@@ -5,7 +5,9 @@
     "outDir": "./dist",
     "rootDir": "./src",                           /* Specify what module code is generated. */            /* Allow 'import x from y' when a module doesn't have a default export. */
     "strict": true,
-    "esModuleInterop": true                            /* Enable all strict type-checking options. */                    /* Skip type checking .d.ts files that are included with TypeScript. */
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,                         /* Enable all strict type-checking options. */                    /* Skip type checking .d.ts files that are included with TypeScript. */
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
