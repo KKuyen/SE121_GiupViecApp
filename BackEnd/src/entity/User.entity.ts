@@ -2,26 +2,45 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TaskerInfo } from "./TaskerInfo.entity";
 
 @Entity({ name: "users" })
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-  @Column({ nullable: false })
-  name!: string;
-
-  @Column({ nullable: false })
+  @Column({ type: "varchar", nullable: false })
   email!: string;
 
-  @Column({ nullable: false })
+  @Column({ type: "varchar", nullable: false })
+  name!: string;
+
+  @Column({ type: "varchar", nullable: false })
+  phoneNumber!: string;
+
+  @Column({ type: "varchar", nullable: false })
   password!: string;
 
-  @Column({ default: "user" })
-  role!: string;
+  @Column({ type: "varchar", default: "R1" })
+  role!: string; // R1=user/R2=tasker
+
+  @Column({ type: "varchar", nullable: true })
+  avatar!: string;
+
+  @Column({ type: "timestamp", nullable: true })
+  birthday!: Date;
+
+  @Column({ type: "int", default: 0 })
+  Rpoints!: number; // For R1
+
+  @ManyToOne(() => TaskerInfo, { nullable: true })
+  @JoinColumn({ name: "taskerInfo" })
+  taskerInfo!: TaskerInfo; // For R2
 
   @CreateDateColumn()
   createdAt!: Date;

@@ -7,7 +7,7 @@
     "start": "nodemon --exec ts-node src/server.ts",
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
-    "migration": " npm run typeorm migration:run -- -d ./src/data-source.ts"
+    "migration": "npx typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts"  
   },
   "keywords": [],
   "author": "",

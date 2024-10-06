@@ -2,7 +2,7 @@ import express from 'express';
 const userRouter = express.Router();
 import { UserController } from "../controllers/user.controller";
 
-
+userRouter.post("/register", UserController.signup);
 userRouter.put(
   "/update/:id",
   UserController.updateUser

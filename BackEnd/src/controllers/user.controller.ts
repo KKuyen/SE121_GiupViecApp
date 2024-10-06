@@ -1,31 +1,31 @@
-// import { Request, Response } from "express";
-
-// export const userController = (req: Request, res: Response) => {
-//     res.status(200).json({ message: "Hello World!" });
-// }
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User.entity";
+import {UserService} from "../services/user.service";
 // import { encrypt } from "../helpers/encrypt";
 // import * as cache from "memory-cache";
 
 export class UserController {
   static async signup(req: Request, res: Response) {
     const { name, email, password, role } = req.body;
+    if (!name || !email || !password || !role) { 
+       res
+        .status(500)
+        .json({
+          errCode: 1,
+          message: "Missing required fields"
+        });
+    }
     const user = new User();
     user.name = name;
     user.email = email;
-    user.password = "123456";
+    user.password = password;
     user.role = role;
 
-    const userRepository = AppDataSource.getRepository(User);
-    await userRepository.save(user);
-
-    // userRepository.create({ Name, email, password });
-
-    return res
+    let message=await UserService.createUser(user);
+    res
       .status(200)
-      .json({ message: "User created successfully", user });
+      .json(message);
   }
  
   static async updateUser(req: Request, res: Response) {
@@ -34,7 +34,7 @@ export class UserController {
         const { name, email } = req.body;
         const userRepository = AppDataSource.getRepository(User);
         const user = await userRepository.findOne({
-        where: { id },
+        where: { id: parseInt(id, 10) },
         });
         user!.name = name;
         user!.email = email;
@@ -45,16 +45,16 @@ export class UserController {
     }
   }
 
-    static async deleteUser(req: Request, res: Response) {
+  static async deleteUser(req: Request, res: Response) {
         const { id } = req.params;
         const userRepository = AppDataSource.getRepository(User);
         const user = await userRepository.findOne({
-        where: { id },
+        where: { id: parseInt(id, 10) },
         });
         await userRepository.remove(user!);
         res.status(200).json({ message: "ok" });
-    }
-    static async getUsers(req: Request, res: Response) {
+  }
+  static async getUsers(req: Request, res: Response) {
         console.log("serving from db");
       const userRepository = AppDataSource.getRepository(User);
       const users = await userRepository.find();

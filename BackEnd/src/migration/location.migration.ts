@@ -1,72 +1,62 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
-export class UsersMigration1698321500515 implements MigrationInterface {
+export class LocationsMigration1698321600518 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "users",
+        name: "locations",
         columns: [
           {
-            name: "id",
+           name: "id",
             type: "int",
             isPrimary: true,
             isGenerated: true,
             generationStrategy: "increment",
           },
           {
-            name: "email",
+            name: "ownerName",
             type: "varchar",
             isNullable: false,
           },
           {
-            name: "name",
+            name: "ownerPhoneNumber",
             type: "varchar",
             isNullable: false,
           },
           {
-            name: "phoneNumber",
+            name: "country",
             type: "varchar",
             isNullable: false,
           },
           {
-            name: "password",
+            name: "province",
             type: "varchar",
             isNullable: false,
           },
           {
-            name: "role",
+            name: "district",
             type: "varchar",
-            default: `'R1'`, // default to R1=user
+            isNullable: false,
           },
           {
-            name: "avatar",
+            name: "detailAddress",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "map",
             type: "varchar",
             isNullable: true,
           },
           {
-            name: "birthday",
-            type: "timestamp",
-            isNullable: true,
-          },
-          {
-            name: "Rpoints",
+            name: "userId",
             type: "int",
-            default: 0,
+            isNullable: false,
           },
           {
-            name: "taskerInfo",
-            type: "uuid",
-            isNullable: true,
-          },
-          {
-            name: "createdAt",
-            type: "timestamp",
-            default: `now()`,
-          },
-          {
-            name: "updatedAt",
-            type: "timestamp",
-            default: `now()`,
+            name: "isDefault",
+            type: "boolean",
+            default: false,
           },
         ],
       }),
@@ -74,20 +64,20 @@ export class UsersMigration1698321500515 implements MigrationInterface {
     );
 
     // await queryRunner.createForeignKey(
-    //   "users",
+    //   "locations",
     //   new TableForeignKey({
-    //     columnNames: ["taskerInfo"],
+    //     columnNames: ["userId"],
     //     referencedColumnNames: ["id"],
-    //     referencedTableName: "taskerInfo",
-    //     onDelete: "SET NULL",
+    //     referencedTableName: "users",
+    //     onDelete: "CASCADE", // When a user is deleted, the related locations are also deleted
     //   })
     // );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable("users");
-    const foreignKey = table!.foreignKeys.find(fk => fk.columnNames.indexOf("taskerInfo") !== -1);
-    await queryRunner.dropForeignKey("users", foreignKey!);
-    await queryRunner.dropTable("users");
+    const table = await queryRunner.getTable("locations");
+    const foreignKey = table!.foreignKeys.find(fk => fk.columnNames.indexOf("userId") !== -1);
+    await queryRunner.dropForeignKey("locations", foreignKey!);
+    await queryRunner.dropTable("locations");
   }
 }
