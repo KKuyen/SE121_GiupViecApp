@@ -1,18 +1,11 @@
 import express from 'express';
 const userRouter = express.Router();
-import { UserController } from "../controllers/user.controller";
+import { auth, checkPermission } from "../middleware/auth";
 
-userRouter.post("/register", UserController.signup);
-userRouter.put(
-  "/update/:id",
-  UserController.updateUser
-);
-userRouter.get(
-  "/users",
-  UserController.getUsers
-);
-userRouter.delete(
-  "/delete/:id",
-  UserController.deleteUser
-);
+import { UserController } from "../controllers/user.controller";
+userRouter.all("*", auth, checkPermission);
+userRouter.get("/api/v1/hello", UserController.handleHelloWorld);
+userRouter.post("/api/v1/register", UserController.signup);
+userRouter.post("/api/v1/login", UserController.login);
+
 export default userRouter;

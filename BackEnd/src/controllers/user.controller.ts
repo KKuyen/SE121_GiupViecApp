@@ -6,9 +6,12 @@ import {UserService} from "../services/user.service";
 // import * as cache from "memory-cache";
 
 export class UserController {
+  static async handleHelloWorld(req: Request, res: Response) {
+    res.status(200).json({ message: "Hello World" });
+  }
   static async signup(req: Request, res: Response) {
-    const { name, email, password, role } = req.body;
-    if (!name || !email || !password || !role) { 
+    const { name, email,phoneNumber, password, role } = req.body;
+    if (!name || !phoneNumber || !password ) { 
        res
         .status(500)
         .json({
@@ -21,56 +24,30 @@ export class UserController {
     user.email = email;
     user.password = password;
     user.role = role;
+    user.phoneNumber = phoneNumber;
 
     let message=await UserService.createUser(user);
     res
       .status(200)
       .json(message);
   }
- 
-  static async updateUser(req: Request, res: Response) {
-    try {
-        const { id } = req.params;
-        const { name, email } = req.body;
-        const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({
-        where: { id: parseInt(id, 10) },
-        });
-        user!.name = name;
-        user!.email = email;
-        await userRepository.save(user!);
-         res.status(200).json({ message: "udpdate", user });
-    } catch (error) {
-         res.status(400).json({ message: "error" });
-    }
-  }
-
-  static async deleteUser(req: Request, res: Response) {
-        const { id } = req.params;
-        const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({
-        where: { id: parseInt(id, 10) },
-        });
-        await userRepository.remove(user!);
-        res.status(200).json({ message: "ok" });
-  }
-  static async getUsers(req: Request, res: Response) {
-        console.log("serving from db");
-      const userRepository = AppDataSource.getRepository(User);
-      const users = await userRepository.find();
-
-     // cache.put("data", users, 6000);
-      res.status(200).json({
-        data: users,
+  static async login(req: Request, res: Response) {
+    const { phoneNumber, password } = req.body;
+    if (!phoneNumber || !password) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
       });
-    //const data = cache.get("data");
-    // if (data) {
-    //   console.log("serving from cache");
-    //   return res.status(200).json({
-    //     data,
-    //   });
-    // } else {
-      
-    //}
+    }
+    let userData: any = await UserService.loginUser(phoneNumber, password);
+    
+    res.status(200).json({
+        errCode: userData.errCode,
+        message: userData.errMessage,
+        user: userData.user ? userData.user : {},
+        access_token: userData.access_token ? userData.access_token : {},
+    });
   }
+ 
+  
 }

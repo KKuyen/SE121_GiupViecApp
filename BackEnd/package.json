@@ -7,13 +7,15 @@
     "start": "nodemon --exec ts-node src/server.ts",
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
-    "migration": "npx typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts"  
+    "migration": "npx typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
     "typescript": "^5.6.2"
   },
   "dependencies": {
