@@ -1,4 +1,5 @@
 import "reflect-metadata"
+require("dotenv").config()
 import { DataSource } from "typeorm"
 import { User } from "./entity/User.entity";
 import { TaskerInfo } from "./entity/TaskerInfo.entity";
@@ -37,11 +38,11 @@ import { VouchersMigration1698324600530 } from "./migration/voucher.migration"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: "aws-0-ap-south-1.pooler.supabase.com",
-    port: 6543,
-    username: "postgres.wbekftdbbgbvuybtvjoi",
-    password: "NguyenDuyHung@123456",
-    database: "postgres",
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT!),
+    username:  process.env.DB_USERNAME,
+    password:   process.env.DB_PASSWORD,
+    database:   process.env.DB_NAME,
     synchronize: false,
     logging: false,
     entities: [User,TaskerInfo, AddPriceDetails, AddPrices, BlockTaskers, LoveTaskers, MyVouchers, Notifications, Reviews, TaskerList, TaskTypes, Location, ReTasks, UserSettings, Tasks, Vouchers],
