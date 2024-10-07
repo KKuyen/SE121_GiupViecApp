@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import the User entity
 
@@ -25,4 +27,10 @@ export class BlockTaskers {
   @ManyToOne(() => User)
   @JoinColumn({ name: "taskerId" })
   tasker!: User; // Relationship with Tasker (also a User)
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

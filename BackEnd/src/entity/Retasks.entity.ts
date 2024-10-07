@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
+  JoinColumn,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import User entity
 import { TaskTypes } from "./TaskTypes.entity"; // Import TaskTypes
@@ -40,4 +41,10 @@ export class ReTasks {
   @ManyToOne(() => Location)
   @JoinColumn({ name: "locationId" })
   location!: Location; // Many-to-one relationship with Locations
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

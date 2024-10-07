@@ -2,7 +2,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
+  OneToMany,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { AddPriceDetails } from "./AddPriceDetails.entity"; // Import AddPriceDetails
 import { Tasks } from "./Task.entity"; // Import Tasks
@@ -32,4 +33,11 @@ export class TaskTypes {
 
   @OneToMany(() => Tasks, (task) => task.taskType)
   tasks!: Tasks[]; // One-to-many relationship with Tasks
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+
 }

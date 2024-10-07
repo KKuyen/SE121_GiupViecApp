@@ -52,6 +52,15 @@ export class ReviewsMigration1698324600528 implements MigrationInterface {
             name: "image4",
             type: "varchar",
             isNullable: false,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

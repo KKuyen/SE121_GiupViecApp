@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import User entity
 import { TaskTypes } from "./TaskTypes.entity"; // Import TaskTypes
@@ -35,9 +37,6 @@ export class Tasks {
   @Column({ type: "varchar", nullable: false })
   taskStatus!: string; // TS1= Đang đợi, TS2 = Đã nhận, TS3 = Đã hoàn thành, TS4 = Đã hủy
 
-  @Column({ type: "timestamp", nullable: false })
-  createdAt!: Date; // Time service ordered
-
   @Column({ type: "timestamp", nullable: true })
   approvedAt!: Date;
 
@@ -61,4 +60,10 @@ export class Tasks {
   @ManyToOne(() => Location)
   @JoinColumn({ name: "locationId" })
   location!: Location; // Many-to-one relationship with Locations
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

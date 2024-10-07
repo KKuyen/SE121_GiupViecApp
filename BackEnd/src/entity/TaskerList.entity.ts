@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
+  JoinColumn,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Tasks } from "./Task.entity"; // Import Tasks entity
 import { User } from "./User.entity"; // Import User entity
@@ -32,4 +33,10 @@ export class TaskerList {
   @ManyToOne(() => User)
   @JoinColumn({ name: "taskerId" })
   tasker!: User; // Many-to-one relationship with Users
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

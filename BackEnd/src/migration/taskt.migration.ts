@@ -48,11 +48,7 @@ export class TasksMigration1698324600524 implements MigrationInterface {
             type: "varchar",
             isNullable: false,
           },
-          {
-            name: "createdAt",
-            type: "timestamp",
-            isNullable: false,
-          },
+          
           {
             name: "approvedAt",
             type: "timestamp",
@@ -72,6 +68,15 @@ export class TasksMigration1698324600524 implements MigrationInterface {
             name: "finishedAt",
             type: "timestamp",
             isNullable: true,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

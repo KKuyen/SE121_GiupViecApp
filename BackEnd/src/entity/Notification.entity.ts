@@ -1,7 +1,8 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
+  Column,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 @Entity({ name: "notifications" })
@@ -20,4 +21,10 @@ export class Notifications {
 
   @Column({ type: "varchar", nullable: true })
   image!: string; // Optional
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

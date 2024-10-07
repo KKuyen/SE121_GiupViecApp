@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { TaskTypes } from "./TaskTypes.entity"; // Import TaskTypes
 
@@ -34,4 +36,10 @@ export class AddPriceDetails {
   @ManyToOne(() => TaskTypes, (taskType) => taskType.addPriceDetails)
   @JoinColumn({ name: "taskTypeId" })
   taskType!: TaskTypes; // Many-to-one relationship with TaskTypes
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

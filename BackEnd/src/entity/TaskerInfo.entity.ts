@@ -2,7 +2,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
+  OneToMany,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity";
 
@@ -25,4 +26,10 @@ export class TaskerInfo {
 
   @OneToMany(() => User, (user) => user.taskerInfo)
   users!: User[];
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

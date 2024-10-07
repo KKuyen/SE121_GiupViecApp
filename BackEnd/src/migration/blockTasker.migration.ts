@@ -22,6 +22,15 @@ export class BlockTaskersMigration1698322600520 implements MigrationInterface {
             name: "taskerId",
             type: "int",
             isNullable: false,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

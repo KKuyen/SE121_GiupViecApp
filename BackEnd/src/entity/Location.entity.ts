@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
+  JoinColumn,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import the User entity
 
@@ -42,4 +43,10 @@ export class Location {
   @ManyToOne(() => User)
   @JoinColumn({ name: "userId" })
   user!: User; // This will reference the User entity's id field
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

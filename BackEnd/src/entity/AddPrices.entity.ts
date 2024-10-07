@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Tasks } from "./Task.entity"; // Import Tasks
 import { ReTasks } from "./Retasks.entity"; // Import ReTasks
@@ -40,4 +42,10 @@ export class AddPrices {
   @ManyToOne(() => AddPriceDetails)
   @JoinColumn({ name: "addPriceDetailId" })
   addPriceDetail!: AddPriceDetails; // Many-to-one relationship with AddPriceDetails
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

@@ -38,6 +38,16 @@ export class UserSettingsMigration1698323600521 implements MigrationInterface {
             type: "boolean",
             default: false,
           },
+          {
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
+          },
         ],
       }),
       true

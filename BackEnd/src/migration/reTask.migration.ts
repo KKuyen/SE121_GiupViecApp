@@ -37,6 +37,15 @@ export class ReTasksMigration1698324600526 implements MigrationInterface {
             name: "note",
             type: "varchar",
             isNullable: true,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

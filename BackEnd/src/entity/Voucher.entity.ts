@@ -1,7 +1,8 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
+  Column,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 @Entity({ name: "vouchers" })
@@ -38,4 +39,10 @@ export class Vouchers {
 
   @Column({ type: "timestamp", nullable: false })
   endDate!: Date;
+  
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

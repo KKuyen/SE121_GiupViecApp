@@ -32,6 +32,15 @@ export class TaskerInfoMigration1698321400516 implements MigrationInterface {
             name: "taskList",
             type: "varchar",
             isNullable: true,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

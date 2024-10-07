@@ -32,6 +32,15 @@ export class TaskerListMigration1698324600527 implements MigrationInterface {
             name: "status",
             type: "varchar",
             isNullable: false,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

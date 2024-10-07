@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
+  JoinColumn,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import the User entity
 
@@ -30,4 +31,10 @@ export class UserSettings {
   @ManyToOne(() => User)
   @JoinColumn({ name: "userId" })
   user!: User; // Relationship with User
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

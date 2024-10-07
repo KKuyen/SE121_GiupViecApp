@@ -3,12 +3,14 @@ import { AppDataSource } from "./data-source"
 import { Request, Response } from "express";
 import bodyParser from 'body-parser';
 import userRouter from "./routes/user.routes";
+import taskerRouter from "./routes/tasker.routes";
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use("/", userRouter);
+app.use("/", taskerRouter);
 app.get("*", (req: Request, res: Response) => {
   res.status(505).json({ message: "Bad Request" });
 });

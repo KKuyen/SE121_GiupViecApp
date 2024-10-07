@@ -37,6 +37,15 @@ export class AddPricesMigration1698324600525 implements MigrationInterface {
             name: "price",
             type: "money",
             isNullable: false,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

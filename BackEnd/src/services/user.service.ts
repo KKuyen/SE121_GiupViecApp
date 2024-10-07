@@ -59,6 +59,7 @@ export class UserService {
                 if (checkUserPhone) {
                     let userRepository = AppDataSource.getRepository(User);
                     let user = await userRepository.findOne({
+                        select: ["id", "name", "email","password","phoneNumber","role","avatar","birthday","Rpoints"],
                         where: { phoneNumber: phoneNumber },
                     });
                     if (user) {
@@ -66,6 +67,7 @@ export class UserService {
                             userData.errCode = 0;
                             userData.errMessage = "OK";
                             userData.user = user;
+                            delete  userData.user.password;
                             let payload = {
                             userId: user.id,
                             phoneNumber: user.phoneNumber,

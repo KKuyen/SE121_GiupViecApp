@@ -32,6 +32,15 @@ export class NotificationsMigration1698324600529 implements MigrationInterface {
             name: "image",
             type: "varchar",
             isNullable: true,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

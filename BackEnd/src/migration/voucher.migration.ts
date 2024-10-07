@@ -63,6 +63,16 @@ export class VouchersMigration1698324600530 implements MigrationInterface {
             type: "timestamp",
             isNullable: false,
           },
+          {
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
+          },
         ],
       }),
       true

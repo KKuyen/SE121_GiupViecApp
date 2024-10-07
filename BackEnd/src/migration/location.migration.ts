@@ -57,6 +57,15 @@ export class LocationsMigration1698321600518 implements MigrationInterface {
             name: "isDefault",
             type: "boolean",
             default: false,
+          },{
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
           },
         ],
       }),

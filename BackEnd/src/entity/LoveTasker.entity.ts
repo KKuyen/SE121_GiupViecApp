@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
+  JoinColumn,CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import the User entity
 
@@ -25,4 +26,10 @@ export class LoveTaskers {
   @ManyToOne(() => User)
   @JoinColumn({ name: "taskerId" })
   tasker!: User; // Relationship with Tasker (also a User)
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

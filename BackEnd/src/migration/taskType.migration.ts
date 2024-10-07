@@ -38,6 +38,16 @@ export class TaskTypesMigration1698324600522 implements MigrationInterface {
             type: "money",
             isNullable: false,
           },
+          {
+            name: "createdAt",
+            type: "timestamp",
+            default: `now()`,
+          },
+          {
+            name: "updatedAt",
+            type: "timestamp",
+            default: `now()`,
+          },
         ],
       }),
       true
