@@ -19,13 +19,17 @@ export class AddPriceDetails {
   name!: string;
 
   @Column({ type: "money", nullable: false })
-  price!: number;
+  stepPrice!: number;
+    @Column({ type: "money", nullable: false })
+  beginPrice!: number;
 
   @Column({ type: "int", nullable: false })
   stepValue!: number;
 
   @Column({ type: "varchar", nullable: false })
   unit!: string;
+  @Column({ type: "int", nullable: false })
+  beginValue!: number;
 
   @ManyToOne(() => TaskTypes, (taskType) => taskType.addPriceDetails)
   @JoinColumn({ name: "taskTypeId" })

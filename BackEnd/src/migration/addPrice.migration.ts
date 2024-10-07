@@ -33,6 +33,11 @@ export class AddPricesMigration1698324600525 implements MigrationInterface {
             type: "int",
             isNullable: false,
           },
+          {
+            name: "price",
+            type: "money",
+            isNullable: false,
+          },
         ],
       }),
       true

@@ -28,6 +28,31 @@ export class ReviewsMigration1698324600528 implements MigrationInterface {
             type: "float",
             isNullable: false,
           },
+          {
+            name: "content",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "image1",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "image2",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "image3",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "image4",
+            type: "varchar",
+            isNullable: false,
+          },
         ],
       }),
       true

@@ -24,11 +24,6 @@ export class AddPriceDetailsMigration1698324600523 implements MigrationInterface
             isNullable: false,
           },
           {
-            name: "price",
-            type: "money",
-            isNullable: false,
-          },
-          {
             name: "stepValue",
             type: "int",
             isNullable: false,
@@ -36,6 +31,21 @@ export class AddPriceDetailsMigration1698324600523 implements MigrationInterface
           {
             name: "unit",
             type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "stepPrice",
+            type: "money",
+            isNullable: false,
+          },
+          {
+            name: "beginPrice",
+            type: "money",
+            isNullable: false,
+          },
+          {
+            name: "beginValue",
+            type: "int",
             isNullable: false,
           },
         ],

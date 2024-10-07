@@ -26,6 +26,9 @@ export class AddPrices {
   @Column({ type: "int", nullable: false })
   quantity!: number;
 
+  @Column({ type: "money", nullable: false })
+  price!: number;
+  
   @ManyToOne(() => Tasks)
   @JoinColumn({ name: "taskId" })
   task!: Tasks; // Many-to-one relationship with Tasks

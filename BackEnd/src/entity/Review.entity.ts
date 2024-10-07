@@ -22,6 +22,21 @@ export class Reviews {
   @Column({ type: "float", nullable: false })
   star!: number;
 
+  @Column({ type: "varchar", nullable: false })
+  content!: number;
+
+  @Column({ type: "varchar", nullable: false })
+  image1!: number;
+
+  @Column({ type: "varchar", nullable: false })
+  image2!: number;
+
+  @Column({ type: "varchar", nullable: false })
+  image3!: number;
+
+  @Column({ type: "varchar", nullable: false })
+  image4!: number;
+
   @ManyToOne(() => Tasks)
   @JoinColumn({ name: "taskId" })
   task!: Tasks; // Many-to-one relationship with Tasks
