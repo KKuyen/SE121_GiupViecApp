@@ -38,10 +38,10 @@ export class Reviews {
   @Column({ type: "varchar", nullable: false })
   image4!: number;
 
-  @ManyToOne(() => Tasks)
+ @ManyToOne(() => Tasks, task => task.reviews)
   @JoinColumn({ name: "taskId" })
-  task!: Tasks; // Many-to-one relationship with Tasks
-
+  task!: Tasks; // Many-to-one relationship with Task
+  
   @ManyToOne(() => User)
   @JoinColumn({ name: "taskerId" })
   tasker!: User; // Many-to-one relationship with Users

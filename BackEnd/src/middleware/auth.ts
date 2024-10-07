@@ -2,7 +2,7 @@ import { verifyJWT } from "./JWTAction";
 import { Request, Response,NextFunction } from "express";
 const nonSecurePaths = ["/api/v1/login", "/api/v1/register"];
 const userPaths:string[] = ["/api/v1/hello"];
-const taskerPaths:string[] = [];
+const taskerPaths:string[] = ["/api/v1/get-tasker-profile","/api/v1/edit-tasker-profile","/api/v1/get-all-reviews"];
 const commonPaths:string[] = [];
 
 export const auth = (req:Request, res:Response, next:NextFunction):void => {

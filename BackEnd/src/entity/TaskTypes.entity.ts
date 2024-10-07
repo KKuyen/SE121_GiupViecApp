@@ -32,7 +32,7 @@ export class TaskTypes {
   addPriceDetails!: AddPriceDetails[]; // One-to-many relationship with AddPriceDetails
 
   @OneToMany(() => Tasks, (task) => task.taskType)
-  tasks!: Tasks[]; // One-to-many relationship with Tasks
+  task!: Tasks[];
 
   @CreateDateColumn()
   createdAt!: Date;

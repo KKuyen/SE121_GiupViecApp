@@ -55,7 +55,7 @@ export class UsersMigration1698321500515 implements MigrationInterface {
           },
           {
             name: "taskerInfo",
-            type: "uuid",
+            type: "int",
             isNullable: true,
           },
           {

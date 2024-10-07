@@ -5,11 +5,12 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn,OneToMany
 } from "typeorm";
 import { User } from "./User.entity"; // Import User entity
 import { TaskTypes } from "./TaskTypes.entity"; // Import TaskTypes
 import { Location } from "./Location.entity"; // Import Locations
+import { Reviews } from "./Review.entity";
 
 @Entity({ name: "tasks" })
 export class Tasks {
@@ -61,6 +62,10 @@ export class Tasks {
   @JoinColumn({ name: "locationId" })
   location!: Location; // Many-to-one relationship with Locations
 
+   @OneToMany(() => Reviews, reviews => reviews.task)
+  reviews!: Reviews[]; // One-to-many relationship with Review
+
+  
   @CreateDateColumn()
   createdAt!: Date;
 
