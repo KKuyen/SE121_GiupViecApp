@@ -5,12 +5,19 @@ import bodyParser from 'body-parser';
 import userRouter from "./routes/user.routes";
 import taskerRouter from "./routes/tasker.routes";
 require('dotenv').config();
+import session from 'express-session';
 
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use("/", userRouter);
 app.use("/", taskerRouter);
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }, // Để `secure: true` khi chạy HTTPS
+}));
 app.get("*", (req: Request, res: Response) => {
   res.status(505).json({ message: "Bad Request" });
 });

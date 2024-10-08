@@ -30,8 +30,12 @@ export class AddPriceDetails {
 
   @Column({ type: "varchar", nullable: false })
   unit!: string;
+
   @Column({ type: "int", nullable: false })
   beginValue!: number;
+
+  @Column({ type: "int", nullable: true })
+  value!: number; 
 
   @ManyToOne(() => TaskTypes, (taskType) => taskType.addPriceDetails)
   @JoinColumn({ name: "taskTypeId" })

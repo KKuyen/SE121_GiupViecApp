@@ -28,6 +28,9 @@ export class TaskTypes {
   @Column({ type: "money", nullable: false })
   originalPrice!: number; // Using money type for prices
 
+  @Column({ type: "int", nullable: true })
+  value!: number; 
+
   @OneToMany(() => AddPriceDetails, (addPriceDetails) => addPriceDetails.taskType)
   addPriceDetails!: AddPriceDetails[]; // One-to-many relationship with AddPriceDetails
 

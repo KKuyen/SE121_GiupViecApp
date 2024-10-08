@@ -16,12 +16,12 @@ export class LocationsMigration1698321600518 implements MigrationInterface {
           {
             name: "ownerName",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "ownerPhoneNumber",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "country",

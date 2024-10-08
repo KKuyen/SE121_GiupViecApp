@@ -39,6 +39,11 @@ export class TaskTypesMigration1698324600522 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "value",
+            type: "int",
+            isNullable: true,
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,

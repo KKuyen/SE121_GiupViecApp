@@ -65,6 +65,8 @@ export class Tasks {
    @OneToMany(() => Reviews, reviews => reviews.task)
   reviews!: Reviews[]; // One-to-many relationship with Review
 
+  @Column({ type: "int", nullable: false })
+  numberOfTasker!: number;
   
   @CreateDateColumn()
   createdAt!: Date;

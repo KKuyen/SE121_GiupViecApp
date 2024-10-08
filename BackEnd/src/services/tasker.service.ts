@@ -2,6 +2,7 @@ import { User } from "../entity/User.entity";
 import { TaskerInfo } from "../entity/TaskerInfo.entity";
 import { AppDataSource } from "../data-source";
 import { Reviews } from "../entity/Review.entity";
+import { Location } from "../entity/Location.entity";
 
 
 export class TaskerService {
@@ -131,6 +132,79 @@ export class TaskerService {
             }
         });
     }
-    
+    static getMyLocation = async (userId:number) => { 
+        return new Promise(async (resolve, reject) => {
+            try {
+                const locationRepository = AppDataSource.getRepository(Location);
+                let locations;
+                locations = await locationRepository.find({
+                        where: { userId: userId },
+                    });
+                    
+                resolve({ errCode: 0, locations: locations });
+            } catch (e) {
+                reject(e);
+            }
+
+        }
+        );
+    }
+    static addNewLocation = async (location: Location) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const locationRepository = AppDataSource.getRepository(Location);
+                await locationRepository.save(location);
+                resolve({ errCode: 0, message: "Ok" });
+
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    static editLocation = async (location: Location) => { 
+        return new Promise(async (resolve, reject) => {
+            try {
+                const locationRepository = AppDataSource.getRepository(Location);
+                const locationInDb = await locationRepository.findOne({
+                    where: { id: location.id },
+                });
+                if (locationInDb) {
+                    locationInDb.ownerName = location.ownerName;
+                    locationInDb.ownerPhoneNumber = location.ownerPhoneNumber;
+                    locationInDb.country = location.country;
+                    locationInDb.province = location.province;
+                    locationInDb.district = location.district;
+                    locationInDb.detailAddress = location.detailAddress;
+                    locationInDb.map = location.map;
+                    locationInDb.userId = location.userId;
+                    locationInDb.isDefault = location.isDefault;
+                    await locationRepository.save(locationInDb);
+                    resolve({ errCode: 0, message: "Ok" });
+                } else {
+                    resolve({ errCode: 1, message: "Location not found" });
+                }
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+    static deleteLocation = async (id: number) => { 
+        return new Promise(async (resolve, reject) => {
+            try {
+                const locationRepository = AppDataSource.getRepository(Location);
+                const location = await locationRepository.findOne({
+                    where: { id: id },
+                });
+                if (location) {
+                    await locationRepository.remove(location);
+                    resolve({ errCode: 0, message: "Ok" });
+                } else {
+                    resolve({ errCode: 1, message: "Location not found" });
+                }
+            } catch (e) {
+                reject(e);
+            }
+         });
+    }
     
 }

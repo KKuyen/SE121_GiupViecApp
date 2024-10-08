@@ -47,7 +47,13 @@ export class AddPriceDetailsMigration1698324600523 implements MigrationInterface
             name: "beginValue",
             type: "int",
             isNullable: false,
-          },{
+          },
+          {
+            name: "value",
+            type: "int",
+            isNullable: true,
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User.entity";
+import { Location } from "../entity/Location.entity";
+
 import {TaskerService} from "../services/tasker.service";
 // import { encrypt } from "../helpers/encrypt";
 // import * as cache from "memory-cache";
@@ -46,6 +48,73 @@ export class TaskerController {
             });
         }
         let message = await TaskerService.getAllReviews(taskerId);
+        res.status(200).json(message);
+    }
+    static async handleGetMyLocation(req: Request, res: Response) {
+        let  userId:any  = req.query.userId;
+        if(!userId ) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.getMyLocation(userId);
+        res.status(200).json(message);
+    }
+    static async handleAddNewLocation(req: Request, res: Response) {
+        const { ownerName, ownerPhoneNumber, country, province, district, detailAddress, map, userId, isDefault } = req.body;
+        if( !country || !province || !district || !detailAddress || !userId || !isDefault) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let location: Location = new Location();
+        location.ownerName = ownerName?ownerName:null;
+        location.ownerPhoneNumber = ownerPhoneNumber?ownerPhoneNumber:null;
+        location.country = country;
+        location.province = province;
+        location.district = district;
+        location.detailAddress = detailAddress;
+        location.map = map?map:null;
+        location.userId = userId;
+        location.isDefault = isDefault;
+
+        let message = await TaskerService.addNewLocation(location);
+        res.status(200).json(message);
+    }
+    static async handleEditMyLocation(req: Request, res: Response) {
+        const { id, ownerName, ownerPhoneNumber, country, province, district, detailAddress, map, userId, isDefault } = req.body;
+        if(!id || !country || !province || !district || !detailAddress || !userId || !isDefault) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let location: Location = new Location();
+        location.id = id;
+        location.ownerName = ownerName?ownerName:null;
+        location.ownerPhoneNumber = ownerPhoneNumber?ownerPhoneNumber:null;
+        location.country = country;
+        location.province = province;
+        location.district = district;
+        location.detailAddress = detailAddress;
+        location.map = map?map:null;
+        location.userId = userId;
+        location.isDefault = isDefault;
+
+        let message = await TaskerService.editLocation(location);
+        res.status(200).json(message);
+    }
+    static async handleDeleteMyLocation(req: Request, res: Response) {
+        let  id:any  = req.query.id;
+        if(!id ) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.deleteLocation(id);
         res.status(200).json(message);
     }
     

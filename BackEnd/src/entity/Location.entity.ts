@@ -13,10 +13,10 @@ export class Location {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   ownerName!: string;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   ownerPhoneNumber!: string;
 
   @Column({ type: "varchar", nullable: false })

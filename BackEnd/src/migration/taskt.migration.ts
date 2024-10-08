@@ -68,7 +68,13 @@ export class TasksMigration1698324600524 implements MigrationInterface {
             name: "finishedAt",
             type: "timestamp",
             isNullable: true,
-          },{
+          },
+          {
+            name: "numberOfTasker",
+            type: "int",
+            isNullable: true,
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,
