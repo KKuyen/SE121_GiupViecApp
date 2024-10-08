@@ -3,6 +3,10 @@ import { AppDataSource } from "../data-source";
 import { User } from "../entity/User.entity";
 import { UserService } from "../services/user.service";
 import { Tasks } from "../entity/Task.entity";
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import * as admin from "firebase-admin";
+
 // import { encrypt } from "../helpers/encrypt";
 // import * as cache from "memory-cache";
 
@@ -369,5 +373,20 @@ export class UserController {
       availableVouchers: message.availableVouchers,
     });
   }
-  static async pushImage(req: Request, res: Response) {}
+  static async uploadImage(req: Request, res: Response): Promise<void> {
+    try {
+      const { quantity, file } = req.body; // Expecting 'single' or 'multiple' in the request body
+      let imageUrl;
+
+      if (quantity === "single") {
+        imageUrl = await UserService.uploadImage(file, "single");
+      } else if (quantity === "multiple") {
+        imageUrl = await UserService.uploadImage(file, "multiple");
+      } else {
+        res.status(400).send({ message: "Invalid quantity" });
+      }
+
+      res.status(200).send({ imageUrl });
+    } catch (error) {}
+  }
 }

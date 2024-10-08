@@ -39,5 +39,5 @@ userRouter.get(
   "/api/v1/get-avaiable-voucher",
   UserController.getAvailableVoucher
 );
-userRouter.post("/api/v1/push-image", UserController.pushImage);
+userRouter.post("/api/v1/push-image", UserController.uploadImage);
 export default userRouter;

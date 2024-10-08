@@ -1,6 +1,10 @@
 import { verifyJWT } from "./JWTAction";
 import { Request, Response, NextFunction } from "express";
-const nonSecurePaths = ["/api/v1/login", "/api/v1/register"];
+const nonSecurePaths = [
+  "/api/v1/login",
+  "/api/v1/register",
+  "/api/v1/upload-and-get-link",
+];
 const userPaths: string[] = [
   "/api/v1/hello",
   "/api/v1/create-new-task",

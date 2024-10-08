@@ -18,6 +18,16 @@ import { Reviews } from "../entity/Review.entity";
 import { TaskerInfo } from "../entity/TaskerInfo.entity";
 import { UserSettings } from "../entity/UserSetting.entity";
 import { parse } from "path";
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase.config";
+import upload from "../middleware/multer"; // Ensure you have your multer setup here
+import * as dotenv from "dotenv";
+dotenv.config();
+
+import bodyParser from "body-parser";
+import { getDownloadURL } from "firebase/storage";
+const admin = require("firebase-admin");
 export class UserService {
   static checkUserPhone = async (phoneNumber: string) => {
     return new Promise<boolean>(async (resolve, reject) => {
@@ -649,5 +659,42 @@ export class UserService {
       errMessage: "OK",
       availableVouchers: availableVouchers,
     };
+  }
+
+  static async uploadImage(file: any, quantity: string) {
+    const firebaseUser = process.env.FIREBASE_USER;
+    const firebaseAuth = process.env.FIREBASE_AUTH;
+
+    if (!firebaseUser || !firebaseAuth) {
+      throw new Error(
+        "FIREBASE_USER and FIREBASE_AUTH must be set in the environment variables"
+      );
+    }
+    const storageFB = getStorage();
+    await signInWithEmailAndPassword(auth, firebaseUser, firebaseAuth);
+
+    if (quantity === "single") {
+      const dateTime = Date.now();
+      const fileName = `images/${dateTime}-${file.originalname}`;
+      const storageRef = ref(storageFB, fileName);
+      const metadata = {
+        contentType: file.mimetype,
+      };
+      await uploadBytesResumable(storageRef, file.buffer, metadata);
+      return fileName;
+    } else if (quantity === "multiple") {
+      const fileNames = [];
+      for (let i = 0; i < file.length; i++) {
+        const dateTime = Date.now();
+        const fileName = `images/${dateTime}-${file[i].originalname}`;
+        const storageRef = ref(storageFB, fileName);
+        const metadata = {
+          contentType: file[i].mimetype,
+        };
+        await uploadBytesResumable(storageRef, file[i].buffer, metadata);
+        fileNames.push(fileName);
+      }
+      return fileNames;
+    }
   }
 }
