@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,CreateDateColumn,
+  JoinColumn,
+  CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User.entity"; // Import User entity
@@ -20,6 +21,8 @@ export class MyVouchers {
   @Column({ type: "int", nullable: false })
   userId!: number;
 
+  @Column({ type: "bool", nullable: false })
+  isUsed!: boolean;
   @ManyToOne(() => Vouchers)
   @JoinColumn({ name: "voucherId" })
   voucher!: Vouchers; // Many-to-one relationship with Vouchers

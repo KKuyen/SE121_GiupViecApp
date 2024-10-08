@@ -21,6 +21,8 @@ export class Tasks {
 
   @Column({ type: "int", nullable: false })
   taskTypeId!: number;
+  @Column({ type: "int", nullable: true })
+  numberOfTasker!: number;
 
   @Column({ type: "timestamp", nullable: false })
   time!: Date;
@@ -48,7 +50,10 @@ export class Tasks {
 
   @Column({ type: "timestamp", nullable: true })
   finishedAt!: Date;
-
+  @Column({ type: "int", nullable: true })
+  voucherId!: number;
+  @Column({ type: "varchar", nullable: true })
+  price!: string;
   @ManyToOne(() => User)
   @JoinColumn({ name: "userId" })
   user!: User; // Many-to-one relationship with User

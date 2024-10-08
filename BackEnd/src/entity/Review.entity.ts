@@ -3,7 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,CreateDateColumn,
+  JoinColumn,
+  CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Tasks } from "./Task.entity"; // Import Tasks entity
@@ -24,7 +25,7 @@ export class Reviews {
   star!: number;
 
   @Column({ type: "varchar", nullable: false })
-  content!: number;
+  content!: string;
 
   @Column({ type: "varchar", nullable: false })
   image1!: number;

@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from "typeorm";
 
 export class TasksMigration1698324600524 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -48,7 +53,7 @@ export class TasksMigration1698324600524 implements MigrationInterface {
             type: "varchar",
             isNullable: false,
           },
-          
+
           {
             name: "approvedAt",
             type: "timestamp",
@@ -68,7 +73,8 @@ export class TasksMigration1698324600524 implements MigrationInterface {
             name: "finishedAt",
             type: "timestamp",
             isNullable: true,
-          },{
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,
@@ -128,11 +134,25 @@ export class TasksMigration1698324600524 implements MigrationInterface {
     const table = await queryRunner.getTable("tasks");
     const foreignKeys = table!.foreignKeys;
 
-    await queryRunner.dropForeignKey("tasks", foreignKeys.find(fk => fk.columnNames.indexOf("userId") !== -1)!);
-    await queryRunner.dropForeignKey("tasks", foreignKeys.find(fk => fk.columnNames.indexOf("taskTypeId") !== -1)!);
-    await queryRunner.dropForeignKey("tasks", foreignKeys.find(fk => fk.columnNames.indexOf("locationId") !== -1)!);
-    await queryRunner.dropForeignKey("tasks", foreignKeys.find(fk => fk.columnNames.indexOf("isReTaskChildren") !== -1)!);
-    
+    await queryRunner.dropForeignKey(
+      "tasks",
+      foreignKeys.find((fk) => fk.columnNames.indexOf("userId") !== -1)!
+    );
+    await queryRunner.dropForeignKey(
+      "tasks",
+      foreignKeys.find((fk) => fk.columnNames.indexOf("taskTypeId") !== -1)!
+    );
+    await queryRunner.dropForeignKey(
+      "tasks",
+      foreignKeys.find((fk) => fk.columnNames.indexOf("locationId") !== -1)!
+    );
+    await queryRunner.dropForeignKey(
+      "tasks",
+      foreignKeys.find(
+        (fk) => fk.columnNames.indexOf("isReTaskChildren") !== -1
+      )!
+    );
+
     await queryRunner.dropTable("tasks");
   }
 }

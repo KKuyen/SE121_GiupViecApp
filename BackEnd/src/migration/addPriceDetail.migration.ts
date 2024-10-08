@@ -1,6 +1,13 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from "typeorm";
 
-export class AddPriceDetailsMigration1698324600523 implements MigrationInterface {
+export class AddPriceDetailsMigration1698324600523
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -47,7 +54,8 @@ export class AddPriceDetailsMigration1698324600523 implements MigrationInterface
             name: "beginValue",
             type: "int",
             isNullable: false,
-          },{
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,
@@ -75,7 +83,9 @@ export class AddPriceDetailsMigration1698324600523 implements MigrationInterface
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable("addPriceDetails");
-    const foreignKey = table!.foreignKeys.find(fk => fk.columnNames.indexOf("taskTypeId") !== -1);
+    const foreignKey = table!.foreignKeys.find(
+      (fk) => fk.columnNames.indexOf("taskTypeId") !== -1
+    );
     await queryRunner.dropForeignKey("addPriceDetails", foreignKey!);
     await queryRunner.dropTable("addPriceDetails");
   }

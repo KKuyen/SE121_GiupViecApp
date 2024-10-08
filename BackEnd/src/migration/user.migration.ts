@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from "typeorm";
 
 export class UsersMigration1698321500515 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -55,7 +60,7 @@ export class UsersMigration1698321500515 implements MigrationInterface {
           },
           {
             name: "taskerInfo",
-            type: "uuid",
+            type: "int",
             isNullable: true,
           },
           {
@@ -86,7 +91,9 @@ export class UsersMigration1698321500515 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable("users");
-    const foreignKey = table!.foreignKeys.find(fk => fk.columnNames.indexOf("taskerInfo") !== -1);
+    const foreignKey = table!.foreignKeys.find(
+      (fk) => fk.columnNames.indexOf("taskerInfo") !== -1
+    );
     await queryRunner.dropForeignKey("users", foreignKey!);
     await queryRunner.dropTable("users");
   }
