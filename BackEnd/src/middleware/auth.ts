@@ -26,6 +26,10 @@ const userPaths: string[] = [
   "/api/v1/edit-setting",
   "/api/v1/claim-voucher",
   "/api/v1/get-avaiable-voucher",
+  "/api/v1/edit-tasker-list-status",
+  "/api/v1/delete-account",
+  "/api/v1/cancel-a-task",
+  "/api/v1/finish-a-task",
 ];
 const taskerPaths: string[] = [];
 const commonPaths: string[] = [];

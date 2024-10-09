@@ -39,5 +39,9 @@ userRouter.get(
   "/api/v1/get-avaiable-voucher",
   UserController.getAvailableVoucher
 );
+userRouter.put("/api/v1/edit-tasker-list-status", UserController.edittkls);
 userRouter.post("/api/v1/push-image", UserController.uploadImage);
+userRouter.delete("/api/v1/delete-account", UserController.deleteAccount);
+userRouter.put("/api/v1/cancel-a-task", UserController.cancelTask);
+userRouter.put("/api/v1/finish-a-task", UserController.finishTask);
 export default userRouter;

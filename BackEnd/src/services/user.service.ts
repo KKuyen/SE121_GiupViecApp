@@ -159,7 +159,7 @@ export class UserService {
       locationId,
       note,
       isReTaskChildren,
-      taskStatus: "S1", // Set default value for taskStatus
+      taskStatus: "TS1", // Set default value for taskStatus
       numberOfTasker: 0,
       voucherId,
     });
@@ -362,7 +362,45 @@ export class UserService {
   }
   static async getAllTasks(userId: number) {
     const taskRepository = AppDataSource.getRepository(Tasks);
-    const tasks = await taskRepository.find({ where: { userId: userId } });
+
+    const tasks = await taskRepository
+      .createQueryBuilder("task")
+      .leftJoinAndSelect("task.location", "location")
+      .leftJoinAndSelect("task.user", "user")
+      .where("task.userId = :userId", { userId })
+      .select([
+        "task.id",
+        "task.userId",
+        "task.taskTypeId",
+        "task.time",
+        "task.locationId",
+        "task.note",
+        "task.isReTaskChildren",
+        "task.taskStatus",
+        "task.createdAt",
+        "task.updatedAt",
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.phoneNumber",
+        "user.role",
+        "user.avatar",
+        "user.birthday",
+        "user.Rpoints",
+
+        "location.id",
+
+        "location.country",
+        "location.province",
+        "location.district",
+        "location.ownerName",
+        "location.ownerPhoneNumber",
+        "location.detailAddress",
+        "location.map",
+      ])
+      .where("task.userId = :userId", { userId })
+      .getMany();
+
     return {
       errCode: 0,
       errMessage: "OK",
@@ -423,9 +461,28 @@ export class UserService {
   }
   static async getTaskerList(taskId: number) {
     const taskerListRepository = AppDataSource.getRepository(TaskerList);
-    const taskerList = await taskerListRepository.find({
-      where: { taskId: taskId },
-    });
+
+    const taskerList = await taskerListRepository
+      .createQueryBuilder("taskerList")
+      .leftJoinAndSelect("taskerList.tasker", "user")
+      .where("taskerList.taskId = :taskId", { taskId })
+      .select([
+        "taskerList.id",
+        "taskerList.taskId",
+        "taskerList.taskerId",
+        "taskerList.status",
+        "taskerList.createdAt",
+        "taskerList.updatedAt",
+        "taskerList.reviewStar",
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.phoneNumber",
+        "user.role",
+        "user.avatar",
+        "user.birthday",
+      ])
+      .getMany();
 
     return {
       errCode: 0,
@@ -463,10 +520,23 @@ export class UserService {
   }
   static async getLoveTaskerList(userId: number) {
     const taskerListRepository = AppDataSource.getRepository(LoveTaskers);
-    const loveList = await taskerListRepository.find({
-      where: { userId: userId },
-    });
-
+    const loveList = await taskerListRepository
+      .createQueryBuilder("loveTaskers")
+      .leftJoinAndSelect("loveTaskers.tasker", "user")
+      .where("loveTaskers.userId = :userId", { userId })
+      .select([
+        "loveTaskers.id",
+        "loveTaskers.userId",
+        "loveTaskers.taskerId",
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.phoneNumber",
+        "user.role",
+        "user.avatar",
+        "user.birthday",
+      ])
+      .getMany();
     return {
       errCode: 0,
       errMessage: "OK",
@@ -475,9 +545,23 @@ export class UserService {
   }
   static async getBlockTaskerList(userId: number) {
     const taskerListRepository = AppDataSource.getRepository(BlockTaskers);
-    const blockList = await taskerListRepository.find({
-      where: { userId: userId },
-    });
+    const blockList = await taskerListRepository
+      .createQueryBuilder("blockTaskers")
+      .leftJoinAndSelect("blockTaskers.tasker", "user")
+      .where("blockTaskers.userId = :userId", { userId })
+      .select([
+        "blockTaskers.id",
+        "blockTaskers.userId",
+        "blockTaskers.taskerId",
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.phoneNumber",
+        "user.role",
+        "user.avatar",
+        "user.birthday",
+      ])
+      .getMany();
 
     return {
       errCode: 0,
@@ -531,17 +615,49 @@ export class UserService {
   }
   static async getATask(taskId: number) {
     const taskRepository = AppDataSource.getRepository(Tasks);
-    const task = await taskRepository.findOne({ where: { id: taskId } });
-    const taskerListRepository = AppDataSource.getRepository(TaskerList);
-    const taskerList = await taskerListRepository.find({
-      where: { taskId: taskId },
-    });
+    const task = await taskRepository
+      .createQueryBuilder("task")
+      .leftJoinAndSelect("task.location", "location")
+      .leftJoinAndSelect("task.user", "user")
+      .where("task.id = :taskId", { taskId })
+      .select([
+        "task.id",
+
+        "task.userId",
+        "task.taskTypeId",
+        "task.time",
+        "task.locationId",
+        "task.note",
+        "task.isReTaskChildren",
+        "task.taskStatus",
+        "task.createdAt",
+        "task.updatedAt",
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.phoneNumber",
+        "user.role",
+        "user.avatar",
+        "user.birthday",
+        "user.Rpoints",
+
+        "location.id",
+
+        "location.country",
+        "location.province",
+        "location.district",
+        "location.ownerName",
+        "location.ownerPhoneNumber",
+        "location.detailAddress",
+        "location.map",
+      ])
+
+      .getOne();
 
     return {
       errCode: 0,
       errMessage: "OK",
       task: task,
-      taskerList: taskerList,
     };
   }
   static async getTaskerInfo(taskerId: number, userId: number) {
@@ -570,6 +686,7 @@ export class UserService {
       tasker: tasker,
       reviewList: reviews,
       loveTasker: loveTasker ? true : false,
+
       blockTasker: blockTasker ? true : false,
       taskerInfo: taskerInfo,
     };
@@ -696,5 +813,90 @@ export class UserService {
       }
       return fileNames;
     }
+  }
+  static async edittkls(taskId: number, taskerId: number, status: string) {
+    const currentDate = new Date();
+    const taskerListRepository = AppDataSource.getRepository(TaskerList);
+    const taskerList = await taskerListRepository.findOne({
+      where: { taskId: taskId, taskerId: taskerId },
+    });
+    if (taskerList) {
+      taskerList.status = status;
+      await taskerListRepository.save(taskerList);
+    }
+    const taskRepository = AppDataSource.getRepository(Tasks);
+    const task = await taskRepository.findOne({ where: { id: taskId } });
+    if (task) {
+      const taskerListCount = await taskerListRepository.count({
+        where: { taskId: taskId, status: "S2" },
+      });
+
+      if (taskerListCount === task.numberOfTasker) {
+        task.taskStatus = "TS2";
+        await taskRepository.save(task);
+        task.approvedAt = currentDate;
+      } else {
+        task.taskStatus = "TS1";
+        await taskRepository.save(task);
+      }
+    }
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async deleteAccount(userId: number) {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: userId } });
+    if (user) {
+      await userRepository.delete({ id: userId });
+    }
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async cancelTask(taskId: number, cancelCode: number) {
+    const currentDate = new Date();
+    const taskRepository = AppDataSource.getRepository(Tasks);
+    const task = await taskRepository.findOne({ where: { id: taskId } });
+    if (task) {
+      task.taskStatus = "TS4" + cancelCode.toString();
+      task.cancelAt = currentDate;
+      await taskRepository.save(task);
+    }
+    const taskerListRepository = AppDataSource.getRepository(TaskerList);
+    await taskerListRepository.delete({ taskId: taskId });
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async finishTask(taskId: number) {
+    const currentDate = new Date();
+    const taskRepository = AppDataSource.getRepository(Tasks);
+    const task = await taskRepository.findOne({ where: { id: taskId } });
+    if (task) {
+      task.taskStatus = "TS3";
+      task.finishedAt = currentDate;
+      await taskRepository.save(task);
+    }
+    const taskerListRepository = AppDataSource.getRepository(TaskerList);
+    const taskerLists = await taskerListRepository.find({
+      where: { taskId: taskId, status: "S2" },
+    });
+
+    for (const taskerList of taskerLists) {
+      taskerList.status = "S5";
+      await taskerListRepository.save(taskerList);
+    }
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
   }
 }
