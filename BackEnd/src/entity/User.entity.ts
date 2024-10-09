@@ -38,9 +38,12 @@ export class User {
   @Column({ type: "int", default: 0 })
   Rpoints!: number; // For R1
 
+
   @ManyToOne(() => TaskerInfo, (taskerInfo) => taskerInfo.users)
   @JoinColumn({ name: "taskerInfo" })
   taskerInfo!: TaskerInfo; // For R2
+
+
 
   @CreateDateColumn()
   createdAt!: Date;

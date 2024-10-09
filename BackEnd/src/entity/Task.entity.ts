@@ -5,14 +5,14 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,OneToMany
+  UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { User } from "./User.entity"; // Import User entity
 import { TaskTypes } from "./TaskTypes.entity"; // Import TaskTypes
 import { Location } from "./Location.entity"; // Import Locations
 import { Reviews } from "./Review.entity";
 import { TaskerList } from "./TaskerList.entity"; // Import TaskerList entity
-
 
 @Entity({ name: "tasks" })
 export class Tasks {
@@ -24,6 +24,8 @@ export class Tasks {
 
   @Column({ type: "int", nullable: false })
   taskTypeId!: number;
+  @Column({ type: "int", nullable: true })
+  numberOfTasker!: number;
 
   @Column({ type: "timestamp", nullable: false })
   time!: Date;
@@ -51,7 +53,10 @@ export class Tasks {
 
   @Column({ type: "timestamp", nullable: true })
   finishedAt!: Date;
-
+  @Column({ type: "int", nullable: true })
+  voucherId!: number;
+  @Column({ type: "varchar", nullable: true })
+  price!: string;
   @ManyToOne(() => User)
   @JoinColumn({ name: "userId" })
   user!: User; // Many-to-one relationship with User
@@ -64,21 +69,12 @@ export class Tasks {
   @JoinColumn({ name: "locationId" })
   location!: Location; // Many-to-one relationship with Locations
 
-   @OneToMany(() => Reviews, reviews => reviews.task)
+  @OneToMany(() => Reviews, (reviews) => reviews.task)
   reviews!: Reviews[]; // One-to-many relationship with Review
 
-   @OneToMany(() => TaskerList, taskerList => taskerList.task)
+  @OneToMany(() => TaskerList, (taskerList) => taskerList.task)
   taskerLists!: TaskerList[];
 
-  @Column({ type: "int", nullable: false })
-  numberOfTasker!: number;
-
-  @Column({ type: "int", nullable: false })
-  voucherId!: number;
-
-  @Column({ type: "int", nullable: false })
-  price!: number;
-  
   @CreateDateColumn()
   createdAt!: Date;
 

@@ -18,11 +18,13 @@ export class TaskTypesMigration1698324600522 implements MigrationInterface {
             type: "varchar",
             isNullable: false,
           },
+
           {
             name: "avatar",
             type: "varchar",
             isNullable: true,
           },
+
           {
             name: "description",
             type: "varchar",
@@ -33,6 +35,7 @@ export class TaskTypesMigration1698324600522 implements MigrationInterface {
             type: "varchar",
             isNullable: true,
           },
+
           {
             name: "originalPrice",
             type: "money",

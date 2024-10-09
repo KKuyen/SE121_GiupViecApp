@@ -1,7 +1,8 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,CreateDateColumn,
+  Column,
+  CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 
@@ -39,7 +40,7 @@ export class Vouchers {
 
   @Column({ type: "timestamp", nullable: false })
   endDate!: Date;
-  
+
   @CreateDateColumn()
   createdAt!: Date;
 

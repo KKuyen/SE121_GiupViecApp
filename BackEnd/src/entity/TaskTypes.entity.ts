@@ -2,7 +2,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,CreateDateColumn,
+  OneToMany,
+  CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { AddPriceDetails } from "./AddPriceDetails.entity"; // Import AddPriceDetails
@@ -18,6 +19,8 @@ export class TaskTypes {
 
   @Column({ type: "varchar", nullable: true })
   avatar!: string;
+  @Column({ type: "int", nullable: false })
+  value!: number;
 
   @Column({ type: "varchar", nullable: true })
   description!: string;
@@ -25,14 +28,12 @@ export class TaskTypes {
   @Column({ type: "varchar", nullable: true })
   image!: string; // Optional
 
-  @Column({ type: "money", nullable: false })
+  @Column({ type: "float", nullable: false })
   originalPrice!: number; // Using money type for prices
 
-  @Column({ type: "int", nullable: true })
-  value!: number; 
-
   @OneToMany(() => AddPriceDetails, (addPriceDetails) => addPriceDetails.taskType)
-  addPriceDetails!: AddPriceDetails[]; // One-to-many relationship with AddPriceDetails
+    addPriceDetails!: AddPriceDetails[]; 
+
 
   @OneToMany(() => Tasks, (task) => task.taskType)
   task!: Tasks[];
@@ -42,5 +43,4 @@ export class TaskTypes {
 
   @UpdateDateColumn()
   updatedAt!: Date;
-
 }
