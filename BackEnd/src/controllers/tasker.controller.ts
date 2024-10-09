@@ -8,9 +8,7 @@ import {TaskerService} from "../services/tasker.service";
 // import * as cache from "memory-cache";
 
 export class TaskerController {
-    static async handleGetAllTasks(req: Request, res: Response) {
-    
-    }
+
     static async handleGetTaskerProfile(req: Request, res: Response) { 
         const taskerId = parseInt(req.query.taskerId as string, 10);
         if(!taskerId) {
@@ -117,9 +115,56 @@ export class TaskerController {
         let message = await TaskerService.deleteLocation(id);
         res.status(200).json(message);
     }
-    
- 
-  
- 
-  
+    static async handleGetAllTasks(req: Request, res: Response) {
+        let message = await TaskerService.getAllTask();
+        res.status(200).json(message);
+    }
+    static async handleGetMyTask(req: Request, res: Response) {
+        let  taskerId:any  = req.query.taskerId;
+        if(!taskerId ) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.getMyTask(taskerId);
+        res.status(200).json(message);
+    }
+     static async handleGetMyTaskHistory(req: Request, res: Response) {
+        let  taskerId:any  = req.query.taskerId;
+        if(!taskerId ) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.getMyHistoryTask(taskerId);
+        res.status(200).json(message);
+    }
+    static async handleApplyTask(req: Request, res: Response) {
+        let taskerId: any = req.query.taskerId;
+        let taskId: any = req.query.taskId;
+        if(!taskerId || !taskId) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.applyTask(taskerId, taskId);
+        res.status(200).json(message);
+
+    }
+    static async handleCancelTask(req: Request, res: Response) {
+        let taskerId: any = req.query.taskerId;
+        let taskId: any = req.query.taskId;
+        if(!taskerId || !taskId) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.cancelTask(taskerId, taskId);
+        res.status(200).json(message);
+    }
+   
 }

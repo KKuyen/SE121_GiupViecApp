@@ -2,7 +2,7 @@ import { verifyJWT } from "./JWTAction";
 import { Request, Response,NextFunction } from "express";
 const nonSecurePaths = ["/api/v1/login", "/api/v1/register","/api/v1/send-otp","/api/v1/verify-otp","/api/v1/forget-password"];
 const userPaths:string[] = ["/api/v1/hello"];
-const taskerPaths:string[] = ["/api/v1/get-tasker-profile","/api/v1/edit-tasker-profile","/api/v1/get-all-reviews","/api/v1/get-my-location","/api/v1/add-new-location","/api/v1/edit-my-location","/api/v1/delete-my-location","/api/v1/change-password"];
+const taskerPaths:string[] = ["/api/v1/get-tasker-profile","/api/v1/edit-tasker-profile","/api/v1/get-all-reviews","/api/v1/get-my-location","/api/v1/add-new-location","/api/v1/edit-my-location","/api/v1/delete-my-location","/api/v1/change-password","/api/v1/get-all-tasks","/api/v1/get-all-tasks","/api/v1/get-my-task","/api/v1/get-my-task-history","/api/v1/apply-task","/api/v1/cancel-task"];
 const commonPaths:string[] = [];
 
 export const auth = (req:Request, res:Response, next:NextFunction):void => {

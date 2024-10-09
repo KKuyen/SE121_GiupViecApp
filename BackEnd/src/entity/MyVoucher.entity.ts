@@ -28,6 +28,9 @@ export class MyVouchers {
   @JoinColumn({ name: "userId" })
   user!: User; // Many-to-one relationship with Users
 
+  @Column({ type: "bool", nullable: false })
+  isUsed!: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 

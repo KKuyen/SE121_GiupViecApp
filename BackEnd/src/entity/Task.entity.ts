@@ -11,6 +11,8 @@ import { User } from "./User.entity"; // Import User entity
 import { TaskTypes } from "./TaskTypes.entity"; // Import TaskTypes
 import { Location } from "./Location.entity"; // Import Locations
 import { Reviews } from "./Review.entity";
+import { TaskerList } from "./TaskerList.entity"; // Import TaskerList entity
+
 
 @Entity({ name: "tasks" })
 export class Tasks {
@@ -65,8 +67,17 @@ export class Tasks {
    @OneToMany(() => Reviews, reviews => reviews.task)
   reviews!: Reviews[]; // One-to-many relationship with Review
 
+   @OneToMany(() => TaskerList, taskerList => taskerList.task)
+  taskerLists!: TaskerList[];
+
   @Column({ type: "int", nullable: false })
   numberOfTasker!: number;
+
+  @Column({ type: "int", nullable: false })
+  voucherId!: number;
+
+  @Column({ type: "int", nullable: false })
+  price!: number;
   
   @CreateDateColumn()
   createdAt!: Date;

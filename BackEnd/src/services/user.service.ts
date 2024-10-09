@@ -1,4 +1,5 @@
 import { User } from "../entity/User.entity";
+import { UserSettings } from "../entity/UserSetting.entity";
 import { AppDataSource } from "../data-source";
 import bcrypt from "bcryptjs";
 const salt = bcrypt.genSaltSync(10);
@@ -43,6 +44,15 @@ export class UserService {
                     const userRepository = AppDataSource.getRepository(User);
                     user.password = await UserService.hashUserPassword(user.password);
                     await userRepository.save(user); 
+                    const userSettingRepository = AppDataSource.getRepository(UserSettings);
+                    let userSetting = new UserSettings();
+                    userSetting.userId = user.id;
+                    userSetting.autoAcceptStatus = false;
+                    userSetting.loveTaskerOnly = false;
+                    userSetting.upperStar = 0;
+                    userSetting.nightMode = false;
+                    await userSettingRepository.save(userSetting);
+
                     resolve ({errCode: 0, message: "Ok"});
                 }
             }

@@ -3,7 +3,8 @@ import { TaskerInfo } from "../entity/TaskerInfo.entity";
 import { AppDataSource } from "../data-source";
 import { Reviews } from "../entity/Review.entity";
 import { Location } from "../entity/Location.entity";
-
+import { Tasks } from "../entity/Task.entity"
+import {TaskerList} from "../entity/TaskerList.entity"
 
 export class TaskerService {
     static getTaskerProfile = async (taskerId: number) => {
@@ -14,7 +15,6 @@ export class TaskerService {
                 //     select: ["id", "name", "email","phoneNumber","role","avatar","taskerInfo","birthday"],
                 //     where: { id: taskerId },
                 //     relations: ["taskerInfo"],
-
                 // });
                 const tasker = await taskerRepository
                 .createQueryBuilder("user")
@@ -206,5 +206,193 @@ export class TaskerService {
             }
          });
     }
+    static getMyTask = async (taskerId: number) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const taskerListRepository = AppDataSource.getRepository(TaskerList);
+                const taskerList = await taskerListRepository
+                        .createQueryBuilder("taskerList")
+                    .leftJoinAndSelect("taskerList.task", "task")
+                    .leftJoinAndSelect("task.taskType", "taskType")
+                    .leftJoinAndSelect("task.location", "location")
+                    .select([
+                            "taskerList.id",
+                            "task.id",
+                            "task.userId",
+                            "task.taskTypeId",
+                            "task.time",
+                            "task.locationId",
+                            "task.note",
+                            "task.taskStatus",
+                            "task.approvedAt",
+                            "task.cancelAt",
+                            "task.cancelReason",
+                            "task.finishedAt",
+                            "task.numberOfTasker",
+                            "task.price",
+                            "taskType.name",
+                            "location.country",
+                            "location.province",
+                            "location.district",
+                            "location.detailAddress",
+                            "location.map",
+                            "location.ownerName",
+                            "location.ownerPhoneNumber",
+
+
+                        ])
+                        .where("(taskerList.status = 'S1' OR taskerList.status = 'S2' )AND taskerList.taskerId= :taskerId", {  taskerId:taskerId})
+                        .getMany();
+
+                resolve ({
+                    errCode: 0,
+                    taskerList: taskerList,
+                });
+            } catch (e) {
+                reject(e);
+            }
+         }); 
+    }
+    static getMyHistoryTask = async (taskerId: number) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const taskerListRepository = AppDataSource.getRepository(TaskerList);
+                const taskerList = await taskerListRepository
+                        .createQueryBuilder("taskerList")
+                    .leftJoinAndSelect("taskerList.task", "task")
+                    .leftJoinAndSelect("task.taskType", "taskType")
+                    .leftJoinAndSelect("task.location", "location")
+                    .select([
+                            "taskerList.id",
+                            "task.id",
+                            "task.userId",
+                            "task.taskTypeId",
+                            "task.time",
+                            "task.locationId",
+                            "task.note",
+                            "task.taskStatus",
+                            "task.approvedAt",
+                            "task.cancelAt",
+                            "task.cancelReason",
+                            "task.finishedAt",
+                            "task.numberOfTasker",
+                            "task.price",
+                            "taskType.name",
+                            "location.country",
+                            "location.province",
+                            "location.district",
+                            "location.detailAddress",
+                            "location.map",
+                            "location.ownerName",
+                            "location.ownerPhoneNumber",
+
+
+                        ])
+                        .where("(taskerList.status = 'S3' OR taskerList.status = 'S4' OR taskerList.status = 'S5' )AND taskerList.taskerId= :taskerId", {  taskerId:taskerId})
+                        .getMany();
+
+                resolve ({
+                    errCode: 0,
+                    errMessage: "OK",
+                    taskerList: taskerList,
+                });
+            } catch (e) {
+                reject(e);
+            }
+         });
+        
+    }
+    static getAllTask = async () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const taskeRepository = AppDataSource.getRepository(Tasks);
+                const tasks = await taskeRepository
+                        .createQueryBuilder("task")
+                    .leftJoinAndSelect("task.taskType", "taskType")
+                    .leftJoinAndSelect("task.location", "location")
+                    .select([
+                            "task.id",
+                            "task.userId",
+                            "task.taskTypeId",
+                            "task.time",
+                            "task.locationId",
+                            "task.note",
+                            "task.taskStatus",
+                            "task.approvedAt",
+                            "task.cancelAt",
+                            "task.cancelReason",
+                            "task.finishedAt",
+                            "task.numberOfTasker",
+                            "task.price",
+                            "taskType.name",
+                            "location.country",
+                            "location.province",
+                            "location.district",
+                            "location.detailAddress",
+                            "location.map",
+                            "location.ownerName",
+                            "location.ownerPhoneNumber",
+
+
+                        ])
+                        .where("(task.taskStatus = 'TS1' AND task.time > CURRENT_TIMESTAMP)", )
+                        .getMany();
+
+                resolve ({
+                    errCode: 0,
+                    errMessage: "OK",
+                    taskerList: tasks,
+                });
+            } catch (e) {
+                reject(e);
+            }
+         });
+        
+    }
+    static applyTask = async (taskerId: number, taskId: number) => { 
+        return new Promise(async (resolve, reject) => {
+            try {
+                const taskerListRepository = AppDataSource.getRepository(TaskerList);
+                const taskerList =await taskerListRepository.findOne({
+                    where: { taskerId: taskerId, taskId: taskId },
+                });
+                if(taskerList) {
+                    resolve({ errCode: 1, message: "Tasker already applied" });
+                }
+                const taskerListNew = new TaskerList();
+                taskerListNew.taskerId = taskerId;
+                taskerListNew.taskId = taskId;
+                taskerListNew.status = "S1";
+                await taskerListRepository.save(taskerListNew);
+                resolve({ errCode: 0, message: "Ok" });
+            } catch (e) {
+                reject(e);
+            }
+         });
+    }
+    static cancelTask = async (taskerId: number, taskId: number) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const taskerListRepository = AppDataSource.getRepository(TaskerList);
+                const taskerList =await taskerListRepository.findOne({
+                    where: { taskerId: taskerId, taskId: taskId },
+                });
+                taskerList!.status = "S3";
+                await taskerListRepository.save(taskerList!);
+                const taskRepository = AppDataSource.getRepository(Tasks);
+                const task =await taskRepository.findOne({
+                    where: { id: taskId },
+                });
+                if(task?.taskStatus === "TS2") {
+                    task.taskStatus = "TS1";
+                    await taskRepository.save(task);
+                }
+                resolve({ errCode: 0, message: "Ok" });
+
+            } catch (e) {
+                reject(e);
+            }
+         });
+     }
     
 }

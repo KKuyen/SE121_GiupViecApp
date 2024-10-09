@@ -22,7 +22,13 @@ export class MyVouchersMigration1698324600531 implements MigrationInterface {
             name: "userId",
             type: "int",
             isNullable: false,
-          },{
+          },
+          {
+            name: "isUsed",
+            type: "bool",
+            isNullable: false,
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,
