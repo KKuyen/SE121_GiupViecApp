@@ -764,10 +764,14 @@ export class UserService {
       where: { userId: userId, taskerId: taskerId },
     });
     const taskerInfoRepository = AppDataSource.getRepository(TaskerInfo);
+    let ti = 1;
+    if (tasker) {
+      ti = tasker.taskerInfoId;
+    }
+    console.log(ti);
     const taskerInfo = await taskerInfoRepository.findOne({
-      where: { id: parseInt((tasker!.taskerInfo).toString()) }
+      where: { id: ti },
     });
-
     return {
       errCode: 0,
       errMessage: "OK",
