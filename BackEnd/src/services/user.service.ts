@@ -281,7 +281,7 @@ export class UserService {
             addPriceDetail.beginValue
           ).toString() +
           " " +
-          addPriceDetail.name.toString();
+          addPriceDetail.unit.toString();
 
         console.log("sum:" + sum);
         console.log("totalPrice:" + totalPrice);
