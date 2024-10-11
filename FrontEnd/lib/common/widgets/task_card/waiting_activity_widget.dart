@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class WatingActivityWidget extends StatefulWidget {
   const WatingActivityWidget({super.key});
@@ -38,7 +40,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 15, 15, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
                     child: SvgPicture.asset(
                       AppVectors.baby_carriage_icon,
                       height: 30,
@@ -102,11 +104,185 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   )
                 ],
               ),
-              SizedBox(height: 10),
-              Container(
-                height: 1,
-                color: Color(0xFFE0E0E0),
+              SizedBox(height: 8),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 5),
+                child: Row(
+                  children: [
+                    Text(
+                      'Ngày bắt đầu:   ',
+                      style: TextStyle(
+                        color: Color(0xFF727272),
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      'Thứ 7, 20/11/2021',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Địa chỉ:   ',
+                      style: TextStyle(
+                        color: Color(0xFF727272),
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(width: 65),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Trần Hồng Quyền',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            'Quốc lộ 13/47B 479, Khu Phố 5, Thủ Đức, Hồ Chí Minh, Việt Nam',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                            ),
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                          ),
+                          Text(
+                            '+(84) 345664xxx',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 5),
+                child: Row(
+                  children: [
+                    Text(
+                      'Giá:   ',
+                      style: TextStyle(
+                        color: Color(0xFF727272),
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(width: 88),
+                    Text(
+                      'Thứ 7, 20/11/2021',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 5),
+                child: Row(
+                  children: [
+                    Text(
+                      'Ghi chú:   ',
+                      style: TextStyle(
+                        color: Color(0xFF727272),
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(width: 60),
+                    Expanded(
+                      child: Text(
+                        'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+                        style: TextStyle(
+                          color: AppColors.xam72,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 8),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment
+                          .start, // Ensure the column itself aligns its children to the start
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Có 5 ứng cử viên cho công việc',
+                            style: TextStyle(
+                              color: AppColors.cam_main,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '1/4 vị trí',
+                            style: TextStyle(
+                              color: AppColors.xanh_main,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Sizedbutton(text: 'Xem chi tiết', width: 130)
+                  ],
+                ),
+              )
             ],
           ),
         ),
