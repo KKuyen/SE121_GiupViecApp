@@ -17,4 +17,5 @@ class AppVectors {
       '${basePath}navi_message_icon_selected$format';
   static const String navi_profile_icon_selected =
       '${basePath}navi_profile_icon_selected$format';
+  static const String baby_carriage_icon = '${basePath}baby-carriage$format';
 }
