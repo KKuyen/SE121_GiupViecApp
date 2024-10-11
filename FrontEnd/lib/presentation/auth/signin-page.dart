@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/auth/signup_page.dart';
 import 'package:se121_giupviec_app/presentation/navigation/navigation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -23,8 +25,10 @@ class _SignInPageState extends State<SignInPage> {
         appBar: BasicAppbar(
           title: SvgPicture.asset(
             AppVectors.logo,
-            height: 35,
+            height: 22,
           ),
+          isHideBackButton: true,
+          isCenter: true,
         ),
         bottomNavigationBar: _bottomText(context),
         body: Padding(
@@ -35,12 +39,13 @@ class _SignInPageState extends State<SignInPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 50),
                 _registerText(),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 _supportText(),
-                const SizedBox(height: 18),
+                const SizedBox(height: 25),
                 _buildFormLogin(),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
                 _dividerWithText('or'),
                 const SizedBox(height: 40),
                 _iconGroup(context),
@@ -58,22 +63,36 @@ class _SignInPageState extends State<SignInPage> {
             _userNameField(context),
             const SizedBox(height: 15),
             _passField(context),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const Navigation()));
-                },
-                child: const Text(
-                  'Sign In',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onTap: () async {},
+                  child: const Text(
+                    'Quên mật khẩu',
+                    style: TextStyle(
+                        color: AppColors.cam_main, fontWeight: FontWeight.w500),
                   ),
-                )),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const Navigation()));
+              },
+              child: const SizedBox(
+                width: double.infinity, // Chiều rộng bằng chiều rộng màn hình
+                child: Sizedbutton(
+                  text: 'Đăng nhập',
+                ),
+              ),
+            ),
           ],
         ));
   }
@@ -119,7 +138,7 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget _registerText() {
     return const Text(
-      'Sign In',
+      'Đăng nhập',
       style: TextStyle(
         fontSize: 30,
         fontWeight: FontWeight.w600,
@@ -128,20 +147,37 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _supportText() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text('If You Need Any Support',
-            style: TextStyle(color: AppColors.xam_nhat)),
-        TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Click Here',
+    return Center(
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(
+              text: 'Nếu bạn cần hỗ trợ, vui lòng liên hệ  ',
               style: TextStyle(
-                color: AppColors.xanh_main,
+                color: Colors.grey,
               ),
-            )),
-      ],
+            ),
+            WidgetSpan(
+              child: GestureDetector(
+                onTap: () async {
+                  const url = 'https://flutter.dev/';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                child: const Text(
+                  'Tại đây',
+                  style: TextStyle(
+                      color: AppColors.cam_main, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -151,7 +187,7 @@ class _SignInPageState extends State<SignInPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Not A Member?'),
+          const Text('Bạn chưa có tài khoản?'),
           TextButton(
               onPressed: () {
                 Navigator.push(
@@ -160,9 +196,9 @@ class _SignInPageState extends State<SignInPage> {
                         builder: (BuildContext context) => SignUpPage()));
               },
               child: const Text(
-                'Register Now',
+                'Đăng kí ngay',
                 style: TextStyle(
-                  color: Color(0xff288CE9),
+                  color: AppColors.cam_main,
                 ),
               )),
         ],
@@ -173,10 +209,11 @@ class _SignInPageState extends State<SignInPage> {
   Widget _userNameField(BuildContext context) {
     return TextFormField(
       controller: _email,
-      decoration: const InputDecoration(hintText: 'Enter Username Or Email')
-          .applyDefaults(
-        Theme.of(context).inputDecorationTheme,
-      ),
+      decoration: const InputDecoration(
+          labelText: 'Email',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          )),
       validator: (String? value) {
         if (value == null || value.isEmpty) {
           return 'Email is required';
@@ -194,9 +231,11 @@ class _SignInPageState extends State<SignInPage> {
   Widget _passField(BuildContext context) {
     return TextFormField(
       controller: _password,
-      decoration: const InputDecoration(hintText: 'Password').applyDefaults(
-        Theme.of(context).inputDecorationTheme,
-      ),
+      decoration: const InputDecoration(
+          labelText: 'Mật khẩu',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          )),
       validator: (String? value) {
         if (value == null || value.isEmpty) {
           return 'Password is required';
@@ -214,11 +253,11 @@ class _SignInPageState extends State<SignInPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(AppVectors.google, height: 37),
+        SvgPicture.asset(AppVectors.google, height: 35),
         const SizedBox(
           width: 50,
         ),
-        SvgPicture.asset(AppVectors.facebook, height: 37),
+        SvgPicture.asset(AppVectors.facebook, height: 35),
       ],
     );
   }

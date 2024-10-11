@@ -6,12 +6,15 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Color? color;
   final bool isHideBackButton;
   final bool isHavePadding;
+  final bool isCenter;
+
   const BasicAppbar(
       {this.title,
       this.isHideBackButton = false,
       this.action,
       this.color,
       this.isHavePadding = false,
+      this.isCenter = false,
       super.key});
 
   @override
@@ -23,7 +26,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         backgroundColor: color ?? Colors.transparent,
         title: title ?? const Text(''),
-        centerTitle: false,
+        centerTitle: isCenter ? true : false,
         automaticallyImplyLeading: !isHideBackButton,
         actions: [action ?? Container()],
         leading: isHideBackButton

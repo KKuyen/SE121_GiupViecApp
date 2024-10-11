@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/navigation/navigation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
   final TextEditingController _fullName = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: BasicAppbar(
           title: SvgPicture.asset(
             AppVectors.logo,
-            height: 35,
+            height: 22,
           ),
+          isHideBackButton: true,
+          isCenter: true,
         ),
         bottomNavigationBar: _bottomText(context),
         body: Padding(
@@ -29,33 +35,36 @@ class SignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 15),
                 _registerText(),
-                const SizedBox(height: 5),
+                const SizedBox(height: 20),
                 _supportText(),
-                const SizedBox(height: 18),
+                const SizedBox(height: 27),
                 _nameField(context),
+                const SizedBox(height: 15),
+                _phoneField(context),
                 const SizedBox(height: 15),
                 _emailField(context),
                 const SizedBox(height: 15),
                 _passField(context),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                    onPressed: () async {
+                const SizedBox(height: 35),
+                SizedBox(
+                  width: double.infinity, // Chiều rộng bằng chiều rộng màn hình
+                  child: GestureDetector(
+                    child: const Sizedbutton(
+                      text: 'Đăng kí',
+                    ),
+                    onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   const Navigation()));
                     },
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )),
+                  ),
+                ),
                 const SizedBox(height: 25),
-                _dividerWithText('or'),
+                _dividerWithText('hoặc'),
                 const SizedBox(height: 20),
                 _iconGroup(context),
               ],
@@ -105,7 +114,7 @@ class SignUpPage extends StatelessWidget {
 
   Widget _registerText() {
     return const Text(
-      'Register',
+      'Đăng kí',
       style: TextStyle(
         fontSize: 30,
         fontWeight: FontWeight.w600,
@@ -114,19 +123,37 @@ class SignUpPage extends StatelessWidget {
   }
 
   Widget _supportText() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text('If You Need Any Support'),
-        TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Click Here',
+    return Center(
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(
+              text: 'Nếu bạn cần hỗ trợ, vui lòng liên hệ  ',
               style: TextStyle(
-                color: AppColors.xanh_main,
+                color: Colors.grey,
               ),
-            )),
-      ],
+            ),
+            WidgetSpan(
+              child: GestureDetector(
+                onTap: () async {
+                  const url = 'https://flutter.dev/';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                child: const Text(
+                  'Tại đây',
+                  style: TextStyle(
+                      color: AppColors.cam_main, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -136,7 +163,7 @@ class SignUpPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Do you have any account?'),
+          const Text('Bạn đã có tài khoản?'),
           TextButton(
               onPressed: () {
                 Navigator.push(
@@ -145,9 +172,9 @@ class SignUpPage extends StatelessWidget {
                         builder: (BuildContext context) => const SignInPage()));
               },
               child: const Text(
-                'Sign In',
+                'Đăng nhập',
                 style: TextStyle(
-                  color: Color(0xff288CE9),
+                  color: AppColors.cam_main,
                 ),
               )),
         ],
@@ -158,27 +185,44 @@ class SignUpPage extends StatelessWidget {
   Widget _nameField(BuildContext context) {
     return TextField(
       controller: _fullName,
-      decoration: const InputDecoration(hintText: 'Full Name').applyDefaults(
-        Theme.of(context).inputDecorationTheme,
-      ),
+      decoration: const InputDecoration(
+          labelText: 'Họ và tên',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          )),
+    );
+  }
+
+  Widget _phoneField(BuildContext context) {
+    return TextField(
+      controller: _phone,
+      decoration: const InputDecoration(
+          labelText: 'Số điện thoại',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          )),
     );
   }
 
   Widget _emailField(BuildContext context) {
     return TextField(
       controller: _email,
-      decoration: const InputDecoration(hintText: 'Enter Email').applyDefaults(
-        Theme.of(context).inputDecorationTheme,
-      ),
+      decoration: const InputDecoration(
+          labelText: 'Email',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          )),
     );
   }
 
   Widget _passField(BuildContext context) {
     return TextField(
       controller: _password,
-      decoration: const InputDecoration(hintText: 'Password').applyDefaults(
-        Theme.of(context).inputDecorationTheme,
-      ),
+      decoration: const InputDecoration(
+          labelText: 'Mật khẩu',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          )),
     );
   }
 
@@ -186,11 +230,11 @@ class SignUpPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(AppVectors.google, height: 37),
+        SvgPicture.asset(AppVectors.google, height: 35),
         const SizedBox(
           width: 50,
         ),
-        SvgPicture.asset(AppVectors.facebook, height: 37),
+        SvgPicture.asset(AppVectors.facebook, height: 35),
       ],
     );
   }
