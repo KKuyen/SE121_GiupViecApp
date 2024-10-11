@@ -17,4 +17,6 @@ class AppVectors {
       '${basePath}navi_message_icon_selected$format';
   static const String navi_profile_icon_selected =
       '${basePath}navi_profile_icon_selected$format';
+  static const String google = '${basePath}google$format';
+  static const String facebook = '${basePath}facebook$format';
 }
