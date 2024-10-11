@@ -108,7 +108,7 @@ class _NavigationState extends State<Navigation> {
           selectedIcon: Padding(
             padding: const EdgeInsets.only(top: 3),
             child: SvgPicture.asset(
-              AppVectors.navi_activity_icon_selected,
+              AppVectors.navi_profile_icon_selected,
               color: AppColors.xanh_main,
               height: 44,
               width: 45,
