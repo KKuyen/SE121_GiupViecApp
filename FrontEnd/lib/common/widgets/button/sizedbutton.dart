@@ -3,6 +3,7 @@ import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Sizedbutton extends StatefulWidget {
+  final VoidCallback onPressFun;
   final String text;
   final double width;
   final double height;
@@ -12,6 +13,7 @@ class Sizedbutton extends StatefulWidget {
   final Color StrokeColor;
 
   const Sizedbutton({
+    required this.onPressFun,
     super.key,
     this.text = 'Nội dung', // Default text
     this.width = 130.0, // Default width
@@ -31,7 +33,7 @@ class _SizedbuttonState extends State<Sizedbutton> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Define what happens when the button is pressed
+        widget.onPressFun();
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: widget.backgroundColor, // Background color
@@ -46,7 +48,7 @@ class _SizedbuttonState extends State<Sizedbutton> {
       child: Text(
         widget.text,
         style: TextStyle(
-          fontSize: 15,
+          fontSize: 17,
           fontFamily: 'Inter',
           fontWeight: FontWeight.normal,
           color: widget.textColor,
