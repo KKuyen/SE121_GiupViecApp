@@ -279,7 +279,10 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                       ],
                     ),
                     Spacer(),
-                    Sizedbutton(text: 'Xem chi tiết', width: 130)
+                    Sizedbutton(
+                      text: 'Xem chi tiết',
+                      width: 130,
+                    )
                   ],
                 ),
               )
