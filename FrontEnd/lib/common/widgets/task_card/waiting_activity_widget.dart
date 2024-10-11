@@ -282,6 +282,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                     Sizedbutton(
                       text: 'Xem chi tiết',
                       width: 130,
+                      onPressFun: () => {},
                     )
                   ],
                 ),

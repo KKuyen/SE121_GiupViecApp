@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
@@ -19,6 +20,11 @@ class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  String _otp = '';
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +75,9 @@ class _SignInPageState extends State<SignInPage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
-                  onTap: () async {},
+                  onTap: () async {
+                    _showForgotPasswordBottomSheet(context);
+                  },
                   child: const Text(
                     'Quên mật khẩu',
                     style: TextStyle(
@@ -79,19 +87,19 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
             const SizedBox(height: 15),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const Navigation()));
-              },
-              child: const SizedBox(
-                width: double.infinity, // Chiều rộng bằng chiều rộng màn hình
-                child: Sizedbutton(
+            SizedBox(
+              width: double.infinity, // Chiều rộng bằng chiều rộng màn hình
+              child: Sizedbutton(
                   text: 'Đăng nhập',
-                ),
-              ),
+                  onPressFun: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const Navigation()));
+                    }
+                  }),
             ),
           ],
         ));
@@ -216,12 +224,12 @@ class _SignInPageState extends State<SignInPage> {
           )),
       validator: (String? value) {
         if (value == null || value.isEmpty) {
-          return 'Email is required';
+          return 'Vui lòng nhập email';
         }
         bool emailValid =
             RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value);
         if (!emailValid) {
-          return 'Please enter a valid email';
+          return 'Vui lòng nhập đúng định dạng';
         }
         return null;
       },
@@ -231,21 +239,32 @@ class _SignInPageState extends State<SignInPage> {
   Widget _passField(BuildContext context) {
     return TextFormField(
       controller: _password,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
           labelText: 'Mật khẩu',
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: const Color.fromARGB(255, 63, 63, 63),
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
           )),
-      validator: (String? value) {
+      obscureText: _obscureText,
+      validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Password is required';
+          return 'Vui lòng nhập mật khẩu';
         }
         if (value.length < 6) {
-          return 'Password must be at least 6 characters';
+          return 'Mật khẩu phải có ít nhất 6 ký tự';
         }
         return null;
       },
-      obscureText: true,
     );
   }
 
@@ -259,6 +278,205 @@ class _SignInPageState extends State<SignInPage> {
         ),
         SvgPicture.asset(AppVectors.facebook, height: 35),
       ],
+    );
+  }
+
+  void _showForgotPasswordBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'Quên mật khẩu',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Vui lòng nhập số điện thoại của bạn để nhận OTP đặt lại mật khẩu.',
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Số điện thoại',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Đóng BottomSheet hiện tại
+                  _showOtpBottomSheet(context);
+                },
+                child: const Text('Gửi'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showOtpBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'Nhập OTP',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Vui lòng nhập số mã OTP đã được gửi đến số điện thoại của bạn.',
+              ),
+              const SizedBox(height: 20),
+              PinCodeTextField(
+                appContext: context,
+                length: 6,
+                onChanged: (value) {
+                  setState(() {
+                    _otp = value;
+                  });
+                },
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(5),
+                  fieldHeight: 50,
+                  fieldWidth: 40,
+                  activeFillColor: Colors.white,
+                  inactiveFillColor: Colors.white,
+                  selectedFillColor: Colors.white,
+                  activeColor:
+                      AppColors.xanh_main, // Màu viền khi ô nhập đang được chọn
+                  inactiveColor:
+                      Colors.grey, // Màu viền khi ô nhập không được chọn
+                  selectedColor: AppColors.cam_main,
+                ),
+              ),
+              const SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Đóng BottomSheet hiện tại
+                  _showChangePasswordBottomSheet(context);
+                },
+                child: const Text('Tiếp tục'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showChangePasswordBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'Cập nhật mật khẩu',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Vui lòng nhập mật khẩu mới của bạn.',
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Mật khẩu mới',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Xác nhận mật khẩu mới',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Xử lý đổi mật khẩu ở đây
+                  String newPassword = _newPasswordController.text;
+                  String confirmPassword = _confirmPasswordController.text;
+                  if (newPassword == confirmPassword) {
+                    print('Mật khẩu đã được đổi thành công');
+                    Navigator.pop(context); // Đóng BottomSheet
+                  } else {
+                    print('Mật khẩu không khớp');
+                  }
+                },
+                child: const Text('Cập nhật'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
