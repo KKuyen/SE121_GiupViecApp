@@ -10,4 +10,5 @@ class AppColors {
   static const den = Color(0xff000000);
   static const nen_the = Color(0xffF2F2F2);
   static const xam_vien = Color(0xffEBEBEB);
+  static const xam72 = Color(0xff727272);
 }
