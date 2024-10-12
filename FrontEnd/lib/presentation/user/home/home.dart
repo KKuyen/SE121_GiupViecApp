@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage>
               _search(),
               _banner(),
               SizedBox(
-                height: 13,
+                height: 16,
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -80,17 +81,30 @@ class _HomePageState extends State<HomePage>
               ),
               _services(),
               SizedBox(
-                height: 15,
+                height: 19,
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: AppInfo.main_padding),
-                  child: Text(
-                    'Ưu đãi',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: AppInfo.main_padding),
+                    child: Text(
+                      'Ưu đãi',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: Text(
+                      'Khám phá',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.cam_main),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 8,
@@ -164,8 +178,8 @@ class _serviceItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: Container(
-        height: 95,
-        width: 85,
+        height: 90,
+        width: 80,
         decoration: BoxDecoration(
           color: color,
           borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -174,13 +188,13 @@ class _serviceItem extends StatelessWidget {
           padding: const EdgeInsets.only(top: 13),
           child: Column(
             children: [
-              Icon(icon, size: 27, color: Colors.white),
+              Icon(icon, size: 25, color: Colors.white),
               const SizedBox(
                 height: 8,
               ),
               Text(
                 title,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white, fontSize: 13),
                 softWrap: true,
                 textAlign: TextAlign.center,
               )
@@ -294,15 +308,27 @@ class _vouchers extends StatelessWidget {
         child: Row(
           children: [
             _VoucherCard(
-              imageUrl: 'assets/images/album1.jpg',
-              title: 'Giảm 50% dịch vụ giúp việc',
-              description: 'Áp dụng cho lần đầu tiên sử dụng',
+              imageUrl: AppImages.voucher1,
+              title: 'Voucher 50%',
+              description: 'Tất cả dịch vụ',
               onPressed: () {},
             ),
             _VoucherCard(
-              imageUrl: 'assets/images/album1.jpg',
-              title: 'Giảm 50% dịch vụ giúp việc',
-              description: 'Áp dụng cho lần đầu tiên sử dụng',
+              imageUrl: AppImages.voucher2,
+              title: 'Voucher 50%',
+              description: 'Tất cả dịch vụ',
+              onPressed: () {},
+            ),
+            _VoucherCard(
+              imageUrl: AppImages.voucher1,
+              title: 'Voucher 50%',
+              description: 'Tất cả dịch vụ',
+              onPressed: () {},
+            ),
+            _VoucherCard(
+              imageUrl: AppImages.voucher2,
+              title: 'Voucher 50%',
+              description: 'Tất cả dịch vụ',
               onPressed: () {},
             ),
           ],
@@ -328,26 +354,69 @@ class _VoucherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(imageUrl), fit: BoxFit.cover),
-              borderRadius: const BorderRadius.all(Radius.circular(20))),
+    return Padding(
+      padding: const EdgeInsets.only(right: 10.0, bottom: AppInfo.main_padding),
+      child: Container(
+        height: 150,
+        width: 220,
+        decoration: const BoxDecoration(
+            border: Border.fromBorderSide(BorderSide(color: Colors.grey)),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Column(
+          children: [
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(imageUrl), fit: BoxFit.cover),
+                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+            ),
+            const SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        description,
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text(
+                        '10',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.cam_main),
+                      ),
+                      const SizedBox(
+                        width: 3,
+                      ),
+                      SvgPicture.asset(
+                        AppVectors.coin,
+                        color: AppColors.cam_main,
+                        height: 17,
+                        width: 17,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
-        const SizedBox(height: 10),
-        const Text(
-          'TP. Hồ  Chí Minh',
-          style: TextStyle(fontSize: 15),
-        ),
-        const Text('BTM Layout, 500628', style: TextStyle(fontSize: 13)),
-        const Icon(
-          Icons.compost_outlined,
-        ),
-      ],
+      ),
     );
   }
 }

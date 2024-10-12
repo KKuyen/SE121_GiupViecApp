@@ -285,53 +285,65 @@ class _SignInPageState extends State<SignInPage> {
   void _showForgotPasswordBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 100,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context)
+                .viewInsets
+                .bottom, // Lấy khoảng trống của bàn phím
+            left: 25.0,
+            right: 25.0,
+            top: 25.0,
+          ),
+          child: SingleChildScrollView(
+            // Bao bọc nội dung để cho phép cuộn
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                'Quên mật khẩu',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Vui lòng nhập số điện thoại của bạn để nhận OTP đặt lại mật khẩu.',
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Số điện thoại',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                const SizedBox(height: 30),
+                const Text(
+                  'Quên mật khẩu',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Đóng BottomSheet hiện tại
-                  _showOtpBottomSheet(context);
-                },
-                child: const Text('Gửi'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                const Text(
+                  'Vui lòng nhập số điện thoại của bạn để nhận OTP đặt lại mật khẩu.',
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Số điện thoại',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Sizedbutton(
+                  onPressFun: () {
+                    Navigator.pop(context); // Đóng BottomSheet hiện tại
+                    _showOtpBottomSheet(context);
+                  },
+                  text: 'Gửi OTP',
+                  width: double.infinity,
+                )
+              ],
+            ),
           ),
         );
       },
@@ -341,68 +353,80 @@ class _SignInPageState extends State<SignInPage> {
   void _showOtpBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 100,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context)
+                .viewInsets
+                .bottom, // Lấy khoảng trống của bàn phím
+            left: 25.0,
+            right: 25.0,
+            top: 25.0,
+          ),
+          child: SingleChildScrollView(
+            // Bao bọc nội dung để cho phép cuộn
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                'Nhập OTP',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 30),
+                const Text(
+                  'Nhập OTP',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Vui lòng nhập số mã OTP đã được gửi đến số điện thoại của bạn.',
-              ),
-              const SizedBox(height: 20),
-              PinCodeTextField(
-                appContext: context,
-                length: 6,
-                onChanged: (value) {
-                  setState(() {
-                    _otp = value;
-                  });
-                },
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(5),
-                  fieldHeight: 50,
-                  fieldWidth: 40,
-                  activeFillColor: Colors.white,
-                  inactiveFillColor: Colors.white,
-                  selectedFillColor: Colors.white,
-                  activeColor:
-                      AppColors.xanh_main, // Màu viền khi ô nhập đang được chọn
-                  inactiveColor:
-                      Colors.grey, // Màu viền khi ô nhập không được chọn
-                  selectedColor: AppColors.cam_main,
+                const SizedBox(height: 20),
+                const Text(
+                  'Vui lòng nhập số mã OTP đã được gửi đến số điện thoại của bạn.',
                 ),
-              ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Đóng BottomSheet hiện tại
-                  _showChangePasswordBottomSheet(context);
-                },
-                child: const Text('Tiếp tục'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                PinCodeTextField(
+                  appContext: context,
+                  length: 6,
+                  onChanged: (value) {
+                    setState(() {
+                      _otp = value;
+                    });
+                  },
+                  pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(5),
+                    fieldHeight: 50,
+                    fieldWidth: 40,
+                    activeFillColor: Colors.white,
+                    inactiveFillColor: Colors.white,
+                    selectedFillColor: Colors.white,
+                    activeColor: AppColors
+                        .xanh_main, // Màu viền khi ô nhập đang được chọn
+                    inactiveColor:
+                        Colors.grey, // Màu viền khi ô nhập không được chọn
+                    selectedColor: AppColors.cam_main,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Sizedbutton(
+                  onPressFun: () {
+                    Navigator.pop(context); // Đóng BottomSheet hiện tại
+                    _showChangePasswordBottomSheet(context);
+                  },
+                  text: 'Tiếp tục',
+                  width: double.infinity,
+                )
+              ],
+            ),
           ),
         );
       },
@@ -412,69 +436,81 @@ class _SignInPageState extends State<SignInPage> {
   void _showChangePasswordBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 100,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context)
+                .viewInsets
+                .bottom, // Lấy khoảng trống của bàn phím
+            left: 25.0,
+            right: 25.0,
+            top: 25.0,
+          ),
+          child: SingleChildScrollView(
+            // Bao bọc nội dung để cho phép cuộn
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                'Cập nhật mật khẩu',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Vui lòng nhập mật khẩu mới của bạn.',
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Mật khẩu mới',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                const SizedBox(height: 30),
+                const Text(
+                  'Cập nhật mật khẩu',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Xác nhận mật khẩu mới',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                const SizedBox(height: 20),
+                const Text(
+                  'Vui lòng nhập mật khẩu mới của bạn.',
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Mật khẩu mới',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Xử lý đổi mật khẩu ở đây
-                  String newPassword = _newPasswordController.text;
-                  String confirmPassword = _confirmPasswordController.text;
-                  if (newPassword == confirmPassword) {
-                    print('Mật khẩu đã được đổi thành công');
-                    Navigator.pop(context); // Đóng BottomSheet
-                  } else {
-                    print('Mật khẩu không khớp');
-                  }
-                },
-                child: const Text('Cập nhật'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Xác nhận mật khẩu mới',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Sizedbutton(
+                  onPressFun: () {
+                    // Xử lý đổi mật khẩu ở đây
+                    String newPassword = _newPasswordController.text;
+                    String confirmPassword = _confirmPasswordController.text;
+                    if (newPassword == confirmPassword) {
+                      print('Mật khẩu đã được đổi thành công');
+                      Navigator.pop(context); // Đóng BottomSheet
+                    } else {
+                      print('Mật khẩu không khớp');
+                    }
+                  },
+                  text: 'Gửi OTP',
+                  width: double.infinity,
+                )
+              ],
+            ),
           ),
         );
       },
