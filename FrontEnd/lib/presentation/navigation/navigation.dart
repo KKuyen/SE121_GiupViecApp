@@ -36,7 +36,7 @@ class _NavigationState extends State<Navigation> {
           currentPageIndex = index;
         });
       },
-      height: 60,
+      height: 56,
       backgroundColor: Colors.white,
       indicatorColor: Colors.transparent,
       // indicatorShape: const Border(
@@ -51,16 +51,16 @@ class _NavigationState extends State<Navigation> {
             padding: const EdgeInsets.only(top: 3),
             child: SvgPicture.asset(
               AppVectors.navi_home_icon_selected,
-              height: 44,
-              width: 45,
+              height: 40,
+              width: 41,
             ),
           ),
           icon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: SvgPicture.asset(
               AppVectors.navi_home_icon,
-              height: 27,
-              width: 27,
+              height: 23,
+              width: 23,
             ),
           ),
           label: '',
@@ -71,16 +71,16 @@ class _NavigationState extends State<Navigation> {
             child: SvgPicture.asset(
               AppVectors.navi_activity_icon_selected,
               color: AppColors.xanh_main,
-              height: 44,
-              width: 45,
+              height: 40,
+              width: 41,
             ),
           ),
           icon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: SvgPicture.asset(
               AppVectors.navi_activity_icon,
-              height: 27,
-              width: 27,
+              height: 23,
+              width: 23,
             ),
           ),
           label: '',
@@ -91,16 +91,16 @@ class _NavigationState extends State<Navigation> {
             child: SvgPicture.asset(
               AppVectors.navi_message_icon_selected,
               color: AppColors.xanh_main,
-              height: 44,
-              width: 45,
+              height: 40,
+              width: 41,
             ),
           ),
           icon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: SvgPicture.asset(
               AppVectors.navi_message_icon,
-              height: 27,
-              width: 27,
+              height: 23,
+              width: 23,
             ),
           ),
           label: '',
@@ -111,16 +111,16 @@ class _NavigationState extends State<Navigation> {
             child: SvgPicture.asset(
               AppVectors.navi_profile_icon_selected,
               color: AppColors.xanh_main,
-              height: 44,
-              width: 45,
+              height: 40,
+              width: 41,
             ),
           ),
           icon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: SvgPicture.asset(
               AppVectors.navi_profile_icon,
-              height: 27,
-              width: 27,
+              height: 23,
+              width: 23,
             ),
           ),
           label: '',

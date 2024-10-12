@@ -20,4 +20,5 @@ class AppVectors {
   static const String google = '${basePath}google$format';
   static const String facebook = '${basePath}facebook$format';
   static const String baby_carriage_icon = '${basePath}baby-carriage$format';
+  static const String search = '${basePath}search$format';
 }

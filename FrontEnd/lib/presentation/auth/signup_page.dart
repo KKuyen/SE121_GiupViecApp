@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/navigation/navigation.dart';
@@ -42,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         bottomNavigationBar: _bottomText(context),
         body: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(AppInfo.main_padding),
           child: SingleChildScrollView(
             reverse: true,
             child: Form(

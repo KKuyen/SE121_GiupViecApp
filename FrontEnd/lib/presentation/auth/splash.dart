@@ -34,7 +34,10 @@ class _SplashPageState extends State<SplashPage> {
 
   Center logo() {
     return Center(
-      child: SvgPicture.asset(AppVectors.logo),
+      child: SvgPicture.asset(
+        AppVectors.logo,
+        height: 30,
+      ),
     );
   }
 }

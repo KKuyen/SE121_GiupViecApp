@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 
 class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
@@ -22,7 +23,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
     return Padding(
       padding: isHavePadding
           ? const EdgeInsets.symmetric(horizontal: 0)
-          : const EdgeInsets.symmetric(horizontal: 13),
+          : const EdgeInsets.symmetric(horizontal: 5),
       child: AppBar(
         backgroundColor: color ?? Colors.transparent,
         title: title ?? const Text(''),
