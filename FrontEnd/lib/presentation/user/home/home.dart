@@ -4,11 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:se121_giupviec_app/presentation/user/home/discovery.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,17 +58,17 @@ class _HomePageState extends State<HomePage>
           onPressed: () {},
         ),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _position(),
-              _search(),
-              _banner(),
-              SizedBox(
+              const _position(),
+              const _search(),
+              const _banner(),
+              const SizedBox(
                 height: 16,
               ),
-              Align(
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.only(left: AppInfo.main_padding),
@@ -76,16 +78,16 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
-              _services(),
-              SizedBox(
+              const _services(),
+              const SizedBox(
                 height: 19,
               ),
               Row(
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: AppInfo.main_padding),
                     child: Text(
                       'Ưu đãi',
@@ -93,23 +95,35 @@ class _HomePageState extends State<HomePage>
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: Text(
-                      'Khám phá',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.cam_main),
+                    padding: const EdgeInsets.only(right: 15),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DiscoveryPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Khám phá',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.cam_main),
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
-              _vouchers(),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
+                child: Vouchers(),
+              ),
             ],
           ),
         ),
@@ -289,133 +303,6 @@ class _position extends StatelessWidget {
           const Text('BTM Layout, 500628', style: TextStyle(fontSize: 13)),
       trailing: const Icon(
         Icons.navigate_next_outlined,
-      ),
-    );
-  }
-}
-
-class _vouchers extends StatelessWidget {
-  const _vouchers({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _VoucherCard(
-              imageUrl: AppImages.voucher1,
-              title: 'Voucher 50%',
-              description: 'Tất cả dịch vụ',
-              onPressed: () {},
-            ),
-            _VoucherCard(
-              imageUrl: AppImages.voucher2,
-              title: 'Voucher 50%',
-              description: 'Tất cả dịch vụ',
-              onPressed: () {},
-            ),
-            _VoucherCard(
-              imageUrl: AppImages.voucher1,
-              title: 'Voucher 50%',
-              description: 'Tất cả dịch vụ',
-              onPressed: () {},
-            ),
-            _VoucherCard(
-              imageUrl: AppImages.voucher2,
-              title: 'Voucher 50%',
-              description: 'Tất cả dịch vụ',
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _VoucherCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String description;
-  final VoidCallback onPressed;
-
-  const _VoucherCard({
-    required this.imageUrl,
-    required this.title,
-    required this.description,
-    required this.onPressed,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10.0, bottom: AppInfo.main_padding),
-      child: Container(
-        height: 150,
-        width: 220,
-        decoration: const BoxDecoration(
-            border: Border.fromBorderSide(BorderSide(color: Colors.grey)),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Column(
-          children: [
-            Container(
-              height: 100,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(imageUrl), fit: BoxFit.cover),
-                  borderRadius: const BorderRadius.all(Radius.circular(10))),
-            ),
-            const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        description,
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        '10',
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.cam_main),
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      SvgPicture.asset(
-                        AppVectors.coin,
-                        color: AppColors.cam_main,
-                        height: 17,
-                        width: 17,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

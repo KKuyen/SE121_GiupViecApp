@@ -1,0 +1,237 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
+import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+
+class DiscoveryPage extends StatefulWidget {
+  const DiscoveryPage({super.key});
+
+  @override
+  State<DiscoveryPage> createState() => _DiscoveryPageState();
+}
+
+class _DiscoveryPageState extends State<DiscoveryPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+      ),
+      Container(
+        height: 130,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(AppImages.discoveryBanner),
+                fit: BoxFit.cover),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+      ),
+      Scaffold(
+        backgroundColor: Colors.transparent, // Đặt nền của Scaffold trong suốt
+
+        appBar: BasicAppbar(
+          otherBackButton: true,
+          title: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.18),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
+              child: Text('Khám phá',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+          ),
+          isHideBackButton: false,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(AppInfo.main_padding),
+          child: SingleChildScrollView(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _financeCard(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () => {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.xanh_main,
+                      fixedSize: const Size(155, 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Row(
+                      children: [
+                        Text(
+                          'Xem tất cả',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 16,
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  const Text(
+                    'Ưu đãi',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  const Vouchers(),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Text(
+                    'Sắp hết hạn',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  const Vouchers(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ]);
+  }
+}
+
+class _financeCard extends StatelessWidget {
+  const _financeCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _finaceChild(
+            icon: Icon(
+              FontAwesomeIcons.coins,
+              color: AppColors.cam_main,
+              size: 25,
+            ),
+            title: 'RPoint',
+            value: 1000,
+          ),
+          _finaceChild(
+            icon: Icon(
+              FontAwesomeIcons.gift,
+              color: AppColors.cam_main,
+              size: 25,
+            ),
+            title: 'Mã giảm giá',
+            value: 100,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _finaceChild extends StatelessWidget {
+  final Icon icon;
+  final String title;
+  final int value;
+  const _finaceChild({
+    required this.icon,
+    required this.title,
+    required this.value,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        icon,
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                value.toString(),
+                style: const TextStyle(
+                  color: AppColors.cam_main,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

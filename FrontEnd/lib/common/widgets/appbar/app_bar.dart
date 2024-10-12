@@ -8,6 +8,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHideBackButton;
   final bool isHavePadding;
   final bool isCenter;
+  final bool otherBackButton;
 
   const BasicAppbar(
       {this.title,
@@ -16,6 +17,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.color,
       this.isHavePadding = false,
       this.isCenter = false,
+      this.otherBackButton = false,
       super.key});
 
   @override
@@ -32,23 +34,42 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
         actions: [action ?? Container()],
         leading: isHideBackButton
             ? null
-            : IconButton(
-                icon: Container(
-                  height: 35,
-                  width: 35,
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.05),
-                      shape: BoxShape.circle),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 15,
-                    color: Colors.black,
+            : otherBackButton
+                ? IconButton(
+                    icon: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255)
+                              .withOpacity(0.18),
+                          shape: BoxShape.circle),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 16,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                : IconButton(
+                    icon: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.05),
+                          shape: BoxShape.circle),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
       ),
     );
   }
