@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/user/home/home.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/activity.dart';
+import 'package:se121_giupviec_app/presentation/user/message/message.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -21,10 +22,7 @@ class _NavigationState extends State<Navigation> {
         body: [
           const HomePage(),
           const ActivityPage(),
-          // const MessagePage(),
-          // const Profile(),
-          Container(),
-          Container(),
+          const MessagePage(),
           Container(),
         ][currentPageIndex]);
   }

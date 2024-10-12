@@ -22,4 +22,5 @@ class AppVectors {
   static const String baby_carriage_icon = '${basePath}baby-carriage$format';
   static const String search = '${basePath}search$format';
   static const String coin = '${basePath}coin$format';
+  static const String avatar = '${basePath}avatar$format';
 }

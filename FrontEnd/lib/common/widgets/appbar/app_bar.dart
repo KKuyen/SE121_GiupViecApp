@@ -25,7 +25,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
     return Padding(
       padding: isHavePadding
           ? const EdgeInsets.symmetric(horizontal: 0)
-          : const EdgeInsets.symmetric(horizontal: 5),
+          : const EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
       child: AppBar(
         backgroundColor: color ?? Colors.transparent,
         title: title ?? const Text(''),

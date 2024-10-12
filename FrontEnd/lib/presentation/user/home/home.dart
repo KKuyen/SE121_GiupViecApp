@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/search/search.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
@@ -63,7 +64,14 @@ class _HomePageState extends State<HomePage>
           child: Column(
             children: [
               const _position(),
-              const _search(),
+              const Padding(
+                padding: EdgeInsets.only(
+                  left: AppInfo.main_padding,
+                  right: AppInfo.main_padding,
+                  bottom: 17,
+                ),
+                child: Search(),
+              ),
               const _banner(),
               const SizedBox(
                 height: 16,
@@ -248,35 +256,6 @@ class _banner extends StatelessWidget {
   }
 }
 
-class _search extends StatelessWidget {
-  const _search({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(
-        left: AppInfo.main_padding,
-        right: AppInfo.main_padding,
-        bottom: 17,
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-            hintText: 'Tìm kiếm dịch vụ',
-            prefixIcon: Icon(
-              CupertinoIcons.search,
-              color: AppColors.xanh_main,
-              size: 30,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            )),
-      ),
-    );
-  }
-}
-
 class _position extends StatelessWidget {
   const _position({
     super.key,
@@ -296,7 +275,7 @@ class _position extends StatelessWidget {
             size: 27,
           )),
       title: const Text(
-        'TP. Hồ  Chí Minh',
+        'TP. Hồ Chí Minh',
         style: TextStyle(fontSize: 15),
       ),
       subtitle:

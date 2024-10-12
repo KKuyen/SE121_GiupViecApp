@@ -4,11 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/search/search.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/home/myVoucher.dart';
 
 class DiscoveryPage extends StatefulWidget {
   const DiscoveryPage({super.key});
@@ -73,68 +75,55 @@ class _DiscoveryPageState extends State<DiscoveryPage>
           ),
           isHideBackButton: false,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(AppInfo.main_padding),
+        body: const Padding(
+          padding: EdgeInsets.all(AppInfo.main_padding),
           child: SingleChildScrollView(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _financeCard(),
-                  const SizedBox(
-                    height: 10,
+                  _financeCard(),
+                  SizedBox(
+                    height: 20,
                   ),
-                  ElevatedButton(
-                    onPressed: () => {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.xanh_main,
-                      fixedSize: const Size(155, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: const Search(
+                        hint: "Tìm kiếm ưu đãi",
+                      )),
+                      SizedBox(
+                        width: 5,
                       ),
-                    ),
-                    child: const Row(
-                      children: [
-                        Text(
-                          'Xem tất cả',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: 16,
-                        )
-                      ],
-                    ),
+                      Icon(
+                        Icons.filter_alt_rounded,
+                        color: AppColors.xanh_main,
+                        size: 35,
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 12,
+                  SizedBox(
+                    height: 15,
                   ),
-                  const Text(
+                  Text(
                     'Ưu đãi',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 6,
                   ),
-                  const Vouchers(),
-                  const SizedBox(
+                  Vouchers(),
+                  SizedBox(
                     height: 5,
                   ),
-                  const Text(
+                  Text(
                     'Sắp hết hạn',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 6,
                   ),
-                  const Vouchers(),
+                  Vouchers(),
                 ],
               ),
             ),
