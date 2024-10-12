@@ -1,73 +1,100 @@
-// ignore_for_file: prefer_const_constructors
-import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../../common/widgets/task_card/waiting_activity_widget.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+import 'package:se121_giupviec_app/common/widgets/task_card/approved_activity_widget.dart';
+import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widget.dart';
+import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_widget.dart';
+import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
+import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/activities/taskerList.dart';
+import 'package:se121_giupviec_app/presentation/user/activities/waitingTab.dart';
 
-class ActivityPage extends StatelessWidget {
+class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
+
+  @override
+  State<ActivityPage> createState() => _ActivityPageState();
+}
+
+class _ActivityPageState extends State<ActivityPage> {
+  bool _isLabelVisible = false;
+
+  void _showLabel() {
+    setState(() {
+      _isLabelVisible = true;
+    });
+  }
+
+  void _hideLabel() {
+    setState(() {
+      _isLabelVisible = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Job Card Demo',
+      title: 'TaskMate',
       theme: ThemeData(
-        primaryColor: AppColors.xanh_main, // Màu chính
+        primaryColor: AppColors.xanh_main,
         tabBarTheme: TabBarTheme(
           splashFactory: NoSplash.splashFactory,
-          // Màu nền của tab
-          labelColor: AppColors.xanh_main, // Màu chữ của tab được chọn
-          unselectedLabelColor:
-              const Color.fromARGB(179, 0, 0, 0), // Màu chữ tab không được chọn
+          labelColor: AppColors.xanh_main,
+          unselectedLabelColor: const Color.fromARGB(179, 0, 0, 0),
           indicator: BoxDecoration(
-            // Tạo hình chữ nhật xanh bên dưới tab được chọn
             border: Border(
               bottom: BorderSide(
-                color:
-                    AppColors.xanh_main, // Màu xanh cho dấu hiệu tab khi click
-                width: 3.0, // Độ dày của đường gạch dưới tab
+                color: AppColors.xanh_main,
+                width: 3.0,
               ),
             ),
           ),
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor:
-              Color.fromARGB(255, 255, 255, 255), // Màu FloatingActionButton
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
-      home: DefaultTabController(
-        length: 4, // Number of tabs
-        child: JobCardScreen(),
+      home: Stack(
+        children: [
+          DefaultTabController(
+            length: 4,
+            child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
+          ),
+          if (_isLabelVisible)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+            ),
+          if (_isLabelVisible)
+            Center(
+              child: Taskerlist(
+                cancel: _hideLabel,
+              ),
+            ),
+        ],
       ),
-      debugShowCheckedModeBanner: false, // Remove the debug banner
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class JobCardScreen extends StatelessWidget {
+  final VoidCallback showLabel;
+  final VoidCallback hideLabel;
+
+  const JobCardScreen({required this.showLabel, required this.hideLabel});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF2F2F2),
+      backgroundColor: AppColors.nen_the,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Column(
-          children: [
-            SizedBox(height: 5),
-            Row(
-              children: [
-                Text(
-                  'Hoạt động',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 26,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ],
+        title: Text(
+          'Hoạt động',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 26,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+          ),
         ),
         bottom: TabBar(
           tabs: [
@@ -80,16 +107,28 @@ class JobCardScreen extends StatelessWidget {
       ),
       body: TabBarView(
         children: [
-          JobCardList1(), // Content for 'Đang tìm'
-          JobCardList2(), // Content for 'Lặp lại'
-          JobCardList3(), // Content for 'Lịch sử'
-          JobCardList4(), // Content for 'Đã hủy'
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: WaitingList(showLabel: showLabel),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ApprovedList(showLabel: showLabel),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: FinishedList(showLabel: showLabel),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CancelList(showLabel: showLabel),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: AppColors.xanh_main, // Màu nền xanh
-        foregroundColor: Colors.white, // Màu icon trắng
+        backgroundColor: AppColors.xanh_main,
+        foregroundColor: Colors.white,
         child: Icon(Icons.add),
         shape: CircleBorder(),
       ),
@@ -97,49 +136,70 @@ class JobCardScreen extends StatelessWidget {
   }
 }
 
-class JobCardList1 extends StatelessWidget {
+class WaitingList extends StatelessWidget {
+  final VoidCallback showLabel;
+
+  const WaitingList({required this.showLabel});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return WatingActivityWidget();
+        return GestureDetector(
+            onTap: () => {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Waitingtab()))
+                },
+            child: WatingActivityWidget(onShowLabel: showLabel));
       },
     );
   }
 }
 
-class JobCardList2 extends StatelessWidget {
+class ApprovedList extends StatelessWidget {
+  final VoidCallback showLabel;
+
+  const ApprovedList({required this.showLabel});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return WatingActivityWidget();
+        return ApprovedActivityWidget();
       },
     );
   }
 }
 
-class JobCardList3 extends StatelessWidget {
+class FinishedList extends StatelessWidget {
+  final VoidCallback showLabel;
+
+  const FinishedList({required this.showLabel});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return WatingActivityWidget();
+        return FinishedActivityWidget();
       },
     );
   }
 }
 
-class JobCardList4 extends StatelessWidget {
+class CancelList extends StatelessWidget {
+  final VoidCallback showLabel;
+
+  const CancelList({required this.showLabel});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return WatingActivityWidget();
+        return CancelActivityWidget();
       },
     );
   }
