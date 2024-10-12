@@ -94,7 +94,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                         ),
                       ],
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Icon(
                       Icons.more_vert,
                       color: Colors.black,
@@ -105,10 +105,10 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                 SizedBox(height: 5),
                 Divider(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Ngày bắt đầu:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -117,7 +117,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Text(
                         'Thứ 7, 20/11/2021',
                         style: TextStyle(
@@ -131,11 +131,11 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Địa chỉ:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -185,10 +185,10 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Giá:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -211,10 +211,10 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Ghi chú:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -223,7 +223,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(width: 60),
+                      const SizedBox(width: 60),
                       Expanded(
                         child: Text(
                           'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
@@ -238,8 +238,8 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                     ],
                   ),
                 ),
-                SizedBox(height: 5),
-                Divider(),
+                const SizedBox(height: 0),
+                const Divider(),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
@@ -251,7 +251,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Có 5 ứng cử viên cho công việc',
+                              '5 ứng cử viên ',
                               style: TextStyle(
                                 color: AppColors.cam_main,
                                 fontSize: 15,
@@ -260,7 +260,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 0),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -278,8 +278,8 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                       Spacer(),
                       Sizedbutton(
                         onPressFun: widget.onShowLabel,
-                        text: 'Xem chi tiết',
-                        width: 130,
+                        text: 'Danh sách',
+                        width: 80,
                       ),
                     ],
                   ),

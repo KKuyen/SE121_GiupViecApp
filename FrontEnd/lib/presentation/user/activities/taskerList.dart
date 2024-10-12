@@ -1,11 +1,17 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowAccept.dart';
+import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowDelete.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/activities/taskerProfile.dart';
 
 class Taskerlist extends StatefulWidget {
   final VoidCallback cancel;
+
   const Taskerlist({super.key, required this.cancel});
 
   @override
@@ -45,7 +51,7 @@ class _TaskerListState extends State<Taskerlist> {
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: 15,
               ),
               Row(
                 children: [
@@ -73,9 +79,31 @@ class _TaskerListState extends State<Taskerlist> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 15,
+              SizedBox(height: 15),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount:
+                    4, // Replace with the actual number of taskerRowAccept items
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Taskerprofile()),
+                      );
+                      // Do something
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
+                      child: Column(
+                        children: [Taskerrowdelete(), Divider()],
+                      ),
+                    ),
+                  ); // Replace with your actual TaskerRowAccept widget
+                },
               ),
+              SizedBox(height: 15),
               Row(
                 children: [
                   Text(
@@ -88,6 +116,30 @@ class _TaskerListState extends State<Taskerlist> {
                     ),
                   ),
                 ],
+              ),
+              SizedBox(height: 15),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount:
+                    4, // Replace with the actual number of taskerRowAccept items
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Taskerprofile()),
+                      );
+                      // Do something
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
+                      child: Column(
+                        children: [Taskerrowaccept(), Divider()],
+                      ),
+                    ),
+                  ); // Replace with your actual TaskerRowAccept widget
+                },
               ),
             ],
           ),

@@ -108,7 +108,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
               SizedBox(height: 4),
               Divider(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   children: [
                     Text(
@@ -134,7 +134,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -188,7 +188,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   children: [
                     Text(
@@ -214,7 +214,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   children: [
                     Text(

@@ -5,6 +5,7 @@ import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_wi
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/taskerList.dart';
+import 'package:se121_giupviec_app/presentation/user/activities/waitingTab.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -31,7 +32,7 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Job Card Demo',
+      title: 'TaskMate',
       theme: ThemeData(
         primaryColor: AppColors.xanh_main,
         tabBarTheme: TabBarTheme(
@@ -83,7 +84,7 @@ class JobCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF2F2F2),
+      backgroundColor: AppColors.nen_the,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -106,10 +107,22 @@ class JobCardScreen extends StatelessWidget {
       ),
       body: TabBarView(
         children: [
-          WaitingList(showLabel: showLabel),
-          ApprovedList(showLabel: showLabel),
-          FinishedList(showLabel: showLabel),
-          CancelList(showLabel: showLabel),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: WaitingList(showLabel: showLabel),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ApprovedList(showLabel: showLabel),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: FinishedList(showLabel: showLabel),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CancelList(showLabel: showLabel),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -133,7 +146,12 @@ class WaitingList extends StatelessWidget {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return WatingActivityWidget(onShowLabel: showLabel);
+        return GestureDetector(
+            onTap: () => {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Waitingtab()))
+                },
+            child: WatingActivityWidget(onShowLabel: showLabel));
       },
     );
   }

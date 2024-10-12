@@ -108,7 +108,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
               SizedBox(height: 4),
               Divider(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   children: [
                     Text(
@@ -134,7 +134,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -188,7 +188,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   children: [
                     Text(
@@ -214,7 +214,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Row(
                   children: [
                     Text(
@@ -241,10 +241,9 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                   ],
                 ),
               ),
-              SizedBox(height: 5),
               Divider(),
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                 child: Column(
                   children: [
                     Text('Danh sách người giúp việc',
@@ -255,7 +254,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                           fontWeight: FontWeight.bold,
                         )),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
