@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/message/detailMessage.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});
@@ -148,41 +149,47 @@ class _messageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero, // Loại bỏ padding mặc định
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Detailmessage()));
+      },
+      child: ListTile(
+        contentPadding: EdgeInsets.zero, // Loại bỏ padding mặc định
 
-      leading: SvgPicture.asset(
-        avatar,
-        width: 41,
-        height: 41,
-      ),
-      title: Text(
-        name,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Row(
-        children: [
-          Text(
-            message,
-            style: TextStyle(
-                color: isSeen ? Colors.grey : Colors.black,
-                fontWeight: isSeen ? FontWeight.normal : FontWeight.bold),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Text(time,
+        leading: SvgPicture.asset(
+          avatar,
+          width: 41,
+          height: 41,
+        ),
+        title: Text(
+          name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Row(
+          children: [
+            Text(
+              message,
               style: TextStyle(
                   color: isSeen ? Colors.grey : Colors.black,
-                  fontWeight: isSeen ? FontWeight.normal : FontWeight.bold)),
-        ],
-      ),
-      trailing: Container(
-        width: 10,
-        height: 10,
-        decoration: BoxDecoration(
-          color: isSeen ? Colors.transparent : AppColors.cam_main,
-          borderRadius: BorderRadius.circular(50),
+                  fontWeight: isSeen ? FontWeight.normal : FontWeight.bold),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(time,
+                style: TextStyle(
+                    color: isSeen ? Colors.grey : Colors.black,
+                    fontWeight: isSeen ? FontWeight.normal : FontWeight.bold)),
+          ],
+        ),
+        trailing: Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: isSeen ? Colors.transparent : AppColors.cam_main,
+            borderRadius: BorderRadius.circular(50),
+          ),
         ),
       ),
     );
