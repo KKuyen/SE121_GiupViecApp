@@ -31,8 +31,8 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
         children: [
           Image.network(
             'https://storage.googleapis.com/se100-af7bc.appspot.com/images/1728630023846-ANIME-PICTURES.NET_-_801133-1197x674-elden_ring-malenia_blade_of_miquella-agong-single-long_hair-wide_image-transformed.jpeg?GoogleAccessId=firebase-adminsdk-6avlp%40se100-af7bc.iam.gserviceaccount.com&Expires=1729234829&Signature=F2pTBMS10pYiDfqBskF7NyLlITUEOwhOQqOPvxmEcCkjBPTV8Lf8KvIu53UV6LNy2s6suCNU0qq97rFaXy%2FKYAquOHeG9%2F%2BstlPmPwViM1mhHF0q12ptEJAwfXbXycND%2FuyaAhNm38zNTBNy%2BdAy%2FZQR4J0CO6lXKLlYLzqP8%2BKuwI4o711lsxSYUVRv1S4%2Fi58Gm%2FF8RDTg%2Fy%2BsP2BGfV71VF44bWcvkwtwjGOkGXWMCmRjmmaDjPiJhxQX9rGDuCyi89Sh9er%2FPWD2lrg6WIh2r14XJjnMnNK8a9tNvH8F5xNDUnohHo2qqOHzWtsOzULdoUUx%2B2USosN9Y79VxQ%3D%3D',
-            width: 38,
-            height: 34,
+            width: 35,
+            height: 35,
             fit: BoxFit.cover,
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent? loadingProgress) {
@@ -51,35 +51,35 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
             },
             errorBuilder:
                 (BuildContext context, Object error, StackTrace? stackTrace) {
-              return Icon(
+              return const Icon(
                 Icons.error,
                 color: Colors.red,
-                size: 38,
+                size: 35,
               );
             },
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 widget.taskerName,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
                   fontFamily: 'Inter',
                   decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          Spacer(),
-          SizedBox(width: 5),
+          const Spacer(),
+          const SizedBox(width: 5),
           IconButton(
             color: AppColors.xanh_main,
-            iconSize: 23,
-            icon: FaIcon(FontAwesomeIcons.check),
+            iconSize: 20,
+            icon: const FaIcon(FontAwesomeIcons.check),
             onPressed: () {
               // Do something
             },

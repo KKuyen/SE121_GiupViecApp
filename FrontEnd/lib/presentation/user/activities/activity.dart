@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widg
 import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/activities/newTaskStep1.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/taskerList.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/waitingTab.dart';
 
@@ -31,46 +32,23 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TaskMate',
-      theme: ThemeData(
-        primaryColor: AppColors.xanh_main,
-        tabBarTheme: TabBarTheme(
-          splashFactory: NoSplash.splashFactory,
-          labelColor: AppColors.xanh_main,
-          unselectedLabelColor: const Color.fromARGB(179, 0, 0, 0),
-          indicator: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: AppColors.xanh_main,
-                width: 3.0,
-              ),
+    return Stack(
+      children: [
+        DefaultTabController(
+          length: 4,
+          child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
+        ),
+        if (_isLabelVisible)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+          ),
+        if (_isLabelVisible)
+          Center(
+            child: Taskerlist(
+              cancel: _hideLabel,
             ),
           ),
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        ),
-      ),
-      home: Stack(
-        children: [
-          DefaultTabController(
-            length: 4,
-            child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
-          ),
-          if (_isLabelVisible)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-            ),
-          if (_isLabelVisible)
-            Center(
-              child: Taskerlist(
-                cancel: _hideLabel,
-              ),
-            ),
-        ],
-      ),
-      debugShowCheckedModeBanner: false,
+      ],
     );
   }
 }
@@ -87,20 +65,24 @@ class JobCardScreen extends StatelessWidget {
       backgroundColor: AppColors.nen_the,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           'Hoạt động',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 26,
+            fontSize: 20,
             fontFamily: 'Inter',
             fontWeight: FontWeight.bold,
           ),
         ),
-        bottom: TabBar(
+        bottom: const TabBar(
+          indicatorColor: AppColors.xanh_main, // Set the underline color
+          labelColor: AppColors.xanh_main, // Set the selected tab text color
+          unselectedLabelColor:
+              Colors.black, // Set the unselected tab text color
           tabs: [
             Tab(text: 'Đang tìm'),
             Tab(text: 'Đã nhận'),
-            Tab(text: 'Đã hoàn thành'),
+            Tab(text: 'Hoàn thành'),
             Tab(text: 'Đã hủy'),
           ],
         ),
@@ -126,11 +108,16 @@ class JobCardScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Newtaskstep1()),
+          );
+        },
         backgroundColor: AppColors.xanh_main,
         foregroundColor: Colors.white,
-        child: Icon(Icons.add),
-        shape: CircleBorder(),
+        child: const Icon(Icons.add),
+        shape: const CircleBorder(),
       ),
     );
   }
@@ -146,12 +133,7 @@ class WaitingList extends StatelessWidget {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return GestureDetector(
-            onTap: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Waitingtab()))
-                },
-            child: WatingActivityWidget(onShowLabel: showLabel));
+        return WatingActivityWidget(onShowLabel: showLabel);
       },
     );
   }
@@ -167,7 +149,7 @@ class ApprovedList extends StatelessWidget {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return ApprovedActivityWidget();
+        return const ApprovedActivityWidget();
       },
     );
   }
@@ -183,7 +165,7 @@ class FinishedList extends StatelessWidget {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return FinishedActivityWidget();
+        return const FinishedActivityWidget();
       },
     );
   }
@@ -199,7 +181,7 @@ class CancelList extends StatelessWidget {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return CancelActivityWidget();
+        return const CancelActivityWidget();
       },
     );
   }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
-class Sizedbutton extends StatefulWidget {
+class Sizedbutton2 extends StatefulWidget {
   final VoidCallback onPressFun;
-  final String text;
+  final String text1;
+  final String text2;
   final double width;
   final double height;
   final Color backgroundColor;
@@ -13,11 +14,12 @@ class Sizedbutton extends StatefulWidget {
   final Color StrokeColor;
   final bool isEnabled;
 
-  const Sizedbutton({
+  const Sizedbutton2({
     required this.onPressFun,
     super.key,
     this.isEnabled = true,
-    this.text = 'Nội dung', // Default text
+    this.text1 = 'Nội dung1',
+    this.text2 = 'Nội dung2', // Default text
     this.width = 130.0, // Default width
     this.height = 50.0, // Default height
     this.backgroundColor = AppColors.xanh_main, // Default color
@@ -27,10 +29,10 @@ class Sizedbutton extends StatefulWidget {
   });
 
   @override
-  State<Sizedbutton> createState() => _SizedbuttonState();
+  State<Sizedbutton2> createState() => _SizedbuttonState2();
 }
 
-class _SizedbuttonState extends State<Sizedbutton> {
+class _SizedbuttonState2 extends State<Sizedbutton2> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -48,15 +50,30 @@ class _SizedbuttonState extends State<Sizedbutton> {
         ),
         minimumSize: Size(widget.width, widget.height), // Size of the button
       ),
-      child: Text(
-        widget.text,
-        style: TextStyle(
-          fontSize: 16,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.normal,
-          color: widget.textColor,
-          // Text color
-        ),
+      child: Row(
+        children: [
+          Text(
+            widget.text1,
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              color: widget.textColor,
+              // Text color
+            ),
+          ),
+          Spacer(),
+          Text(
+            widget.text2,
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.normal,
+              color: widget.textColor,
+              // Text color
+            ),
+          ),
+        ],
       ),
     );
   }
