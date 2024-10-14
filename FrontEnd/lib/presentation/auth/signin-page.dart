@@ -53,7 +53,7 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 25),
                 _buildFormLogin(),
                 const SizedBox(height: 40),
-                _dividerWithText('or'),
+                _dividerWithText('hoặc'),
                 const SizedBox(height: 40),
                 _iconGroup(context),
               ],

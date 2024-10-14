@@ -22,20 +22,28 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: isHavePadding
-          ? const EdgeInsets.symmetric(horizontal: 0)
-          : const EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-      child: AppBar(
-        backgroundColor: color ?? Colors.transparent,
-        title: title ?? const Text(''),
-        centerTitle: isCenter ? true : false,
-        automaticallyImplyLeading: !isHideBackButton,
-        actions: [action ?? Container()],
-        leading: isHideBackButton
-            ? null
-            : otherBackButton
-                ? IconButton(
+    return AppBar(
+      backgroundColor: color ?? Colors.transparent,
+      title: title ?? const Text(''),
+      centerTitle: isCenter ? true : false,
+      automaticallyImplyLeading: !isHideBackButton,
+      actions: [
+        Padding(
+          padding: isHavePadding
+              ? const EdgeInsets.symmetric(horizontal: 0)
+              : const EdgeInsets.only(right: AppInfo.main_padding),
+          child: action ?? Container(),
+        )
+      ],
+      //elevation: 1,
+      leading: isHideBackButton
+          ? null
+          : otherBackButton
+              ? Padding(
+                  padding: isHavePadding
+                      ? const EdgeInsets.symmetric(horizontal: 0)
+                      : const EdgeInsets.only(left: AppInfo.main_padding),
+                  child: IconButton(
                     icon: Container(
                       height: 35,
                       width: 35,
@@ -52,25 +60,25 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                  )
-                : IconButton(
-                    icon: Container(
-                      height: 35,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.05),
-                          shape: BoxShape.circle),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
                   ),
-      ),
+                )
+              : IconButton(
+                  icon: Container(
+                    height: 35,
+                    width: 35,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.05),
+                        shape: BoxShape.circle),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
     );
   }
 

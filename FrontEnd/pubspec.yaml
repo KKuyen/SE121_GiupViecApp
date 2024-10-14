@@ -19,7 +19,8 @@ dependencies:
   url_launcher:
   pin_code_fields:
   firebase_data_connect:
-
+  emoji_picker_flutter: ^1.5.1
+  image_picker:
 
 dev_dependencies:
   flutter_test:

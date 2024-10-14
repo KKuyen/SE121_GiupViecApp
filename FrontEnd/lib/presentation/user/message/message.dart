@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/data/models/User.dart';
 import 'package:se121_giupviec_app/presentation/user/message/detailMessage.dart';
 
 class MessagePage extends StatefulWidget {
@@ -151,8 +152,9 @@ class _messageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        User user = User(id: 1, name: name, avatar: avatar);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const Detailmessage()));
+            MaterialPageRoute(builder: (context) => Detailmessage(user: user)));
       },
       child: ListTile(
         contentPadding: EdgeInsets.zero, // Loại bỏ padding mặc định

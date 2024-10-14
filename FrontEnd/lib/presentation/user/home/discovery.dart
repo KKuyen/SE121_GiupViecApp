@@ -61,7 +61,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
           title: Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.18),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: const Padding(
               padding: EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
