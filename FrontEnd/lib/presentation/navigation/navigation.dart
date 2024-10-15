@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/account/account.dart';
 import 'package:se121_giupviec_app/presentation/user/home/home.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/user/message/message.dart';
@@ -23,7 +24,7 @@ class _NavigationState extends State<Navigation> {
           const HomePage(),
           const ActivityPage(),
           const MessagePage(),
-          Container(),
+          const AccountPage(),
         ][currentPageIndex]);
   }
 

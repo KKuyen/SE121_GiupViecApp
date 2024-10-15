@@ -5,4 +5,5 @@ class AppImages {
   static const String voucher1 = '${basePath}voucher1.png';
   static const String voucher2 = '${basePath}voucher2.png';
   static const String discoveryBanner = '${basePath}discoveryBanner.png';
+  static const String cover = '${basePath}cover.png';
 }
