@@ -5,6 +5,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/account/addLocation.dart';
 
 class LocationPage extends StatefulWidget {
   const LocationPage({super.key});
@@ -75,12 +76,22 @@ class _LocationPageState extends State<LocationPage> {
                               //       builder: (context) => const DiscoveryPage()),
                               // );
                             },
-                            child: const Text(
-                              '+ Thêm địa chỉ',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.cam_main),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddLocationPage()),
+                                );
+                              },
+                              child: const Text(
+                                '+ Thêm địa chỉ',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.cam_main),
+                              ),
                             ),
                           ),
                         ),
