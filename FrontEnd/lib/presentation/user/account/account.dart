@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/account/location.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -62,6 +63,22 @@ class _AccountPageState extends State<AccountPage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          ListTile(
+                            title: const Text('Địa chỉ'),
+                            leading: const Icon(Icons.location_on_outlined),
+                            trailing: const Icon(Icons.navigate_next_rounded),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LocationPage()));
+                            },
+                          ),
+                          const Divider(
+                            height: 1,
+                            thickness: 1,
+                          ),
                           ListTile(
                             title: const Text('Tasker yêu thích'),
                             leading: const Icon(Icons.favorite_border_rounded),
@@ -178,7 +195,7 @@ class _AccountPageState extends State<AccountPage> {
                         const SizedBox(height: 10),
                         Sizedbutton(
                           onPressFun: () {},
-                          text: 'Xem hồ sơ',
+                          text: 'Cập nhật hồ sơ',
                           backgroundColor: AppColors.cam_main,
                           textColor: Colors.white,
                           width: double.infinity,
