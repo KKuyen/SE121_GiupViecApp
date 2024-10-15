@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
+import 'package:se121_giupviec_app/common/widgets/message/jobCard.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -31,8 +33,9 @@ class _DetailmessageState extends State<Detailmessage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: const Color(0xFFF2F2F2),
       appBar: BasicAppbar(
-          color: Color.fromARGB(255, 244, 244, 244),
+          color: const Color.fromARGB(255, 255, 255, 255),
           isHideBackButton: false,
           action: Row(
             children: [
@@ -135,6 +138,10 @@ class _DetailmessageState extends State<Detailmessage> {
                 avatar: widget.user.avatar,
                 isMe: true,
                 message: 'Chào bạn, bạn cần giúp gì?',
+              ),
+              JobCard(
+                avatar: widget.user.avatar,
+                isMe: false,
               ),
               _messageCard(
                 avatar: widget.user.avatar,
@@ -259,7 +266,7 @@ class _messageCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             decoration: BoxDecoration(
-              color: isMe ? AppColors.cam_main : const Color(0xFFEEEEEE),
+              color: isMe ? AppColors.cam_main : Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(15),
                 topRight: const Radius.circular(15),

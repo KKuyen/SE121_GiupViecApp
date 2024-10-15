@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/message/jobCard.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
+import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class ListTaskMessage extends StatefulWidget {
   const ListTaskMessage({super.key});
@@ -14,7 +16,7 @@ class _ListTaskMessageState extends State<ListTaskMessage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: 1,
+      initialIndex: 0,
       length: 2,
       child: Scaffold(
         appBar: AppBar(
@@ -41,12 +43,14 @@ class _ListTaskMessageState extends State<ListTaskMessage> {
             },
           ),
           bottom: const TabBar(
+            indicatorColor: AppColors.xanh_main,
+            labelColor: AppColors.xanh_main,
             tabs: <Widget>[
               Tab(
-                icon: Icon(Icons.cloud_outlined),
+                text: "Ứng cử",
               ),
               Tab(
-                icon: Icon(Icons.beach_access_sharp),
+                text: "Đã nhận",
               ),
             ],
           ),
@@ -54,12 +58,78 @@ class _ListTaskMessageState extends State<ListTaskMessage> {
         body: const TabBarView(
           children: <Widget>[
             Center(
-              child: Text("It's cloudy here"),
+              child: UngCuTab(),
             ),
             Center(
-              child: Text("It's rainy here"),
+              child: DaNhanTab(),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class DaNhanTab extends StatelessWidget {
+  const DaNhanTab({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          _time(time: "9:00 21/4/2024"),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+          _time(time: "9:00 21/4/2024"),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+        ],
+      ),
+    );
+  }
+}
+
+class UngCuTab extends StatelessWidget {
+  const UngCuTab({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          _time(time: "9:00 21/4/2024"),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+          _time(time: "9:00 21/4/2024"),
+          JobCard(avatar: AppVectors.facebook, isMe: false, isCenter: true),
+        ],
+      ),
+    );
+  }
+}
+
+class _time extends StatelessWidget {
+  final String time;
+  const _time({
+    required this.time,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        time,
+        style: const TextStyle(
+          color: AppColors.xam72,
+          fontSize: 12,
         ),
       ),
     );
