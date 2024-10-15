@@ -111,11 +111,11 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
                       ],
                     ),
                     Spacer(),
-                    Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
-                      size: 25.0,
-                    )
+                    // Icon(
+                    //   Icons.more_vert,
+                    //   color: Colors.black,
+                    //   size: 25.0,
+                    // )
                   ],
                 ),
                 SizedBox(height: 4),
@@ -279,19 +279,6 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
                         },
                       ),
                     ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Sizedbutton(
-                    onPressFun: () {
-                      // Define what happens when the button is pressed
-                    },
-                    text: 'Đã hoàn thành',
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    backgroundColor: AppColors.xanh_main,
-                    textColor: Colors.white,
                   ),
                 ),
               ],

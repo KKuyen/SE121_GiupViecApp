@@ -6,6 +6,12 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 class AppTextStyle {
   static const tieudebox = TextStyle(
       fontFamily: 'Inter',
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+      decoration: TextDecoration.none);
+  static const tieudebox20 = TextStyle(
+      fontFamily: 'Inter',
       fontSize: 20,
       fontWeight: FontWeight.bold,
       color: Colors.black,

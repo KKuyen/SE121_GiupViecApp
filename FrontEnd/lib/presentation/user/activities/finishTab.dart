@@ -5,7 +5,9 @@ import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
+import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
+import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/taskerList.dart';
 // import statements here
@@ -156,10 +158,7 @@ class _FinishtabState extends State<Finishtab> {
                         alignment: Alignment.centerLeft,
                         child: const Text(
                           'Người giúp việc',
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: AppTextStyle.tieudebox,
                         ),
                       ),
                       SizedBox(
@@ -171,7 +170,7 @@ class _FinishtabState extends State<Finishtab> {
                           shrinkWrap: true,
                           itemCount: 4, // Số lượng tasker
                           itemBuilder: (context, index) {
-                            return const Taskerrowbasic(
+                            return const Taskerrowreview(
                               taskerImageLink: '',
                             );
                           },
@@ -198,10 +197,7 @@ class _FinishtabState extends State<Finishtab> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Thông tin chi tiết',
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: AppTextStyle.tieudebox,
                         ),
                       ),
                       Padding(
@@ -410,10 +406,7 @@ class _FinishtabState extends State<Finishtab> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Lịch sử',
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: AppTextStyle.tieudebox,
                         ),
                       ),
                       Padding(

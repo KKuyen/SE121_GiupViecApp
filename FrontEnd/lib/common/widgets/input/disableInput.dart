@@ -9,7 +9,7 @@ class DisableInput extends StatelessWidget {
 
   const DisableInput({
     this.text = 'Noi dung',
-    this.hintext = 'hintext',
+    this.hintext = 'Nhập thông tin',
     this.color = AppColors.xam72,
     this.enabled = false, // Mặc định là không cho phép chỉnh sửa
     super.key,

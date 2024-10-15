@@ -104,11 +104,11 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                         ],
                       ),
                       const Spacer(),
-                      const Icon(
-                        Icons.more_vert,
-                        color: Colors.black,
-                        size: 25.0,
-                      )
+                      // const Icon(
+                      //   Icons.more_vert,
+                      //   color: Colors.black,
+                      //   size: 25.0,
+                      // )
                     ],
                   ),
                   const SizedBox(height: 5),

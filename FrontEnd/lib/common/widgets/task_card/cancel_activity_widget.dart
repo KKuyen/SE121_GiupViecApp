@@ -109,11 +109,11 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ],
                     ),
                     Spacer(),
-                    Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
-                      size: 25.0,
-                    )
+                    // Icon(
+                    //   Icons.more_vert,
+                    //   color: Colors.black,
+                    //   size: 25.0,
+                    // )
                   ],
                 ),
                 SizedBox(height: 4),

@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
+import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/taskerList.dart';
 // import statements here
@@ -157,10 +158,7 @@ class _ApprovetabState extends State<Approvetab> {
                         alignment: Alignment.centerLeft,
                         child: const Text(
                           'Người giúp việc',
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: AppTextStyle.tieudebox,
                         ),
                       ),
                       SizedBox(
@@ -199,10 +197,7 @@ class _ApprovetabState extends State<Approvetab> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Thông tin chi tiết',
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: AppTextStyle.tieudebox,
                         ),
                       ),
                       Padding(
@@ -417,10 +412,7 @@ class _ApprovetabState extends State<Approvetab> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Lịch sử',
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: AppTextStyle.tieudebox,
                         ),
                       ),
                       Padding(

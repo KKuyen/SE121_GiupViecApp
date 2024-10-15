@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:se121_giupviec_app/common/widgets/addPrice/addPrice.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton2text.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/activities/newTaskStep2.dart';
 
 class Newtaskstep1 extends StatefulWidget {
   const Newtaskstep1({super.key});
@@ -52,7 +54,7 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Trông trẻ', style: AppTextStyle.tieudebox),
+                        Text('Trông trẻ', style: AppTextStyle.tieudebox20),
                         SizedBox(
                             height:
                                 5), // Khoảng cách giữa tiêu đề và văn bản mô tả
@@ -172,13 +174,34 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 3, // Số lượng phần tử trong danh sách
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppInfor1.horizontal_padding,
+                        vertical: 10), // Padding hai bên),
+                    child: Addprice(),
+                  );
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15, vertical: 15), // Padding hai bên),
                 child: Sizedbutton2(
-                  onPressFun: () {},
+                  onPressFun: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Newtaskstep2()),
+                    );
+                  },
                   width: double.infinity,
-                  height: 45,
+                  height: 50,
                   text1: '200 000 đ / 2 cháu / 2 giờ',
                   text2: 'Tiếp theo',
                 ),

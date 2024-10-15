@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
+import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/finishTab.dart';
@@ -109,11 +110,11 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ],
                     ),
                     Spacer(),
-                    Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
-                      size: 25.0,
-                    )
+                    // Icon(
+                    //   Icons.more_vert,
+                    //   color: Colors.black,
+                    //   size: 25.0,
+                    // )
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -272,7 +273,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                           itemCount:
                               3, // Replace with the actual number of items
                           itemBuilder: (context, index) {
-                            return Taskerrowbasic(
+                            return Taskerrowreview(
                                 taskerImageLink:
                                     'https://storage.googleapis.com/se100-af7bc.appspot.com/images/1728630023846-ANIME-PICTURES.NET_-_801133-1197x674-elden_ring-malenia_blade_of_miquella-agong-single-long_hair-wide_image-transformed.jpeg?GoogleAccessId=firebase-adminsdk-6avlp%40se100-af7bc.iam.gserviceaccount.com&Expires=1729234829&Signature=F2pTBMS10pYiDfqBskF7NyLlITUEOwhOQqOPvxmEcCkjBPTV8Lf8KvIu53UV6LNy2s6suCNU0qq97rFaXy%2FKYAquOHeG9%2F%2BstlPmPwViM1mhHF0q12ptEJAwfXbXycND%2FuyaAhNm35zNTBNy%2BdAy%2FZQR4J0CO6lXKLlYLzqP8%2BKuwI4o711lsxSYUVRv1S4%2Fi58Gm%2FF8RDTg%2Fy%2BsP2BGfV71VF44bWcvkwtwjGOkGXWMCmRjmmaDjPiJhxQX9rGDuCyi89Sh9er%2FPWD2lrg6WIh2r14XJjnMnNK8a9tNvH8F5xNDUnohHo2qqOHzWtsOzULdoUUx%2B2USosN9Y79VxQ%3D%3D');
                           },
