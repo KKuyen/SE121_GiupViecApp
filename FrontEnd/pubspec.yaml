@@ -21,6 +21,7 @@ dependencies:
   firebase_data_connect:
   emoji_picker_flutter: ^1.5.1
   image_picker:
+  flutter_slidable:
 
 dev_dependencies:
   flutter_test:

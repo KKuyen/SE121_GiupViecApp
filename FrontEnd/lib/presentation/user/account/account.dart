@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/user/account/editAccount.dart';
 import 'package:se121_giupviec_app/presentation/user/account/location.dart';
+import 'package:se121_giupviec_app/presentation/user/home/myVoucher.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -57,7 +58,7 @@ class _AccountPageState extends State<AccountPage> {
                     height: 10,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height-490,
+                    height: MediaQuery.of(context).size.height - 490,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
@@ -104,7 +105,13 @@ class _AccountPageState extends State<AccountPage> {
                             title: const Text('Ưu đãi của tôi'),
                             leading: const Icon(Icons.wallet_giftcard_sharp),
                             trailing: const Icon(Icons.navigate_next_rounded),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MyVoucherPage()));
+                            },
                           ),
                           const Divider(
                             height: 1,
