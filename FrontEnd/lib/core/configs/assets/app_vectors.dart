@@ -17,5 +17,10 @@ class AppVectors {
       '${basePath}navi_message_icon_selected$format';
   static const String navi_profile_icon_selected =
       '${basePath}navi_profile_icon_selected$format';
+  static const String google = '${basePath}google$format';
+  static const String facebook = '${basePath}facebook$format';
   static const String baby_carriage_icon = '${basePath}baby-carriage$format';
+  static const String search = '${basePath}search$format';
+  static const String coin = '${basePath}coin$format';
+  static const String avatar = '${basePath}avatar$format';
 }

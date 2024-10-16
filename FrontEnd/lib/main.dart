@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:se121_giupviec_app/presentation/auth/signin-page.dart';
+import 'package:se121_giupviec_app/presentation/auth/splash.dart';
 import 'package:se121_giupviec_app/presentation/navigation/navigation.dart';
 import 'package:se121_giupviec_app/presentation/user/home/home.dart';
 
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Navigation(),
+      home: const SplashPage(),
       debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
     );
   }
