@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/account/chooseLocation.dart';
 
 class AddLocationPage extends StatefulWidget {
   const AddLocationPage({super.key});
@@ -19,16 +20,25 @@ class _AddLocationPageState extends State<AddLocationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
-      appBar: const BasicAppbar(
+      appBar: BasicAppbar(
         isHideBackButton: false,
         isHavePadding: false,
         color: Colors.white,
-        action: Icon(
-          Icons.my_location_rounded,
-          color: AppColors.xanh_main,
-          size: 30,
+        action: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ChooseLocationPage()),
+            );
+          },
+          child: const Icon(
+            Icons.my_location_rounded,
+            color: AppColors.xanh_main,
+            size: 30,
+          ),
         ),
-        title: Text('Thêm địa chỉ',
+        title: const Text('Thêm địa chỉ',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

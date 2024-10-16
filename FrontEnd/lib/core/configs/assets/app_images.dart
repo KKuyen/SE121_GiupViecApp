@@ -6,4 +6,5 @@ class AppImages {
   static const String voucher2 = '${basePath}voucher2.png';
   static const String discoveryBanner = '${basePath}discoveryBanner.png';
   static const String cover = '${basePath}cover.png';
+  static const String location = '${basePath}chooseLocation.png';
 }

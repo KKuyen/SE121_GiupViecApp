@@ -20,6 +20,7 @@ class _MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
+      backgroundColor: Colors.white,
       appBar: BasicAppbar(
         isHideBackButton: true,
         action: Icon(
