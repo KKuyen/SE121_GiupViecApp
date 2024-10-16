@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/account/editAccount.dart';
 import 'package:se121_giupviec_app/presentation/user/account/location.dart';
 
 class AccountPage extends StatefulWidget {
@@ -35,7 +36,7 @@ class _AccountPageState extends State<AccountPage> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 130,
+                  height: 150,
                   decoration: const BoxDecoration(
                     image: DecorationImage(image: AssetImage(AppImages.cover)),
                   ),
@@ -56,7 +57,7 @@ class _AccountPageState extends State<AccountPage> {
                     height: 10,
                   ),
                   Container(
-                    height: 300,
+                    height: MediaQuery.of(context).size.height-490,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
@@ -194,7 +195,13 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         const SizedBox(height: 10),
                         Sizedbutton(
-                          onPressFun: () {},
+                          onPressFun: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const EditAccountPage()));
+                          },
                           text: 'Cập nhật hồ sơ',
                           backgroundColor: AppColors.cam_main,
                           textColor: Colors.white,

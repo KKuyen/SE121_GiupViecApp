@@ -36,7 +36,7 @@ class _LocationPageState extends State<LocationPage> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 130,
+                  height: 150,
                   decoration: const BoxDecoration(
                     image: DecorationImage(image: AssetImage(AppImages.cover)),
                   ),

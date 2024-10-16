@@ -101,15 +101,17 @@ class _ChooseLocationPageState extends State<ChooseLocationPage> {
                               color: Color.fromARGB(255, 0, 0, 0)),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
                         const Text(
                           'Hàn Thuyên, KP.6, P.Linh Trung, Tp.Thủ Đức, Hồ Chí Mình',
+
                           style: TextStyle(
                               fontSize: 16,
+
                               fontWeight: FontWeight.normal,
                               color: Color.fromARGB(255, 49, 49, 49)),
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                         ),
                         const SizedBox(
                           height: 20,
@@ -131,7 +133,7 @@ class _ChooseLocationPageState extends State<ChooseLocationPage> {
             ),
           ),
           Positioned(
-              top: MediaQuery.of(context).size.height / 2 - 50 - 100,
+              top: MediaQuery.of(context).size.height / 2 - 50 - 80,
               left: 0,
               right: 0,
               child: const Icon(

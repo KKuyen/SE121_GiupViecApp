@@ -23,10 +23,7 @@ class _MessagePageState extends State<MessagePage> {
       backgroundColor: Colors.white,
       appBar: BasicAppbar(
         isHideBackButton: true,
-        action: Icon(
-          Icons.more_horiz_rounded,
-          size: 30,
-        ),
+
         isHavePadding: false,
         title: Text('Tin nhắn',
             style: TextStyle(

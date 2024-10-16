@@ -41,7 +41,8 @@ class _DetailmessageState extends State<Detailmessage> {
             children: [
               const Icon(
                 Icons.phone,
-                size: 27,
+                size: 27,                  color: AppColors.xanh_main,
+
               ),
               const SizedBox(
                 width: 10,
@@ -54,8 +55,9 @@ class _DetailmessageState extends State<Detailmessage> {
                           builder: (context) => const ListTaskMessage()));
                 },
                 child: const Icon(
-                  Icons.more_horiz_rounded,
+                  Icons.info,
                   size: 27,
+                  color: AppColors.xanh_main,
                 ),
               ),
             ],
