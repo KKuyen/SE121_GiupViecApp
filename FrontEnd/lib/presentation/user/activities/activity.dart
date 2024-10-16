@@ -64,6 +64,7 @@ class JobCardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.nen_the,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: const Text(
           'Hoạt động',

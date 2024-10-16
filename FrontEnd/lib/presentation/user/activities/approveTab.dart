@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
@@ -99,53 +100,17 @@ class _ApprovetabState extends State<Approvetab> {
           body: SingleChildScrollView(
               child: Column(
             children: [
-              Container(
-                  decoration: const BoxDecoration(color: AppColors.xanh_main),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 22, horizontal: AppInfor1.horizontal_padding),
-                    child: Row(
-                      children: [
-                        // Sử dụng Expanded để văn bản chiếm hết không gian có thể
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Đang chờ tới ngày làm',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(
-                                  height: 5), // Khoảng cách giữa các đoạn text
-                              Text(
-                                'Còn 3 ngày nữa tới lịch: 23/2/2024. Lưu ý chú ý thời gian',
-                                softWrap: true,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  // Màu chữ nhạt hơn cho phần mô tả
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 20), // Khoảng cách giữa văn bản và icon
-                        // Ic
-                        Icon(
-                          Icons.timelapse,
-                          color: Colors.white, // Màu của icon
-                          size: 50, // Kích thước của icon
-                        ),
-                      ],
-                    ),
-                  )),
-              const SizedBox(
+              Header(
+                text1: "Đang chờ tới ngày làm",
+                text2:
+                    'Còn 3 ngày nữa là tới lịch 23/2/2004. Lưu ý chú ý thời gian',
+                icon: Icon(
+                  Icons.timelapse,
+                  color: Colors.white, // Màu của icon
+                  size: 50, // Kích thước của icon
+                ),
+              ),
+              SizedBox(
                 height: 10,
               ),
               Container(

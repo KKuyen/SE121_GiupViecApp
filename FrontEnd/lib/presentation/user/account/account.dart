@@ -4,7 +4,11 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/user/account/aboutUs.dart';
+import 'package:se121_giupviec_app/presentation/user/account/blockTaskers.dart';
 import 'package:se121_giupviec_app/presentation/user/account/location.dart';
+import 'package:se121_giupviec_app/presentation/user/account/loveTaskers.dart';
+import 'package:se121_giupviec_app/presentation/user/account/setting.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -83,7 +87,13 @@ class _AccountPageState extends State<AccountPage> {
                             title: const Text('Tasker yêu thích'),
                             leading: const Icon(Icons.favorite_border_rounded),
                             trailing: const Icon(Icons.navigate_next_rounded),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Lovetaskers()));
+                            },
                           ),
                           const Divider(
                             height: 1,
@@ -93,7 +103,13 @@ class _AccountPageState extends State<AccountPage> {
                             title: const Text('Danh sách chặn'),
                             leading: const Icon(Icons.block_outlined),
                             trailing: const Icon(Icons.navigate_next_rounded),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Blocktaskers()));
+                            },
                           ),
                           const Divider(
                             height: 1,
@@ -123,7 +139,12 @@ class _AccountPageState extends State<AccountPage> {
                             title: const Text('Trợ giúp'),
                             leading: const Icon(Icons.help_outline_rounded),
                             trailing: const Icon(Icons.navigate_next_rounded),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Aboutus()));
+                            },
                           ),
                           const Divider(
                             height: 1,
@@ -133,7 +154,12 @@ class _AccountPageState extends State<AccountPage> {
                             title: const Text('Cài đặt'),
                             leading: const Icon(Icons.settings_outlined),
                             trailing: const Icon(Icons.navigate_next_rounded),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Setting()));
+                            },
                           ),
                           const Divider(
                             height: 1,

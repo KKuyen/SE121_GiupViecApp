@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:se121_giupviec_app/common/widgets/button/2sttbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/review_card/review_card_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_type_mini_card/mini_tt_card_widget.dart';
@@ -17,6 +19,21 @@ class Taskerprofile extends StatefulWidget {
 }
 
 class _TaskerprofileState extends State<Taskerprofile> {
+  bool isLove = false;
+
+  bool isBlock = false;
+  void toggleLove() {
+    setState(() {
+      isLove = !isLove;
+    });
+  }
+
+  void toggleBlock() {
+    setState(() {
+      isBlock = !isBlock;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -69,12 +86,33 @@ class _TaskerprofileState extends State<Taskerprofile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
+                          TwoSttButton(
+                            sttkey: isBlock,
+                            icon: const Icon(
                               Icons.block,
-                              size: 32,
+                              color: AppColors.do_main,
+                              size: 33,
+                            ),
+                            icon2: const Icon(
+                              Icons.block,
                               color: AppColors.xam72,
+                              size: 33,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          TwoSttButton(
+                            sttkey: isLove,
+                            icon: const Icon(
+                              FontAwesomeIcons.solidHeart,
+                              color: AppColors.xanh_main,
+                              size: 32,
+                            ),
+                            icon2: const Icon(
+                              FontAwesomeIcons.heart,
+                              color: AppColors.xam72,
+                              size: 32,
                             ),
                           ),
                           const SizedBox(
@@ -82,20 +120,9 @@ class _TaskerprofileState extends State<Taskerprofile> {
                           ),
                           IconButton(
                             onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.heart,
-                              size: 32,
-                              color: AppColors.xam72,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 6,
-                          ),
-                          IconButton(
-                            onPressed: () {},
                             icon: const Icon(
                               FontAwesomeIcons.solidMessage,
-                              color: AppColors.xanh_main,
+                              color: AppColors.xam72,
                               size: 28,
                             ),
                           ),

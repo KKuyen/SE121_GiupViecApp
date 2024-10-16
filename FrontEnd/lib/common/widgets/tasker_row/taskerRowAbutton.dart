@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:se121_giupviec_app/common/widgets/button/2sttbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/presentation/user/activities/taskerProfile.dart';
 
-class Taskerrowaccept extends StatefulWidget {
+class Taskerrowabutton extends StatefulWidget {
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
+  final TwoSttButton iconButton;
 
-  const Taskerrowaccept({
+  const Taskerrowabutton({
+    required this.iconButton,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
     this.taskerPhone = '0123456759',
@@ -20,10 +23,10 @@ class Taskerrowaccept extends StatefulWidget {
   });
 
   @override
-  State<Taskerrowaccept> createState() => _Taskerrowaccept();
+  State<Taskerrowabutton> createState() => _TaskerrowdaState();
 }
 
-class _Taskerrowaccept extends State<Taskerrowaccept> {
+class _TaskerrowdaState extends State<Taskerrowabutton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -85,15 +88,7 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
               ],
             ),
             const Spacer(),
-            const SizedBox(width: 5),
-            IconButton(
-              color: AppColors.xanh_main,
-              iconSize: 20,
-              icon: const FaIcon(FontAwesomeIcons.check),
-              onPressed: () {
-                // Do something
-              },
-            ),
+            widget.iconButton,
           ],
         ),
       ),

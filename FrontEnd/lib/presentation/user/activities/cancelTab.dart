@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
@@ -67,52 +68,16 @@ class _CanceltabState extends State<Canceltab> {
           body: SingleChildScrollView(
               child: Column(
             children: [
-              Container(
-                  decoration: const BoxDecoration(color: AppColors.do_main),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 22, horizontal: AppInfor1.horizontal_padding),
-                    child: Row(
-                      children: [
-                        // Sử dụng Expanded để văn bản chiếm hết không gian có thể
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Đã hủy dịch vụ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(
-                                  height: 5), // Khoảng cách giữa các đoạn text
-                              Text(
-                                'Đã hủy dịch vụ vào ngày 23/10/2024',
-                                softWrap: true,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  // Màu chữ nhạt hơn cho phần mô tả
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 20), // Khoảng cách giữa văn bản và icon
-                        // Ic
-                        Icon(
-                          Icons.cancel, // Icon kiểu hình tròn
-                          color: Colors.white, // Màu của icon
-                          size: 50, // Kích thước của icon
-                        ),
-                      ],
-                    ),
-                  )),
+              Header(
+                color: AppColors.do_main,
+                text1: 'Đã hủy dịch vụ',
+                text2: 'Đã hủy dịch vụ vào ngày 23/10/2024',
+                icon: Icon(
+                  Icons.cancel, // Icon kiểu hình tròn
+                  color: Colors.white, // Màu của icon
+                  size: 50, // Kích thước của icon
+                ),
+              ),
               const SizedBox(
                 height: 10,
               ),
