@@ -100,7 +100,7 @@ class _SettingState extends State<Setting> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: 'mật khẩu mới',
+                          labelText: 'Mật khẩu mới',
                           border: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(8.0), // Bo góc viền
@@ -134,7 +134,7 @@ class _SettingState extends State<Setting> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          labelText: 'Nhập lại mạt khẩu mới',
+                          labelText: 'Nhập lại mật khẩu mới',
                           border: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(8.0), // Bo góc viền
