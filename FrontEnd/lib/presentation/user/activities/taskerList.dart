@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowAccept.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowDelete.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -22,7 +23,7 @@ class _TaskerListState extends State<Taskerlist> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(40),
+      padding: EdgeInsets.all(15),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -38,7 +39,8 @@ class _TaskerListState extends State<Taskerlist> {
                 children: [
                   Text('Danh sách ứng cử viên',
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 18,
+                        fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         decoration: TextDecoration.none,
@@ -50,17 +52,16 @@ class _TaskerListState extends State<Taskerlist> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 15,
-              ),
+              SizedBox(height: 5),
               Row(
                 children: [
                   Text(
                     'Danh sách đã xác nhận',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.xam72,
+                      fontFamily: 'Inter',
                       decoration: TextDecoration.none,
                     ),
                   ),
@@ -68,18 +69,18 @@ class _TaskerListState extends State<Taskerlist> {
                   Text(
                     '2/4 vị trí',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
                       color: AppColors.xanh_main,
                       decoration: TextDecoration.none,
                     ),
                   ),
-                  SizedBox(
-                    width: 15,
-                  ),
+                  SizedBox(width: 15)
                 ],
               ),
-              SizedBox(height: 15),
+
+              // Sử dụng Container để giới hạn chiều cao của danh sách đã xác nhận
               ListView.builder(
                 shrinkWrap: true,
                 itemCount:
@@ -92,55 +93,84 @@ class _TaskerListState extends State<Taskerlist> {
                         MaterialPageRoute(
                             builder: (context) => Taskerprofile()),
                       );
-                      // Do something
                     },
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
+                      padding: const EdgeInsets.fromLTRB(5, 0, 12, 0),
                       child: Column(
                         children: [Taskerrowdelete(), Divider()],
                       ),
                     ),
-                  ); // Replace with your actual TaskerRowAccept widget
+                  );
                 },
               ),
-              SizedBox(height: 15),
+
+              SizedBox(height: 5),
               Row(
                 children: [
                   Text(
                     'Danh sách ứng cử viên',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
                       color: AppColors.xam72,
                       decoration: TextDecoration.none,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 15),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount:
-                    4, // Replace with the actual number of taskerRowAccept items
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Taskerprofile()),
-                      );
-                      // Do something
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                      child: Column(
-                        children: [Taskerrowaccept(), Divider()],
+              const SizedBox(height: 10),
+              // Sử dụng Container để giới hạn chiều cao của danh sách ứng cử viên
+              Container(
+                height: min(
+                    200,
+                    MediaQuery.of(context).size.height *
+                        0.3), // Giới hạn chiều cao
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount:
+                      4, // Replace with the actual number of taskerRowAccept items
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Taskerprofile()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
+                        child: Column(
+                          children: [Taskerrowaccept(), Divider()],
+                        ),
                       ),
-                    ),
-                  ); // Replace with your actual TaskerRowAccept widget
-                },
+                    );
+                  },
+                ),
               ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Sizedbutton(
+                    onPressFun: () {},
+                    text: 'Xác nhận',
+                    height: 45,
+                    width: MediaQuery.of(context).size.width * 0.5 - 40,
+                  ),
+                  const SizedBox(width: 10),
+                  Sizedbutton(
+                    onPressFun: () {},
+                    text: 'Hủy',
+                    height: 45,
+                    backgroundColor: Colors.white,
+                    textColor: AppColors.do_main,
+                    isStroke: true,
+                    StrokeColor: AppColors.do_main,
+                    width: MediaQuery.of(context).size.width * 0.5 - 40,
+                  )
+                ],
+              )
             ],
           ),
         ),

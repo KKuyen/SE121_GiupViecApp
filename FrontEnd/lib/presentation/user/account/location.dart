@@ -107,7 +107,7 @@ class _LocationPageState extends State<LocationPage> {
                       child: Column(
                         children: [
                           _addressCard(),
-                          const Divider(
+                          Divider(
                             height: 1,
                             thickness: 1,
                           ),

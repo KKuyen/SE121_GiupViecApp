@@ -12,13 +12,18 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg:
+
+  flutter_dash: ^1.0.0
   cupertino_icons: ^1.0.6
   font_awesome_flutter: ^10.1.0
   flutter_bloc:
-  carousel_slider: 
+  carousel_slider:
   url_launcher:
   pin_code_fields:
   firebase_data_connect:
+
+  flutter_datetime_picker: ^1.5.1
+
   emoji_picker_flutter: ^1.5.1
   image_picker:
   flutter_slidable:
