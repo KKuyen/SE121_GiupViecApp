@@ -87,6 +87,7 @@ export class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         let userData: any = {};
+        userData.access_token = "";
         let checkUserPhone = await UserService.checkUserPhone(phoneNumber);
         if (checkUserPhone) {
           let userRepository = AppDataSource.getRepository(User);

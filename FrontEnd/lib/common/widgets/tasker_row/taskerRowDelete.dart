@@ -4,7 +4,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/taskerProfile.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerrowdelete extends StatefulWidget {
   final String taskerName;

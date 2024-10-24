@@ -14,8 +14,11 @@ import upload from "../src/middleware/multer";
 import dotenv from "dotenv";
 
 dotenv.config();
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
+
 const serviceAccount = require(process.env.Credential as string);
 
 admin.initializeApp({

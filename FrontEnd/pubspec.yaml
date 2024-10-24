@@ -27,6 +27,10 @@ dependencies:
   emoji_picker_flutter: ^1.5.1
   image_picker:
   flutter_slidable:
+  equatable: 
+  http: 
+  get_it:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
