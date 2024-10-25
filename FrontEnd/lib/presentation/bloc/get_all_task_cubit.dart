@@ -11,6 +11,7 @@ class TaskCubit extends Cubit<TaskState> {
   Future<void> getAllTasks(int userId) async {
     emit(TaskLoading());
     try {
+      print("chay vao cubit");
       final tasks = await getAllTasksUseCase.execute(userId);
       emit(TaskSuccess(tasks));
     } catch (e) {
