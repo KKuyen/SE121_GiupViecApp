@@ -15,7 +15,7 @@ userRouter.put("/api/v1/change-password", UserController.changePassword);
 
 userRouter.post("/api/v1/create-new-task", UserController.createNewTask);
 userRouter.put("/api/v1/edit-a-task", UserController.editTask);
-userRouter.get("/api/v1/get-all-tasks", UserController.getAllTasks);
+userRouter.post("/api/v1/get-all-tasks", UserController.getAllTasks);
 userRouter.get("/api/v1/get-all-voucher", UserController.getAllVoucher);
 userRouter.get("/api/v1/get-my-voucher", UserController.getMyVoucher);
 userRouter.get("/api/v1/get-all-task-type", UserController.getAllTaskType);

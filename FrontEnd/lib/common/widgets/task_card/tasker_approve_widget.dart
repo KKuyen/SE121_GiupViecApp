@@ -3,8 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/approveTab.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/waitingTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
 class TaskerApproveWidget extends StatefulWidget {
   final VoidCallback onShowLabel;
@@ -259,7 +258,7 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                       isStroke: true,
                       StrokeColor: AppColors.cam_main,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(width: 20),
                     Sizedbutton(
                       onPressFun: () {},
                       text: 'Gọi',

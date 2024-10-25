@@ -6,7 +6,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/cancelTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/cancelTab.dart';
 
 class CancelActivityWidget extends StatefulWidget {
   const CancelActivityWidget({super.key});

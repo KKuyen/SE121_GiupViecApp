@@ -6,9 +6,10 @@ import 'package:se121_giupviec_app/common/widgets/task_card/tasker_approve_widge
 import 'package:se121_giupviec_app/common/widgets/task_card/tasker_waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/newTaskStep1.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/taskerList.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/waitingTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
+
+import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
 class TaskerActivityPage extends StatefulWidget {
   const TaskerActivityPage({super.key});

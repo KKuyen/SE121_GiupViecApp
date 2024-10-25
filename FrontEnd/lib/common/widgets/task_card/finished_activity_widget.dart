@@ -7,7 +7,7 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/user/activities/finishTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/finishTab.dart';
 
 class FinishedActivityWidget extends StatefulWidget {
   const FinishedActivityWidget({super.key});

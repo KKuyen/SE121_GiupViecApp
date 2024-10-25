@@ -43,15 +43,16 @@ export class UserController {
         errCode: 1,
         message: "Missing required fields",
       });
-    }
-    let userData: any = await UserService.loginUser(phoneNumber, password);
+    } else {
+      let userData: any = await UserService.loginUser(phoneNumber, password);
 
-    res.status(200).json({
-      errCode: userData.errCode,
-      message: userData.errMessage,
-      user: userData.user ? userData.user : {},
-      access_token: userData.access_token ? userData.access_token : {},
-    });
+      res.status(200).json({
+        errCode: userData.errCode,
+        message: userData.errMessage,
+        user: userData.user ? userData.user : {},
+        access_token: userData.access_token ? userData.access_token : {},
+      });
+    }
   }
   static async sendOTP(req: Request, res: Response) {
     const { phoneNumber } = req.body;

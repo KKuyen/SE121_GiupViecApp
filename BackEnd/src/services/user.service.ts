@@ -87,6 +87,7 @@ export class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         let userData: any = {};
+        userData.access_token = "";
         let checkUserPhone = await UserService.checkUserPhone(phoneNumber);
         if (checkUserPhone) {
           let userRepository = AppDataSource.getRepository(User);
@@ -467,24 +468,24 @@ export class UserService {
         "task.taskStatus",
         "task.createdAt",
         "task.updatedAt",
-        "user.id",
-        "user.name",
-        "user.email",
-        "user.phoneNumber",
-        "user.role",
-        "user.avatar",
-        "user.birthday",
-        "user.Rpoints",
+        // "user.id",
+        // "user.name",
+        // "user.email",
+        // "user.phoneNumber",
+        // "user.role",
+        // "user.avatar",
+        // "user.birthday",
+        // "user.Rpoints",
 
-        "location.id",
+        // "location.id",
 
-        "location.country",
-        "location.province",
-        "location.district",
-        "location.ownerName",
-        "location.ownerPhoneNumber",
-        "location.detailAddress",
-        "location.map",
+        // "location.country",
+        // "location.province",
+        // "location.district",
+        // "location.ownerName",
+        // "location.ownerPhoneNumber",
+        // "location.detailAddress",
+        // "location.map",
       ])
       .where("task.userId = :userId", { userId })
       .getMany();
