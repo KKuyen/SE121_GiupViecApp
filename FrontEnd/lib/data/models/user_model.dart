@@ -41,6 +41,9 @@ class UserModel extends User {
       // 'email': email,
       // 'phoneNumber': phoneNumber,
       'access_token': access_token,
+      'message': message,
+      'user': user,
+      'errCode': errCode,
     };
   }
 }
