@@ -60,8 +60,13 @@ export class UserService {
   static createUser = async (user: User) => {
     return new Promise(async (resolve, reject) => {
       try {
+         let userData: any = {};
         if (await UserService.checkUserPhone(user.phoneNumber)) {
-          resolve({ errCode: 1, message: "Phone number already exists" });
+          userData.errCode = 1;
+          userData.errMessage = "Phone number already exists";
+          userData.access_token = "";
+          userData.user = {};
+          resolve(userData);
         } else {
           const userRepository = AppDataSource.getRepository(User);
           user.password = await UserService.hashUserPassword(user.password);
@@ -75,8 +80,18 @@ export class UserService {
           userSetting.upperStar = 0;
           userSetting.nightMode = false;
           await userSettingRepository.save(userSetting);
-
-          resolve({ errCode: 0, message: "Ok" });
+          userData.errCode = 0;
+          userData.errMessage = "OK";
+          let payload = {
+                userId: user.id,
+                phoneNumber: user.phoneNumber,
+                role: user.role,
+                expiresIn: process.env.JWT_EXPIRES_IN,
+              };
+              userData.access_token = await createJWT(payload);
+           
+          userData.user = user;
+          resolve(userData);
         }
       } catch (error) {
         reject(error);

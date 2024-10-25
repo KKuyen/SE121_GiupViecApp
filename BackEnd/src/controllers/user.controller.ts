@@ -33,8 +33,13 @@ export class UserController {
     user.role = role;
     user.phoneNumber = phoneNumber;
 
-    let message = await UserService.createUser(user);
-    res.status(200).json(message);
+    let userData: any  = await UserService.createUser(user);
+    res.status(200).json({
+      errCode: userData.errCode,
+      message: userData.errMessage,
+      user: userData.user ? userData.user : {},
+      access_token: userData.access_token ? userData.access_token : {},
+    });
   }
   static async login(req: Request, res: Response) {
     const { phoneNumber, password } = req.body;
