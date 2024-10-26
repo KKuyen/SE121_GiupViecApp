@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/splash.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
@@ -25,11 +26,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<AuthCubit>(),
         ),
+        BlocProvider(
+          create: (context) => di.sl<TaskCubit>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
         home: const SignInPage(),

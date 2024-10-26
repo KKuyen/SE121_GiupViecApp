@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/approved_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/core/injection/injection_container.dart';
+import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/get_all_task_state.dart';
+
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_all_tasks_usecase.dart';
+import 'package:se121_giupviec_app/data/repository/auth_repository_impl.dart';
+import 'package:se121_giupviec_app/data/datasources/auth_remote_datasource.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -32,23 +39,27 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        DefaultTabController(
-          length: 4,
-          child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
-        ),
-        if (_isLabelVisible)
-          Container(
-            color: Colors.black.withOpacity(0.5),
+    return BlocProvider(
+      create: (_) => TaskCubit(getAllTasksUseCase: sl<GetAllTasksUseCase>())
+        ..getAllTasks(1),
+      child: Stack(
+        children: [
+          DefaultTabController(
+            length: 4,
+            child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
           ),
-        if (_isLabelVisible)
-          Center(
-            child: Taskerlist(
-              cancel: _hideLabel,
+          if (_isLabelVisible)
+            Container(
+              color: Colors.black.withOpacity(0.5),
             ),
-          ),
-      ],
+          if (_isLabelVisible)
+            Center(
+              child: Taskerlist(
+                cancel: _hideLabel,
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -131,10 +142,22 @@ class WaitingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return WatingActivityWidget(onShowLabel: showLabel);
+    return BlocBuilder<TaskCubit, TaskState>(
+      builder: (context, state) {
+        if (state is TaskLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is TaskSuccess) {
+          return ListView.builder(
+            itemCount: state.tasks.length,
+            itemBuilder: (context, index) {
+              return WatingActivityWidget(onShowLabel: showLabel);
+            },
+          );
+        } else if (state is TaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return Center(child: Text('No tasks found'));
+        }
       },
     );
   }

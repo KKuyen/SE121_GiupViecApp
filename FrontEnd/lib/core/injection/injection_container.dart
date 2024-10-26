@@ -1,12 +1,18 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
+import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
+import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repository/auth_repository_impl.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
+import '../../domain/usecases/get_all_tasks_usecase.dart'; // Import GetAllTasksUseCase
 import '../../presentation/bloc/auth_cubit.dart';
+
 import '../configs/constants/api_constants.dart';
 
 final sl = GetIt.instance;
@@ -20,18 +26,34 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerFactory(
+    () => TaskCubit(
+      getAllTasksUseCase: sl(),
+    ),
+  );
+
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
-
+  sl.registerLazySingleton(() => GetAllTasksUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<TaskRepository>(
+    () => TaskRepositoryImpl(sl()),
   );
 
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<TaskRemoteDatasource>(
+    () => TaskRemoteDataSourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,
