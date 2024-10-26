@@ -12,6 +12,7 @@ import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.da
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bloc/auth_cubit.dart';
+import '../../bloc/auth_state.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({super.key});
@@ -35,69 +36,94 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: BasicAppbar(
-          title: SvgPicture.asset(
-            AppVectors.logo,
-            height: 22,
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthLoading) {
+          // Show loading dialog
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          // Hide loading dialog
+          Navigator.of(context).pop();
+
+          if (state is AuthSuccess) {
+            // Navigate to home
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Navigation()),
+            );
+          } else if (state is AuthError) {
+            // Show error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        }
+      },
+      child: Scaffold(
+          appBar: BasicAppbar(
+            title: SvgPicture.asset(
+              AppVectors.logo,
+              height: 22,
+            ),
+            isHideBackButton: true,
+            isCenter: true,
           ),
-          isHideBackButton: true,
-          isCenter: true,
-        ),
-        bottomNavigationBar: _bottomText(context),
-        body: Padding(
-          padding: const EdgeInsets.all(AppInfo.main_padding),
-          child: SingleChildScrollView(
-            reverse: true,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 15),
-                  _registerText(),
-                  const SizedBox(height: 20),
-                  _supportText(),
-                  const SizedBox(height: 27),
-                  _nameField(context),
-                  const SizedBox(height: 15),
-                  _phoneField(context),
-                  const SizedBox(height: 15),
-                  _emailField(context),
-                  const SizedBox(height: 15),
-                  _passField(context),
-                  const SizedBox(height: 35),
-                  SizedBox(
-                    width:
-                        double.infinity, // Chiều rộng bằng chiều rộng màn hình
-                    child: Sizedbutton(
-                        text: 'Đăng kí',
-                        onPressFun: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<AuthCubit>().register(
-                                  _fullName.text,
-                                  _email.text,
-                                  _password.text,
-                                  _phone.text,
-                                );
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const Navigation()));
-                          }
-                        }),
-                  ),
-                  const SizedBox(height: 25),
-                  _dividerWithText('hoặc'),
-                  const SizedBox(height: 20),
-                  _iconGroup(context),
-                ],
+          bottomNavigationBar: _bottomText(context),
+          body: Padding(
+            padding: const EdgeInsets.all(AppInfo.main_padding),
+            child: SingleChildScrollView(
+              reverse: true,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 15),
+                    _registerText(),
+                    const SizedBox(height: 20),
+                    _supportText(),
+                    const SizedBox(height: 27),
+                    _nameField(context),
+                    const SizedBox(height: 15),
+                    _phoneField(context),
+                    const SizedBox(height: 15),
+                    _emailField(context),
+                    const SizedBox(height: 15),
+                    _passField(context),
+                    const SizedBox(height: 35),
+                    SizedBox(
+                      width: double
+                          .infinity, // Chiều rộng bằng chiều rộng màn hình
+                      child: Sizedbutton(
+                          text: 'Đăng kí',
+                          onPressFun: () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<AuthCubit>().register(
+                                    _fullName.text,
+                                    _email.text,
+                                    _password.text,
+                                    _phone.text,
+                                  );
+                            }
+                          }),
+                    ),
+                    const SizedBox(height: 25),
+                    _dividerWithText('hoặc'),
+                    const SizedBox(height: 20),
+                    _iconGroup(context),
+                  ],
+                ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   Widget _dividerWithText(String text) {

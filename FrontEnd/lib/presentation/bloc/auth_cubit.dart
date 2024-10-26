@@ -29,12 +29,16 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> register(
-      String fullName, String email, String password, String phone) async {
+      String name, String email, String password, String phoneNumber) async {
     emit(AuthLoading());
     try {
       final user =
-          await registerUseCase.execute(fullName, email, password, phone);
-      emit(AuthSuccess(user));
+          await registerUseCase.execute(name, email, password, phoneNumber);
+      if (user.errCode == 0) {
+        emit(AuthSuccess(user));
+      } else {
+        emit(AuthError(user.message));
+      }
     } catch (e) {
       emit(AuthError(e.toString()));
     }

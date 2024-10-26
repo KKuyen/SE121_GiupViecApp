@@ -6,7 +6,7 @@ import '../models/user_model.dart';
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
   Future<UserModel> register(
-      String fullName, String email, String password, String phone);
+      String name, String email, String password, String phoneNumber);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -60,19 +60,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> register(
-      String fullName, String email, String password, String phone) async {
+      String name, String email, String password, String phoneNumber) async {
     final response = await client.post(
       Uri.parse('$baseUrl/$apiVersion/register'),
       body: json.encode({
-        'fullName': fullName,
+        'name': name,
         'email': email,
         'password': password,
-        'phone': phone,
+        'phoneNumber': phoneNumber,
+        'role': 'R1',
       }),
       headers: {'Content-Type': 'application/json'},
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return UserModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to register');
