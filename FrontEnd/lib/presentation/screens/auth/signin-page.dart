@@ -27,9 +27,14 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController _password = TextEditingController();
   String _otp = '';
   final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _phoneDialogController = TextEditingController();
+
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
   bool _obscureText = true;
+  bool isShowErrText = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
@@ -111,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   onTap: () async {
-                    _showForgotPasswordBottomSheet(context);
+                    _showOtpBottomSheet(context);
                   },
                   child: const Text(
                     'Quên mật khẩu',
@@ -324,62 +329,93 @@ class _SignInPageState extends State<SignInPage> {
       context: context,
       isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context)
-                .viewInsets
-                .bottom, // Lấy khoảng trống của bàn phím
-            left: 25.0,
-            right: 25.0,
-            top: 25.0,
-          ),
-          child: SingleChildScrollView(
-            // Bao bọc nội dung để cho phép cuộn
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
+        return BlocListener<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthLoading) {
+              // Show loading dialog
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              // Hide loading dialog
+              Navigator.of(context).pop();
+
+              if (state is AuthResponseSuccess) {
+                // Navigation to OTP
+                Navigator.pop(context); // Đóng BottomSheet hiện tại
+                _showOtpBottomSheet(context);
+              } else if (state is AuthError) {
+                // Show error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context)
+                  .viewInsets
+                  .bottom, // Lấy khoảng trống của bàn phím
+              left: 25.0,
+              right: 25.0,
+              top: 25.0,
+            ),
+            child: SingleChildScrollView(
+              // Bao bọc nội dung để cho phép cuộn
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  'Quên mật khẩu',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Vui lòng nhập số điện thoại của bạn để nhận OTP đặt lại mật khẩu.',
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Số điện thoại',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                  const SizedBox(height: 30),
+                  const Text(
+                    'Quên mật khẩu',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Sizedbutton(
-                  onPressFun: () {
-                    Navigator.pop(context); // Đóng BottomSheet hiện tại
-                    _showOtpBottomSheet(context);
-                  },
-                  text: 'Gửi OTP',
-                  width: double.infinity,
-                )
-              ],
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Vui lòng nhập số điện thoại của bạn để nhận OTP đặt lại mật khẩu.',
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _phoneDialogController,
+                    decoration: const InputDecoration(
+                      labelText: 'Số điện thoại',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Sizedbutton(
+                    onPressFun: () {
+                      context.read<AuthCubit>().sendOTP(
+                            _phoneDialogController.text,
+                          );
+                    },
+                    text: 'Gửi OTP',
+                    width: double.infinity,
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
         );
@@ -387,84 +423,142 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
+  bool _isOtpError = false;
   void _showOtpBottomSheet(BuildContext context) {
+    final TextEditingController _OTPController = TextEditingController();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context)
-                .viewInsets
-                .bottom, // Lấy khoảng trống của bàn phím
-            left: 25.0,
-            right: 25.0,
-            top: 25.0,
-          ),
-          child: SingleChildScrollView(
-            // Bao bọc nội dung để cho phép cuộn
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
+        bool _isOtpError = false;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return BlocListener<AuthCubit, AuthState>(
+              listener: (context, state) async {
+                if (state is AuthLoading) {
+                  // Show loading dialog
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  'Nhập OTP',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Vui lòng nhập số mã OTP đã được gửi đến số điện thoại của bạn.',
-                ),
-                const SizedBox(height: 20),
-                PinCodeTextField(
-                  appContext: context,
-                  length: 6,
-                  onChanged: (value) {
+                  );
+                } else {
+                  // Hide loading dialog
+                  Navigator.of(context).pop();
+
+                  if (state is AuthResponseSuccess) {
+                    // Reset error flag
                     setState(() {
-                      _otp = value;
+                      _isOtpError = false;
                     });
-                  },
-                  pinTheme: PinTheme(
-                    shape: PinCodeFieldShape.box,
-                    borderRadius: BorderRadius.circular(5),
-                    fieldHeight: 50,
-                    fieldWidth: 40,
-                    activeFillColor: Colors.white,
-                    inactiveFillColor: Colors.white,
-                    selectedFillColor: Colors.white,
-                    activeColor: AppColors
-                        .xanh_main, // Màu viền khi ô nhập đang được chọn
-                    inactiveColor:
-                        Colors.grey, // Màu viền khi ô nhập không được chọn
-                    selectedColor: AppColors.cam_main,
-                  ),
-                ),
-                const SizedBox(height: 15),
-                Sizedbutton(
-                  onPressFun: () {
+                    // Show Thành công message after dialog is dismissed
+                    await Future.delayed(Duration.zero);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Thành công")),
+                    );
+                    // Navigation to OTP
                     Navigator.pop(context); // Đóng BottomSheet hiện tại
                     _showChangePasswordBottomSheet(context);
-                  },
-                  text: 'Tiếp tục',
-                  width: double.infinity,
-                )
-              ],
-            ),
-          ),
+                  } else if (state is AuthError) {
+                    // Set error flag
+                    setState(() {
+                      _isOtpError = true;
+                    });
+                  }
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context)
+                      .viewInsets
+                      .bottom, // Lấy khoảng trống của bàn phím
+                  left: 25.0,
+                  right: 25.0,
+                  top: 25.0,
+                ),
+                child: SingleChildScrollView(
+                  // Bao bọc nội dung để cho phép cuộn
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 100,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      const Text(
+                        'Nhập OTP',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Vui lòng nhập số mã OTP đã được gửi đến số điện thoại của bạn.',
+                      ),
+                      const SizedBox(height: 20),
+                      PinCodeTextField(
+                        appContext: context,
+                        controller: _OTPController,
+                        length: 6,
+                        onChanged: (value) {
+                          setState(() {
+                            _otp = value;
+                          });
+                        },
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 40,
+                          activeFillColor: Colors.white,
+                          inactiveFillColor: Colors.white,
+                          selectedFillColor: Colors.white,
+                          activeColor: AppColors
+                              .xanh_main, // Màu viền khi ô nhập đang được chọn
+                          inactiveColor: Colors
+                              .grey, // Màu viền khi ô nhập không được chọn
+                          selectedColor: AppColors.cam_main,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Visibility(
+                        visible: _isOtpError,
+                        child: const Text(
+                          "OTP không hợp lệ hoặc hết hạn",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Sizedbutton(
+                        onPressFun: () {
+                          context.read<AuthCubit>().verifyOTP(
+                                "0345664024",
+                                _OTPController.text,
+                              );
+                        },
+                        text: 'Tiếp tục',
+                        width: double.infinity,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -475,78 +569,125 @@ class _SignInPageState extends State<SignInPage> {
       context: context,
       isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context)
-                .viewInsets
-                .bottom, // Lấy khoảng trống của bàn phím
-            left: 25.0,
-            right: 25.0,
-            top: 25.0,
-          ),
-          child: SingleChildScrollView(
-            // Bao bọc nội dung để cho phép cuộn
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
+        return BlocListener<AuthCubit, AuthState>(
+          listener: (context, state) {
+            print("state: " + state.toString());
+            if (state is AuthLoading) {
+              print("state is AuthLoading");
+              // Show loading dialog
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              print("state is not AuthLoading");
+              // Hide loading dialog
+              //Navigator.of(context).pop();
+
+              if (state is AuthResponseSuccess) {
+                print("state is AuthResponseSuccess");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Thành công"),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                // Navigator.pop(context); // Đóng BottomSheet hiện tại
+              } else if (state is AuthError) {
+                // Show error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+                Navigator.pop(context); // Đóng BottomSheet hiện tại
+              }
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context)
+                  .viewInsets
+                  .bottom, // Lấy khoảng trống của bàn phím
+              left: 25.0,
+              right: 25.0,
+              top: 25.0,
+            ),
+            child: SingleChildScrollView(
+              // Bao bọc nội dung để cho phép cuộn
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  'Cập nhật mật khẩu',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Vui lòng nhập mật khẩu mới của bạn.',
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Mật khẩu mới',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                  const SizedBox(height: 30),
+                  const Text(
+                    'Cập nhật mật khẩu',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Xác nhận mật khẩu mới',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Vui lòng nhập mật khẩu mới của bạn.',
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _newPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Mật khẩu mới',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Sizedbutton(
-                  onPressFun: () {
-                    // Xử lý đổi mật khẩu ở đây
-                    String newPassword = _newPasswordController.text;
-                    String confirmPassword = _confirmPasswordController.text;
-                    if (newPassword == confirmPassword) {
-                      print('Mật khẩu đã được đổi thành công');
-                      Navigator.pop(context); // Đóng BottomSheet
-                    } else {
-                      print('Mật khẩu không khớp');
-                    }
-                  },
-                  text: 'Gửi OTP',
-                  width: double.infinity,
-                )
-              ],
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Xác nhận mật khẩu mới',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Sizedbutton(
+                    onPressFun: () {
+                      // Xử lý đổi mật khẩu ở đây
+                      String newPassword = _newPasswordController.text;
+                      String confirmPassword = _confirmPasswordController.text;
+                      if (newPassword == confirmPassword) {
+                        //Navigator.pop(context); // Đóng BottomSheet
+
+                        context.read<AuthCubit>().forgetPassword(
+                              "0345664024",
+                              newPassword,
+                            );
+                      } else {
+                        print('Mật khẩu không khớp: ' +
+                            newPassword +
+                            " __ " +
+                            confirmPassword);
+                      }
+                    },
+                    text: 'Cập nhật mật khẩu',
+                    width: double.infinity,
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
         );

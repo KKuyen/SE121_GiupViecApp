@@ -1,6 +1,6 @@
 // lib/domain/usecases/register_usecase.dart
-import '../entities/user.dart';
-import '../repository/auth_repository.dart';
+import '../../entities/user.dart';
+import '../../repository/auth_repository.dart';
 
 class RegisterUseCase {
   final AuthRepository repository;

@@ -68,29 +68,23 @@ export class UserController {
       });
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Tạo OTP ngẫu nhiên
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP hết hạn sau 5 phút
+    const expiresAt = new Date(Date.now() + 24*60 * 60 * 1000); // OTP hết hạn sau 5 phút
     const message = await UserService.sendOTP(phoneNumber, otp);
     otps[phoneNumber] = { otp, expiresAt };
-    res.status(200).json({
-      errCode: 0,
-      message: message,
-    });
+    res.status(200).json(message);
   }
   static async verifyOTP(req: Request, res: Response) {
     const { phoneNumber, otp } = req.body;
     const otpDetails = otps[phoneNumber];
     if (!otpDetails) {
-      res.status(400).json({ message: "OTP not found for this phone number" });
+      res.status(400).json({errCode:1, message: "OTP not found for this phone number" });
     } else {
       const { otp: actualOtp, expiresAt } = otpDetails;
       if (new Date() > expiresAt) {
-        res.status(400).json({ message: "OTP has expired" });
+        res.status(400).json({errCode:2,  message: "OTP has expired" });
       } else {
         const message = await UserService.verifyOtp(otp, actualOtp);
-        res.status(200).json({
-          errCode: 0,
-          message: message,
-        });
+        res.status(200).json(message);
       }
     }
   }

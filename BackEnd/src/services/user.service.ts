@@ -155,15 +155,33 @@ export class UserService {
       }
     });
   };
+  static convertToShortPhoneNumber(phoneNumber: string): string {
+  if (phoneNumber.startsWith('+84')) {
+    return '0' + phoneNumber.slice(3);
+    }
+  
+  return phoneNumber; // Return the original if it doesn't start with +84
+  }
+  static convertToFullPhoneNumber(phoneNumber: string): string {
+    if (phoneNumber.startsWith('0')) {
+      return '+84' + phoneNumber.slice(1);
+    }
+    return phoneNumber; // Return the original if it doesn't start with '0'
+  }
   static sendOTP = async (phoneNumber: string, otp: string) => {
     return new Promise(async (resolve, reject) => {
       try {
-        await client.messages.create({
-          body: `Your OTP is: ${otp}`,
-          from: process.env.TWILIO_PHONE_NUMBER!,
-          to: phoneNumber,
-        });
-        resolve({ errCode: 0, message: "Ok" });
+        let shortPhoneNumber = UserService.convertToShortPhoneNumber(phoneNumber);
+        let checkUserPhone = await UserService.checkUserPhone(shortPhoneNumber);
+        if (checkUserPhone) {
+          await client.messages.create({
+            body: `Your OTP is: ${otp}`,
+            from: process.env.TWILIO_PHONE_NUMBER!,
+            to: this.convertToFullPhoneNumber(shortPhoneNumber),
+          });
+          resolve({ errCode: 0, message: "Ok" });
+        }
+        resolve({ errCode: 1, message: "Your phone number isn`t exist in system. Please try again!" });
       } catch (error) {
         reject(error);
       }

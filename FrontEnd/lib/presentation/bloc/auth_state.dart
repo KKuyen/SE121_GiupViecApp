@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:se121_giupviec_app/domain/entities/response.dart';
 import '../../../domain/entities/user.dart';
 
 abstract class AuthState extends Equatable {
@@ -19,6 +20,15 @@ class AuthSuccess extends AuthState {
 
   @override
   List<Object> get props => [user];
+}
+
+class AuthResponseSuccess extends AuthState {
+  final Response response;
+
+  const AuthResponseSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
 }
 
 class AuthError extends AuthState {
