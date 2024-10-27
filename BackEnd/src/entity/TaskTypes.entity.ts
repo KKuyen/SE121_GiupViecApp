@@ -31,9 +31,11 @@ export class TaskTypes {
   @Column({ type: "float", nullable: false })
   originalPrice!: number; // Using money type for prices
 
-  @OneToMany(() => AddPriceDetails, (addPriceDetails) => addPriceDetails.taskType)
-    addPriceDetails!: AddPriceDetails[]; 
-
+  @OneToMany(
+    () => AddPriceDetails,
+    (addPriceDetails) => addPriceDetails.taskType
+  )
+  addPriceDetails!: AddPriceDetails[];
 
   @OneToMany(() => Tasks, (task) => task.taskType)
   task!: Tasks[];

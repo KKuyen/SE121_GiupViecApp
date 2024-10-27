@@ -1,22 +1,29 @@
-// lib/data/models/task_model.dart
-import 'package:se121_giupviec_app/data/models/kuser_model.dart';
-import 'package:se121_giupviec_app/data/models/location_model.dart';
-import 'package:se121_giupviec_app/data/models/user_model.dart';
-import 'package:se121_giupviec_app/domain/entities/kuser.dart';
-import '../../domain/entities/task.dart';
+import 'package:se121_giupviec_app/domain/entities/task.dart';
 
 class TaskModel extends Task {
+  final Map<String, dynamic>? user; // Allow null
+  final Map<String, dynamic>? location; // Allow null
+  final Map<String, dynamic>? taskType; // Allow null
+  final List<Map<String, dynamic>>? taskerLists; // Allow null
+
   TaskModel({
     required int id,
     required int userId,
     required int taskTypeId,
     required DateTime time,
     required int locationId,
-    required String note,
-    required int isReTaskChildren,
+    String? note,
+    int? isReTaskChildren,
     required String taskStatus,
     required DateTime createdAt,
     required DateTime updatedAt,
+    String? price,
+    this.user,
+    this.location,
+    this.taskType,
+    this.taskerLists,
+    int? numberOfTasker,
+    DateTime? approvedAt,
   }) : super(
           id: id,
           userId: userId,
@@ -28,6 +35,13 @@ class TaskModel extends Task {
           taskStatus: taskStatus,
           createdAt: createdAt,
           updatedAt: updatedAt,
+          price: price,
+          location: location,
+          user: user,
+          taskType: taskType,
+          taskerLists: taskerLists,
+          numberOfTasker: numberOfTasker,
+          approvedAt: approvedAt,
         );
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +56,23 @@ class TaskModel extends Task {
       taskStatus: json['taskStatus'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      price: json['price'],
+      user: json['user'] != null ? json['user'] as Map<String, dynamic> : null,
+      location: json['location'] != null
+          ? json['location'] as Map<String, dynamic>
+          : null,
+      taskType: json['taskType'] != null
+          ? json['taskType'] as Map<String, dynamic>
+          : null,
+      taskerLists: json['taskerLists'] != null
+          ? (json['taskerLists'] as List<dynamic>)
+              .map((e) => e as Map<String, dynamic>)
+              .toList()
+          : null,
+      numberOfTasker: json['numberOfTasker'],
+      approvedAt: json['approvedAt'] != null
+          ? DateTime.parse(json['approvedAt'])
+          : null,
     );
   }
 
@@ -57,6 +88,13 @@ class TaskModel extends Task {
       'taskStatus': taskStatus,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'price': price,
+      'user': user,
+      'location': location,
+      'taskType': taskType,
+      'taskerLists': taskerLists,
+      'numberOfTasker': numberOfTasker,
+      'approvedAt': approvedAt?.toIso8601String(),
     };
   }
 }

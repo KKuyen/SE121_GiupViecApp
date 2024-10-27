@@ -3,7 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowAccept.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowDelete.dart';
@@ -12,8 +12,9 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerPr
 
 class Taskerlist extends StatefulWidget {
   final VoidCallback cancel;
+  final int id;
 
-  const Taskerlist({super.key, required this.cancel});
+  const Taskerlist({this.id = 1, super.key, required this.cancel});
 
   @override
   State<Taskerlist> createState() => _TaskerListState();

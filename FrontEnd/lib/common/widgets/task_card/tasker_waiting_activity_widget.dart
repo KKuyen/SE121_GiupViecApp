@@ -21,10 +21,10 @@ class TaskerWatingActivityWidgetState
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Waitingtab()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const Waitingtab()),
+        // );
       },
       child: Center(
         child: Padding(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
-import 'package:se121_giupviec_app/presentation/screens/auth/splash.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
 import 'core/injection/injection_container.dart' as di;
 import 'presentation/bloc/auth_cubit.dart';
 
@@ -29,6 +29,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<TaskCubit>(),
         ),
+        BlocProvider(
+          create: (context) => di.sl<ATaskCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<AWCubit>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -37,7 +43,7 @@ class MyApp extends StatelessWidget {
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-        home: const SignInPage(),
+        home: const Navigation(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );

@@ -8,6 +8,10 @@ class GetAllTasksUseCase {
   GetAllTasksUseCase(this.repository);
 
   Future<List<Task>> execute(int userId) async {
-    return await repository.getAllTasks(userId);
+    return await repository.getTS1Tasks(userId);
+  }
+
+  Future<List<Task>> execute2(int userId) async {
+    return await repository.getTS2Tasks(userId);
   }
 }

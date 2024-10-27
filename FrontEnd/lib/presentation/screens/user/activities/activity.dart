@@ -5,15 +5,10 @@ import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widg
 import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/core/injection/injection_container.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_state.dart';
-
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
-import 'package:se121_giupviec_app/domain/usecases/get_all_tasks_usecase.dart';
-import 'package:se121_giupviec_app/data/repository/auth_repository_impl.dart';
-import 'package:se121_giupviec_app/data/datasources/auth_remote_datasource.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -38,28 +33,30 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    final taskCubit = BlocProvider.of<TaskCubit>(context).getAllTasks(1);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => TaskCubit(getAllTasksUseCase: sl<GetAllTasksUseCase>())
-        ..getAllTasks(1),
-      child: Stack(
-        children: [
-          DefaultTabController(
-            length: 4,
-            child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
+    return Stack(
+      children: [
+        DefaultTabController(
+          length: 4,
+          child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
+        ),
+        if (_isLabelVisible)
+          Container(
+            color: Colors.black.withOpacity(0.5),
           ),
-          if (_isLabelVisible)
-            Container(
-              color: Colors.black.withOpacity(0.5),
+        if (_isLabelVisible)
+          Center(
+            child: Taskerlist(
+              cancel: _hideLabel,
             ),
-          if (_isLabelVisible)
-            Center(
-              child: Taskerlist(
-                cancel: _hideLabel,
-              ),
-            ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
@@ -128,8 +125,8 @@ class JobCardScreen extends StatelessWidget {
         },
         backgroundColor: AppColors.xanh_main,
         foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
         shape: const CircleBorder(),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -138,25 +135,62 @@ class JobCardScreen extends StatelessWidget {
 class WaitingList extends StatelessWidget {
   final VoidCallback showLabel;
 
-  const WaitingList({required this.showLabel});
+  const WaitingList({super.key, required this.showLabel});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
         if (state is TaskLoading) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Center(
+                child: Container(
+                    height: 40,
+                    width: 40,
+                    child: const CircularProgressIndicator())),
+          );
         } else if (state is TaskSuccess) {
           return ListView.builder(
-            itemCount: state.tasks.length,
-            itemBuilder: (context, index) {
-              return WatingActivityWidget(onShowLabel: showLabel);
-            },
-          );
+              itemCount: state.TS1tasks.length,
+              itemBuilder: (context, index) {
+                var task = state.TS1tasks[index];
+                int maxTasker = 0;
+                int appTasker = 0;
+                for (var tasker in task.taskerLists ?? []) {
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
+                    maxTasker++;
+                  }
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+                    appTasker++;
+                  }
+                }
+
+                return WatingActivityWidget(
+                  ungCuVien: maxTasker,
+                  daNhan: appTasker,
+                  createAt: task.createdAt,
+                  numberOfTasker: task.numberOfTasker ?? 0,
+                  onShowLabel: showLabel,
+                  id: task.id,
+                  startDay: task.time,
+                  price: task.price ?? '',
+                  note: task.note ?? '',
+                  ownerName:
+                      (task.location as Map<String, dynamic>)['ownerName'],
+                  phone: (task.location
+                      as Map<String, dynamic>)['ownerPhoneNumber'],
+                  deltailAddress:
+                      (task.location as Map<String, dynamic>)['detailAddress'],
+                  province: (task.location as Map<String, dynamic>)['province'],
+                  district: (task.location as Map<String, dynamic>)['district'],
+                  country: (task.location as Map<String, dynamic>)['country'],
+                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                );
+              });
         } else if (state is TaskError) {
           return Center(child: Text('Error: ${state.message}'));
         } else {
-          return Center(child: Text('No tasks found'));
+          return const Center(child: Text('No tasks found'));
         }
       },
     );
@@ -170,10 +204,59 @@ class ApprovedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return const ApprovedActivityWidget();
+    return BlocBuilder<TaskCubit, TaskState>(
+      builder: (context, state) {
+        if (state is TaskLoading) {
+          return Center(
+            child: Center(
+                child: Container(
+                    height: 40,
+                    width: 40,
+                    child: const CircularProgressIndicator())),
+          );
+        } else if (state is TaskSuccess) {
+          return ListView.builder(
+              itemCount: state.TS2tasks.length,
+              itemBuilder: (context, index) {
+                var task = state.TS2tasks[index];
+                int maxTasker = 0;
+                int appTasker = 0;
+                for (var tasker in task.taskerLists ?? []) {
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
+                    maxTasker++;
+                  }
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+                    appTasker++;
+                  }
+                }
+
+                return ApprovedActivityWidget(
+                  ungCuVien: maxTasker,
+                  daNhan: appTasker,
+                  onShowLabel: showLabel,
+                  createAt: task.createdAt,
+                  numberOfTasker: task.numberOfTasker ?? 0,
+                  id: task.id,
+                  startDay: task.time,
+                  price: task.price ?? '',
+                  note: task.note ?? '',
+                  ownerName:
+                      (task.location as Map<String, dynamic>)['ownerName'],
+                  phone: (task.location
+                      as Map<String, dynamic>)['ownerPhoneNumber'],
+                  deltailAddress:
+                      (task.location as Map<String, dynamic>)['detailAddress'],
+                  province: (task.location as Map<String, dynamic>)['province'],
+                  district: (task.location as Map<String, dynamic>)['district'],
+                  country: (task.location as Map<String, dynamic>)['country'],
+                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                );
+              });
+        } else if (state is TaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No tasks found'));
+        }
       },
     );
   }

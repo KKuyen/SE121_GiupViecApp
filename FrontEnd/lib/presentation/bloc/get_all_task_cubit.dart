@@ -12,8 +12,10 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskLoading());
     try {
       print("chay vao cubit");
-      final tasks = await getAllTasksUseCase.execute(userId);
-      emit(TaskSuccess(tasks));
+      final TS1tasks = await getAllTasksUseCase.execute(userId);
+      final TS2tasks = await getAllTasksUseCase.execute2(userId);
+
+      emit(TaskSuccess(TS1tasks, TS2tasks));
     } catch (e) {
       emit(TaskError(e.toString()));
     }
