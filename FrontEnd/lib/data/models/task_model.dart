@@ -24,6 +24,9 @@ class TaskModel extends Task {
     this.taskerLists,
     int? numberOfTasker,
     DateTime? approvedAt,
+    DateTime? cancelAt,
+    DateTime? finishedAt,
+    String? cancelReason,
   }) : super(
           id: id,
           userId: userId,
@@ -42,6 +45,9 @@ class TaskModel extends Task {
           taskerLists: taskerLists,
           numberOfTasker: numberOfTasker,
           approvedAt: approvedAt,
+          cancelAt: cancelAt,
+          finishedAt: finishedAt,
+          cancelReason: cancelReason,
         );
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
@@ -73,6 +79,12 @@ class TaskModel extends Task {
       approvedAt: json['approvedAt'] != null
           ? DateTime.parse(json['approvedAt'])
           : null,
+      cancelAt:
+          json['cancelAt'] != null ? DateTime.parse(json['cancelAt']) : null,
+      finishedAt: json['finishedAt'] != null
+          ? DateTime.parse(json['finishedAt'])
+          : null,
+      cancelReason: json['cancelReason'],
     );
   }
 
@@ -95,6 +107,9 @@ class TaskModel extends Task {
       'taskerLists': taskerLists,
       'numberOfTasker': numberOfTasker,
       'approvedAt': approvedAt?.toIso8601String(),
+      'cancelAt': cancelAt?.toIso8601String(),
+      'finishedAt': finishedAt?.toIso8601String(),
+      'cancelReason': cancelReason,
     };
   }
 }

@@ -7,8 +7,10 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/finishTab.dart';
 
 class ApprovedActivityWidget extends StatefulWidget {
+  final bool isFinished;
   final VoidCallback onShowLabel;
   final int numberOfTasker;
   final int id;
@@ -28,8 +30,9 @@ class ApprovedActivityWidget extends StatefulWidget {
   final String note;
 
   const ApprovedActivityWidget(
-      {required this.onShowLabel,
-      this.id = 1,
+      {this.isFinished = false,
+      required this.onShowLabel,
+      required this.id,
       required this.createAt,
       this.ungCuVien = 0,
       this.daNhan = 0,
@@ -41,8 +44,8 @@ class ApprovedActivityWidget extends StatefulWidget {
       required this.deltailAddress,
       required this.country,
       required this.province,
-      this.phone = '+(54) 345664xxx',
-      this.price = '200000 đ',
+      required this.phone,
+      required this.price,
       this.note = 'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
       super.key});
 
@@ -55,14 +58,28 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Approvetab(
-              id: widget.id,
+        if (widget.isFinished == false)
+          {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Approvetab(
+                  id: widget.id,
+                ),
+              ),
             ),
-          ),
-        ),
+          }
+        else
+          {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Finishtab(
+                  id: widget.id,
+                ),
+              ),
+            ),
+          }
       },
       child: Center(
           child: Padding(

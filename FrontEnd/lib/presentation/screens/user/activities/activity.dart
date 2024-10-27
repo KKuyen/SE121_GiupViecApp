@@ -269,10 +269,60 @@ class FinishedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return const FinishedActivityWidget();
+    return BlocBuilder<TaskCubit, TaskState>(
+      builder: (context, state) {
+        if (state is TaskLoading) {
+          return Center(
+            child: Center(
+                child: Container(
+                    height: 40,
+                    width: 40,
+                    child: const CircularProgressIndicator())),
+          );
+        } else if (state is TaskSuccess) {
+          return ListView.builder(
+              itemCount: state.TS3tasks.length,
+              itemBuilder: (context, index) {
+                var task = state.TS3tasks[index];
+                int maxTasker = 0;
+                int appTasker = 0;
+                for (var tasker in task.taskerLists ?? []) {
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
+                    maxTasker++;
+                  }
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+                    appTasker++;
+                  }
+                }
+
+                return ApprovedActivityWidget(
+                  isFinished: true,
+                  ungCuVien: maxTasker,
+                  daNhan: appTasker,
+                  onShowLabel: showLabel,
+                  createAt: task.createdAt,
+                  numberOfTasker: task.numberOfTasker ?? 0,
+                  id: task.id,
+                  startDay: task.time,
+                  price: task.price ?? '',
+                  note: task.note ?? '',
+                  ownerName:
+                      (task.location as Map<String, dynamic>)['ownerName'],
+                  phone: (task.location
+                      as Map<String, dynamic>)['ownerPhoneNumber'],
+                  deltailAddress:
+                      (task.location as Map<String, dynamic>)['detailAddress'],
+                  province: (task.location as Map<String, dynamic>)['province'],
+                  district: (task.location as Map<String, dynamic>)['district'],
+                  country: (task.location as Map<String, dynamic>)['country'],
+                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                );
+              });
+        } else if (state is TaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No tasks found'));
+        }
       },
     );
   }
@@ -285,10 +335,60 @@ class CancelList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return const CancelActivityWidget();
+    return BlocBuilder<TaskCubit, TaskState>(
+      builder: (context, state) {
+        if (state is TaskLoading) {
+          return Center(
+            child: Center(
+                child: Container(
+                    height: 40,
+                    width: 40,
+                    child: const CircularProgressIndicator())),
+          );
+        } else if (state is TaskSuccess) {
+          return ListView.builder(
+              itemCount: state.TS4tasks.length,
+              itemBuilder: (context, index) {
+                var task = state.TS4tasks[index];
+                int maxTasker = 0;
+                int appTasker = 0;
+                for (var tasker in task.taskerLists ?? []) {
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
+                    maxTasker++;
+                  }
+                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+                    appTasker++;
+                  }
+                }
+
+                return CancelActivityWidget(
+                  cancelAt: task.cancelAt ?? DateTime.now(),
+                  cancelReason: task.cancelReason ?? '',
+                  ungCuVien: maxTasker,
+                  daNhan: appTasker,
+                  createAt: task.createdAt,
+                  numberOfTasker: task.numberOfTasker ?? 0,
+                  id: task.id,
+                  startDay: task.time,
+                  price: task.price ?? '',
+                  note: task.note ?? '',
+                  ownerName:
+                      (task.location as Map<String, dynamic>)['ownerName'],
+                  phone: (task.location
+                      as Map<String, dynamic>)['ownerPhoneNumber'],
+                  deltailAddress:
+                      (task.location as Map<String, dynamic>)['detailAddress'],
+                  province: (task.location as Map<String, dynamic>)['province'],
+                  district: (task.location as Map<String, dynamic>)['district'],
+                  country: (task.location as Map<String, dynamic>)['country'],
+                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                );
+              });
+        } else if (state is TaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No tasks found'));
+        }
       },
     );
   }

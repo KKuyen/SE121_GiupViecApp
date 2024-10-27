@@ -738,11 +738,13 @@ export class UserService {
         "task.createdAt",
         "task.updatedAt",
         "task.price",
+        "task.numberOfTasker",
 
         "task.approvedAt",
         "task.cancelAt",
         "task.finishedAt",
         "task.cancelReason",
+
         "user.id",
         "user.name",
         "user.email",
@@ -982,7 +984,10 @@ export class UserService {
     const taskRepository = AppDataSource.getRepository(Tasks);
     const task = await taskRepository.findOne({ where: { id: taskId } });
     if (task) {
-      task.taskStatus = "TS4" + cancelCode.toString();
+      task.taskStatus = "TS4";
+      if (cancelCode === 0) {
+        task.cancelReason = "Không có lý do";
+      }
       task.cancelAt = currentDate;
       await taskRepository.save(task);
     }

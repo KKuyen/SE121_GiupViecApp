@@ -173,14 +173,21 @@ class _ApprovetabState extends State<Approvetab> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: 4, // Số lượng tasker
-                                itemBuilder: (context, index) {
-                                  return const Taskerrowbasic(
-                                    taskerImageLink: '',
-                                  );
-                                },
+                              child: Column(
+                                children: taskerList.map<Widget>((atasker) {
+                                  if (atasker.status == "S2") {
+                                    return Taskerrowbasic(
+                                      taskerName: (atasker.tasker
+                                          as Map<String, dynamic>)['name'],
+                                      taskerImageLink: (atasker.tasker
+                                          as Map<String, dynamic>)['avatar'],
+                                      taskerPhone: (atasker.tasker as Map<
+                                          String, dynamic>)['phoneNumber'],
+                                    );
+                                  } else {
+                                    return Container(); // Return an empty container if the status is not "S1"
+                                  }
+                                }).toList(),
                               ),
                             ),
                             const SizedBox(
@@ -290,86 +297,6 @@ class _ApprovetabState extends State<Approvetab> {
                                               fontWeight: FontWeight.normal),
                                         ),
                                       ),
-                                      IconButton(
-                                        onPressed: () {
-                                          showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2000),
-                                            lastDate: DateTime(2100),
-                                            builder: (BuildContext context,
-                                                Widget? child) {
-                                              return Theme(
-                                                data:
-                                                    ThemeData.light().copyWith(
-                                                  primaryColor: AppColors
-                                                      .xanh_main, // Header background color
-                                                  highlightColor: AppColors
-                                                      .xanh_main, // Selected date color
-                                                  colorScheme:
-                                                      ColorScheme.light(
-                                                    primary: AppColors
-                                                        .xanh_main, // Header background color
-                                                    onPrimary: Colors
-                                                        .white, // Header text color
-                                                    onSurface: Colors
-                                                        .black, // Body text color
-                                                  ),
-                                                  dialogBackgroundColor: Colors
-                                                      .white, // Background color
-                                                ),
-                                                child: child!,
-                                              );
-                                            },
-                                          ).then((selectedDate) {
-                                            if (selectedDate != null) {
-                                              showTimePicker(
-                                                context: context,
-                                                initialTime: TimeOfDay.now(),
-                                                builder: (BuildContext context,
-                                                    Widget? child) {
-                                                  return Theme(
-                                                    data: ThemeData.light()
-                                                        .copyWith(
-                                                      primaryColor: AppColors
-                                                          .xanh_main, // Header background color
-                                                      hintColor: AppColors
-                                                          .xanh_main, // Selected time color
-                                                      colorScheme:
-                                                          ColorScheme.light(
-                                                        primary: AppColors
-                                                            .xanh_main, // Header background color
-                                                        onPrimary: Colors
-                                                            .white, // Header text color
-                                                        onSurface: Colors
-                                                            .black, // Body text color
-                                                      ),
-                                                      dialogBackgroundColor: Colors
-                                                          .white, // Background color
-                                                    ),
-                                                    child: child!,
-                                                  );
-                                                },
-                                              ).then((selectedTime) {
-                                                if (selectedTime != null) {
-                                                  setState(() {
-                                                    // Update the date and time here
-                                                    // For example, you can format and display the selected date and time
-                                                    _formattedDate =
-                                                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-                                                    _formattedTime =
-                                                        "${selectedTime.format(context)}";
-                                                  });
-                                                }
-                                              });
-                                            }
-                                          });
-                                        },
-                                        icon: Icon(
-                                          Icons.calendar_today_rounded,
-                                          size: 25,
-                                        ),
-                                      )
                                     ],
                                   ),
                                   SizedBox(
@@ -432,13 +359,6 @@ class _ApprovetabState extends State<Approvetab> {
                                         ),
                                       ),
                                       Spacer(),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.location_on,
-                                          size: 30,
-                                        ),
-                                      )
                                     ],
                                   ),
                                   SizedBox(
@@ -490,14 +410,6 @@ class _ApprovetabState extends State<Approvetab> {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      IconButton(
-                                          onPressed: _toggleEditableNote,
-                                          icon: !_isEditableNote
-                                              ? Icon(Icons.edit)
-                                              : Icon(
-                                                  Icons.check,
-                                                  color: AppColors.xanh_main,
-                                                ))
                                     ],
                                   ),
                                 ],
@@ -572,7 +484,8 @@ class _ApprovetabState extends State<Approvetab> {
                                       const SizedBox(width: 25),
                                       Expanded(
                                         child: Text(
-                                          '2:00 PM, 16/7/2024',
+                                          task.approvedAt?.toIso8601String() ??
+                                              '',
                                           softWrap: true,
                                           style: TextStyle(
                                               fontFamily: 'Inter',

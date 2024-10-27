@@ -16,6 +16,9 @@ class Task {
   final List<Object>? taskerLists; // Allow null
   final int? numberOfTasker; // Allow null
   final DateTime? approvedAt; // Allow null
+  final DateTime? cancelAt;
+  final DateTime? finishedAt;
+  final String? cancelReason; // Allow null
 
   Task({
     required this.id,
@@ -35,5 +38,8 @@ class Task {
     this.taskerLists,
     this.numberOfTasker,
     this.approvedAt,
+    this.cancelAt,
+    this.finishedAt,
+    this.cancelReason,
   });
 }

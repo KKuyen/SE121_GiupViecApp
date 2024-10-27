@@ -4,27 +4,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/finishTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
 
 class FinishedActivityWidget extends StatefulWidget {
-  const FinishedActivityWidget({super.key});
+  final VoidCallback onShowLabel;
+  final int numberOfTasker;
+  final int id;
+  final String serviceName;
+  final DateTime startDay;
+  final DateTime createAt;
+  final String ownerName;
+  final String district;
+  final String deltailAddress;
+  final String country;
+  final String province;
+  final String phone;
+  final int ungCuVien;
+  final int daNhan;
+
+  final String price;
+  final String note;
+
+  const FinishedActivityWidget(
+      {required this.onShowLabel,
+      this.id = 1,
+      required this.createAt,
+      this.ungCuVien = 0,
+      this.daNhan = 0,
+      required this.numberOfTasker,
+      this.serviceName = 'Trông trẻ',
+      required this.startDay,
+      this.ownerName = 'Trần Hồng Quyền',
+      required this.district,
+      required this.deltailAddress,
+      required this.country,
+      required this.province,
+      this.phone = '+(54) 345664xxx',
+      this.price = '200000 đ',
+      this.note = 'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+      super.key});
 
   @override
-  State<FinishedActivityWidget> createState() => FinishedActivityWidgetState();
+  State<FinishedActivityWidget> createState() => _FinishedActivityWidgetState();
 }
 
-class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
+class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Finishtab()),
-        );
+          MaterialPageRoute(
+            builder: (context) => Approvetab(
+              id: widget.id,
+            ),
+          ),
+        ),
       },
       child: Center(
           child: Padding(
@@ -50,7 +88,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 5, 15, 5),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
                       child: SvgPicture.asset(
                         AppVectors.baby_carriage_icon,
                         height: 30,
@@ -58,38 +96,34 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ),
                     ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment
-                          .start, // Align children to the left
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Text(
-                              'Trông trẻ',
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
-                              style: TextStyle(
+                              widget.serviceName,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-                            Text(
+                            const Text(
                               '#',
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
+                              textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                color: Color(0xFF4AB7B6),
+                                color: AppColors.xanh_main,
                                 fontSize: 17,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
                             Text(
-                              'DV01',
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
-                              style: TextStyle(
-                                color: Color(0xFF4AB7B6),
+                              'DV${widget.id}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                color: AppColors.xanh_main,
                                 fontSize: 17,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
@@ -98,9 +132,9 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                           ],
                         ),
                         Text(
-                          'Đã hoàn thành',
-                          textAlign: TextAlign.left, // Align text to the left
-                          style: TextStyle(
+                          widget.createAt.toIso8601String(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
                             color: Color(0xFF727272),
                             fontSize: 12,
                             fontFamily: 'Inter',
@@ -109,16 +143,16 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                         ),
                       ],
                     ),
-                    Spacer(),
-                    // Icon(
+                    const Spacer(),
+                    // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,
                     //   size: 25.0,
                     // )
                   ],
                 ),
-                const SizedBox(height: 4),
-                Divider(),
+                const SizedBox(height: 5),
+                const Divider(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
@@ -134,8 +168,8 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ),
                       const SizedBox(width: 20),
                       Text(
-                        'Thứ 7, 20/11/2021',
-                        style: TextStyle(
+                        widget.startDay.toIso8601String(),
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -159,14 +193,14 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: 25),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Trần Hồng Quyền',
-                              style: TextStyle(
+                              widget.ownerName,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -174,8 +208,14 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                               ),
                             ),
                             Text(
-                              'Quốc lộ 13/47B 479, Khu Phố 5, Thủ Đức, Hồ Chí Minh, Việt Nam',
-                              style: TextStyle(
+                              widget.deltailAddress +
+                                  ', ' +
+                                  widget.district +
+                                  ', ' +
+                                  widget.province +
+                                  ', ' +
+                                  widget.country,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -185,8 +225,8 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                               overflow: TextOverflow.visible,
                             ),
                             Text(
-                              '+(54) 345664xxx',
-                              style: TextStyle(
+                              widget.phone,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -203,7 +243,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Giá:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -214,8 +254,8 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ),
                       const SizedBox(width: 48),
                       Text(
-                        'Thứ 7, 20/11/2021',
-                        style: TextStyle(
+                        widget.price,
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -225,8 +265,8 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
                       Text(
@@ -238,7 +278,7 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      const SizedBox(width: 18),
+                      SizedBox(width: 18),
                       Expanded(
                         child: Text(
                           'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
@@ -253,32 +293,37 @@ class FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                     ],
                   ),
                 ),
-                Divider(),
+                const SizedBox(height: 0),
+                const Divider(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
-                  child: Column(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Row(
                     children: [
-                      const Text('Danh sách người giúp việc',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.bold,
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount:
-                              3, // Replace with the actual number of items
-                          itemBuilder: (context, index) {
-                            return Taskerrowreview(
-                                taskerImageLink:
-                                    'https://storage.googleapis.com/se100-af7bc.appspot.com/images/1728630023846-ANIME-PICTURES.NET_-_801133-1197x674-elden_ring-malenia_blade_of_miquella-agong-single-long_hair-wide_image-transformed.jpeg?GoogleAccessId=firebase-adminsdk-6avlp%40se100-af7bc.iam.gserviceaccount.com&Expires=1729234829&Signature=F2pTBMS10pYiDfqBskF7NyLlITUEOwhOQqOPvxmEcCkjBPTV8Lf8KvIu53UV6LNy2s6suCNU0qq97rFaXy%2FKYAquOHeG9%2F%2BstlPmPwViM1mhHF0q12ptEJAwfXbXycND%2FuyaAhNm35zNTBNy%2BdAy%2FZQR4J0CO6lXKLlYLzqP8%2BKuwI4o711lsxSYUVRv1S4%2Fi58Gm%2FF8RDTg%2Fy%2BsP2BGfV71VF44bWcvkwtwjGOkGXWMCmRjmmaDjPiJhxQX9rGDuCyi89Sh9er%2FPWD2lrg6WIh2r14XJjnMnNK8a9tNvH8F5xNDUnohHo2qqOHzWtsOzULdoUUx%2B2USosN9Y79VxQ%3D%3D');
-                          },
-                        ),
-                      )
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '${widget.daNhan}/${widget.numberOfTasker} vị trí',
+                              style: const TextStyle(
+                                color: AppColors.xanh_main,
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Sizedbutton(
+                        onPressFun: widget.onShowLabel,
+                        text: 'Danh sách',
+                        width: 80,
+                        height: 40,
+                      ),
                     ],
                   ),
                 ),
