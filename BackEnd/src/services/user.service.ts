@@ -489,9 +489,12 @@ export class UserService {
       .createQueryBuilder("task")
       .leftJoinAndSelect("task.location", "location")
       .leftJoinAndSelect("task.user", "user")
+      .leftJoinAndSelect("task.taskType", "taskType")
+      .leftJoinAndSelect("task.taskerLists", "taskerLists")
       .where("task.userId = :userId", { userId })
       .select([
         "task.id",
+
         "task.userId",
         "task.taskTypeId",
         "task.time",
@@ -501,24 +504,35 @@ export class UserService {
         "task.taskStatus",
         "task.createdAt",
         "task.updatedAt",
-        // "user.id",
-        // "user.name",
-        // "user.email",
-        // "user.phoneNumber",
-        // "user.role",
-        // "user.avatar",
-        // "user.birthday",
-        // "user.Rpoints",
+        "task.price",
+        "task.approvedAt",
+        "task.cancelAt",
+        "task.finishedAt",
+        "task.cancelReason",
 
-        // "location.id",
+        "task.numberOfTasker",
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.phoneNumber",
+        "user.role",
+        "user.avatar",
+        "user.birthday",
+        "user.Rpoints",
 
-        // "location.country",
-        // "location.province",
-        // "location.district",
-        // "location.ownerName",
-        // "location.ownerPhoneNumber",
-        // "location.detailAddress",
-        // "location.map",
+        "location.id",
+
+        "location.country",
+        "location.province",
+        "location.district",
+        "location.ownerName",
+        "location.ownerPhoneNumber",
+        "location.detailAddress",
+        "location.map",
+        "taskType.id",
+        "taskType.name",
+        "taskerLists.id",
+        "taskerLists.status",
       ])
       .where("task.userId = :userId", { userId })
       .getMany();
@@ -741,6 +755,8 @@ export class UserService {
       .createQueryBuilder("task")
       .leftJoinAndSelect("task.location", "location")
       .leftJoinAndSelect("task.user", "user")
+      .leftJoinAndSelect("task.taskType", "taskType")
+      .leftJoinAndSelect("task.taskerLists", "taskerLists")
       .where("task.id = :taskId", { taskId })
       .select([
         "task.id",
@@ -754,6 +770,14 @@ export class UserService {
         "task.taskStatus",
         "task.createdAt",
         "task.updatedAt",
+        "task.price",
+        "task.numberOfTasker",
+
+        "task.approvedAt",
+        "task.cancelAt",
+        "task.finishedAt",
+        "task.cancelReason",
+
         "user.id",
         "user.name",
         "user.email",
@@ -772,6 +796,10 @@ export class UserService {
         "location.ownerPhoneNumber",
         "location.detailAddress",
         "location.map",
+        "taskType.id",
+        "taskType.name",
+        "taskerLists.id",
+        "taskerLists.status",
       ])
 
       .getOne();
@@ -989,7 +1017,10 @@ export class UserService {
     const taskRepository = AppDataSource.getRepository(Tasks);
     const task = await taskRepository.findOne({ where: { id: taskId } });
     if (task) {
-      task.taskStatus = "TS4" + cancelCode.toString();
+      task.taskStatus = "TS4";
+      if (cancelCode === 0) {
+        task.cancelReason = "Không có lý do";
+      }
       task.cancelAt = currentDate;
       await taskRepository.save(task);
     }

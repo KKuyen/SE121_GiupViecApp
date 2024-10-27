@@ -13,7 +13,22 @@ class TaskRepositoryImpl implements TaskRepository {
   TaskRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<Task>> getAllTasks(int userId) async {
-    return await remoteDataSource.getAllTasks(userId);
+  Future<List<Task>> getTS1Tasks(int taskId) async {
+    return await remoteDataSource.getTS1Tasks(taskId);
+  }
+
+  @override
+  Future<List<Task>> getTS2Tasks(int taskId) async {
+    return await remoteDataSource.getTS2Tasks(taskId);
+  }
+
+  @override
+  Future<List<Task>> getTS3Tasks(int taskId) async {
+    return await remoteDataSource.getTS3Tasks(taskId);
+  }
+
+  @override
+  Future<List<Task>> getTS4Tasks(int taskId) async {
+    return await remoteDataSource.getTS4Tasks(taskId);
   }
 }

@@ -74,12 +74,13 @@ class _NewreviewState extends State<Newreview> {
             children: [
               GestureDetector(
                 onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Finishtab(),
-                    ),
-                  ),
+                  // lỗi id nên comment lại
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const Finishtab(),
+                  //   ),
+                  // ),
                 },
                 child: Container(
                   decoration: BoxDecoration(

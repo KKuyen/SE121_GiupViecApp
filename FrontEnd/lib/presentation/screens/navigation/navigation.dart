@@ -25,7 +25,7 @@ class _NavigationState extends State<Navigation> {
         bottomNavigationBar: _navigationBar(),
         body: [
           const HomePage(),
-          const TaskPage(),
+          const ActivityPage(),
           const MessagePage(),
           const AccountPage(),
         ][currentPageIndex]);

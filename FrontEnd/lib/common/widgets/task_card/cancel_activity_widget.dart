@@ -9,7 +9,44 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/cancelTab.dart';
 
 class CancelActivityWidget extends StatefulWidget {
-  const CancelActivityWidget({super.key});
+  final int numberOfTasker;
+  final int id;
+  final String serviceName;
+  final DateTime startDay;
+  final DateTime createAt;
+  final String ownerName;
+  final String district;
+  final String deltailAddress;
+  final String country;
+  final String province;
+  final String phone;
+  final int ungCuVien;
+  final int daNhan;
+  final String cancelReason;
+  final DateTime cancelAt;
+
+  final String price;
+  final String note;
+  const CancelActivityWidget({
+    super.key,
+    required this.id,
+    required this.createAt,
+    this.ungCuVien = 0,
+    this.daNhan = 0,
+    required this.numberOfTasker,
+    this.serviceName = 'Trông trẻ',
+    required this.startDay,
+    this.ownerName = 'Trần Hồng Quyền',
+    required this.district,
+    required this.deltailAddress,
+    required this.country,
+    required this.province,
+    required this.phone,
+    required this.price,
+    this.note = 'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+    this.cancelReason = 'Lý do khác',
+    required this.cancelAt,
+  });
 
   @override
   State<CancelActivityWidget> createState() => CancelActivityWidgetState();
@@ -22,7 +59,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Canceltab()),
+          MaterialPageRoute(
+              builder: (context) => Canceltab(
+                    id: widget.id,
+                  )),
         );
       },
       child: Center(
@@ -49,7 +89,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 5, 15, 5),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
                       child: SvgPicture.asset(
                         AppVectors.baby_carriage_icon,
                         height: 30,
@@ -57,25 +97,22 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ),
                     ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment
-                          .start, // Align children to the left
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Text(
-                              'Trông trẻ',
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
-                              style: TextStyle(
+                              widget.serviceName,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-                            Text(
+                            const Text(
                               '#',
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
+                              textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 color: AppColors.xam72,
@@ -84,10 +121,9 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                               ),
                             ),
                             Text(
-                              'DV01',
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
-                              style: TextStyle(
+                              'DV${widget.id}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
                                 color: AppColors.xam72,
                                 fontSize: 17,
                                 fontFamily: 'Inter',
@@ -97,9 +133,9 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           ],
                         ),
                         Text(
-                          'Đã hoàn thành',
-                          textAlign: TextAlign.left, // Align text to the left
-                          style: TextStyle(
+                          widget.createAt.toIso8601String(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
                             color: Color(0xFF727272),
                             fontSize: 12,
                             fontFamily: 'Inter',
@@ -108,21 +144,21 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                         ),
                       ],
                     ),
-                    Spacer(),
-                    // Icon(
+                    const Spacer(),
+                    // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,
                     //   size: 25.0,
                     // )
                   ],
                 ),
-                SizedBox(height: 4),
-                Divider(),
+                const SizedBox(height: 5),
+                const Divider(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Ngày bắt đầu:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -131,10 +167,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Text(
-                        'Thứ 7, 20/11/2021',
-                        style: TextStyle(
+                        widget.startDay.toIso8601String(),
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -149,7 +185,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Địa chỉ:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -158,14 +194,14 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(width: 65),
+                      const SizedBox(width: 25),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Trần Hồng Quyền',
-                              style: TextStyle(
+                              widget.ownerName,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -173,8 +209,8 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                               ),
                             ),
                             Text(
-                              'Quốc lộ 13/47B 479, Khu Phố 5, Thủ Đức, Hồ Chí Minh, Việt Nam',
-                              style: TextStyle(
+                              '${widget.deltailAddress}, ${widget.district}, ${widget.province}, ${widget.country}',
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -184,8 +220,8 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                               overflow: TextOverflow.visible,
                             ),
                             Text(
-                              '+(54) 345664xxx',
-                              style: TextStyle(
+                              widget.phone,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
@@ -202,7 +238,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Giá:   ',
                         style: TextStyle(
                           color: Color(0xFF727272),
@@ -211,10 +247,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(width: 88),
+                      const SizedBox(width: 48),
                       Text(
-                        'Thứ 7, 20/11/2021',
-                        style: TextStyle(
+                        widget.price,
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -224,8 +260,8 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
                   child: Row(
                     children: [
                       Text(
@@ -237,7 +273,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(width: 60),
+                      SizedBox(width: 18),
                       Expanded(
                         child: Text(
                           'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
@@ -268,7 +304,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontWeight: FontWeight.normal,
                               )),
                           Spacer(),
-                          Text('Lý do khác',
+                          Text(widget.cancelReason,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -288,7 +324,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontWeight: FontWeight.normal,
                               )),
                           Spacer(),
-                          Text('Lý do khác',
+                          Text(widget.cancelAt.toIso8601String(),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

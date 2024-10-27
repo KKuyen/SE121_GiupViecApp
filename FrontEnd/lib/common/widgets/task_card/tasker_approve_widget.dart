@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
 class TaskerApproveWidget extends StatefulWidget {
@@ -18,10 +19,10 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Waitingtab()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const Approvetab()),
+        // );
       },
       child: Center(
         child: Padding(

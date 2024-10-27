@@ -1,10 +1,7 @@
 // lib/data/models/task_model.dart
 import 'dart:ffi';
 
-import 'package:se121_giupviec_app/data/models/kuser_model.dart';
-import 'package:se121_giupviec_app/data/models/location_model.dart';
 import 'package:se121_giupviec_app/data/models/user_model.dart';
-import 'package:se121_giupviec_app/domain/entities/kuser.dart';
 import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 import '../../domain/entities/task.dart';
 

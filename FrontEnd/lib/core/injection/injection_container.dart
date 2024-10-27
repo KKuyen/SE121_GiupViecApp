@@ -1,9 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/repository/get_task_impl.dart';
 import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
+import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
+import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
@@ -37,6 +42,16 @@ Future<void> init() async {
       getAllTasksUseCase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => ATaskCubit(
+      getATasksUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => AWCubit(
+      getATasksUsercase: sl(),
+    ),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
@@ -45,12 +60,16 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SendOTPUseCase(sl()));
   sl.registerLazySingleton(() => VerifyOTPUseCase(sl()));
   sl.registerLazySingleton(() => ForgetPassUseCase(sl()));
+  sl.registerLazySingleton(() => GetATasksUsecase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<TaskRepository>(
     () => TaskRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<ATaskRepository>(
+    () => ATaskRepositoryImpl(sl()),
   );
 
   // Data sources
