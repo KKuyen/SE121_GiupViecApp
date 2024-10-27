@@ -177,7 +177,7 @@ export class UserService {
           await client.messages.create({
             body: `Your OTP is: ${otp}`,
             from: process.env.TWILIO_PHONE_NUMBER!,
-            to: this.convertToFullPhoneNumber(shortPhoneNumber),
+            to: this.convertToFullPhoneNumber(phoneNumber),
           });
           resolve({ errCode: 0, message: "Ok" });
         }
