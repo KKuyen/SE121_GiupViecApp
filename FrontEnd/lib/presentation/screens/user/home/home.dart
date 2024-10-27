@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
@@ -11,7 +14,10 @@ import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
+
+import '../../../bloc/TaskType/get_all_tasktype_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,10 +29,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    final taskTypeCubit =
+        BlocProvider.of<TaskTypeCubit>(context).getAllTypeTasks();
   }
 
   @override
@@ -90,7 +99,13 @@ class _HomePageState extends State<HomePage>
               const SizedBox(
                 height: 8,
               ),
-              const _services(),
+              const SizedBox(
+                  height: 95,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
+                    child: _services(),
+                  )),
               const SizedBox(
                 height: 19,
               ),
@@ -148,40 +163,37 @@ class _services extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _serviceItem(
-              icon: FontAwesomeIcons.solidClock,
-              title: 'Giúp việc theo giờ',
-              color: AppColors.cam_main,
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.solidCalendarCheck,
-              title: 'Giúp việc định kì',
-              color: AppColors.xanh_main,
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.babyCarriage,
-              title: 'Trông trẻ',
-              color: AppColors.do_main,
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.broom,
-              title: 'Dọn nhà',
-              color: Color(0xff4B9DCB),
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.faucet,
-              title: 'Sửa ống nước',
-              color: AppColors.cam_main,
-            ),
-          ],
-        ),
-      ),
+    final List<Color> colors = [
+      AppColors.cam_main,
+      AppColors.xanh_main,
+      AppColors.do_main,
+      Color(0xff4B9DCB),
+    ];
+    return BlocBuilder<TaskTypeCubit, TaskTypeState>(
+      builder: (context, state) {
+        if (state is TaskLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is TaskSuccess) {
+          final tasks = state.tasks;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return _serviceItem(
+                  icon: FontAwesomeIcons.babyCarriage,
+                  title: task.name,
+                  color: colors[index % colors.length]);
+            },
+          );
+        } else if (state is TaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No tasks found'));
+        }
+      },
     );
   }
 }

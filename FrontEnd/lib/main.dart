@@ -6,7 +6,8 @@ import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
 import 'core/injection/injection_container.dart' as di;
-import 'presentation/bloc/auth_cubit.dart';
+import 'presentation/bloc/Auth/auth_cubit.dart';
+import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<TaskCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TaskTypeCubit>(),
         ),
         BlocProvider(
           create: (context) => di.sl<ATaskCubit>(),

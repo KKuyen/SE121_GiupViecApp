@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/verifyOTP.dart';
-import '../../domain/usecases/Auth/forget_pass_usecase.dart';
-import '../../domain/usecases/Auth/login_usecase.dart';
-import '../../domain/usecases/Auth/register_usecase.dart';
+import '../../../domain/usecases/Auth/forget_pass_usecase.dart';
+import '../../../domain/usecases/Auth/login_usecase.dart';
+import '../../../domain/usecases/Auth/register_usecase.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {

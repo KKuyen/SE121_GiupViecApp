@@ -11,8 +11,8 @@ import 'package:se121_giupviec_app/presentation/screens/auth/signup_page.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../bloc/auth_cubit.dart';
-import '../../bloc/auth_state.dart';
+import '../../bloc/Auth/auth_cubit.dart';
+import '../../bloc/Auth/auth_state.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

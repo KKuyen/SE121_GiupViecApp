@@ -1,5 +1,4 @@
 // lib/data/models/task_model.dart
-import 'dart:ffi';
 
 import 'package:se121_giupviec_app/data/models/user_model.dart';
 import 'package:se121_giupviec_app/domain/entities/taskType.dart';
@@ -9,20 +8,20 @@ class TaskTypeModel extends TaskType {
   TaskTypeModel({
     required int id,
     required String name,
-    required String avatar,
-    required int value,
-    required String description,
-    required String image,
-    required Float originalPrice,
+    required String? avatar,
+    required String value,
+    required String? description,
+    required String? image,
+    required double originalPrice,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : super(
           id: id,
           name: name,
-          avatar: avatar,
+          avatar: avatar ?? '',
           value: value,
-          description: description,
-          image: image,
+          description: description ?? '',
+          image: image ?? '',
           originalPrice: originalPrice,
           createdAt: createdAt,
           updatedAt: updatedAt,

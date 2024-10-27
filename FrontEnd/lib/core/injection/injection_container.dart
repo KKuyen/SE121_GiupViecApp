@@ -12,15 +12,20 @@ import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
+import '../../data/datasources/task_type_remote_datasourse.dart';
 import '../../data/repository/auth_repository_impl.dart';
+import '../../data/repository/task_type_repository.dart';
 import '../../domain/repository/auth_repository.dart';
+import '../../domain/repository/task_type_repository.dart';
 import '../../domain/usecases/Auth/forget_pass_usecase.dart';
 import '../../domain/usecases/Auth/login_usecase.dart';
 import '../../domain/usecases/Auth/register_usecase.dart';
+import '../../domain/usecases/TaskType/get_all_tasktype.dart';
 import '../../domain/usecases/get_all_tasks_usecase.dart'; // Import GetAllTasksUseCase
 import '../../domain/usecases/Auth/verifyOTP.dart';
-import '../../presentation/bloc/auth_cubit.dart';
+import '../../presentation/bloc/Auth/auth_cubit.dart';
 
+import '../../presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import '../configs/constants/api_constants.dart';
 
 final sl = GetIt.instance;
@@ -43,6 +48,11 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory(
+    () => TaskTypeCubit(
+      getAllTasksTypeUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
     () => ATaskCubit(
       getATasksUsercase: sl(),
     ),
@@ -61,6 +71,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => VerifyOTPUseCase(sl()));
   sl.registerLazySingleton(() => ForgetPassUseCase(sl()));
   sl.registerLazySingleton(() => GetATasksUsecase(sl()));
+  sl.registerLazySingleton(() => GetAllTasksTypeUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
@@ -71,7 +82,9 @@ Future<void> init() async {
   sl.registerLazySingleton<ATaskRepository>(
     () => ATaskRepositoryImpl(sl()),
   );
-
+  sl.registerLazySingleton<TaskTypeRepository>(
+    () => TaskTypeRepositoryImpl(sl()),
+  );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
@@ -82,6 +95,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<TaskRemoteDatasource>(
     () => TaskRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<TaskTypeRemoteDatasource>(
+    () => TaskTypeRemoteDatasourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,

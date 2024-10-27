@@ -1,15 +1,15 @@
 // lib/domain/entities/task.dart
 
-import 'dart:ffi';
+// In taskType.dart
 
 class TaskType {
   final int id;
   final String name;
   final String avatar;
-  final int value;
+  final String value;
   final String description;
   final String image;
-  final Float originalPrice;
+  final double originalPrice;
   final DateTime createdAt;
   final DateTime updatedAt;
 
