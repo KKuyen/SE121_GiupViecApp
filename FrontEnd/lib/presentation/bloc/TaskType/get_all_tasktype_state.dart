@@ -1,7 +1,6 @@
 // lib/presentation/cubit/task_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:se121_giupviec_app/domain/entities/taskType.dart';
-import '../../../../domain/entities/task.dart';
 
 abstract class TaskTypeState extends Equatable {
   const TaskTypeState();

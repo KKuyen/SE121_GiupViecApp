@@ -1,8 +1,6 @@
 // lib/data/models/task_model.dart
 
-import 'package:se121_giupviec_app/data/models/user_model.dart';
 import 'package:se121_giupviec_app/domain/entities/taskType.dart';
-import '../../domain/entities/task.dart';
 
 class TaskTypeModel extends TaskType {
   TaskTypeModel({

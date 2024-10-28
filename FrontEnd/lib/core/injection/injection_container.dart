@@ -13,19 +13,24 @@ import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/task_type_remote_datasourse.dart';
+import '../../data/datasources/voucher_remote_datasourse.dart';
 import '../../data/repository/auth_repository_impl.dart';
-import '../../data/repository/task_type_repository.dart';
+import '../../data/repository/task_type_repository_impl.dart';
+import '../../data/repository/voucher_repository_impl.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../../domain/repository/task_type_repository.dart';
+import '../../domain/repository/voucher_repository.dart';
 import '../../domain/usecases/Auth/forget_pass_usecase.dart';
 import '../../domain/usecases/Auth/login_usecase.dart';
 import '../../domain/usecases/Auth/register_usecase.dart';
-import '../../domain/usecases/TaskType/get_all_tasktype.dart';
+import '../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
+import '../../domain/usecases/Voucher/get_all_vouchcer_usecase.dart';
 import '../../domain/usecases/get_all_tasks_usecase.dart'; // Import GetAllTasksUseCase
 import '../../domain/usecases/Auth/verifyOTP.dart';
 import '../../presentation/bloc/Auth/auth_cubit.dart';
 
 import '../../presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
+import '../../presentation/bloc/Voucher/voucher_cubit.dart';
 import '../configs/constants/api_constants.dart';
 
 final sl = GetIt.instance;
@@ -62,7 +67,11 @@ Future<void> init() async {
       getATasksUsercase: sl(),
     ),
   );
-
+  sl.registerFactory(
+    () => VoucherCubit(
+      getAllVoucherUseCase: sl(),
+    ),
+  );
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -72,6 +81,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ForgetPassUseCase(sl()));
   sl.registerLazySingleton(() => GetATasksUsecase(sl()));
   sl.registerLazySingleton(() => GetAllTasksTypeUseCase(sl()));
+  sl.registerLazySingleton(() => GetAllVoucherUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
@@ -84,6 +94,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<TaskTypeRepository>(
     () => TaskTypeRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<VoucherRepository>(
+    () => VoucherRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -107,7 +120,13 @@ Future<void> init() async {
       apiVersion: ApiConstants.apiVersion,
     ),
   );
-
+  sl.registerLazySingleton<VoucherRemoteDatasource>(
+    () => VoucherRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
   // External
   sl.registerLazySingleton(() => http.Client());
 }

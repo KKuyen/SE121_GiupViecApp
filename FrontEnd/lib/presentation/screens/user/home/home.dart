@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +7,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/search/search.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -144,10 +141,13 @@ class _HomePageState extends State<HomePage>
               const SizedBox(
                 height: 8,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-                child: Vouchers(),
-              ),
+              const SizedBox(
+                  height: 170,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
+                    child: Vouchers(),
+                  )),
             ],
           ),
         ),
@@ -183,7 +183,7 @@ class _services extends StatelessWidget {
             itemBuilder: (context, index) {
               final task = tasks[index];
               return _serviceItem(
-                  icon: FontAwesomeIcons.babyCarriage,
+                  icon: getIcon(task.avatar),
                   title: task.name,
                   color: colors[index % colors.length]);
             },
@@ -191,10 +191,27 @@ class _services extends StatelessWidget {
         } else if (state is TaskError) {
           return Center(child: Text('Error: ${state.message}'));
         } else {
-          return const Center(child: Text('No tasks found'));
+          return const Center(child: Text('Không tìm thấy dịch vụ'));
         }
       },
     );
+  }
+
+  IconData getIcon(String name) {
+    switch (name) {
+      case 'broom':
+        return FontAwesomeIcons.broom;
+      case 'dry_cleaning_rounded':
+        return Icons.dry_cleaning_rounded;
+      case 'cutlery':
+        return FontAwesomeIcons.cutlery;
+      case 'local_florist_rounded':
+        return Icons.local_florist_rounded;
+      case 'bagShopping':
+        return FontAwesomeIcons.bagShopping;
+      default:
+        return Icons.more_horiz;
+    }
   }
 }
 

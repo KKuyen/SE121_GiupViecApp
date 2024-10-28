@@ -8,6 +8,7 @@ class VoucherCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String description;
+  final String RpointCost;
   final VoidCallback onPressed;
 
   const VoucherCard({
@@ -15,6 +16,7 @@ class VoucherCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.onPressed,
+    required this.RpointCost,
     super.key,
   });
 
@@ -59,9 +61,9 @@ class VoucherCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      const Text(
-                        '10',
-                        style: TextStyle(
+                      Text(
+                        RpointCost,
+                        style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: AppColors.cam_main),

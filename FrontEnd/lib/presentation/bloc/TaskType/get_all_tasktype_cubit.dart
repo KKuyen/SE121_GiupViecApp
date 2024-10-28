@@ -1,7 +1,7 @@
 // lib/presentation/cubit/task_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/usecases/TaskType/get_all_tasktype.dart';
+import '../../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
 import 'get_all_tasktype_state.dart';
 
 class TaskTypeCubit extends Cubit<TaskTypeState> {
