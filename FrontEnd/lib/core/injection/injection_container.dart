@@ -27,6 +27,7 @@ import '../../domain/usecases/Auth/forget_pass_usecase.dart';
 import '../../domain/usecases/Auth/login_usecase.dart';
 import '../../domain/usecases/Auth/register_usecase.dart';
 import '../../domain/usecases/Location/add_new_location_usecase.dart';
+import '../../domain/usecases/Location/delete_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_default_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_location_usecase.dart';
 import '../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
@@ -84,6 +85,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => LocationCubit(
       getMyLocationUseCase: sl(),
+      deleteLocationUseCase: sl(),
     ),
   );
   sl.registerFactory(
@@ -109,6 +111,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMyLocationUseCase(sl()));
   sl.registerLazySingleton(() => GetMyDefaultLocationUseCase(sl()));
   sl.registerLazySingleton(() => AddNewLocationUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteLocationUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),

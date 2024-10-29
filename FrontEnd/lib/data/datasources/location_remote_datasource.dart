@@ -19,6 +19,7 @@ abstract class LocationRemoteDatasource {
       String map,
       int userId,
       bool isDefault);
+  Future<ResponseModel> deleteLocation(int id);
 }
 
 class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
@@ -178,6 +179,35 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
       return ResponseModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to add location');
+    }
+  }
+
+  @override
+  Future<ResponseModel> deleteLocation(int id) async {
+    final uri = Uri.parse('$baseUrl/$apiVersion/delete-my-location').replace(
+      queryParameters: {
+        'id': id.toString(),
+      },
+    );
+    try {
+      final response = await client.delete(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return ResponseModel.fromJson(json.decode(response.body));
+      } else {
+        print("response.body failed: ${response.body}");
+        throw Exception('Failed to delete location');
+      }
+    } catch (e) {
+      print("Unexpected error: $e");
+      throw Exception('Unexpected error: $e');
     }
   }
 }

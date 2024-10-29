@@ -31,4 +31,8 @@ class LocationRepositoryImpl implements LocationRepository {
     return await remoteDataSource.addNewLocation(ownerName, ownerPhoneNumber,
         country, province, district, detailAddress, map, userId, isDefault);
   }
+
+  Future<Response> deleteLocation(int id) async {
+    return await remoteDataSource.deleteLocation(id);
+  }
 }

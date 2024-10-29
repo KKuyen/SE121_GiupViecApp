@@ -17,4 +17,5 @@ abstract class LocationRepository {
       String map,
       int userId,
       bool isDefault);
+  Future<Response> deleteLocation(int id);
 }

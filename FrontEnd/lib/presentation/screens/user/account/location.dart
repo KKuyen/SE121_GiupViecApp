@@ -239,12 +239,12 @@ class _addressCard extends StatelessWidget {
         color: AppColors.do_main,
       ),
       onTap: () {
-        _showDialog(context);
+        _showDialog(context, location.id);
       },
     );
   }
 
-  void _showDialog(BuildContext context) {
+  void _showDialog(BuildContext context, int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -264,7 +264,11 @@ class _addressCard extends StatelessWidget {
             ),
             Sizedbutton(
               onPressFun: () {
+                context
+                    .read<LocationCubit>()
+                    .deleteLocation(id); // Gọi hàm deleteLocation
                 Navigator.of(context).pop(); // Đóng dialog
+                //BlocProvider.of<LocationCubit>(context).getMyLocation(1);
               },
               text: 'Xóa',
               backgroundColor: AppColors.do_main,
