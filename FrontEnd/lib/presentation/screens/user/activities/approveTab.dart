@@ -10,14 +10,16 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Approvetab extends StatefulWidget {
   final int id;
-  const Approvetab({super.key, required this.id});
+  final int numberOfTasker;
+  const Approvetab({super.key, required this.id, required this.numberOfTasker});
 
   @override
   State<Approvetab> createState() => _ApprovetabState();
@@ -526,6 +528,7 @@ class _ApprovetabState extends State<Approvetab> {
         Center(
           child: Taskerlist(
             cancel: _hideLabel,
+            numberOfTasker: widget.numberOfTasker,
           ),
         ),
     ]);

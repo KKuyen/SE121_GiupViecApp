@@ -5,8 +5,8 @@ import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widg
 import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 
@@ -19,10 +19,14 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityPageState extends State<ActivityPage> {
   bool _isLabelVisible = false;
+  int numberOfTasker = 0;
+  int id = 1;
 
-  void _showLabel() {
+  void _showLabel(int id, int numberOfTasker) {
     setState(() {
       _isLabelVisible = true;
+      this.numberOfTasker = numberOfTasker;
+      this.id = id;
     });
   }
 
@@ -53,6 +57,8 @@ class _ActivityPageState extends State<ActivityPage> {
         if (_isLabelVisible)
           Center(
             child: Taskerlist(
+              id: id,
+              numberOfTasker: numberOfTasker,
               cancel: _hideLabel,
             ),
           ),
@@ -62,7 +68,7 @@ class _ActivityPageState extends State<ActivityPage> {
 }
 
 class JobCardScreen extends StatelessWidget {
-  final VoidCallback showLabel;
+  final void Function(int, int) showLabel;
   final VoidCallback hideLabel;
 
   const JobCardScreen({required this.showLabel, required this.hideLabel});
@@ -133,7 +139,7 @@ class JobCardScreen extends StatelessWidget {
 }
 
 class WaitingList extends StatelessWidget {
-  final VoidCallback showLabel;
+  final void Function(int, int) showLabel;
 
   const WaitingList({super.key, required this.showLabel});
 
@@ -170,7 +176,8 @@ class WaitingList extends StatelessWidget {
                   daNhan: appTasker,
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
-                  onShowLabel: showLabel,
+                  onShowLabel: () =>
+                      showLabel(task.id, task.numberOfTasker ?? 0),
                   id: task.id,
                   startDay: task.time,
                   price: task.price ?? '',
@@ -198,7 +205,7 @@ class WaitingList extends StatelessWidget {
 }
 
 class ApprovedList extends StatelessWidget {
-  final VoidCallback showLabel;
+  final void Function(int, int) showLabel;
 
   const ApprovedList({required this.showLabel});
 
@@ -233,7 +240,8 @@ class ApprovedList extends StatelessWidget {
                 return ApprovedActivityWidget(
                   ungCuVien: maxTasker,
                   daNhan: appTasker,
-                  onShowLabel: showLabel,
+                  onShowLabel: () =>
+                      showLabel(task.id, task.numberOfTasker ?? 0),
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   id: task.id,
@@ -263,7 +271,7 @@ class ApprovedList extends StatelessWidget {
 }
 
 class FinishedList extends StatelessWidget {
-  final VoidCallback showLabel;
+  final void Function(int, int) showLabel;
 
   const FinishedList({required this.showLabel});
 
@@ -299,7 +307,8 @@ class FinishedList extends StatelessWidget {
                   isFinished: true,
                   ungCuVien: maxTasker,
                   daNhan: appTasker,
-                  onShowLabel: showLabel,
+                  onShowLabel: () =>
+                      showLabel(task.id, task.numberOfTasker ?? 0),
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   id: task.id,
@@ -329,7 +338,7 @@ class FinishedList extends StatelessWidget {
 }
 
 class CancelList extends StatelessWidget {
-  final VoidCallback showLabel;
+  final void Function(int, int) showLabel;
 
   const CancelList({required this.showLabel});
 

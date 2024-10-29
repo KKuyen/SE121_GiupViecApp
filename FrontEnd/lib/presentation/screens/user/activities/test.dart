@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_state.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({Key? key}) : super(key: key);
@@ -15,7 +17,8 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-    final aTaskCubit = BlocProvider.of<ATaskCubit>(context).getATasks(38);
+    final TaskerList =
+        BlocProvider.of<TaskerlistCubit>(context).getTaskerList(38);
   }
 
   @override
@@ -24,9 +27,9 @@ class _TaskPageState extends State<TaskPage> {
       appBar: AppBar(
         title: const Text('Tasks'),
       ),
-      body: BlocBuilder<TaskCubit, TaskState>(
+      body: BlocBuilder<TaskerlistCubit, TaskerListState>(
         builder: (context, state) {
-          if (state is TaskLoading) {
+          if (state is TaskerListLoading) {
             return Center(
               child: Container(
                   width: double.infinity,
@@ -40,9 +43,9 @@ class _TaskPageState extends State<TaskPage> {
                           width: 40,
                           child: CircularProgressIndicator()))),
             );
-          } else if (state is TaskSuccess) {
+          } else if (state is TaskerListSuccess) {
             return const Center(child: Text('No tasks sucessfull'));
-          } else if (state is TaskError) {
+          } else if (state is TaskerListError) {
             return Center(child: Text('Error: ${state.message}'));
           } else {
             return const Center(child: Text('No tasks found'));

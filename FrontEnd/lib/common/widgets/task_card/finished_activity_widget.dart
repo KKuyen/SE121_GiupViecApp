@@ -59,6 +59,7 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
           context,
           MaterialPageRoute(
             builder: (context) => Approvetab(
+              numberOfTasker: widget.numberOfTasker,
               id: widget.id,
             ),
           ),

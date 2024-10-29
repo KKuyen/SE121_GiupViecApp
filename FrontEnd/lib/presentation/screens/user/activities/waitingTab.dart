@@ -11,8 +11,9 @@ import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
@@ -59,37 +60,37 @@ class _WaitingtabState extends State<Waitingtab> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      BlocBuilder<ATaskCubit, ATaskState>(
-        builder: (context, state) {
-          if (state is ATaskLoading) {
-            return Center(
-              child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                  ),
-                  child: Center(
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          child: CircularProgressIndicator()))),
-            );
-          } else if (state is ATaskSuccess) {
-            final task = state.task;
-            final taskerList = state.taskerList;
-            int maxTasker = 0;
-            int appTasker = 0;
-            for (var tasker in task.taskerLists ?? []) {
-              if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
-                maxTasker++;
-              }
-              if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
-                appTasker++;
-              }
+    return BlocBuilder<ATaskCubit, ATaskState>(
+      builder: (context, state) {
+        if (state is ATaskLoading) {
+          return Center(
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                child: Center(
+                    child: Container(
+                        height: 40,
+                        width: 40,
+                        child: CircularProgressIndicator()))),
+          );
+        } else if (state is ATaskSuccess) {
+          final task = state.task;
+          final taskerList = state.taskerList;
+          int maxTasker = 0;
+          int appTasker = 0;
+          for (var tasker in task.taskerLists ?? []) {
+            if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
+              maxTasker++;
             }
-            return Scaffold(
+            if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+              appTasker++;
+            }
+          }
+          return Stack(children: [
+            Scaffold(
                 backgroundColor: AppColors.nen_the,
                 appBar: BasicAppbar(
                   title: const Text(
@@ -622,24 +623,26 @@ class _WaitingtabState extends State<Waitingtab> {
                       height: 10,
                     ),
                   ],
-                )));
-          } else if (state is ATaskError) {
-            return Center(child: Text('Error: ${state.message}'));
-          } else {
-            return const Center(child: Text('No tasks found'));
-          }
-        },
-      ),
-      if (_isLabelVisible)
-        Container(
-          color: Colors.black.withOpacity(0.5),
-        ),
-      if (_isLabelVisible)
-        Center(
-          child: Taskerlist(
-            cancel: _hideLabel,
-          ),
-        ),
-    ]);
+                ))),
+            if (_isLabelVisible)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            if (_isLabelVisible)
+              Center(
+                child: Taskerlist(
+                  id: widget.id,
+                  numberOfTasker: task.numberOfTasker,
+                  cancel: _hideLabel,
+                ),
+              ),
+          ]);
+        } else if (state is ATaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No tasks found'));
+        }
+      },
+    );
   }
 }

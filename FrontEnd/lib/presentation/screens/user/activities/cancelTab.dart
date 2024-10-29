@@ -10,8 +10,9 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
@@ -88,375 +89,389 @@ class _CanceltabState extends State<Canceltab> {
                 appTasker++;
               }
             }
-            return Scaffold(
-                backgroundColor: AppColors.nen_the,
-                appBar: BasicAppbar(
-                  title: const Text(
-                    'Thông tin',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+            return Stack(children: [
+              Scaffold(
+                  backgroundColor: AppColors.nen_the,
+                  appBar: BasicAppbar(
+                    title: const Text(
+                      'Thông tin',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    isHideBackButton: false,
+                    isHavePadding: true,
+                    color: Colors.white,
                   ),
-                  isHideBackButton: false,
-                  isHavePadding: true,
-                  color: Colors.white,
-                ),
 
-                //noi dung
-                body: SingleChildScrollView(
-                    child: Column(
-                  children: [
-                    Header(
-                      color: AppColors.do_main,
-                      text1: 'Đã hủy dịch vụ',
-                      text2: 'Đã hủy dịch vụ vào ngày 23/10/2024',
-                      icon: Icon(
-                        Icons.cancel, // Icon kiểu hình tròn
-                        color: Colors.white, // Màu của icon
-                        size: 50, // Kích thước của icon
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.all(AppInfor1.horizontal_padding),
-                        child: Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Thông tin chi tiết',
-                                style: AppTextStyle.tieudebox,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Divider(),
-                                      const Text('Mã đơn hàng: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 24),
-                                      Text(
-                                        '#DV${task.id}',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            color: AppColors.xam72,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.normal),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Divider(),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Tên dịch vụ: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 38),
-                                      Text(
-                                        (task.taskType
-                                            as Map<String, dynamic>)['name'],
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Divider(),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Ngày bắt đầu: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 25),
-                                      Expanded(
-                                        child: Text(
-                                          task.time.toString(),
-                                          softWrap: true,
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Divider(),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Địa chỉ: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 26),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              (task.location as Map<String,
-                                                      dynamic>)['ownerName']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              (task.location as Map<String,
-                                                          dynamic>)[
-                                                      'ownerPhoneNumber']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Spacer(),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Divider(),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Giá: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 52),
-                                      Text(
-                                        '${task.price} VNĐ',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Divider(),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Ghi chú: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 9),
-                                      DisableInput(
-                                        enabled: _isEditableNote,
-                                        text: task.note ?? '',
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
+                  //noi dung
+                  body: SingleChildScrollView(
+                      child: Column(
+                    children: [
+                      Header(
+                        color: AppColors.do_main,
+                        text1: 'Đã hủy dịch vụ',
+                        text2: 'Đã hủy dịch vụ vào ngày 23/10/2024',
+                        icon: Icon(
+                          Icons.cancel, // Icon kiểu hình tròn
+                          color: Colors.white, // Màu của icon
+                          size: 50, // Kích thước của icon
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.all(AppInfor1.horizontal_padding),
-                        child: Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Lý do hủy',
-                                style: AppTextStyle.tieudebox,
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                              AppInfor1.horizontal_padding),
+                          child: Column(
+                            children: [
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Thông tin chi tiết',
+                                  style: AppTextStyle.tieudebox,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Yêu cầu bởi: ',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 47),
-                                      Expanded(
-                                        child: Text(
-                                          'Khách hàng',
-                                          softWrap: true,
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: AppColors.xam72,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Yêu cầu vào:',
-                                          style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 42),
-                                      Expanded(
-                                        child: Text(
-                                          task.cancelAt?.toIso8601String() ??
-                                              '',
-                                          softWrap: true,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Divider(),
+                                        const Text('Mã đơn hàng: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 24),
+                                        Text(
+                                          '#DV${task.id}',
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               color: AppColors.xam72,
                                               fontSize: 15,
                                               fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text('Lý do:',
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Tên dịch vụ: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 38),
+                                        Text(
+                                          (task.taskType
+                                              as Map<String, dynamic>)['name'],
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               color: Colors.black,
                                               fontSize: 15,
-                                              fontWeight: FontWeight.normal)),
-                                      const SizedBox(width: 25),
-                                      Expanded(
-                                        child: Text(
-                                          task.cancelReason ?? '',
-                                          softWrap: true,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Ngày bắt đầu: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 25),
+                                        Expanded(
+                                          child: Text(
+                                            task.time.toString(),
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Địa chỉ: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 26),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                (task.location as Map<String,
+                                                        dynamic>)['ownerName']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
+                                                softWrap: true,
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                (task.location as Map<String,
+                                                            dynamic>)[
+                                                        'ownerPhoneNumber']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Spacer(),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Giá: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 52),
+                                        Text(
+                                          '${task.price} VNĐ',
                                           style: TextStyle(
                                               fontFamily: 'Inter',
-                                              color: AppColors.xam72,
+                                              color: Colors.black,
                                               fontSize: 15,
                                               fontWeight: FontWeight.normal),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Divider(),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Ghi chú: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 9),
+                                        DisableInput(
+                                          enabled: _isEditableNote,
+                                          text: task.note ?? '',
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                )));
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                              AppInfor1.horizontal_padding),
+                          child: Column(
+                            children: [
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Lý do hủy',
+                                  style: AppTextStyle.tieudebox,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Yêu cầu bởi: ',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 47),
+                                        Expanded(
+                                          child: Text(
+                                            'Khách hàng',
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: AppColors.xam72,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Yêu cầu vào:',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 42),
+                                        Expanded(
+                                          child: Text(
+                                            task.cancelAt?.toIso8601String() ??
+                                                '',
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: AppColors.xam72,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Lý do:',
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal)),
+                                        const SizedBox(width: 25),
+                                        Expanded(
+                                          child: Text(
+                                            task.cancelReason ?? '',
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                color: AppColors.xam72,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ))),
+              if (_isLabelVisible)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              if (_isLabelVisible)
+                Center(
+                  child: Taskerlist(
+                    id: widget.id,
+                    numberOfTasker: task.numberOfTasker,
+                    cancel: _hideLabel,
+                  ),
+                ),
+            ]);
           } else if (state is ATaskError) {
             return Center(child: Text('Error: ${state.message}'));
           } else {
@@ -464,16 +479,6 @@ class _CanceltabState extends State<Canceltab> {
           }
         },
       ),
-      if (_isLabelVisible)
-        Container(
-          color: Colors.black.withOpacity(0.5),
-        ),
-      if (_isLabelVisible)
-        Center(
-          child: Taskerlist(
-            cancel: _hideLabel,
-          ),
-        ),
     ]);
   }
 }

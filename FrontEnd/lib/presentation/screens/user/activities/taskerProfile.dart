@@ -10,7 +10,8 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/allReview.dart';
 
 class Taskerprofile extends StatefulWidget {
-  const Taskerprofile({super.key});
+  final int id;
+  const Taskerprofile({super.key, this.id = 1});
 
   @override
   State<Taskerprofile> createState() => _TaskerprofileState();

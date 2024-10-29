@@ -12,7 +12,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskS
 import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
 class TaskerActivityPage extends StatefulWidget {
-  const TaskerActivityPage({super.key});
+  TaskerActivityPage({super.key});
 
   @override
   State<TaskerActivityPage> createState() => _TaskerActivityPageState();
@@ -20,6 +20,15 @@ class TaskerActivityPage extends StatefulWidget {
 
 class _TaskerActivityPageState extends State<TaskerActivityPage> {
   bool _isLabelVisible = false;
+  int id = 1;
+  int numberOfTasker = 1;
+  void setId(int id) {
+    this.id = id;
+  }
+
+  void setNumberOfTasker(int numberOfTasker) {
+    this.numberOfTasker = numberOfTasker;
+  }
 
   void _showLabel() {
     setState(() {
@@ -48,6 +57,8 @@ class _TaskerActivityPageState extends State<TaskerActivityPage> {
         if (_isLabelVisible)
           Center(
             child: Taskerlist(
+              numberOfTasker: numberOfTasker,
+              id: id,
               cancel: _hideLabel,
             ),
           ),

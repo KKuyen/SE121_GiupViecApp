@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
 import 'core/injection/injection_container.dart' as di;
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<AWCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TaskerlistCubit>(),
         ),
       ],
       child: MaterialApp(

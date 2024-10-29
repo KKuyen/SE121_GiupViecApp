@@ -6,9 +6,10 @@ import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
 import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repository/auth_repository_impl.dart';
@@ -43,6 +44,11 @@ Future<void> init() async {
   );
   sl.registerFactory(
     () => AWCubit(
+      getATasksUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => TaskerlistCubit(
       getATasksUsercase: sl(),
     ),
   );

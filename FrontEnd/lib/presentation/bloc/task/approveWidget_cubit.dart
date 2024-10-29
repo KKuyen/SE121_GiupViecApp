@@ -2,24 +2,25 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_state.dart';
 
-class ATaskCubit extends Cubit<ATaskState> {
+class AWCubit extends Cubit<AWState> {
   final GetATasksUsecase getATasksUsercase;
 
-  ATaskCubit({required this.getATasksUsercase}) : super(ATaskInitial());
+  AWCubit({required this.getATasksUsercase}) : super(AWInitial());
 
   Future<void> getATasks(int taskId) async {
-    emit(ATaskLoading());
+    emit(AWLoading());
     try {
       print("chay vao Acubit");
-      final task = await getATasksUsercase.execute(taskId);
+
       final List<TaskerList> taskerList =
           await getATasksUsercase.execute2(taskId);
 
-      emit(ATaskSuccess(task, taskerList));
+      emit(AWSuccess(taskerList));
     } catch (e) {
-      emit(ATaskError(e.toString()));
+      emit(AWError(e.toString()));
     }
   }
 }

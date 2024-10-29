@@ -11,14 +11,15 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dar
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Finishtab extends StatefulWidget {
   final int id;
-  const Finishtab({super.key, required this.id});
+  final int numberOfTasker;
+  const Finishtab({super.key, required this.id, required this.numberOfTasker});
 
   @override
   State<Finishtab> createState() => _FinishTabState();
@@ -558,6 +559,7 @@ class _FinishTabState extends State<Finishtab> {
         Center(
           child: Taskerlist(
             cancel: _hideLabel,
+            numberOfTasker: widget.numberOfTasker,
           ),
         ),
     ]);
