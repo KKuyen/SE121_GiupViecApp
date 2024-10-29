@@ -1,12 +1,11 @@
 // lib/presentation/cubit/task_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/usecases/Location/get_my_location.dart';
+import '../../../domain/usecases/Location/get_my_location_usecase.dart';
 import 'location_state.dart';
 
 class LocationCubit extends Cubit<LocationState> {
   final GetMyLocationUseCase getMyLocationUseCase;
-
   LocationCubit({
     required this.getMyLocationUseCase,
   }) : super(LocationInitial());

@@ -1,7 +1,7 @@
 // lib/presentation/cubit/task_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/usecases/Location/get_my_default_location.dart';
+import '../../../domain/usecases/Location/get_my_default_location_usecase.dart';
 import 'location_state.dart';
 
 class DefaultLocationCubit extends Cubit<LocationState> {

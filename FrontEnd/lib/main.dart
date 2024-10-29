@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'core/injection/injection_container.dart' as di;
 import 'presentation/bloc/Auth/auth_cubit.dart';
+import 'presentation/bloc/Location/add_location_cubit.dart';
 import 'presentation/bloc/Location/default_location_cubit.dart';
 import 'presentation/bloc/Location/location_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<LocationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<AddLocationCubit>(),
         ),
         BlocProvider(
           create: (context) => di.sl<DefaultLocationCubit>(),

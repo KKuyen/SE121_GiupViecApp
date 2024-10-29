@@ -2,6 +2,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../domain/entities/location.dart';
+import '../../../domain/entities/response.dart';
 
 abstract class LocationState extends Equatable {
   const LocationState();
@@ -25,6 +26,15 @@ class LocationSuccess extends LocationState {
 
   @override
   List<Object> get props => [locations];
+}
+
+class LocationResponseSuccess extends LocationState {
+  final Response response;
+
+  const LocationResponseSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
 }
 
 class DefaultLocationSuccess extends LocationState {
