@@ -1,14 +1,19 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/tasker_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/repository/get_task_impl.dart';
 import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/tasker_repository_impl.dart';
 import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/tasker_repository.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_a_tasker_usercase.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
@@ -52,12 +57,18 @@ Future<void> init() async {
       getATasksUsercase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => TaskerCubit(
+      getATaskerUsercase: sl(),
+    ),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => GetAllTasksUseCase(sl()));
   sl.registerLazySingleton(() => GetATasksUsecase(sl()));
+  sl.registerLazySingleton(() => GetATaskerUsercase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
@@ -67,6 +78,10 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<ATaskRepository>(
     () => ATaskRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton<TaskerRepository>(
+    () => TaskerRepositoryImpl(sl()),
   );
 
   // Data sources
@@ -79,6 +94,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<TaskRemoteDatasource>(
     () => TaskRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<TaskerRemoteDataSourceImpl>(
+    () => TaskerRemoteDataSourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,

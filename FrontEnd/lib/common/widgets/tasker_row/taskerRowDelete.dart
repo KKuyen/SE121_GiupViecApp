@@ -10,8 +10,9 @@ class Taskerrowdelete extends StatefulWidget {
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
-
+  final int taskerId;
   const Taskerrowdelete({
+    required this.taskerId,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
     this.taskerPhone = '0123456759',
@@ -31,7 +32,7 @@ class _TaskerrowdeleteState extends State<Taskerrowdelete> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Taskerprofile(),
+            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
           ),
         ),
       },

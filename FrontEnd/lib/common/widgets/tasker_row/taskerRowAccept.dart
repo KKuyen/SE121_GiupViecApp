@@ -7,11 +7,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerrowaccept extends StatefulWidget {
+  final int taskerId;
+
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
 
   const Taskerrowaccept({
+    required this.taskerId,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
     this.taskerPhone = '0123456759',
@@ -31,7 +34,7 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Taskerprofile(),
+            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
           ),
         ),
       },

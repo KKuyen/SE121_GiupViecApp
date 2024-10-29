@@ -59,21 +59,21 @@ class _LovetaskersState extends State<Lovetaskers> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 2, // Replace with the actual number of taskers
             itemBuilder: (context, index) {
-              // ignore: prefer_const_constructors
-              return Taskerrowabutton(
-                  iconButton: const TwoSttButton(
-                sttkey: true,
-                icon: Icon(
-                  FontAwesomeIcons.solidHeart,
-                  color: AppColors.xanh_main,
-                  size: 32,
-                ),
-                icon2: Icon(
-                  FontAwesomeIcons.heart,
-                  color: AppColors.xam72,
-                  size: 32,
-                ),
-              ));
+              // tamm thoi comment
+              // return Taskerrowabutton(
+              //     iconButton: const TwoSttButton(
+              //   sttkey: true,
+              //   icon: Icon(
+              //     FontAwesomeIcons.solidHeart,
+              //     color: AppColors.xanh_main,
+              //     size: 32,
+              //   ),
+              //   icon2: Icon(
+              //     FontAwesomeIcons.heart,
+              //     color: AppColors.xam72,
+              //     size: 32,
+              //   ),
+              // ));
             },
           ),
         )

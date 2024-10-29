@@ -25,8 +25,8 @@ class _AllreviewState extends State<Allreview> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BasicAppbar(
-        title: const Text(
+      appBar: const BasicAppbar(
+        title: Text(
           'Tất cả đánh giá',
           style: TextStyle(
             fontFamily: 'Inter',
@@ -184,7 +184,7 @@ class _AllreviewState extends State<Allreview> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        ReviewCardWidget(),
+                        // ReviewCardWidget(),
                         const SizedBox(
                           height: 10,
                         ),

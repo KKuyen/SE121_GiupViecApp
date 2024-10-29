@@ -1,6 +1,7 @@
 // lib/presentation/cubit/task_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
+import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
 import '../../../../../domain/entities/task.dart';
 
 abstract class TaskerState extends Equatable {
@@ -15,7 +16,7 @@ class TaskerInitial extends TaskerState {}
 class TaskerLoading extends TaskerState {}
 
 class TaskerSuccess extends TaskerState {
-  final List<TaskerList> tasker;
+  final TaskerInfo tasker;
 
   const TaskerSuccess(this.tasker);
 

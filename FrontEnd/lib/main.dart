@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<TaskerlistCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TaskerCubit>(),
         ),
       ],
       child: MaterialApp(

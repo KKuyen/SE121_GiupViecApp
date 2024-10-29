@@ -178,6 +178,8 @@ class _FinishTabState extends State<Finishtab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S5") {
                                     return Taskerrowreview(
+                                      taskerId: (atasker.tasker
+                                          as Map<String, dynamic>)['id'],
                                       taskerName: (atasker.tasker
                                           as Map<String, dynamic>)['name'],
                                       taskerImageLink: (atasker.tasker

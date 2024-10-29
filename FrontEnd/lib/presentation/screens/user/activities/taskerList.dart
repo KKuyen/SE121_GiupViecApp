@@ -138,13 +138,25 @@ class _TaskerListState extends State<Taskerlist> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Taskerprofile()),
+                                  builder: (context) => Taskerprofile(
+                                        taskerId: taskerList[index].id,
+                                      )),
                             );
                           },
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 12, 0),
                             child: Column(
-                              children: [Taskerrowdelete(), Divider()],
+                              children: [
+                                Taskerrowdelete(
+                                  taskerName: (taskerList[index].tasker
+                                      as Map<String, dynamic>)['name'],
+                                  taskerId: (taskerList[index].tasker
+                                      as Map<String, dynamic>)['id'],
+                                  taskerPhone: (taskerList[index].tasker
+                                      as Map<String, dynamic>)['phoneNumber'],
+                                ),
+                                Divider()
+                              ],
                             ),
                           ),
                         );
@@ -204,13 +216,25 @@ class _TaskerListState extends State<Taskerlist> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Taskerprofile()),
+                                      builder: (context) => Taskerprofile(
+                                          taskerId: taskerList[index].id)),
                                 );
                               },
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 12, 0),
                                 child: Column(
-                                  children: [Taskerrowaccept(), Divider()],
+                                  children: [
+                                    Taskerrowaccept(
+                                      taskerName: (taskerList[index].tasker
+                                          as Map<String, dynamic>)['name'],
+                                      taskerId: (taskerList[index].tasker
+                                          as Map<String, dynamic>)['id'],
+                                      taskerPhone: (taskerList[index].tasker
+                                              as Map<String, dynamic>)[
+                                          'phoneNumber'],
+                                    ),
+                                    Divider()
+                                  ],
                                 ),
                               ),
                             );

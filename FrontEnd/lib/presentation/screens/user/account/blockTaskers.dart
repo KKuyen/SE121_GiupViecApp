@@ -59,21 +59,21 @@ class _blocktaskersState extends State<Blocktaskers> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 2, // Replace with the actual number of taskers
             itemBuilder: (context, index) {
-              // ignore: prefer_const_constructors
-              return Taskerrowabutton(
-                  iconButton: const TwoSttButton(
-                sttkey: true,
-                icon: Icon(
-                  Icons.block,
-                  color: AppColors.do_main,
-                  size: 33,
-                ),
-                icon2: Icon(
-                  Icons.block,
-                  color: AppColors.xam72,
-                  size: 33,
-                ),
-              ));
+              // tam thoi comment
+              // return Taskerrowabutton(
+              //     iconButton: const TwoSttButton(
+              //   sttkey: true,
+              //   icon: Icon(
+              //     Icons.block,
+              //     color: AppColors.do_main,
+              //     size: 33,
+              //   ),
+              //   icon2: Icon(
+              //     Icons.block,
+              //     color: AppColors.xam72,
+              //     size: 33,
+              //   ),
+              // ));
             },
           ),
         )

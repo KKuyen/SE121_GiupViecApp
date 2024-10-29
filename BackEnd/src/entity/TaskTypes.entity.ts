@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { AddPriceDetails } from "./AddPriceDetails.entity"; // Import AddPriceDetails
 import { Tasks } from "./Task.entity"; // Import Tasks
+import { Reviews } from "./Review.entity";
 
 @Entity({ name: "taskTypes" })
 export class TaskTypes {
@@ -36,6 +37,9 @@ export class TaskTypes {
     (addPriceDetails) => addPriceDetails.taskType
   )
   addPriceDetails!: AddPriceDetails[];
+
+  @OneToMany(() => Reviews, (reviews) => reviews.taskType)
+  reviews!: Reviews[]; // One-to-many relationship with Review
 
   @OneToMany(() => Tasks, (task) => task.taskType)
   task!: Tasks[];

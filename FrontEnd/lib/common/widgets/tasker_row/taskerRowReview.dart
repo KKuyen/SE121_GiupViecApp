@@ -8,6 +8,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/newRevie
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerrowreview extends StatefulWidget {
+  final int taskerId;
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
@@ -15,6 +16,7 @@ class Taskerrowreview extends StatefulWidget {
   final int Star;
 
   const Taskerrowreview({
+    required this.taskerId,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
     this.isReview = false,
@@ -36,7 +38,7 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Taskerprofile(),
+            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
           ),
         ),
       },

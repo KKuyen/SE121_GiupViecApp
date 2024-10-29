@@ -8,12 +8,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerrowabutton extends StatefulWidget {
+  final int taskerId;
+
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
   final TwoSttButton iconButton;
 
   const Taskerrowabutton({
+    required this.taskerId,
     required this.iconButton,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
@@ -34,7 +37,7 @@ class _TaskerrowdaState extends State<Taskerrowabutton> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Taskerprofile(),
+            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
           ),
         ),
       },

@@ -179,6 +179,8 @@ class _ApprovetabState extends State<Approvetab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S2") {
                                     return Taskerrowbasic(
+                                      taskerId: (atasker.tasker
+                                          as Map<String, dynamic>)['id'],
                                       taskerName: (atasker.tasker
                                           as Map<String, dynamic>)['name'],
                                       taskerImageLink: (atasker.tasker

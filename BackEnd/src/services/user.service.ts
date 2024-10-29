@@ -695,6 +695,10 @@ export class UserService {
     taskerId: number,
     star: number,
     content: string,
+
+    userId: number,
+    userName: string,
+    userAvatar: string,
     imageArray: any
   ) {
     const reviewRepository = AppDataSource.getRepository(Reviews);
@@ -703,6 +707,9 @@ export class UserService {
       taskerId: taskerId,
       star: star,
       content: content,
+      userId: userId,
+      userName: userName,
+      userAvatar: userAvatar,
     });
     if (imageArray.length > 0) review.image1 = imageArray[0];
     if (imageArray.length > 1) review.image2 = imageArray[1];
@@ -779,11 +786,51 @@ export class UserService {
   }
   static async getTaskerInfo(taskerId: number, userId: number) {
     const userRepository = AppDataSource.getRepository(User);
-    const tasker = await userRepository.findOne({ where: { id: taskerId } });
-    const reviewRepository = AppDataSource.getRepository(Reviews);
-    const reviews = await reviewRepository.find({
-      where: { taskerId: taskerId },
+    const tasker = await userRepository.findOne({
+      where: { id: taskerId },
+      select: [
+        "id",
+        "name",
+        "email",
+        "phoneNumber",
+        "role",
+        "avatar",
+        "birthday",
+        "Rpoints",
+        "taskerInfoId",
+        "createdAt",
+        "updatedAt",
+      ],
     });
+    const reviewRepository = AppDataSource.getRepository(Reviews);
+    const reviews = await reviewRepository
+      .createQueryBuilder("review")
+      .leftJoinAndSelect("review.task", "task")
+      .leftJoinAndSelect("review.taskType", "taskType")
+      .where("review.taskerId = :taskerId", { taskerId })
+      .select([
+        "review.id",
+        "review.taskId",
+        "review.taskerId",
+        "review.star",
+        "review.content",
+        "review.userId",
+        "review.userName",
+        "review.userAvatar",
+        "review.image1",
+        "review.image2",
+        "review.image3",
+        "review.image4",
+        "review.createdAt",
+        "review.updatedAt",
+        "task.id",
+        "task.time",
+        "task.note",
+        "taskType.id",
+        "taskType.name",
+        "taskType.image",
+      ])
+      .getMany();
     const loveTaskerRepository = AppDataSource.getRepository(LoveTaskers);
     const loveTasker = await loveTaskerRepository.findOne({
       where: { userId: userId, taskerId: taskerId },

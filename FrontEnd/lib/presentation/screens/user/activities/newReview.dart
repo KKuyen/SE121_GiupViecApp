@@ -184,11 +184,12 @@ class _NewreviewState extends State<Newreview> {
                         Container(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Taskerrowbasic(
-                              taskerImageLink:
-                                  'https://lh3.googleusercontent.com/a/ACg8ocIbTWK1I0NcPM8SuGtujEanJwtR6OKWulhhvljuu5Td5VtEYxgD=s389-c-no',
-                              taskerName: 'Nguyễn Văn A',
-                            ),
+                            //comment vì chưa làm
+                            // child: Taskerrowbasic(
+                            //   taskerImageLink:
+                            //       'https://lh3.googleusercontent.com/a/ACg8ocIbTWK1I0NcPM8SuGtujEanJwtR6OKWulhhvljuu5Td5VtEYxgD=s389-c-no',
+                            //   taskerName: 'Nguyễn Văn A',
+                            // ),
                           ),
                         ),
                       ],

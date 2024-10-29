@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 
-import 'package:se121_giupviec_app/data/models/tasker_model.dart';
+import 'package:se121_giupviec_app/data/models/taskerInfo_model.dart';
 
 abstract class TaskerRemoteDatasource {
-  Future<TaskerModel> getATasker(int userId);
+  Future<TaskerInfoModel> getATasker(int userId, int taskerId);
 }
 
 class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
@@ -21,16 +21,18 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
   });
 
   @override
-  Future<TaskerModel> getATasker(int userId) async {
+  Future<TaskerInfoModel> getATasker(int userId, int taskerId) async {
     final http.Response response;
     try {
-      final uri = Uri.parse('$baseUrl/$apiVersion/get-tasker-profile')
-          .replace(queryParameters: {'taskerId': userId.toString()});
-      response = await client.get(
-        uri,
+      response = await client.post(
+        Uri.parse('$baseUrl/$apiVersion/get-tasker-info'),
+        body: json.encode({
+          "userId": userId,
+          'taskerId': taskerId,
+        }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token,
+          'Authorization': AppInfor1.user_token
         },
       );
     } on SocketException {
@@ -52,9 +54,10 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
     }
 
     if (response.statusCode == 200) {
-      final dynamic taskListJson = json.decode(response.body)['tasker'];
-      print("taskListJson: $taskListJson");
-      return TaskerModel.fromJson(taskListJson);
+      final dynamic taskerJson = json.decode(response.body);
+
+      print("tasker: $taskerJson");
+      return TaskerInfoModel.fromJson(taskerJson);
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed ');

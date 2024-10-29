@@ -333,23 +333,40 @@ export class UserController {
     });
   }
   static async review(req: Request, res: Response) {
-    const { taskId, taskerId, star, content, imageArray } = req.body;
+    const {
+      taskId,
+      taskerId,
+      star,
+      content,
+      imageArray,
+      userId,
+      userName,
+      userAvatar,
+    } = req.body;
     if (
       taskId === undefined ||
       taskerId === undefined ||
       star === undefined ||
-      content === undefined
+      content === undefined ||
+      userId === undefined ||
+      userName === undefined ||
+      userAvatar === undefined
     ) {
       res.status(500).json({
         errCode: 1,
         message: "Missing required fields",
       });
     }
+
     let message = await UserService.review(
       taskId,
       taskerId,
       star,
       content,
+
+      userId,
+      userName,
+      userAvatar,
       imageArray
     );
     res.status(200).json({

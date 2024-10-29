@@ -1,3 +1,4 @@
+import { TaskTypes } from "./TaskTypes.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,10 +18,17 @@ export class Reviews {
 
   @Column({ type: "int", nullable: false })
   taskId!: number;
+  @Column({ type: "int", nullable: false })
+  taskTypeId!: number;
 
   @Column({ type: "int", nullable: false })
   taskerId!: number;
-
+  @Column({ type: "int", nullable: false })
+  userId!: number;
+  @Column({ type: "varchar", nullable: true })
+  userAvatar!: string;
+  @Column({ type: "varchar", nullable: true })
+  userName!: string;
   @Column({ type: "float", nullable: false })
   star!: number;
 
@@ -39,10 +47,13 @@ export class Reviews {
   @Column({ type: "varchar", nullable: false })
   image4!: number;
 
- @ManyToOne(() => Tasks, task => task.reviews)
+  @ManyToOne(() => Tasks, (task) => task.reviews)
   @JoinColumn({ name: "taskId" })
   task!: Tasks; // Many-to-one relationship with Task
-  
+  @ManyToOne(() => TaskTypes, (taskTypes) => taskTypes.reviews)
+  @JoinColumn({ name: "taskTypeId" })
+  taskType!: TaskTypes; // Many-to-one relationship with Task
+
   @ManyToOne(() => User)
   @JoinColumn({ name: "taskerId" })
   tasker!: User; // Many-to-one relationship with Users

@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from "typeorm";
 
 export class ReviewsMigration1698324600528 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -19,10 +24,32 @@ export class ReviewsMigration1698324600528 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "taskTypeId",
+            type: "int",
+            isNullable: false,
+          },
+          {
             name: "taskerId",
             type: "int",
             isNullable: false,
           },
+          {
+            name: "userId",
+            type: "int",
+            isNullable: false,
+          },
+
+          {
+            name: "userAvatar",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
+            name: "userName",
+            type: "varchar",
+            isNullable: true,
+          },
+
           {
             name: "star",
             type: "float",
@@ -52,7 +79,8 @@ export class ReviewsMigration1698324600528 implements MigrationInterface {
             name: "image4",
             type: "varchar",
             isNullable: false,
-          },{
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,
@@ -92,9 +120,15 @@ export class ReviewsMigration1698324600528 implements MigrationInterface {
     const table = await queryRunner.getTable("reviews");
     const foreignKeys = table!.foreignKeys;
 
-    await queryRunner.dropForeignKey("reviews", foreignKeys.find(fk => fk.columnNames.indexOf("taskId") !== -1)!);
-    await queryRunner.dropForeignKey("reviews", foreignKeys.find(fk => fk.columnNames.indexOf("taskerId") !== -1)!);
-    
+    await queryRunner.dropForeignKey(
+      "reviews",
+      foreignKeys.find((fk) => fk.columnNames.indexOf("taskId") !== -1)!
+    );
+    await queryRunner.dropForeignKey(
+      "reviews",
+      foreignKeys.find((fk) => fk.columnNames.indexOf("taskerId") !== -1)!
+    );
+
     await queryRunner.dropTable("reviews");
   }
 }
