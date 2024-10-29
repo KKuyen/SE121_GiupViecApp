@@ -4,4 +4,5 @@ import 'package:se121_giupviec_app/domain/entities/location.dart';
 
 abstract class LocationRepository {
   Future<List<Location>> getMyLocation(int userId);
+  Future<Location> getMyDefaultLocation(int userId);
 }

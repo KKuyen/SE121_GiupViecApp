@@ -7,8 +7,9 @@ import 'location_state.dart';
 class LocationCubit extends Cubit<LocationState> {
   final GetMyLocationUseCase getMyLocationUseCase;
 
-  LocationCubit({required this.getMyLocationUseCase})
-      : super(LocationInitial());
+  LocationCubit({
+    required this.getMyLocationUseCase,
+  }) : super(LocationInitial());
 
   Future<void> getMyLocation(int userId) async {
     emit(LocationLoading());

@@ -52,7 +52,6 @@ class TaskTypeRemoteDatasourceImpl implements TaskTypeRemoteDatasource {
     if (response.statusCode == 200) {
       final List<dynamic> taskTypeListJson =
           json.decode(response.body)['taskTypeList'];
-      print(taskTypeListJson);
       return taskTypeListJson
           .map((json) => TaskTypeModel.fromJson(json))
           .toList();

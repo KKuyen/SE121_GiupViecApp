@@ -21,12 +21,6 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<LocationCubit>(context).getMyLocation(1);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
@@ -163,10 +157,21 @@ class _LocationPageState extends State<LocationPage> {
   }
 }
 
-class listLocation extends StatelessWidget {
+class listLocation extends StatefulWidget {
   const listLocation({
     super.key,
   });
+
+  @override
+  State<listLocation> createState() => _listLocationState();
+}
+
+class _listLocationState extends State<listLocation> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<LocationCubit>(context).getMyLocation(1);
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,11 +4,9 @@ import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 import 'package:se121_giupviec_app/presentation/screens/user/account/account.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/message.dart';
-import 'package:se121_giupviec_app/presentation/tasker/activities/activity.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});

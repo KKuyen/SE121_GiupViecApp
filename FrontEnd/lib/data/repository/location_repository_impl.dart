@@ -11,4 +11,8 @@ class LocationRepositoryImpl implements LocationRepository {
   Future<List<Location>> getMyLocation(int userId) async {
     return await remoteDataSource.getMyLocation(userId);
   }
+
+  Future<Location> getMyDefaultLocation(int userId) async {
+    return await remoteDataSource.getMyDefaultLocation(userId);
+  }
 }

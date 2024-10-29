@@ -166,5 +166,16 @@ export class TaskerController {
         let message = await TaskerService.cancelTask(taskerId, taskId);
         res.status(200).json(message);
     }
+    static async handleGetMyDefaultLocation(req: Request, res: Response) {
+        let  userId:any  = req.query.userId;
+        if(!userId ) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.getMyDefaultLocation(userId);
+        res.status(200).json(message);
+    }
    
 }

@@ -53,7 +53,6 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
     if (response.statusCode == 200) {
       final List<dynamic> voucherListJson =
           json.decode(response.body)['voucherList'];
-      print(voucherListJson);
       return voucherListJson
           .map((json) => VoucherModel.fromJson(json))
           .toList();
