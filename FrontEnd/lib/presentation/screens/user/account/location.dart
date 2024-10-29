@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/bloc/Location/location_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
+
+import '../../../../domain/entities/location.dart';
+import '../../../bloc/Location/location_state.dart';
 
 class LocationPage extends StatefulWidget {
   const LocationPage({super.key});
@@ -15,6 +20,12 @@ class LocationPage extends StatefulWidget {
 }
 
 class _LocationPageState extends State<LocationPage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<LocationCubit>(context).getMyLocation(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,34 +109,7 @@ class _LocationPageState extends State<LocationPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    height: MediaQuery.of(context).size.height - 400,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: const SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          _addressCard(),
-                          Divider(
-                            height: 1,
-                            thickness: 1,
-                          ),
-                          _addressCard(),
-                          const Divider(
-                            height: 1,
-                            thickness: 1,
-                          ),
-                          _addressCard(),
-                          const Divider(
-                            height: 1,
-                            thickness: 1,
-                          ),
-                          _addressCard(),
-                        ],
-                      ),
-                    ),
-                  ),
+                  const listLocation(),
                 ],
               ),
             ),
@@ -179,23 +163,70 @@ class _LocationPageState extends State<LocationPage> {
   }
 }
 
+class listLocation extends StatelessWidget {
+  const listLocation({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LocationCubit, LocationState>(
+      builder: (context, state) {
+        if (state is LocationLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is LocationSuccess) {
+          final locations = state.locations;
+          return Container(
+              height: MediaQuery.of(context).size.height - 400,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: locations.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        _addressCard(location: locations[index]),
+                        const Divider(
+                          height: 1,
+                          thickness: 1,
+                        ),
+                      ],
+                    );
+                  }));
+        } else if (state is LocationError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('Không tìm thấy địa chỉ'));
+        }
+      },
+    );
+  }
+}
+
 class _addressCard extends StatelessWidget {
-  const _addressCard({
+  Location location;
+  _addressCard({
+    required this.location,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text(
-        'Trịnh Trần Phương Tuấn',
-        style: TextStyle(fontWeight: FontWeight.bold),
+      title: Text(
+        location.ownerName,
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: const Column(
+      subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Quốc lộ 13/47B 479, Khu Phố 5, Thủ Đức, Hồ Chí Minh, Việt Nam'),
-          Text('+(84) 3456 7891'),
+          Text(
+              "${location.map}, ${location.detailAddress}, ${location.district}, ${location.province}, ${location.country}"),
+          Text(location.ownerPhoneNumber),
         ],
       ),
       trailing: const Icon(
@@ -203,11 +234,37 @@ class _addressCard extends StatelessWidget {
         color: AppColors.do_main,
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LocationPage(),
-          ),
+        _showDialog(context);
+      },
+    );
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Xác nhận'),
+          content: const Text('Bạn muốn xóa địa chỉ này?'),
+          actions: <Widget>[
+            Sizedbutton(
+              onPressFun: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              text: 'Hủy',
+              backgroundColor: Colors.white,
+              StrokeColor: AppColors.do_main,
+              isStroke: true,
+              textColor: AppColors.do_main,
+            ),
+            Sizedbutton(
+              onPressFun: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              text: 'Xóa',
+              backgroundColor: AppColors.do_main,
+            ),
+          ],
         );
       },
     );

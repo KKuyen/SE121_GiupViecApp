@@ -4,11 +4,15 @@ import 'package:se121_giupviec_app/common/widgets/voucher/voucherCard.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 
+import '../../../core/configs/theme/app_colors.dart';
 import '../../../presentation/bloc/Voucher/voucher_cubit.dart';
 import '../../../presentation/bloc/Voucher/voucher_state.dart';
+import '../button/sizedbutton.dart';
 
 class Vouchers extends StatefulWidget {
+  final bool isNearToExpire;
   const Vouchers({
+    this.isNearToExpire = false,
     super.key,
   });
 
@@ -38,11 +42,19 @@ class _VouchersState extends State<Vouchers> {
               itemCount: vouchers.length,
               itemBuilder: (context, index) {
                 final voucher = vouchers[index];
+                final currentDate = DateTime.now();
+                final difference =
+                    voucher.endDate.difference(currentDate).inDays;
+
+                if (widget.isNearToExpire == true && difference > 5) {
+                  return Container();
+                }
+
                 return VoucherCard(
                   imageUrl: AppImages.voucher1,
                   title: voucher.header,
                   description: voucher.content,
-                  onPressed: () {},
+                  onPressed: _showDialog,
                   RpointCost: voucher.RpointCost.toString(),
                 );
               });
@@ -53,19 +65,36 @@ class _VouchersState extends State<Vouchers> {
         }
       },
     );
+  }
 
-    // return SingleChildScrollView(
-    //   scrollDirection: Axis.horizontal,
-    //   child: Row(
-    //     children: [
-    //       VoucherCard(
-    //         imageUrl: AppImages.voucher1,
-    //         title: 'Voucher 50%',
-    //         description: 'Tất cả dịch vụ',
-    //         onPressed: () {},
-    //       ),
-    //     ],
-    //   ),
-    // );
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Xác nhận'),
+          content: const Text('Bạn có muốn lưu voucher này không?'),
+          actions: <Widget>[
+            Sizedbutton(
+              onPressFun: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              text: 'Hủy',
+              backgroundColor: Colors.white,
+              StrokeColor: AppColors.cam_main,
+              isStroke: true,
+              textColor: AppColors.cam_main,
+            ),
+            Sizedbutton(
+              onPressFun: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              text: 'Lưu',
+              backgroundColor: AppColors.cam_main,
+            ),
+          ],
+        );
+      },
+    );
   }
 }

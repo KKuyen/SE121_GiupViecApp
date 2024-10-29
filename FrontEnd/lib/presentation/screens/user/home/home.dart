@@ -15,6 +15,7 @@ import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_c
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
 
 import '../../../bloc/TaskType/get_all_tasktype_state.dart';
+import '../account/location.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -293,25 +294,33 @@ class _position extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-          height: 47,
-          width: 47,
-          decoration: const BoxDecoration(
-              color: AppColors.xanh_main, shape: BoxShape.circle),
-          child: const Icon(
-            Icons.location_on,
-            color: Colors.white,
-            size: 27,
-          )),
-      title: const Text(
-        'TP. Hồ Chí Minh',
-        style: TextStyle(fontSize: 15),
-      ),
-      subtitle:
-          const Text('BTM Layout, 500628', style: TextStyle(fontSize: 13)),
-      trailing: const Icon(
-        Icons.navigate_next_outlined,
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LocationPage()),
+        )
+      },
+      child: ListTile(
+        leading: Container(
+            height: 47,
+            width: 47,
+            decoration: const BoxDecoration(
+                color: AppColors.xanh_main, shape: BoxShape.circle),
+            child: const Icon(
+              Icons.location_on,
+              color: Colors.white,
+              size: 27,
+            )),
+        title: const Text(
+          'TP. Hồ Chí Minh',
+          style: TextStyle(fontSize: 15),
+        ),
+        subtitle:
+            const Text('BTM Layout, 500628', style: TextStyle(fontSize: 13)),
+        trailing: const Icon(
+          Icons.navigate_next_outlined,
+        ),
       ),
     );
   }
