@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
@@ -11,6 +12,7 @@ import 'package:se121_giupviec_app/presentation/screens/auth/signup_page.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../common/helpers/SecureStorage.dart';
 import '../../bloc/Auth/auth_cubit.dart';
 import '../../bloc/Auth/auth_state.dart';
 
@@ -34,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
 
   bool _obscureText = true;
   bool isShowErrText = false;
-
+  SecureStorage secureStorage = new SecureStorage();
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
@@ -53,6 +55,7 @@ class _SignInPageState extends State<SignInPage> {
           Navigator.of(context).pop();
 
           if (state is AuthSuccess) {
+            secureStorage.writeUserInfo(state.user, state.user.access_token);
             // Navigate to home
             Navigator.pushReplacement(
               context,

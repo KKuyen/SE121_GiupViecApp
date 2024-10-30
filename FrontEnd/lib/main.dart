@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/screens/auth/splash.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'core/injection/injection_container.dart' as di;
 import 'presentation/bloc/Auth/auth_cubit.dart';
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-        home: const Navigation(),
+        home: const SplashPage(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );
