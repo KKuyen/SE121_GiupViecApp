@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/approved_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widget.dart';
-import 'package:se121_giupviec_app/common/widgets/task_card/finished_activity_widget.dart';
+
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';

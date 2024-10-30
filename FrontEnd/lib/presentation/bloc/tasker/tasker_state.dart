@@ -1,5 +1,7 @@
 // lib/presentation/cubit/task_state.dart
+// lib/presentation/cubit/task_state.dart
 import 'package:equatable/equatable.dart';
+import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
 import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
 import '../../../../../domain/entities/task.dart';
@@ -17,11 +19,12 @@ class TaskerLoading extends TaskerState {}
 
 class TaskerSuccess extends TaskerState {
   final TaskerInfo tasker;
+  final List<TaskType> taskTypeList;
 
-  const TaskerSuccess(this.tasker);
+  const TaskerSuccess(this.tasker, this.taskTypeList);
 
   @override
-  List<Object> get props => [tasker];
+  List<Object> get props => [tasker, taskTypeList];
 }
 
 class TaskerError extends TaskerState {

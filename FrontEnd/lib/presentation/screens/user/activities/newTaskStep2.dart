@@ -15,14 +15,14 @@ class Newtaskstep2 extends StatefulWidget {
 class _Newtaskstep2State extends State<Newtaskstep2> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _timeController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
-    _selectedTime = TimeOfDay(hour: 8, minute: 0);
+    _selectedTime = const TimeOfDay(hour: 8, minute: 0);
   }
 
   // Hàm định dạng ngày

@@ -2,35 +2,36 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
-import 'package:se121_giupviec_app/data/models/taskType_model.dart';
+import 'package:se121_giupviec_app/data/models/BlockTasker_model.dart';
+import 'package:se121_giupviec_app/data/models/loveTasker_model.dart';
+import 'package:se121_giupviec_app/data/models/review_model.dart';
 
 import 'package:se121_giupviec_app/data/models/taskerInfo_model.dart';
 
-abstract class TaskerRemoteDatasource {
-  Future<TaskerInfoModel> getATasker(int userId, int taskerId);
-  Future<List<TasktypeModel>> getTaskTypeList();
+abstract class LoveTaskersRemoteDatasource {
+  Future<List<LoveTaskerModel>> getAllLoveTaskers(int userId);
+  Future<List<BlockTaskerModel>> getAllBlockTaskers(int userId);
 }
 
-class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
+class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
   final http.Client client;
   final String baseUrl;
   final String apiVersion;
 
-  TaskerRemoteDataSourceImpl({
+  LoveTaskersRemoteDatasourceImpl({
     required this.client,
     required this.baseUrl,
     required this.apiVersion,
   });
 
   @override
-  Future<TaskerInfoModel> getATasker(int userId, int taskerId) async {
+  Future<List<LoveTaskerModel>> getAllLoveTaskers(int userId) async {
     final http.Response response;
     try {
       response = await client.post(
-        Uri.parse('$baseUrl/$apiVersion/get-tasker-info'),
+        Uri.parse('$baseUrl/$apiVersion/get-love-tasker'),
         body: json.encode({
-          "userId": userId,
-          'taskerId': taskerId,
+          'userId': userId,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -54,12 +55,13 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
       print("Unexpected error: $e");
       throw Exception('Unexpected error: $e');
     }
-
     if (response.statusCode == 200) {
-      final dynamic taskerJson = json.decode(response.body);
-
-      print("tasker: $taskerJson");
-      return TaskerInfoModel.fromJson(taskerJson);
+      final List<dynamic> taskListJson = json.decode(response.body)['loveList'];
+      print('--------------------------------------');
+      print(taskListJson);
+      return taskListJson
+          .map((json) => LoveTaskerModel.fromJson(json))
+          .toList();
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed ');
@@ -67,12 +69,14 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
   }
 
   @override
-  Future<List<TasktypeModel>> getTaskTypeList() async {
+  Future<List<BlockTaskerModel>> getAllBlockTaskers(int userId) async {
     final http.Response response;
     try {
       response = await client.post(
-        Uri.parse('$baseUrl/$apiVersion/get-all-task-type'),
-        body: json.encode({}),
+        Uri.parse('$baseUrl/$apiVersion/get-block-tasker'),
+        body: json.encode({
+          'userId': userId,
+        }),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': AppInfor1.user_token
@@ -95,15 +99,13 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
       print("Unexpected error: $e");
       throw Exception('Unexpected error: $e');
     }
-
     if (response.statusCode == 200) {
-      final List<dynamic> taskTypeListJson =
-          json.decode(response.body)['taskTypeList'];
-      print('taskType--------------------------------------');
-      print(taskTypeListJson);
-
-      return taskTypeListJson
-          .map((json) => TasktypeModel.fromJson(json))
+      final List<dynamic> taskListJson =
+          json.decode(response.body)['blockList'];
+      print('--------------------------------------');
+      print(taskListJson);
+      return taskListJson
+          .map((json) => BlockTaskerModel.fromJson(json))
           .toList();
     } else {
       print("response.body failed: ${response.body}");

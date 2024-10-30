@@ -526,6 +526,7 @@ export class UserService {
       voucherList: vouchers,
     };
   }
+
   static async getMyVoucher(userId: number) {
     const voucherRepository = AppDataSource.getRepository(Vouchers);
     const currentDate = new Date();
@@ -560,6 +561,21 @@ export class UserService {
       errCode: 0,
       errMessage: "OK",
       taskTypeList: taskTypes,
+    };
+  }
+  static async getATaskType(taskTypeId: number) {
+    const taskTypeRepository = AppDataSource.getRepository(TaskTypes);
+
+    const taskType = await taskTypeRepository
+      .createQueryBuilder("taskType")
+      .leftJoinAndSelect("taskType.addPriceDetails", "addPriceDetails")
+      .where("taskType.id = :taskTypeId", { taskTypeId })
+      .getOne();
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      taskType: taskType,
     };
   }
   static async getTaskerList(taskId: number) {
@@ -857,6 +873,43 @@ export class UserService {
 
       blockTasker: blockTasker ? true : false,
       taskerInfo: taskerInfo,
+    };
+  }
+  static async getAllReviews(taskerId: number) {
+    const reviewRepository = AppDataSource.getRepository(Reviews);
+    const reviews = await reviewRepository
+      .createQueryBuilder("review")
+      .leftJoinAndSelect("review.task", "task")
+      .leftJoinAndSelect("review.taskType", "taskType")
+      .where("review.taskerId = :taskerId", { taskerId })
+      .select([
+        "review.id",
+        "review.taskId",
+        "review.taskerId",
+        "review.star",
+        "review.content",
+        "review.userId",
+        "review.userName",
+        "review.userAvatar",
+        "review.image1",
+        "review.image2",
+        "review.image3",
+        "review.image4",
+        "review.createdAt",
+        "review.updatedAt",
+        "task.id",
+        "task.time",
+        "task.note",
+        "taskType.id",
+        "taskType.name",
+        "taskType.image",
+      ])
+      .getMany();
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      reviewList: reviews,
     };
   }
   static async editSetting(

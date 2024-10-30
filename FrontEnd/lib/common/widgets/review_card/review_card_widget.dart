@@ -75,7 +75,13 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
             const SizedBox(
               height: 10,
             ),
-            Text(widget.content, style: AppTextStyle.textthuongxam),
+            Text(widget.content,
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.xam72,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none)),
             const SizedBox(
               height: 10,
             ),

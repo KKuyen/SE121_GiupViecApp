@@ -1,6 +1,6 @@
 // lib/presentation/cubit/task_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
+import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasker_usercase.dart';
 
@@ -18,8 +18,9 @@ class TaskerCubit extends Cubit<TaskerState> {
 
       final TaskerInfo taskerInfo =
           (await getATaskerUsercase.execute(userId, taskerId));
+      final List<TaskType> taskTypeList = (await getATaskerUsercase.execute2());
 
-      emit(TaskerSuccess(taskerInfo));
+      emit(TaskerSuccess(taskerInfo, taskTypeList));
     } catch (e) {
       emit(TaskerError(e.toString()));
     }

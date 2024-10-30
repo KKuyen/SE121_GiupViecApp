@@ -6,6 +6,7 @@ import { Tasks } from "../entity/Task.entity";
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import * as admin from "firebase-admin";
+import { TaskTypes } from "../entity/TaskTypes.entity";
 
 // import { encrypt } from "../helpers/encrypt";
 // import * as cache from "memory-cache";
@@ -200,6 +201,21 @@ export class UserController {
       taskList: message.tasklist,
     });
   }
+  static async getAllReviews(req: Request, res: Response) {
+    const { taskerId } = req.body;
+    if (taskerId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getAllReviews(taskerId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      reviewList: message.reviewList,
+    });
+  }
   static async getAllVoucher(req: Request, res: Response) {
     let message = await UserService.getAllVoucher();
     res.status(200).json({
@@ -229,6 +245,21 @@ export class UserController {
       errCode: message.errCode,
       message: message.errMessage,
       taskTypeList: message.taskTypeList,
+    });
+  }
+  static async getATaskType(req: Request, res: Response) {
+    const { taskTypeId } = req.body;
+    if (taskTypeId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getATaskType(taskTypeId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      TaskType: message.taskType,
     });
   }
   static async getTaskerList(req: Request, res: Response) {

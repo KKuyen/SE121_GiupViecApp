@@ -8,10 +8,10 @@ import 'package:se121_giupviec_app/common/widgets/task_type_mini_card/mini_tt_ca
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/domain/entities/task.dart';
+
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
-import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
+
 import 'package:se121_giupviec_app/presentation/screens/user/activities/allReview.dart';
 
 class Taskerprofile extends StatefulWidget {
@@ -66,6 +66,14 @@ class _TaskerprofileState extends State<Taskerprofile> {
           );
         } else if (state is TaskerSuccess) {
           final tasker = state.tasker;
+          isLove = state.tasker.isLove ?? false;
+          isBlock = state.tasker.isBlock ?? false;
+          var totalStar = 0;
+          var totalReviews = 0;
+          for (var review in tasker.reviewList ?? []) {
+            totalStar += (review?['star'] ?? 0) as int;
+            totalReviews++;
+          }
           return SingleChildScrollView(
             child: Stack(
               children: [
@@ -249,12 +257,38 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                     ),
                                     Wrap(
                                       spacing: 10,
-                                      runSpacing: 10,
+                                      runSpacing: 5,
                                       children: List.generate(
-                                        6, // Replace with the number of items you want
-                                        (index) => MiniTtCardWidget(
-                                          taskType: 'Title $index',
-                                        ),
+                                        state.taskTypeList
+                                            .length, // Replace with the number of items you want
+                                        (index) {
+                                          // Convert 'taskList' from tasker.taskerInfo into a list of integers
+                                          String taskList = (tasker.taskerInfo
+                                                  as Map<String, dynamic>)[
+                                              'taskList'];
+
+                                          List<int> taskListIds = taskList
+                                              .split('_')
+                                              .map((e) => int.parse(e))
+                                              .toList();
+
+                                          // Check if taskTypeList[index].id exists in taskListIds
+                                          bool containsId =
+                                              taskListIds.contains(
+                                                  state.taskTypeList[index].id);
+
+                                          if (containsId) {
+                                            return MiniTtCardWidget(
+                                              taskType: state
+                                                  .taskTypeList[index].name,
+                                              // Pass checked value to the widget
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+
+                                          // Return an empty container if ID is not found
+                                        },
                                       ),
                                     ),
                                   ],
@@ -285,7 +319,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                     Row(
                                       children: [
                                         Text(
-                                          '${(tasker.taskerInfo as Map<String, dynamic>)['totalStar'] / (tasker.taskerInfo as Map<String, dynamic>)['totalReviews']}/5',
+                                          '${totalStar / totalReviews}/5',
                                           style: const TextStyle(
                                               color: Colors.amber,
                                               fontSize: 22,
@@ -303,7 +337,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         ),
                                         const Spacer(),
                                         Text(
-                                          'Từ ${(tasker.taskerInfo as Map<String, dynamic>)['totalReviews']} lượt đánh giá',
+                                          'Từ ${totalReviews} lượt đánh giá',
                                           style: AppTextStyle.textthuongxam,
                                         ),
                                       ],
@@ -403,8 +437,9 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Allreview()),
+                                              builder: (context) => Allreview(
+                                                    taskerId: widget.taskerId,
+                                                  )),
                                         );
                                       },
                                       height: 45,

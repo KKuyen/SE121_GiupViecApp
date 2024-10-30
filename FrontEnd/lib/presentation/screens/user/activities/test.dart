@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_state.dart';
+
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_state.dart';
 

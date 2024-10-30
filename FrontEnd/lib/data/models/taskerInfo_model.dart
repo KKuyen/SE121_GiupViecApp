@@ -15,6 +15,7 @@ class TaskerInfoModel extends TaskerInfo {
           taskerInfo: taskerInfo,
           reviewList: reviewList,
           isLove: isLove,
+          isBlock: isBlock,
           message: message,
         );
 
