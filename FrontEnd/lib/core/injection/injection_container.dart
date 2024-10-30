@@ -37,6 +37,8 @@ import '../../domain/usecases/Auth/verifyOTP.dart';
 import '../../presentation/bloc/Auth/auth_cubit.dart';
 
 import '../../presentation/bloc/Location/add_location_cubit.dart';
+import '../../presentation/bloc/Location/delete_location_cubit.dart';
+
 import '../../presentation/bloc/Location/default_location_cubit.dart';
 import '../../presentation/bloc/Location/location_cubit.dart';
 import '../../presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
@@ -85,6 +87,10 @@ Future<void> init() async {
   sl.registerFactory(
     () => LocationCubit(
       getMyLocationUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => DeleteLocationCubit(
       deleteLocationUseCase: sl(),
     ),
   );

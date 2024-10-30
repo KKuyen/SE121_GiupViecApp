@@ -202,6 +202,9 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 const SnackBar(content: Text("Thành công")),
               );
 
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const LocationPage()),

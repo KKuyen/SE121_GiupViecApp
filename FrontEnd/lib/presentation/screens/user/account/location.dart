@@ -10,6 +10,7 @@ import 'package:se121_giupviec_app/presentation/bloc/Location/location_cubit.dar
 import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
 
 import '../../../../domain/entities/location.dart';
+import '../../../bloc/Location/delete_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
 
 class LocationPage extends StatefulWidget {
@@ -265,10 +266,15 @@ class _addressCard extends StatelessWidget {
             Sizedbutton(
               onPressFun: () {
                 context
-                    .read<LocationCubit>()
+                    .read<DeleteLocationCubit>()
                     .deleteLocation(id); // Gọi hàm deleteLocation
                 Navigator.of(context).pop(); // Đóng dialog
-                //BlocProvider.of<LocationCubit>(context).getMyLocation(1);
+                Navigator.of(context).pop();
+                Future.delayed(const Duration(seconds: 2));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LocationPage()),
+                );
               },
               text: 'Xóa',
               backgroundColor: AppColors.do_main,
