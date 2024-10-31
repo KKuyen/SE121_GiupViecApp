@@ -9,6 +9,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/Location/location_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../domain/entities/location.dart';
 import '../../../bloc/Location/delete_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
@@ -21,6 +22,13 @@ class LocationPage extends StatefulWidget {
 }
 
 class _LocationPageState extends State<LocationPage> {
+  SecureStorage secureStorage = SecureStorage();
+  Future<Map<String, String>> _fetchUserData() async {
+    String name = await secureStorage.readName();
+    String phoneNumber = await secureStorage.readPhoneNumber();
+    return {'name': name, 'phoneNumber': phoneNumber};
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,20 +142,38 @@ class _LocationPageState extends State<LocationPage> {
                           ),
                         ),
                         const SizedBox(height: 7),
-                        const Text(
-                          'Nguyễn Văn A',
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          '0345678901',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.grey,
-                          ),
+                        FutureBuilder<Map<String, String>>(
+                          future: _fetchUserData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              final userData = snapshot.data!;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userData['name']!,
+                                    style: const TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    userData['phoneNumber']!,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
                       ]),
                 ))
