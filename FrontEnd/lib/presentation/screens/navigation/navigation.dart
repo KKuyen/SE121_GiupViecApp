@@ -4,11 +4,11 @@ import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 import 'package:se121_giupviec_app/presentation/screens/user/account/account.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/message.dart';
-import 'package:se121_giupviec_app/presentation/tasker/activities/activity.dart';
+
+import '../../../common/helpers/SecureStorage.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -19,8 +19,19 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentPageIndex = 0;
+  SecureStorage secureStorage = new SecureStorage();
+  void _printUser() async {
+    String? id = await secureStorage.readId();
+    String? email = await secureStorage.readEmail();
+
+    print("Data from local: ${id}");
+    print("Data from local: ${email}");
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("aaaaaaaaaaaaaaaaaa");
+    _printUser();
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [

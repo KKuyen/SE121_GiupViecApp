@@ -5,7 +5,7 @@ class User {
   // final String phoneNumber;
   final dynamic access_token;
   final String message;
-  final Object user;
+  final Object? user;
   final int errCode;
 
   User({
@@ -15,7 +15,7 @@ class User {
     // required this.phoneNumber,
     required this.access_token,
     required this.message,
-    required this.user,
+    this.user,
     required this.errCode,
   });
 }

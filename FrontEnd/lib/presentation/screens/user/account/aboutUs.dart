@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Aboutus extends StatefulWidget {

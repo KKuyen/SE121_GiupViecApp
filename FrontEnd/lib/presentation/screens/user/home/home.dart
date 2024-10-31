@@ -1,17 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/search/search.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
+
+import '../../../../common/widgets/location/default_location.dart';
+import '../../../bloc/TaskType/get_all_tasktype_state.dart';
+import '../account/location.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,10 +28,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    final taskTypeCubit =
+        BlocProvider.of<TaskTypeCubit>(context).getAllTypeTasks();
   }
 
   @override
@@ -64,7 +72,15 @@ class _HomePageState extends State<HomePage>
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const _position(),
+              GestureDetector(
+                  onTap: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LocationPage()),
+                        )
+                      },
+                  child: const position()),
               const Padding(
                 padding: EdgeInsets.only(
                   left: AppInfo.main_padding,
@@ -90,7 +106,13 @@ class _HomePageState extends State<HomePage>
               const SizedBox(
                 height: 8,
               ),
-              const _services(),
+              const SizedBox(
+                  height: 95,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
+                    child: _services(),
+                  )),
               const SizedBox(
                 height: 19,
               ),
@@ -129,10 +151,13 @@ class _HomePageState extends State<HomePage>
               const SizedBox(
                 height: 8,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-                child: Vouchers(),
-              ),
+              const SizedBox(
+                  height: 170,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
+                    child: Vouchers(),
+                  )),
             ],
           ),
         ),
@@ -148,41 +173,55 @@ class _services extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _serviceItem(
-              icon: FontAwesomeIcons.solidClock,
-              title: 'Giúp việc theo giờ',
-              color: AppColors.cam_main,
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.solidCalendarCheck,
-              title: 'Giúp việc định kì',
-              color: AppColors.xanh_main,
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.babyCarriage,
-              title: 'Trông trẻ',
-              color: AppColors.do_main,
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.broom,
-              title: 'Dọn nhà',
-              color: Color(0xff4B9DCB),
-            ),
-            _serviceItem(
-              icon: FontAwesomeIcons.faucet,
-              title: 'Sửa ống nước',
-              color: AppColors.cam_main,
-            ),
-          ],
-        ),
-      ),
+    final List<Color> colors = [
+      AppColors.cam_main,
+      AppColors.xanh_main,
+      AppColors.do_main,
+      const Color(0xff4B9DCB),
+    ];
+    return BlocBuilder<TaskTypeCubit, TaskTypeState>(
+      builder: (context, state) {
+        if (state is TaskLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is TaskSuccess) {
+          final tasks = state.tasks;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return _serviceItem(
+                  icon: getIcon(task.avatar ?? ''),
+                  title: task.name,
+                  color: colors[index % colors.length]);
+            },
+          );
+        } else if (state is TaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('Không tìm thấy dịch vụ'));
+        }
+      },
     );
+  }
+
+  IconData getIcon(String name) {
+    switch (name) {
+      case 'broom':
+        return FontAwesomeIcons.broom;
+      case 'dry_cleaning_rounded':
+        return Icons.dry_cleaning_rounded;
+      case 'cutlery':
+        return FontAwesomeIcons.cutlery;
+      case 'local_florist_rounded':
+        return Icons.local_florist_rounded;
+      case 'bagShopping':
+        return FontAwesomeIcons.bagShopping;
+      default:
+        return Icons.more_horiz;
+    }
   }
 }
 
@@ -253,37 +292,6 @@ class _banner extends StatelessWidget {
           },
         );
       }).toList(),
-    );
-  }
-}
-
-class _position extends StatelessWidget {
-  const _position({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-          height: 47,
-          width: 47,
-          decoration: const BoxDecoration(
-              color: AppColors.xanh_main, shape: BoxShape.circle),
-          child: const Icon(
-            Icons.location_on,
-            color: Colors.white,
-            size: 27,
-          )),
-      title: const Text(
-        'TP. Hồ Chí Minh',
-        style: TextStyle(fontSize: 15),
-      ),
-      subtitle:
-          const Text('BTM Layout, 500628', style: TextStyle(fontSize: 13)),
-      trailing: const Icon(
-        Icons.navigate_next_outlined,
-      ),
     );
   }
 }

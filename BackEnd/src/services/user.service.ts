@@ -60,8 +60,13 @@ export class UserService {
   static createUser = async (user: User) => {
     return new Promise(async (resolve, reject) => {
       try {
+         let userData: any = {};
         if (await UserService.checkUserPhone(user.phoneNumber)) {
-          resolve({ errCode: 1, message: "Phone number already exists" });
+          userData.errCode = 1;
+          userData.errMessage = "Phone number already exists";
+          userData.access_token = "";
+          userData.user = {};
+          resolve(userData);
         } else {
           const userRepository = AppDataSource.getRepository(User);
           user.password = await UserService.hashUserPassword(user.password);
@@ -75,8 +80,18 @@ export class UserService {
           userSetting.upperStar = 0;
           userSetting.nightMode = false;
           await userSettingRepository.save(userSetting);
-
-          resolve({ errCode: 0, message: "Ok" });
+          userData.errCode = 0;
+          userData.errMessage = "OK";
+          let payload = {
+                userId: user.id,
+                phoneNumber: user.phoneNumber,
+                role: user.role,
+                expiresIn: process.env.JWT_EXPIRES_IN,
+              };
+              userData.access_token = await createJWT(payload);
+           
+          userData.user = user;
+          resolve(userData);
         }
       } catch (error) {
         reject(error);
@@ -140,15 +155,33 @@ export class UserService {
       }
     });
   };
+  static convertToShortPhoneNumber(phoneNumber: string): string {
+  if (phoneNumber.startsWith('+84')) {
+    return '0' + phoneNumber.slice(3);
+    }
+  
+  return phoneNumber; // Return the original if it doesn't start with +84
+  }
+  static convertToFullPhoneNumber(phoneNumber: string): string {
+    if (phoneNumber.startsWith('0')) {
+      return '+84' + phoneNumber.slice(1);
+    }
+    return phoneNumber; // Return the original if it doesn't start with '0'
+  }
   static sendOTP = async (phoneNumber: string, otp: string) => {
     return new Promise(async (resolve, reject) => {
       try {
-        await client.messages.create({
-          body: `Your OTP is: ${otp}`,
-          from: process.env.TWILIO_PHONE_NUMBER!,
-          to: phoneNumber,
-        });
-        resolve({ errCode: 0, message: "Ok" });
+        let shortPhoneNumber = UserService.convertToShortPhoneNumber(phoneNumber);
+        let checkUserPhone = await UserService.checkUserPhone(shortPhoneNumber);
+        if (checkUserPhone) {
+          await client.messages.create({
+            body: `Your OTP is: ${otp}`,
+            from: process.env.TWILIO_PHONE_NUMBER!,
+            to: this.convertToFullPhoneNumber(phoneNumber),
+          });
+          resolve({ errCode: 0, message: "Ok" });
+        }
+        resolve({ errCode: 1, message: "Your phone number isn`t exist in system. Please try again!" });
       } catch (error) {
         reject(error);
       }

@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:se121_giupviec_app/data/models/task_model.dart';
+import 'package:se121_giupviec_app/data/models/response_model.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
   Future<UserModel> register(
-      String fullName, String email, String password, String phone);
+      String name, String email, String password, String phoneNumber);
+  Future<ResponseModel> sendOTP(String phoneNumber);
+  Future<ResponseModel> verifyOTP(String phoneNumber, String otp);
+  Future<ResponseModel> forgetPassword(String phoneNumber, String newPassword);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -61,22 +64,75 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> register(
-      String fullName, String email, String password, String phone) async {
+      String name, String email, String password, String phoneNumber) async {
     final response = await client.post(
       Uri.parse('$baseUrl/$apiVersion/register'),
       body: json.encode({
-        'fullName': fullName,
+        'name': name,
         'email': email,
         'password': password,
-        'phone': phone,
+        'phoneNumber': phoneNumber,
+        'role': 'R1',
       }),
       headers: {'Content-Type': 'application/json'},
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return UserModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to register');
+    }
+  }
+
+  @override
+  Future<ResponseModel> sendOTP(String phoneNumber) async {
+    final response = await client.post(
+      Uri.parse('$baseUrl/$apiVersion/send-otp'),
+      body: json.encode({
+        'phoneNumber': phoneNumber,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return ResponseModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to send OTP');
+    }
+  }
+
+  Future<ResponseModel> verifyOTP(String phoneNumber, String otp) async {
+    final response = await client.post(
+      Uri.parse('$baseUrl/$apiVersion/verify-otp'),
+      body: json.encode({
+        'phoneNumber': phoneNumber,
+        'otp': otp,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return ResponseModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to verify OTP');
+    }
+  }
+
+  Future<ResponseModel> forgetPassword(
+      String phoneNumber, String newPassword) async {
+    final response = await client.put(
+      Uri.parse('$baseUrl/$apiVersion/forget-password'),
+      body: json.encode({
+        'phoneNumber': phoneNumber,
+        'newPassword': newPassword,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return ResponseModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to change password');
     }
   }
 }

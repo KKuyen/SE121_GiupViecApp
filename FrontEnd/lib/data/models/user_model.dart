@@ -8,7 +8,7 @@ class UserModel extends User {
     // required String phoneNumber,
     required dynamic access_token,
     required String message,
-    required Object user,
+    required Object? user,
     required int errCode,
   }) : super(
           // id: id,

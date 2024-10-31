@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
-import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/editAccount.dart';
@@ -13,6 +12,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/blockTasker
 import 'package:se121_giupviec_app/presentation/screens/user/account/loveTaskers.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
+
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
@@ -21,6 +22,13 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  SecureStorage secureStorage = SecureStorage();
+  Future<Map<String, String>> _fetchUserData() async {
+    String name = await secureStorage.readName();
+    String phoneNumber = await secureStorage.readPhoneNumber();
+    return {'name': name, 'phoneNumber': phoneNumber};
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,20 +226,38 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                         const SizedBox(height: 7),
-                        const Text(
-                          'Nguyễn Văn A',
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          '0345678901',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.grey,
-                          ),
+                        FutureBuilder<Map<String, String>>(
+                          future: _fetchUserData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              final userData = snapshot.data!;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userData['name']!,
+                                    style: const TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    userData['phoneNumber']!,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
                         const SizedBox(height: 10),
                         Sizedbutton(

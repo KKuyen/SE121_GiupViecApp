@@ -61,11 +61,13 @@ export class TaskerController {
     }
     static async handleAddNewLocation(req: Request, res: Response) {
         const { ownerName, ownerPhoneNumber, country, province, district, detailAddress, map, userId, isDefault } = req.body;
-        if( !country || !province || !district || !detailAddress || !userId || !isDefault) {
+        console.log(req.body);
+        if( !country || !province || !district || !detailAddress || !userId ) {
             res.status(500).json({
                 errCode: 1,
                 message: "Missing required fields"
             });
+            return;
         }
         let location: Location = new Location();
         location.ownerName = ownerName?ownerName:null;
@@ -164,6 +166,17 @@ export class TaskerController {
             });
         }
         let message = await TaskerService.cancelTask(taskerId, taskId);
+        res.status(200).json(message);
+    }
+    static async handleGetMyDefaultLocation(req: Request, res: Response) {
+        let  userId:any  = req.query.userId;
+        if(!userId ) {
+            res.status(500).json({
+                errCode: 1,
+                message: "Missing required fields"
+            });
+        }
+        let message = await TaskerService.getMyDefaultLocation(userId);
         res.status(200).json(message);
     }
    

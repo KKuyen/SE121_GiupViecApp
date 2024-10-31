@@ -105,10 +105,8 @@ class _ChooseLocationPageState extends State<ChooseLocationPage> {
                         ),
                         const Text(
                           'Hàn Thuyên, KP.6, P.Linh Trung, Tp.Thủ Đức, Hồ Chí Mình',
-
                           style: TextStyle(
                               fontSize: 16,
-
                               fontWeight: FontWeight.normal,
                               color: Color.fromARGB(255, 49, 49, 49)),
                           textAlign: TextAlign.left,

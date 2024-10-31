@@ -144,6 +144,15 @@ export class TaskerService {
     return new Promise(async (resolve, reject) => {
       try {
         const locationRepository = AppDataSource.getRepository(Location);
+        if (location.isDefault) {
+          const locationDefault = await locationRepository.findOne({
+            where: { userId: location.userId, isDefault: true },
+          });
+          if (locationDefault) {
+            locationDefault.isDefault = false;
+            await locationRepository.save(locationDefault);
+          }
+        }
         await locationRepository.save(location);
         resolve({ errCode: 0, message: "Ok" });
       } catch (error) {
@@ -381,4 +390,21 @@ export class TaskerService {
       }
     });
   };
+  static getMyDefaultLocation = async (userId: number) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const locationRepository = AppDataSource.getRepository(Location);
+        const location = await locationRepository.findOne({
+          where: { userId: userId, isDefault: true },
+        });
+        if (location) {
+          resolve({ errCode: 0, location: location });
+        } else {
+          resolve({ errCode: 1, message: "Location not found" });
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
 }
