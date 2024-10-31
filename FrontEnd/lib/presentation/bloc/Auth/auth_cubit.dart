@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/verifyOTP.dart';
+import '../../../domain/usecases/Auth/edit_profile_usecase.dart';
 import '../../../domain/usecases/Auth/forget_pass_usecase.dart';
 import '../../../domain/usecases/Auth/login_usecase.dart';
 import '../../../domain/usecases/Auth/register_usecase.dart';
@@ -12,12 +13,14 @@ class AuthCubit extends Cubit<AuthState> {
   final SendOTPUseCase sendOTPUseCase;
   final VerifyOTPUseCase verifyOTPUseCase;
   final ForgetPassUseCase forgetPassUseCase;
+  final EditProfileUsecase editProfileUsecase;
   AuthCubit({
     required this.loginUseCase,
     required this.registerUseCase,
     required this.sendOTPUseCase,
     required this.verifyOTPUseCase,
     required this.forgetPassUseCase,
+    required this.editProfileUsecase,
   }) : super(AuthInitial());
 
   Future<void> login(String email, String password) async {
@@ -46,6 +49,22 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthSuccess(user));
       } else {
         emit(AuthError(user.message));
+      }
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> editProfile(int userId, String name, String email,
+      String phoneNumber, String avatar) async {
+    emit(AuthLoading());
+    try {
+      final ress = await editProfileUsecase.execute(
+          userId, name, email, phoneNumber, avatar);
+      if (ress.errCode == 0) {
+        emit(AuthResponseSuccess(ress));
+      } else {
+        emit(AuthError(ress.message));
       }
     } catch (e) {
       emit(AuthError(e.toString()));

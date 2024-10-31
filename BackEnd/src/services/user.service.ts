@@ -1056,4 +1056,20 @@ export class UserService {
       errMessage: "OK",
     };
   }
+  static async editUserProfile(userId: any, name: any, email: any, phoneNumber: any, avatar: any) {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: userId } });
+    if (user) {
+      if (name !== undefined) user.name = name;
+      if (email !== undefined) user.email = email;
+      if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
+      if (avatar !== undefined) user.avatar = avatar;
+      await userRepository.save(user);
+    }
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
 }

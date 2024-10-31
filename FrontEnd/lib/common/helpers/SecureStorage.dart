@@ -5,15 +5,44 @@ import '../../domain/entities/user.dart';
 class SecureStorage {
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 //state.blockTaskers[index].tasker as Map<String, dynamic>)['id'],
-  void writeUserInfo(User user, String access_token) {
+  Future<void> writeUserInfo(User user, String access_token) async {
     final userMap = user.user as Map<String, dynamic>;
-    _secureStorage.write(key: 'id', value: userMap['id'].toString());
-    _secureStorage.write(key: 'email', value: userMap['email']);
-    _secureStorage.write(key: 'name', value: userMap['name']);
-    _secureStorage.write(key: 'phoneNumber', value: userMap['phoneNumber']);
-    _secureStorage.write(key: 'avatar', value: userMap['avatar']);
-    _secureStorage.write(key: 'birthday', value: userMap['birthday']);
-    _secureStorage.write(key: 'access_token', value: access_token);
+    await _secureStorage.write(key: 'id', value: userMap['id'].toString());
+    await _secureStorage.write(key: 'email', value: userMap['email']);
+    await _secureStorage.write(key: 'name', value: userMap['name']);
+    await _secureStorage.write(
+        key: 'phoneNumber', value: userMap['phoneNumber']);
+    await _secureStorage.write(key: 'avatar', value: userMap['avatar']);
+    await _secureStorage.write(key: 'birthday', value: userMap['birthday']);
+    await _secureStorage.write(key: 'access_token', value: access_token);
+  }
+
+  Future<void> writeId(String id) async {
+    await _secureStorage.write(key: 'id', value: id);
+  }
+
+  Future<void> writeEmail(String email) async {
+    await _secureStorage.write(key: 'email', value: email);
+  }
+
+  Future<void> writeName(String name) async {
+    await _secureStorage.write(key: 'name', value: name);
+  }
+
+  Future<void> writePhoneNumber(String phoneNumber) async {
+    await _secureStorage.write(key: 'phoneNumber', value: phoneNumber);
+  }
+
+  Future<void> writeAvatar(String avatar) async {
+    await _secureStorage.write(key: 'avatar', value: avatar);
+  }
+
+  Future<void> writeBirthday(String birthday) async {
+    await _secureStorage.write(key: 'birthday', value: birthday);
+  }
+
+  Future<void> writeAccess_token(String access_token) async {
+    await _secureStorage.write(key: 'access_token', value: access_token);
   }
 
   Future<String> readId() async {

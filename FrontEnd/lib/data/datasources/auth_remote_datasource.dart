@@ -8,6 +8,8 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
   Future<UserModel> register(
       String name, String email, String password, String phoneNumber);
+  Future<ResponseModel> editProfile(
+      int userId, String name, String email, String phoneNumber, String avatar);
   Future<ResponseModel> sendOTP(String phoneNumber);
   Future<ResponseModel> verifyOTP(String phoneNumber, String otp);
   Future<ResponseModel> forgetPassword(String phoneNumber, String newPassword);
@@ -81,6 +83,32 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to register');
+    }
+  }
+
+  @override
+  Future<ResponseModel> editProfile(int userId, String name, String email,
+      String phoneNumber, String avatar) async {
+    final response = await client.put(
+      Uri.parse('$baseUrl/$apiVersion/edit-user-profile'),
+      body: json.encode({
+        'userId': userId,
+        'name': name,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'avatar': avatar,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return ResponseModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to edit profile');
     }
   }
 

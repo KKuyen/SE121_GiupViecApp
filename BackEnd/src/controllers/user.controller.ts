@@ -517,4 +517,30 @@ export class UserController {
       message: message.errMessage,
     });
   }
+  static async editUserProfile(req: Request, res: Response) {
+    const {
+      userId,
+      name,
+      email,
+      phoneNumber,
+      avatar
+    } = req.body;
+    if (userId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.editUserProfile(
+      userId,
+      name,
+      email,
+      phoneNumber,
+      avatar
+    );
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+    });
+  }
 }

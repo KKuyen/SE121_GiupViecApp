@@ -23,6 +23,7 @@ import '../../domain/repository/auth_repository.dart';
 import '../../domain/repository/location_repository.dart';
 import '../../domain/repository/task_type_repository.dart';
 import '../../domain/repository/voucher_repository.dart';
+import '../../domain/usecases/Auth/edit_profile_usecase.dart';
 import '../../domain/usecases/Auth/forget_pass_usecase.dart';
 import '../../domain/usecases/Auth/login_usecase.dart';
 import '../../domain/usecases/Auth/register_usecase.dart';
@@ -56,6 +57,7 @@ Future<void> init() async {
       sendOTPUseCase: sl(),
       verifyOTPUseCase: sl(),
       forgetPassUseCase: sl(),
+      editProfileUsecase: sl(),
     ),
   );
 
@@ -118,6 +120,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMyDefaultLocationUseCase(sl()));
   sl.registerLazySingleton(() => AddNewLocationUseCase(sl()));
   sl.registerLazySingleton(() => DeleteLocationUseCase(sl()));
+  sl.registerLazySingleton(() => EditProfileUsecase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),

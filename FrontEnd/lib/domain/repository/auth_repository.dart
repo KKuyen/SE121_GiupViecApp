@@ -10,4 +10,6 @@ abstract class AuthRepository {
   Future<Response> sendOTP(String phoneNumber);
   Future<Response> verifyOTP(String phoneNumber, String otp);
   Future<Response> forgetPassword(String phoneNumber, String newPassword);
+  Future<Response> editProfile(
+      int userId, String name, String email, String phoneNumber, String avatar);
 }

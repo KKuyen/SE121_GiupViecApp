@@ -34,4 +34,11 @@ class AuthRepositoryImpl implements AuthRepository {
       String phoneNumber, String newPassword) async {
     return await remoteDataSource.forgetPassword(phoneNumber, newPassword);
   }
+
+  @override
+  Future<Response> editProfile(int userId, String name, String email,
+      String phoneNumber, String avatar) async {
+    return await remoteDataSource.editProfile(
+        userId, name, email, phoneNumber, avatar);
+  }
 }

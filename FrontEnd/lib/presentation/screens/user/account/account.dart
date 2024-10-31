@@ -265,8 +265,9 @@ class _AccountPageState extends State<AccountPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EditAccountPage()));
+                                    builder: (context) => EditAccountPage(
+                                          parrent: widget,
+                                        )));
                           },
                           text: 'Cập nhật hồ sơ',
                           backgroundColor: AppColors.cam_main,

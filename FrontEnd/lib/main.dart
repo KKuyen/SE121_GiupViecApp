@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-        home: const Navigation(),
+        home: const SplashPage(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );
