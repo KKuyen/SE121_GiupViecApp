@@ -22,4 +22,8 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskError(e.toString()));
     }
   }
+
+  Future<void> Loading() async {
+    emit(TaskLoading());
+  }
 }

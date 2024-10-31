@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 
 class Newtaskstep2 extends StatefulWidget {
-  const Newtaskstep2({super.key});
+  final int taskTypeId;
+
+  final int? myvoucherId;
+  final int? voucherId;
+  final List<Map<String, dynamic>> addPriceDetail;
+
+  const Newtaskstep2(
+      {required this.taskTypeId,
+      super.key,
+      required this.addPriceDetail,
+      this.myvoucherId,
+      this.voucherId});
 
   @override
   State<Newtaskstep2> createState() => _Newtaskstep2State();
@@ -17,6 +30,9 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
   TimeOfDay? _selectedTime;
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  String note = '';
+
+  final TextEditingController _noteController = TextEditingController();
 
   @override
   void initState() {
@@ -245,25 +261,64 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
               const Text('Ghi chú', style: AppTextStyle.tieudebox),
               const SizedBox(height: 10),
               TextField(
+                controller: _noteController,
                 maxLength: 200,
                 cursorColor: AppColors.xanh_main,
                 maxLines: 5,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Nhập ghi chú',
-                  hintStyle: const TextStyle(
+                  hintStyle: TextStyle(
                       color: AppColors.xam72, fontWeight: FontWeight.normal),
                   border: OutlineInputBorder(),
-                  focusedBorder: const OutlineInputBorder(
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: AppColors.xanh_main),
                   ),
-                  labelStyle: const TextStyle(color: Colors.black),
-                  floatingLabelStyle:
-                      const TextStyle(color: AppColors.xanh_main),
+                  labelStyle: TextStyle(color: Colors.black),
+                  floatingLabelStyle: TextStyle(color: AppColors.xanh_main),
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    note = value;
+                  });
+                },
               ),
               const SizedBox(height: 20),
               Sizedbutton(
-                onPressFun: () {},
+                onPressFun: () {
+                  int userId = 1;
+                  int taskTypeId = widget.taskTypeId;
+                  DateTime time = DateTime(
+                    _selectedDate!.year,
+                    _selectedDate!.month,
+                    _selectedDate!.day,
+                    _selectedTime!.hour,
+                    _selectedTime!.minute,
+                  );
+                  int locationId = 4;
+                  String note = this.note;
+                  int myvoucherId = 4;
+                  int voucherId = 5;
+                  List<Map<String, dynamic>> addPriceDetail =
+                      widget.addPriceDetail;
+                  context.read<NewTask1Cubit>().createTask(
+                        userId,
+                        taskTypeId,
+                        time,
+                        locationId,
+                        note,
+                        myvoucherId,
+                        voucherId,
+                        addPriceDetail,
+                      );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Đăng việc thành công!'),
+                      backgroundColor: AppColors.xanh_main,
+                    ),
+                  );
+
+                  Navigator.pop(context, true);
+                },
                 text: 'Đăng việc',
                 width: MediaQuery.of(context).size.width,
                 height: 45,

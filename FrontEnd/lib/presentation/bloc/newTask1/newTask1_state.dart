@@ -27,6 +27,13 @@ class NewTask1Success extends NewTask1State {
   List<Object> get props => [taskType];
 }
 
+class NewTask1Execute2 extends NewTask1State {
+  const NewTask1Execute2();
+
+  @override
+  List<Object> get props => [];
+}
+
 class NewTask1Error extends NewTask1State {
   final String message;
 

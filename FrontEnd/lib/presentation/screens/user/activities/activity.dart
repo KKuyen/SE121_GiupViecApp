@@ -36,10 +36,14 @@ class _ActivityPageState extends State<ActivityPage> {
     });
   }
 
+  void _refreshScreen() {
+    BlocProvider.of<TaskCubit>(context).getAllTasks(1);
+  }
+
   @override
   void initState() {
     super.initState();
-    final taskCubit = BlocProvider.of<TaskCubit>(context).getAllTasks(1);
+    _refreshScreen();
   }
 
   @override
@@ -123,12 +127,20 @@ class JobCardScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => Newtaskstep1()),
           );
+
+          // Check if the result is true, meaning a refresh is needed
+          if (result == true) {
+            // Call your Cubit's refresh function
+            BlocProvider.of<TaskCubit>(context).getAllTasks(1);
+          }
         },
+        // Call the refresh function to re-render the screen
+
         backgroundColor: AppColors.xanh_main,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),
@@ -166,7 +178,7 @@ class WaitingList extends StatelessWidget {
                   if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
                     maxTasker++;
                   }
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+                  if ((tasker)['status'] == 'S2') {
                     appTasker++;
                   }
                 }
@@ -183,15 +195,25 @@ class WaitingList extends StatelessWidget {
                   price: task.price ?? '',
                   note: task.note ?? '',
                   ownerName:
-                      (task.location as Map<String, dynamic>)['ownerName'],
+                      (task.location as Map<String, dynamic>?)?['ownerName'] ??
+                          '',
                   phone: (task.location
-                      as Map<String, dynamic>)['ownerPhoneNumber'],
-                  deltailAddress:
-                      (task.location as Map<String, dynamic>)['detailAddress'],
-                  province: (task.location as Map<String, dynamic>)['province'],
-                  district: (task.location as Map<String, dynamic>)['district'],
-                  country: (task.location as Map<String, dynamic>)['country'],
-                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                          as Map<String, dynamic>?)?['ownerPhoneNumber'] ??
+                      '',
+                  detailAddress: (task.location
+                          as Map<String, dynamic>?)?['detailAddress'] ??
+                      '',
+                  province:
+                      (task.location as Map<String, dynamic>?)?['province'] ??
+                          '',
+                  district:
+                      (task.location as Map<String, dynamic>?)?['district'] ??
+                          '',
+                  country:
+                      (task.location as Map<String, dynamic>?)?['country'] ??
+                          '',
+                  serviceName:
+                      (task.taskType as Map<String, dynamic>?)?['name'] ?? '',
                 );
               });
         } else if (state is TaskError) {
@@ -214,6 +236,7 @@ class ApprovedList extends StatelessWidget {
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
         if (state is TaskLoading) {
+          final taskCubit = BlocProvider.of<TaskCubit>(context).getAllTasks(1);
           return Center(
             child: Center(
                 child: Container(

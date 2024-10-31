@@ -129,7 +129,7 @@ export class UserController {
       addPriceDetail,
       locationId,
       note,
-      isReTaskChildren,
+
       voucherId,
       myVoucherId,
     } = req.body;
@@ -139,7 +139,6 @@ export class UserController {
       time === undefined ||
       locationId === undefined ||
       note === undefined ||
-      isReTaskChildren === undefined ||
       addPriceDetail === undefined
     ) {
       res.status(500).json({
@@ -154,7 +153,6 @@ export class UserController {
         addPriceDetail,
         locationId,
         note,
-        isReTaskChildren,
         voucherId,
         myVoucherId
       );

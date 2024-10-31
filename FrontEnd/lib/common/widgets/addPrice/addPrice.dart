@@ -4,21 +4,26 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Addprice extends StatefulWidget {
   final String name;
+  final int index;
+  final int id;
 
   final String unit;
   final int stepValue;
   final int beginValue;
   final int stepPrice;
   final Function(int) onPriceUpdate; // Thêm callback
-
+  final Function(int, int, int) onXUpdate;
   const Addprice({
+    required this.index,
     super.key,
+    required this.id,
     required this.name,
     required this.unit,
     required this.stepValue,
     required this.beginValue,
     required this.stepPrice,
     required this.onPriceUpdate, // Nhận callback
+    required this.onXUpdate,
   });
 
   @override
@@ -37,6 +42,7 @@ class _AddpriceState extends State<Addprice> {
         ((x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice).toString());
     widget
         .onPriceUpdate((x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice);
+    widget.onXUpdate(widget.index, x, widget.id);
   }
 
   @override
@@ -149,7 +155,7 @@ class container extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '${beginValue + (doiso) * stepValue} $unit',
+              '${beginValue + (doiso - 1) * stepValue} $unit',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,

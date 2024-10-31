@@ -220,7 +220,6 @@ export class UserService {
     addPriceDetail: any,
     locationId: number,
     note: string,
-    isReTaskChildren: number,
     voucherId: number,
     myVoucherId: number
   ) {
@@ -247,7 +246,7 @@ export class UserService {
       time,
       locationId,
       note,
-      isReTaskChildren,
+
       taskStatus: "TS1", // Set default value for taskStatus
       numberOfTasker: 0,
       voucherId,
@@ -288,21 +287,12 @@ export class UserService {
         console.log("totalPrice:" + totalPrice);
         console.log("pricedetail:" + pricedetail);
 
-        if (isReTaskChildren === 0) {
-          return addPriceRepository.create({
-            taskId: newTask.id,
-            addPriceDetailId: detail.addPriceDetailId,
-            quantity: detail.quantity,
-            price: detail.price,
-          });
-        } else {
-          return addPriceRepository.create({
-            reTaskId: newTask.id,
-            addPriceDetailId: detail.addPriceDetailId,
-            quantity: detail.quantity,
-            price: detail.price,
-          });
-        }
+        return addPriceRepository.create({
+          taskId: newTask.id,
+          addPriceDetailId: detail.addPriceDetailId,
+          quantity: detail.quantity,
+          price: 0,
+        });
       })
     );
 
@@ -458,6 +448,7 @@ export class UserService {
       .leftJoinAndSelect("task.user", "user")
       .leftJoinAndSelect("task.taskType", "taskType")
       .leftJoinAndSelect("task.taskerLists", "taskerLists")
+      .orderBy("task.createdAt", "DESC")
       .where("task.userId = :userId", { userId })
       .select([
         "task.id",

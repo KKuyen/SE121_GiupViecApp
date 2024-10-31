@@ -24,4 +24,18 @@ class Newtask1RepositoryImpl implements Newtask1Repository {
   Future<TasktypeModel> getATaskType(int TaskTypeId) async {
     return await remoteDataSource.getAtTaskType(TaskTypeId);
   }
+
+  @override
+  Future<void> createTask(
+      int userId,
+      int taskTypeId,
+      DateTime time,
+      int locationId,
+      String note,
+      int myvoucherId,
+      int voucherId,
+      List<Map<String, dynamic>> addPriceDetail) async {
+    return await remoteDataSource.createTask(userId, taskTypeId, time,
+        locationId, note, myvoucherId, voucherId, addPriceDetail);
+  }
 }

@@ -14,7 +14,8 @@ import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_state.dar
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep2.dart';
 
 class Newtaskstep1 extends StatefulWidget {
-  const Newtaskstep1({super.key});
+  final int taskTypeId;
+  const Newtaskstep1({super.key, this.taskTypeId = 1});
 
   @override
   State<Newtaskstep1> createState() => _Newtaskstep1State();
@@ -22,6 +23,25 @@ class Newtaskstep1 extends StatefulWidget {
 
 class _Newtaskstep1State extends State<Newtaskstep1> {
   int sumMoney = 0;
+
+  List<Map<String, dynamic>> xValues = [];
+  void updateXValue(
+    int index,
+    int quantity,
+    int id,
+  ) {
+    setState(() {
+      if (index < xValues.length) {
+        xValues[index] = {'addPriceDetailId': id, 'quantity': quantity};
+        print(xValues[index].toString() + index.toString());
+      } else {
+        // Add new values if necessary
+        xValues.add({'addPriceDetailId': id, 'quantity': quantity});
+        print(xValues[index].toString() + index.toString());
+      }
+    });
+  }
+
   void updateMoney(int amount) {
     print("vao day 2 " + sumMoney.toString());
     setState(() {
@@ -33,7 +53,8 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
   @override
   void initState() {
     super.initState();
-    final NewTask1 = BlocProvider.of<NewTask1Cubit>(context).getTaskType(1);
+    final NewTask1 =
+        BlocProvider.of<NewTask1Cubit>(context).getTaskType(widget.taskTypeId);
   }
 
   @override
@@ -230,8 +251,15 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                               horizontal: AppInfor1.horizontal_padding,
                               vertical: 10), // Padding hai bên),
                           child: Addprice(
+                            id: (state.taskType.addPriceDetails?[index]
+                                as Map<String, dynamic>)['id'],
                             onPriceUpdate: (amount) {
                               updateMoney(amount);
+                            },
+                            index: index,
+                            onXUpdate: (index, quantity, id) {
+                              updateXValue(index, quantity,
+                                  id); // Update x value in the list
                             },
                             name: (state.taskType.addPriceDetails?[index]
                                 as Map<String, dynamic>)['name'],
@@ -257,16 +285,48 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 15), // Padding hai bên),
                       child: Sizedbutton2(
-                        onPressFun: () {
-                          Navigator.push(
+                        onPressFun: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Newtaskstep2()),
+                                builder: (context) => Newtaskstep2(
+                                      taskTypeId: widget.taskTypeId,
+                                      addPriceDetail: xValues,
+                                    )),
                           );
+                          if (result == true) {
+                            Navigator.pop(
+                                context, true); // Pass true up to ActivityPage
+                          }
+
+                          // Pass true up to ActivityPage
                         },
                         width: double.infinity,
                         height: 50,
-                        text1: '$sumMoney đ/ 2 cháu / 2 giờ',
+                        text1:
+                            '$sumMoney đ / ${List.generate(state.taskType.addPriceDetails?.length ?? 0, (index) {
+                          final unit = (state.taskType.addPriceDetails?[index]
+                              as Map<String, dynamic>)['unit'];
+                          if (index < xValues.length) {
+                            final beginValue =
+                                (state.taskType.addPriceDetails?[index]
+                                    as Map<String, dynamic>)['beginValue'];
+                            final stepValue =
+                                (state.taskType.addPriceDetails?[index]
+                                    as Map<String, dynamic>)['stepValue'];
+                            return '${(xValues[index]['quantity'] - 1) * stepValue + beginValue} $unit';
+                          } else {
+                            final beginValue =
+                                (state.taskType.addPriceDetails?[index]
+                                    as Map<String, dynamic>)['beginValue'];
+                            final id = (state.taskType.addPriceDetails?[index]
+                                as Map<String, dynamic>)['id'];
+
+                            xValues
+                                .add({'addPriceDetailId': id, 'quantity': 1});
+                            return '$beginValue $unit';
+                          }
+                        }).join(' / ')}',
                         text2: 'Tiếp theo',
                       ),
                     ),

@@ -34,16 +34,16 @@ class FinishedActivityWidget extends StatefulWidget {
       this.ungCuVien = 0,
       this.daNhan = 0,
       required this.numberOfTasker,
-      this.serviceName = 'Trông trẻ',
+      required this.serviceName,
       required this.startDay,
-      this.ownerName = 'Trần Hồng Quyền',
+      required this.ownerName,
       required this.district,
       required this.deltailAddress,
       required this.country,
       required this.province,
-      this.phone = '+(54) 345664xxx',
-      this.price = '200000 đ',
-      this.note = 'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+      required this.phone,
+      required this.price,
+      required this.note,
       super.key});
 
   @override
@@ -266,34 +266,35 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Ghi chú:   ',
-                        style: TextStyle(
-                          color: Color(0xFF727272),
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      SizedBox(width: 18),
-                      Expanded(
-                        child: Text(
-                          'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+                if (widget.note != '')
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Ghi chú:   ',
                           style: TextStyle(
-                            color: AppColors.xam72,
+                            color: Color(0xFF727272),
                             fontSize: 15,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 18),
+                        Expanded(
+                          child: Text(
+                            widget.note,
+                            style: TextStyle(
+                              color: AppColors.xam72,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 const SizedBox(height: 0),
                 const Divider(),
                 Padding(

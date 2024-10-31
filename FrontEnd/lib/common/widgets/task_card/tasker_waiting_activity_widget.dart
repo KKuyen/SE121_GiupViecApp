@@ -221,7 +221,7 @@ class TaskerWatingActivityWidgetState
                       ],
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       children: [

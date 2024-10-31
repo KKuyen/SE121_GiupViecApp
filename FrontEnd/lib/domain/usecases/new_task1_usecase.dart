@@ -18,4 +18,17 @@ class NewTask1Usecase {
   Future<TaskType> execute(int taskTypeId) async {
     return await repository.getATaskType(taskTypeId);
   }
+
+  Future<void> execute2(
+      int userId,
+      int taskTypeId,
+      DateTime time,
+      int locationId,
+      String note,
+      int myvoucherId,
+      int voucherId,
+      List<Map<String, dynamic>> addPriceDetail) async {
+    return await repository.createTask(userId, taskTypeId, time, locationId,
+        note, myvoucherId, voucherId, addPriceDetail);
+  }
 }

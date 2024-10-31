@@ -3,9 +3,19 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
+import 'package:se121_giupviec_app/data/models/task_model.dart';
 
 abstract class NewTask1RemoteDatasource {
   Future<TasktypeModel> getAtTaskType(int taskTypeId);
+  Future<void> createTask(
+      int userId,
+      int taskTypeId,
+      DateTime time,
+      int locationId,
+      String note,
+      int myvoucherId,
+      int voucherId,
+      List<Map<String, dynamic>> addPriceDetail);
 }
 
 class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
@@ -59,6 +69,44 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed ');
+    }
+  }
+
+  @override
+  Future<void> createTask(
+    int userId,
+    int taskTypeId,
+    DateTime time,
+    int locationId,
+    String note,
+    int myvoucherId,
+    int voucherId,
+    List<Map<String, dynamic>> addPriceDetail,
+  ) async {
+    print('bo may day');
+    final response = await client.post(
+      Uri.parse('$baseUrl/$apiVersion/create-new-task'),
+      body: json.encode({
+        'userId': userId,
+        'taskTypeId': taskTypeId,
+        'time': time.toIso8601String(),
+        'locationId': locationId,
+        'note': note,
+        'addPriceDetail': addPriceDetail,
+        'myvoucherId': myvoucherId,
+        'voucherId': voucherId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AppInfor1.user_token,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      print('thanh cong');
+    } else {
+      print("response.body failed: ${response.body}");
+      throw Exception('Failed to create task');
     }
   }
 }

@@ -37,6 +37,7 @@ const userPaths: string[] = [
   "/api/v1/finish-a-task",
   "/api/v1/get-all-reviews",
   "/api/v1/get-a-task-type",
+  "/api/v1/get-my-location",
 ];
 const taskerPaths: string[] = [
   "/api/v1/get-tasker-profile",
