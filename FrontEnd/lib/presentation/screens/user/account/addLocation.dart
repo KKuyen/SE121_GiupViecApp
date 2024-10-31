@@ -6,8 +6,8 @@ import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/account/chooseLocation.dart';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/presentation/screens/user/account/chooseLocation2.dart';
 
 import '../../../bloc/Location/add_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
@@ -121,25 +121,11 @@ class _AddLocationPageState extends State<AddLocationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
-      appBar: BasicAppbar(
+      appBar: const BasicAppbar(
         isHideBackButton: false,
         isHavePadding: false,
         color: Colors.white,
-        action: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ChooseLocationPage()),
-            );
-          },
-          child: const Icon(
-            Icons.my_location_rounded,
-            color: AppColors.xanh_main,
-            size: 30,
-          ),
-        ),
-        title: const Text(
+        title: Text(
           'Thêm địa chỉ',
           style: TextStyle(
             fontSize: 20,
@@ -174,8 +160,8 @@ class _AddLocationPageState extends State<AddLocationPage> {
                     "Việt Nam",
                     selectedProvinceName!,
                     selectedDistrictName!,
-                    "${_chitiet.text}, $selectedWardName",
-                    "xxooxxooxxooxx",
+                    selectedWardName!,
+                    "${_chitiet.text}",
                     1,
                     _isDefault,
                   );
@@ -347,10 +333,32 @@ class _AddLocationPageState extends State<AddLocationPage> {
                         },
                       ),
                       const Divider(height: 1, thickness: 1),
+                      SizedBox(height: 10),
                       TextField(
                         controller: _chitiet,
-                        decoration: const InputDecoration(
-                          hintText: "Các chi tiết khác (nếu có)",
+                        decoration: InputDecoration(
+                          hintText: "Địa chỉ chi tiết ",
+                          suffixIcon: GestureDetector(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ChooseLocationPage2()),
+                              );
+                              if (result != null) {
+                                print("neeeeeeeeeeee" + result);
+                                setState(() {
+                                  _chitiet.text = result;
+                                });
+                              }
+                            },
+                            child: const Icon(
+                              Icons.my_location_rounded,
+                              color: AppColors.xanh_main,
+                              size: 30,
+                            ),
+                          ),
                           border: InputBorder.none,
                         ),
                       ),

@@ -13,6 +13,7 @@ import 'presentation/bloc/Location/delete_location_cubit.dart';
 import 'presentation/bloc/Location/location_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
+import 'presentation/screens/user/account/chooseLocation2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-        home: const SplashPage(),
+        home: const Navigation(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );
