@@ -869,34 +869,51 @@ export class UserService {
     };
   }
   static async claimVoucher(userId: number, voucherId: number) {
-    const voucherRepository = AppDataSource.getRepository(Vouchers);
-    const voucher = await voucherRepository.findOne({
-      where: { id: voucherId },
-    });
-    if (!voucher) {
-      return {
-        errCode: 1,
-        errMessage: "Voucher not found",
-      };
-    }
-
-    const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
-    const myVoucher = myVoucherRepository.create({
-      userId: userId,
-      voucherId: voucherId,
-      isUsed: false,
-    });
-
-    await myVoucherRepository.save(myVoucher);
-
-    voucher.quantity = voucher.quantity - 1;
-    await voucherRepository.save(voucher);
-
+  const voucherRepository = AppDataSource.getRepository(Vouchers);
+  const voucher = await voucherRepository.findOne({
+    where: { id: voucherId },
+  });
+  if (!voucher) {
     return {
-      errCode: 0,
-      errMessage: "OK",
+      errCode: 1,
+      errMessage: "Voucher not found",
     };
   }
+
+  const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
+  const existingMyVoucher = await myVoucherRepository.findOne({
+    where: { userId: userId, voucherId: voucherId },
+  });
+
+  if (existingMyVoucher) {
+    return {
+      errCode: 2,
+      errMessage: "Voucher already claimed",
+    };
+  }
+
+  const myVoucher = myVoucherRepository.create({
+    userId: userId,
+    voucherId: voucherId,
+    isUsed: false,
+  });
+
+  await myVoucherRepository.save(myVoucher);
+
+  voucher.quantity = voucher.quantity - 1;
+  await voucherRepository.save(voucher);
+
+  const userRepository = AppDataSource.getRepository(User);
+  const user = await userRepository.findOne({ where: { id: userId } });
+  if (user) {
+    user.Rpoints -= voucher.RpointCost;
+    await userRepository.save(user);
+  }
+  return {
+    errCode: 0,
+    errMessage: "OK",
+  };
+}
   static async getAvailableVoucher(userId: number, taskTypeId: number) {
     const voucherRepository = AppDataSource.getRepository(Vouchers);
     const currentDate = new Date();
