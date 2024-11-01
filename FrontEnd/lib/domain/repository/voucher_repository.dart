@@ -8,4 +8,5 @@ abstract class VoucherRepository {
   Future<List<Voucher>> getMyVoucher(int userId);
 
   Future<Response> claimVoucher(int userId, int voucherId);
+  Future<Response> deleteMyVoucher(int userId, int voucherId);
 }

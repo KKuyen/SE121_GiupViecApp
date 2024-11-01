@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<DefaultLocationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<DeleteMyVoucherCubit>(),
         ),
       ],
       child: MaterialApp(

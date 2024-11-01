@@ -23,4 +23,9 @@ class VoucherRepositoryImpl implements VoucherRepository {
   Future<Response> claimVoucher(int userId, int voucherId) async {
     return await remoteDataSource.claimVoucher(userId, voucherId);
   }
+
+  @override
+  Future<Response> deleteMyVoucher(int userId, int voucherId) async {
+    return await remoteDataSource.deleteMyVoucher(userId, voucherId);
+  }
 }

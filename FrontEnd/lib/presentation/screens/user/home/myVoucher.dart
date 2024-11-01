@@ -5,8 +5,10 @@ import 'package:flutter_slidable/flutter_slidable.dart'; // Import Slidable pack
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
+import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/configs/theme/app_colors.dart';
 import '../../../bloc/Voucher/voucher_cubit.dart';
 import '../../../bloc/Voucher/voucher_state.dart';
 
@@ -40,63 +42,94 @@ class CustomListItem extends StatelessWidget {
     required this.title,
     required this.user,
     required this.viewCount,
+    required this.id,
   });
 
   final Widget thumbnail;
   final String title;
   final String user;
   final String viewCount;
+  final int id;
+  Future<int> _initialize() async {
+    SecureStorage secureStorage = SecureStorage();
+    int userId = int.parse(await secureStorage.readId());
+    return userId;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      // Define the slideable actions on both sides
+    return BlocListener<DeleteMyVoucherCubit, VoucherState>(
+      listener: (context, state) {
+        if (state is ResponseVoucherSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Xóa thành công'),
+              backgroundColor: AppColors.xanh_main,
+            ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyVoucherPage()),
+          );
+        } else if (state is VoucherError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.do_main,
+            ),
+          );
+        }
+      },
+      child: Slidable(
+        // Define the slideable actions on both sides
 
-      endActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (context) {
-              // Add your action here
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Xóa $title')),
-              );
-            },
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Xóa',
-          ),
-        ],
-      ),
-      child: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 0.5,
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (context) {
+                final voucherCubit =
+                    BlocProvider.of<DeleteMyVoucherCubit>(context);
+                _initialize().then((userId) {
+                  voucherCubit.deleteMyVoucher(userId, id);
+                });
+              },
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Xóa',
+            ),
+          ],
+        ),
+        child: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.grey,
+                width: 0.5,
+              ),
             ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: thumbnail,
-              ),
-              const SizedBox(width: 7),
-              Expanded(
-                flex: 3,
-                child: _VoucherDescription(
-                  title: title,
-                  user: user,
-                  viewCount: viewCount,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: thumbnail,
                 ),
-              ),
-            ],
+                const SizedBox(width: 7),
+                Expanded(
+                  flex: 3,
+                  child: _VoucherDescription(
+                    title: title,
+                    user: user,
+                    viewCount: viewCount,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -193,6 +226,7 @@ class _CustomListItemExampleState extends State<CustomListItemExample> {
                 itemExtent: 100.0,
                 itemBuilder: (context, index) {
                   return CustomListItem(
+                    id: vouchers[index].id,
                     user: vouchers[index].content,
                     viewCount: "120",
                     thumbnail: Container(

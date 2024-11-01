@@ -7,6 +7,7 @@ import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
+import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
@@ -33,6 +34,7 @@ import '../../domain/usecases/Location/get_my_default_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_location_usecase.dart';
 import '../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
 import '../../domain/usecases/Voucher/claim_voucher_usecase.dart';
+import '../../domain/usecases/Voucher/delete_my_voucher_usecase.dart';
 import '../../domain/usecases/Voucher/get_all_vouchcer_usecase.dart';
 import '../../domain/usecases/Voucher/get_my_voucher_usecase.dart';
 import '../../domain/usecases/get_all_tasks_usecase.dart'; // Import GetAllTasksUseCase
@@ -96,6 +98,11 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory(
+    () => DeleteMyVoucherCubit(
+      deleteMyVoucherUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
     () => LocationCubit(
       getMyLocationUseCase: sl(),
     ),
@@ -132,6 +139,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => EditProfileUsecase(sl()));
   sl.registerLazySingleton(() => ClaimVoucherUseCase(sl()));
   sl.registerLazySingleton(() => GetMyVoucherUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteMyVoucherUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
