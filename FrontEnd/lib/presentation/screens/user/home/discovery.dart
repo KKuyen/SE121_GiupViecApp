@@ -9,6 +9,8 @@ import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
+
 class DiscoveryPage extends StatefulWidget {
   const DiscoveryPage({super.key});
 
@@ -143,10 +145,21 @@ class _DiscoveryPageState extends State<DiscoveryPage>
   }
 }
 
-class _financeCard extends StatelessWidget {
+class _financeCard extends StatefulWidget {
   const _financeCard({
     super.key,
   });
+
+  @override
+  State<_financeCard> createState() => _financeCardState();
+}
+
+class _financeCardState extends State<_financeCard> {
+  SecureStorage secureStorage = SecureStorage();
+  Future<Map<String, String>> _fetchUserData() async {
+    String Rpoints = await secureStorage.readRpoints();
+    return {'Rpoints': Rpoints};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,19 +175,31 @@ class _financeCard extends StatelessWidget {
           ),
         ],
       ),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _finaceChild(
-            icon: Icon(
-              FontAwesomeIcons.coins,
-              color: AppColors.cam_main,
-              size: 25,
-            ),
-            title: 'RPoint',
-            value: 1000,
+          FutureBuilder<Map<String, String>>(
+            future: _fetchUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final userData = snapshot.data!;
+                return _finaceChild(
+                  icon: const Icon(
+                    FontAwesomeIcons.coins,
+                    color: AppColors.cam_main,
+                    size: 25,
+                  ),
+                  title: 'RPoint',
+                  value: int.parse(userData['Rpoints']!),
+                );
+              }
+            },
           ),
-          _finaceChild(
+          const _finaceChild(
             icon: Icon(
               FontAwesomeIcons.gift,
               color: AppColors.cam_main,

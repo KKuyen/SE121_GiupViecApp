@@ -23,9 +23,11 @@ class _NavigationState extends State<Navigation> {
   void _printUser() async {
     String? id = await secureStorage.readId();
     String? email = await secureStorage.readEmail();
+    String? Rpoints = await secureStorage.readRpoints();
 
     print("Data from local: ${id}");
     print("Data from local: ${email}");
+    print("Data from local: ${Rpoints}");
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/Auth/auth_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/account.dar
 
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../core/configs/assets/app_images.dart';
+import '../../auth/signin-page.dart';
 
 class EditAccountPage extends StatefulWidget {
   final AccountPage parrent;
@@ -218,7 +220,60 @@ class _EditAccountPageState extends State<EditAccountPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          TextEditingController _passwordController =
+                              TextEditingController();
+                          return AlertDialog(
+                            title: const Text('Xác nhận xóa tài khoản'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                    'Vui lòng nhập mật khẩu để xác nhận xóa tài khoản.'),
+                                TextField(
+                                  controller: _passwordController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Mật khẩu',
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              Sizedbutton(
+                                onPressFun: () {
+                                  Navigator.of(context).pop();
+                                },
+                                text: "Hủy",
+                                StrokeColor: AppColors.cam_main,
+                                backgroundColor: Colors.white,
+                                textColor: AppColors.cam_main,
+                                isStroke: true,
+                              ),
+                              Sizedbutton(
+                                onPressFun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignInPage()));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    content: Text('Xóa tài khoản thành công'),
+                                    backgroundColor: AppColors.xanh_main,
+                                  ));
+                                },
+                                text: "Xác nhận",
+                                backgroundColor: AppColors.do_main,
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
                     child: const Text(
                       'Xóa tài khoản',
                       style: TextStyle(

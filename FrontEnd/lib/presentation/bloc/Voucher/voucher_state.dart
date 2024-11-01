@@ -1,5 +1,6 @@
 // lib/presentation/cubit/task_state.dart
 import 'package:equatable/equatable.dart';
+import 'package:se121_giupviec_app/domain/entities/response.dart';
 
 import '../../../domain/entities/voucher.dart';
 
@@ -8,6 +9,7 @@ abstract class VoucherState extends Equatable {
 
   @override
   List<Object> get props => [];
+  Object get prop => {};
 }
 
 class VoucherInitial extends VoucherState {}
@@ -21,6 +23,15 @@ class VoucherSuccess extends VoucherState {
 
   @override
   List<Object> get props => [vouchers];
+}
+
+class ResponseVoucherSuccess extends VoucherState {
+  final Response response;
+
+  const ResponseVoucherSuccess(this.response);
+
+  @override
+  Object get prop => response;
 }
 
 class VoucherError extends VoucherState {

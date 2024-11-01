@@ -14,6 +14,8 @@ class SecureStorage {
         key: 'phoneNumber', value: userMap['phoneNumber']);
     await _secureStorage.write(key: 'avatar', value: userMap['avatar']);
     await _secureStorage.write(key: 'birthday', value: userMap['birthday']);
+    await _secureStorage.write(
+        key: 'Rpoints', value: userMap['Rpoints'].toString());
     await _secureStorage.write(key: 'access_token', value: access_token);
   }
 
@@ -43,6 +45,10 @@ class SecureStorage {
 
   Future<void> writeAccess_token(String access_token) async {
     await _secureStorage.write(key: 'access_token', value: access_token);
+  }
+
+  Future<void> writeRpoints(String Rpoints) async {
+    await _secureStorage.write(key: 'Rpoints', value: Rpoints);
   }
 
   Future<String> readId() async {
@@ -78,5 +84,10 @@ class SecureStorage {
   Future<String> readAccess_token() async {
     String? access_token = await _secureStorage.read(key: 'access_token');
     return access_token!;
+  }
+
+  Future<String> readRpoints() async {
+    String? Rpoints = await _secureStorage.read(key: 'Rpoints');
+    return Rpoints!;
   }
 }
