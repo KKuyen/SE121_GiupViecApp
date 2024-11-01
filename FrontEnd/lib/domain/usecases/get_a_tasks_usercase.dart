@@ -17,4 +17,8 @@ class GetATasksUsecase {
   Future<List<TaskerList>> execute2(int taskId) async {
     return await repository.getTaskerList(taskId);
   }
+
+  deleteTask(int taskId, int cancelCode) async {
+    return await repository.deleteTask(taskId, cancelCode);
+  }
 }

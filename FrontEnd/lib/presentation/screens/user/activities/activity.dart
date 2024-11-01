@@ -133,9 +133,8 @@ class JobCardScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => Newtaskstep1()),
           );
 
-          // Check if the result is true, meaning a refresh is needed
           if (result == true) {
-            // Call your Cubit's refresh function
+            print("pop thanh cong lan 2");
             BlocProvider.of<TaskCubit>(context).getAllTasks(1);
           }
         },
@@ -160,14 +159,15 @@ class WaitingList extends StatelessWidget {
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
         if (state is TaskLoading) {
-          return Center(
+          return const Center(
             child: Center(
-                child: Container(
-                    height: 40,
-                    width: 40,
-                    child: const CircularProgressIndicator())),
+                child: SizedBox(
+                    height: 40, width: 40, child: CircularProgressIndicator())),
           );
         } else if (state is TaskSuccess) {
+          if (state.TS1tasks.isEmpty) {
+            return const Center(child: Text('Không có công việc nào'));
+          }
           return ListView.builder(
               itemCount: state.TS1tasks.length,
               itemBuilder: (context, index) {
@@ -185,6 +185,10 @@ class WaitingList extends StatelessWidget {
 
                 return WatingActivityWidget(
                   ungCuVien: maxTasker,
+                  loading: () => {
+                    DefaultTabController.of(context).animateTo(3),
+                    BlocProvider.of<TaskCubit>(context).getAllTasks(1),
+                  },
                   daNhan: appTasker,
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
@@ -245,6 +249,9 @@ class ApprovedList extends StatelessWidget {
                     child: const CircularProgressIndicator())),
           );
         } else if (state is TaskSuccess) {
+          if (state.TS2tasks.isEmpty) {
+            return const Center(child: Text('Không có công việc nào'));
+          }
           return ListView.builder(
               itemCount: state.TS2tasks.length,
               itemBuilder: (context, index) {
@@ -261,6 +268,10 @@ class ApprovedList extends StatelessWidget {
                 }
 
                 return ApprovedActivityWidget(
+                  loading: () => {
+                    DefaultTabController.of(context).animateTo(3),
+                    BlocProvider.of<TaskCubit>(context).getAllTasks(1),
+                  },
                   ungCuVien: maxTasker,
                   daNhan: appTasker,
                   onShowLabel: () =>
@@ -311,6 +322,10 @@ class FinishedList extends StatelessWidget {
                     child: const CircularProgressIndicator())),
           );
         } else if (state is TaskSuccess) {
+          if (state.TS3tasks.isEmpty) {
+            return const Center(child: Text('Không có công việc nào'));
+          }
+
           return ListView.builder(
               itemCount: state.TS3tasks.length,
               itemBuilder: (context, index) {
@@ -327,6 +342,10 @@ class FinishedList extends StatelessWidget {
                 }
 
                 return ApprovedActivityWidget(
+                  loading: () => {
+                    DefaultTabController.of(context).animateTo(3),
+                    BlocProvider.of<TaskCubit>(context).getAllTasks(1),
+                  },
                   isFinished: true,
                   ungCuVien: maxTasker,
                   daNhan: appTasker,
@@ -378,6 +397,9 @@ class CancelList extends StatelessWidget {
                     child: const CircularProgressIndicator())),
           );
         } else if (state is TaskSuccess) {
+          if (state.TS4tasks.isEmpty) {
+            return const Center(child: Text('Không có công việc nào'));
+          }
           return ListView.builder(
               itemCount: state.TS4tasks.length,
               itemBuilder: (context, index) {

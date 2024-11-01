@@ -3,11 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
 class WatingActivityWidget extends StatefulWidget {
   final VoidCallback onShowLabel;
+  final VoidCallback loading;
   final int numberOfTasker;
   final int id;
   final String serviceName;
@@ -42,6 +42,7 @@ class WatingActivityWidget extends StatefulWidget {
       required this.price,
       required this.note,
       required this.onShowLabel,
+      required this.loading,
       super.key});
 
   @override
@@ -52,14 +53,18 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Waitingtab(
                     id: widget.id,
                   )),
         );
+        if (result == true) {
+          print("pop thanh cong lan 1");
+          widget.loading();
+        }
       },
       child: Center(
         child: Padding(
@@ -258,7 +263,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   ),
                   if (widget.note != '')
                     Padding(
-                      padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                       child: Row(
                         children: [
                           const Text(

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
@@ -83,6 +84,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<DefaultLocationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<NewTask2Cubit>(),
         ),
       ],
       child: MaterialApp(

@@ -13,6 +13,7 @@ abstract class TaskRemoteDatasource {
   Future<List<TaskModel>> getTS4Tasks(int userId);
   Future<TaskModel> getATask(int taskId);
   Future<List<TaskerListModel>> getTaskerList(int userId);
+  Future<void> deleteTask(int taskId, cancelCode);
 }
 
 class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
@@ -151,12 +152,16 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
     if (response.statusCode == 200) {
       final List<dynamic> taskListJson = json.decode(response.body)['taskList'];
-      print(taskListJson);
 
-      return taskListJson
+      print(taskListJson);
+      final List<TaskModel> taskList = taskListJson
           .map((json) => TaskModel.fromJson(json))
           .where((task) => task.taskStatus == 'TS4')
           .toList();
+      taskList.sort((a, b) =>
+          (b.cancelAt ?? DateTime(0)).compareTo(a.cancelAt ?? DateTime(0)));
+
+      return taskList;
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed ');
@@ -296,6 +301,44 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed ');
+    }
+  }
+
+  @override
+  Future<void> deleteTask(int taskId, cancelCode) async {
+    final http.Response response;
+    try {
+      response = await client.put(
+        Uri.parse('$baseUrl/$apiVersion/cancel-a-task'),
+        body: json.encode({'taskId': taskId, 'cancelCode': cancelCode}),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': AppInfor1.user_token
+        },
+      );
+    } on SocketException {
+      // Handle network errors
+      print("No Internet connection");
+      throw Exception('No Internet connection');
+    } on HttpException {
+      // Handle HTTP errors
+      print("HTTP error occurred");
+      throw Exception('HTTP error occurred');
+    } on FormatException {
+      // Handle JSON format errors
+      print("Bad response format");
+      throw Exception('Bad response format');
+    } catch (e) {
+      // Handle any other exceptions
+      print("Unexpected error: $e");
+      throw Exception('Unexpected error: $e');
+    }
+
+    if (response.statusCode == 200) {
+      print("Task deleted successfully");
+    } else {
+      print("response.body failed: ${response.body}");
+      throw Exception('Failed to delete task');
     }
   }
 }

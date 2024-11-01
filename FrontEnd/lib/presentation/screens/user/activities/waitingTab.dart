@@ -113,8 +113,101 @@ class _WaitingtabState extends State<Waitingtab> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Sizedbutton(
-                          onPressFun: () {
-                            // Add your logic here
+                          onPressFun: () async {
+                            bool? confirmDelete = await showDialog<bool>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Xác nhận'),
+                                  content: Text(
+                                      'Bạn có chắc chắn muốn xóa công việc này không?'),
+                                  actions: <Widget>[
+                                    Sizedbutton(
+                                      onPressFun: () {
+                                        Navigator.of(context).pop(
+                                            false); // Return false if not confirmed
+                                      },
+                                      text: 'Hủy',
+                                      backgroundColor: AppColors.xanh_main,
+                                      height: 45,
+                                    ),
+                                    Spacer(),
+                                    Sizedbutton(
+                                      onPressFun: () {
+                                        Navigator.of(context).pop(
+                                            true); // Return true if confirmed
+                                      },
+                                      text: 'Xóa',
+                                      backgroundColor: AppColors.do_main,
+                                      height: 45,
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirmDelete == true) {
+                              // Show a second dialog to select an integer cancelCode
+                              int? cancelCode = await showDialog<int>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Lý do hủy',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                              'Tôi không có nhu cầu  nữa',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(0),
+                                        ),
+                                        ListTile(
+                                          title: Text(
+                                              'Tôi có công việc đột xuất',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(1),
+                                        ),
+                                        ListTile(
+                                          title: Text(
+                                              'Tôi muốn đặt công việc khác',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(2),
+                                        ),
+                                        ListTile(
+                                          title: Text('Lý do khác',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(3),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+
+                              if (cancelCode != null) {
+                                await BlocProvider.of<ATaskCubit>(context)
+                                    .deleteTask(widget.id, cancelCode);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Đã hủy công việc '),
+                                    backgroundColor: AppColors.do_main,
+                                  ),
+                                );
+                                Navigator.pop(context, true);
+                              }
+                            }
                           },
                           text: 'Xác nhận hủy',
                           StrokeColor: AppColors.cam_main,

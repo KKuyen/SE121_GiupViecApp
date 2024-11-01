@@ -7,4 +7,6 @@ import '../entities/task.dart';
 abstract class ATaskRepository {
   Future<Task> getATasks(int taskId);
   Future<List<TaskerList>> getTaskerList(int taskId);
+
+  Future<void> deleteTask(int taskId, int cancelCode);
 }

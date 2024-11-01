@@ -295,6 +295,7 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                                     )),
                           );
                           if (result == true) {
+                            print("pop thanh cong lan 1");
                             Navigator.pop(
                                 context, true); // Pass true up to ActivityPage
                           }

@@ -1,5 +1,6 @@
 // lib/domain/usecases/get_all_tasks_usecase.dart
 
+import 'package:se121_giupviec_app/domain/entities/location.dart';
 import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 
 import 'package:se121_giupviec_app/domain/repository/newTask1_repository.dart';
@@ -24,5 +25,13 @@ class NewTask1Usecase {
       List<Map<String, dynamic>> addPriceDetail) async {
     return await repository.createTask(userId, taskTypeId, time, locationId,
         note, myvoucherId, voucherId, addPriceDetail);
+  }
+
+  Future<Location> execute3(int userId) async {
+    return await repository.getMyDefaultLocation(userId);
+  }
+
+  Future<List<Location>> execute4(int userId) async {
+    return await repository.getMyLocation(userId);
   }
 }

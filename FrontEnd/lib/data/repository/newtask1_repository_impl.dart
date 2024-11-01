@@ -3,6 +3,7 @@ import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart'
 import 'package:se121_giupviec_app/data/datasources/tasker_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
 import 'package:se121_giupviec_app/data/models/task_model.dart';
+import 'package:se121_giupviec_app/domain/entities/location.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
 import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
@@ -37,5 +38,14 @@ class Newtask1RepositoryImpl implements Newtask1Repository {
       List<Map<String, dynamic>> addPriceDetail) async {
     return await remoteDataSource.createTask(userId, taskTypeId, time,
         locationId, note, myvoucherId, voucherId, addPriceDetail);
+  }
+
+  @override
+  Future<List<Location>> getMyLocation(int userId) async {
+    return await remoteDataSource.getMyLocation(userId);
+  }
+
+  Future<Location> getMyDefaultLocation(int userId) async {
+    return await remoteDataSource.getMyDefaultLocation(userId);
   }
 }

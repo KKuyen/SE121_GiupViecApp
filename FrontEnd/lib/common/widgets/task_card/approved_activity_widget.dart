@@ -13,6 +13,7 @@ class ApprovedActivityWidget extends StatefulWidget {
   final bool isFinished;
   final VoidCallback onShowLabel;
   final int numberOfTasker;
+  final VoidCallback loading;
   final int id;
   final String serviceName;
   final DateTime startDay;
@@ -47,6 +48,7 @@ class ApprovedActivityWidget extends StatefulWidget {
       required this.phone,
       required this.price,
       required this.note,
+      required this.loading,
       super.key});
 
   @override
@@ -57,31 +59,32 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-        if (widget.isFinished == false)
-          {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Approvetab(
-                  numberOfTasker: widget.numberOfTasker,
-                  id: widget.id,
-                ),
+      onTap: () async {
+        if (widget.isFinished == false) {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Approvetab(
+                numberOfTasker: widget.numberOfTasker,
+                id: widget.id,
               ),
             ),
+          );
+
+          if (result == true) {
+            widget.loading();
           }
-        else
-          {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Finishtab(
-                  numberOfTasker: widget.numberOfTasker,
-                  id: widget.id,
-                ),
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Finishtab(
+                numberOfTasker: widget.numberOfTasker,
+                id: widget.id,
               ),
             ),
-          }
+          );
+        }
       },
       child: Center(
           child: Padding(

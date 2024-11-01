@@ -34,6 +34,11 @@ const userPaths: string[] = [
   "/api/v1/edit-tasker-list-status",
   "/api/v1/delete-account",
   "/api/v1/cancel-a-task",
+
+  "/api/v1/finish-a-task",
+  "/api/v1/get-all-reviews",
+  "/api/v1/get-a-task-type",
+  "/api/v1/get-my-location",
   "/api/v1/finish-a-task",
   "/api/v1/get-my-location",
   "/api/v1/add-new-location",

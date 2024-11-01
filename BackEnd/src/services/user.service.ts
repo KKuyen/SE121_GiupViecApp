@@ -60,7 +60,7 @@ export class UserService {
   static createUser = async (user: User) => {
     return new Promise(async (resolve, reject) => {
       try {
-         let userData: any = {};
+        let userData: any = {};
         if (await UserService.checkUserPhone(user.phoneNumber)) {
           userData.errCode = 1;
           userData.errMessage = "Phone number already exists";
@@ -83,13 +83,13 @@ export class UserService {
           userData.errCode = 0;
           userData.errMessage = "OK";
           let payload = {
-                userId: user.id,
-                phoneNumber: user.phoneNumber,
-                role: user.role,
-                expiresIn: process.env.JWT_EXPIRES_IN,
-              };
-              userData.access_token = await createJWT(payload);
-           
+            userId: user.id,
+            phoneNumber: user.phoneNumber,
+            role: user.role,
+            expiresIn: process.env.JWT_EXPIRES_IN,
+          };
+          userData.access_token = await createJWT(payload);
+
           userData.user = user;
           resolve(userData);
         }
@@ -156,22 +156,23 @@ export class UserService {
     });
   };
   static convertToShortPhoneNumber(phoneNumber: string): string {
-  if (phoneNumber.startsWith('+84')) {
-    return '0' + phoneNumber.slice(3);
+    if (phoneNumber.startsWith("+84")) {
+      return "0" + phoneNumber.slice(3);
     }
-  
-  return phoneNumber; // Return the original if it doesn't start with +84
+
+    return phoneNumber; // Return the original if it doesn't start with +84
   }
   static convertToFullPhoneNumber(phoneNumber: string): string {
-    if (phoneNumber.startsWith('0')) {
-      return '+84' + phoneNumber.slice(1);
+    if (phoneNumber.startsWith("0")) {
+      return "+84" + phoneNumber.slice(1);
     }
     return phoneNumber; // Return the original if it doesn't start with '0'
   }
   static sendOTP = async (phoneNumber: string, otp: string) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let shortPhoneNumber = UserService.convertToShortPhoneNumber(phoneNumber);
+        let shortPhoneNumber =
+          UserService.convertToShortPhoneNumber(phoneNumber);
         let checkUserPhone = await UserService.checkUserPhone(shortPhoneNumber);
         if (checkUserPhone) {
           await client.messages.create({
@@ -181,7 +182,10 @@ export class UserService {
           });
           resolve({ errCode: 0, message: "Ok" });
         }
-        resolve({ errCode: 1, message: "Your phone number isn`t exist in system. Please try again!" });
+        resolve({
+          errCode: 1,
+          message: "Your phone number isn`t exist in system. Please try again!",
+        });
       } catch (error) {
         reject(error);
       }
@@ -1110,7 +1114,16 @@ export class UserService {
     if (task) {
       task.taskStatus = "TS4";
       if (cancelCode === 0) {
-        task.cancelReason = "Không có lý do";
+        task.cancelReason = "Khách hàng không có nhu cầu  nữa";
+      }
+      if (cancelCode === 1) {
+        task.cancelReason = "Khách hàng có công việc đột xuất";
+      }
+      if (cancelCode === 2) {
+        task.cancelReason = "Khách hàng muốn đặt công việc khác";
+      }
+      if (cancelCode === 3) {
+        task.cancelReason = "Lý do khác";
       }
       task.cancelAt = currentDate;
       await taskRepository.save(task);

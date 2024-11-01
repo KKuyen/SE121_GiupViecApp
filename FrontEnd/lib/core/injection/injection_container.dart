@@ -33,6 +33,7 @@ import 'package:se121_giupviec_app/domain/usecases/new_task1_usecase.dart';
 import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
@@ -160,6 +161,11 @@ Future<void> init() async {
   sl.registerFactory(
     () => DefaultLocationCubit(
       getMyDefaultLocationUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => NewTask2Cubit(
+      NewTask2Usecase: sl(),
     ),
   );
   // Use cases
