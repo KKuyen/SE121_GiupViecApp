@@ -19,9 +19,11 @@ class Taskerlist extends StatefulWidget {
   final VoidCallback cancel;
   final int id;
   final numberOfTasker;
+  final String taskStatus;
 
   const Taskerlist(
       {required this.numberOfTasker,
+      required this.taskStatus,
       this.id = 1,
       super.key,
       required this.cancel});
@@ -31,6 +33,7 @@ class Taskerlist extends StatefulWidget {
 }
 
 class _TaskerListState extends State<Taskerlist> {
+  int type = 1;
   @override
   void initState() {
     super.initState();
@@ -68,6 +71,10 @@ class _TaskerListState extends State<Taskerlist> {
 
           List<Object> approvedTaskers =
               taskerList.where((tasker) => tasker.status == "S2").toList();
+          if (widget.taskStatus == 'TS3') {
+            approvedTaskers =
+                taskerList.where((tasker) => tasker.status == "S5").toList();
+          }
           List<Object> pendingTasker =
               taskerList.where((tasker) => tasker.status == "S1").toList();
           return Padding(
@@ -85,14 +92,25 @@ class _TaskerListState extends State<Taskerlist> {
                   children: [
                     Row(
                       children: [
-                        Text('Danh sách ứng cử viên',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              decoration: TextDecoration.none,
-                            )),
+                        if (widget.taskStatus == 'TS1')
+                          Text('Danh sách ứng cử viên',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                decoration: TextDecoration.none,
+                              )),
+                        if (widget.taskStatus == 'TS2' ||
+                            widget.taskStatus == 'TS3')
+                          Text('Danh sách người giúp việc',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                decoration: TextDecoration.none,
+                              )),
                         Spacer(),
                         IconButton(
                           icon: Icon(Icons.close),
@@ -103,16 +121,17 @@ class _TaskerListState extends State<Taskerlist> {
                     SizedBox(height: 5),
                     Row(
                       children: [
-                        Text(
-                          'Danh sách đã xác nhận',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.xam72,
-                            fontFamily: 'Inter',
-                            decoration: TextDecoration.none,
+                        if (widget.taskStatus == 'TS1')
+                          Text(
+                            'Danh sách đã xác nhận',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.xam72,
+                              fontFamily: 'Inter',
+                              decoration: TextDecoration.none,
+                            ),
                           ),
-                        ),
                         Spacer(),
                         Text(
                           '${approvedTaskers.length}/${widget.numberOfTasker} vị trí',
@@ -168,7 +187,7 @@ class _TaskerListState extends State<Taskerlist> {
                           SizedBox(height: 10),
                           Center(
                             child: Text(
-                              'Không có ứng cử viên nào đã được xác nhận',
+                              'Danh sách trống',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal,
@@ -182,107 +201,119 @@ class _TaskerListState extends State<Taskerlist> {
                           SizedBox(height: 10),
                         ],
                       ),
-
-                    SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Text(
-                          'Danh sách ứng cử viên',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: AppColors.xam72,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Sử dụng Container để giới hạn chiều cao của danh sách ứng cử viên
-                    if (pendingTasker.isNotEmpty)
-                      Container(
-                        height: min(
-                            200,
-                            MediaQuery.of(context).size.height *
-                                0.3), // Giới hạn chiều cao
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: pendingTasker.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Taskerprofile(
-                                          taskerId: taskerList[index].id)),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 0, 12, 0),
-                                child: Column(
-                                  children: [
-                                    Taskerrowaccept(
-                                      taskerName: (taskerList[index].tasker
-                                          as Map<String, dynamic>)['name'],
-                                      taskerId: (taskerList[index].tasker
-                                          as Map<String, dynamic>)['id'],
-                                      taskerPhone: (taskerList[index].tasker
-                                              as Map<String, dynamic>)[
-                                          'phoneNumber'],
-                                    ),
-                                    Divider()
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    if (pendingTasker.isEmpty)
+//bo đi neu la case 2
+                    if (widget.taskStatus == 'TS1')
                       Column(
                         children: [
-                          SizedBox(height: 10),
-                          Center(
-                            child: Text(
-                              'Không có ứng cử viên nào khác',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: 'Inter',
-                                color: AppColors.xam72,
-                                decoration: TextDecoration.none,
-                                fontStyle: FontStyle.italic,
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Text(
+                                'Danh sách ứng cử viên',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Inter',
+                                  color: AppColors.xam72,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Sử dụng Container để giới hạn chiều cao của danh sách ứng cử viên
+                          if (pendingTasker.isNotEmpty)
+                            Container(
+                              height: min(
+                                  200,
+                                  MediaQuery.of(context).size.height *
+                                      0.3), // Giới hạn chiều cao
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: pendingTasker.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Taskerprofile(
+                                                taskerId:
+                                                    taskerList[index].id)),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          5, 0, 12, 0),
+                                      child: Column(
+                                        children: [
+                                          Taskerrowaccept(
+                                            taskerName:
+                                                (taskerList[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['name'],
+                                            taskerId: (taskerList[index].tasker
+                                                as Map<String, dynamic>)['id'],
+                                            taskerPhone: (taskerList[index]
+                                                        .tasker
+                                                    as Map<String, dynamic>)[
+                                                'phoneNumber'],
+                                          ),
+                                          Divider()
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          ),
-                          SizedBox(height: 10),
+                          if (pendingTasker.isEmpty)
+                            Column(
+                              children: [
+                                SizedBox(height: 10),
+                                Center(
+                                  child: Text(
+                                    'Không có ứng cử viên nào khác',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: AppColors.xam72,
+                                      decoration: TextDecoration.none,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Sizedbutton(
+                                onPressFun: () {},
+                                text: 'Xác nhận',
+                                height: 45,
+                                width: MediaQuery.of(context).size.width * 0.5 -
+                                    40,
+                              ),
+                              const SizedBox(width: 10),
+                              Sizedbutton(
+                                onPressFun: () {},
+                                text: 'Hủy',
+                                height: 45,
+                                backgroundColor: Colors.white,
+                                textColor: AppColors.do_main,
+                                isStroke: true,
+                                StrokeColor: AppColors.do_main,
+                                width: MediaQuery.of(context).size.width * 0.5 -
+                                    40,
+                              )
+                            ],
+                          )
                         ],
                       ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Sizedbutton(
-                          onPressFun: () {},
-                          text: 'Xác nhận',
-                          height: 45,
-                          width: MediaQuery.of(context).size.width * 0.5 - 40,
-                        ),
-                        const SizedBox(width: 10),
-                        Sizedbutton(
-                          onPressFun: () {},
-                          text: 'Hủy',
-                          height: 45,
-                          backgroundColor: Colors.white,
-                          textColor: AppColors.do_main,
-                          isStroke: true,
-                          StrokeColor: AppColors.do_main,
-                          width: MediaQuery.of(context).size.width * 0.5 - 40,
-                        )
-                      ],
-                    )
                   ],
                 ),
               ),

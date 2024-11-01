@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
@@ -8,6 +9,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 
 class Newtaskstep2 extends StatefulWidget {
   final int taskTypeId;
@@ -499,6 +501,79 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                         });
                       },
                     ),
+                    const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Mã giảm giá'),
+                              content: const Text('Chưa có mã giảm giá nào.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Đóng'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          const Text('Mã giảm giá',
+                              style: AppTextStyle.tieudebox),
+                          const SizedBox(width: 10),
+                          Spacer(),
+                          Text('Chưa chọn mã giảm giá nào',
+                              style: AppTextStyle.textthuong),
+                          const SizedBox(width: 10),
+                          const Icon(
+                            FontAwesomeIcons.angleRight,
+                            color: AppColors.xam72,
+                            size: 15,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Chi tiết thanh toán', style: AppTextStyle.tieudebox),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Text('Tổng tiền dịch vụ',
+                            style: AppTextStyle.textnhoxam),
+                        Spacer(),
+                        Text('100.000đ', style: AppTextStyle.textnhoxam),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Giảm giá', style: AppTextStyle.textnhoxam),
+                        Spacer(),
+                        Text('100.000đ', style: AppTextStyle.textnhoxam),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Tổng thanh toán',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        Spacer(),
+                        Text('100.000đ',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.cam_main)),
+                      ],
+                    ),
                     const SizedBox(height: 20),
                     Sizedbutton(
                       onPressFun: () async {
@@ -542,8 +617,12 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                             backgroundColor: AppColors.xanh_main,
                           ),
                         );
-                        Navigator.pop(context, true);
-                        Navigator.pop(context, true);
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Navigation(tab: 1),
+                          ),
+                        );
                       },
                       text: 'Đăng việc',
                       width: MediaQuery.of(context).size.width,

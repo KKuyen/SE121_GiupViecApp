@@ -56,12 +56,13 @@ class _TaskerActivityPageState extends State<TaskerActivityPage> {
           ),
         if (_isLabelVisible)
           Center(
-            child: Taskerlist(
-              numberOfTasker: numberOfTasker,
-              id: id,
-              cancel: _hideLabel,
-            ),
-          ),
+              // child: Taskerlist(
+              //   numberOfTasker: numberOfTasker,
+              //   id: id,
+              //   cancel: _hideLabel,
+
+              // ),
+              ),
       ],
     );
   }

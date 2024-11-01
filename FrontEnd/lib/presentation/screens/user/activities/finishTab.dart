@@ -13,13 +13,19 @@ import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Finishtab extends StatefulWidget {
   final int id;
   final int numberOfTasker;
-  const Finishtab({super.key, required this.id, required this.numberOfTasker});
+  final int taskTypeId;
+  const Finishtab(
+      {super.key,
+      required this.id,
+      required this.numberOfTasker,
+      required this.taskTypeId});
 
   @override
   State<Finishtab> createState() => _FinishTabState();
@@ -126,7 +132,14 @@ class _FinishTabState extends State<Finishtab> {
                         ),
                         Sizedbutton(
                           onPressFun: () {
-                            // Add your logic here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Newtaskstep1(
+                                  taskTypeId: widget.taskTypeId,
+                                ),
+                              ),
+                            );
                           },
                           text: 'Đặt lại',
                           width: MediaQuery.of(context).size.width / 2 - 15,
@@ -562,6 +575,7 @@ class _FinishTabState extends State<Finishtab> {
           child: Taskerlist(
             cancel: _hideLabel,
             numberOfTasker: widget.numberOfTasker,
+            taskStatus: 'TS3',
           ),
         ),
     ]);

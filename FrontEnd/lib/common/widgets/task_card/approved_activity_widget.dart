@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
+
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
@@ -15,6 +15,7 @@ class ApprovedActivityWidget extends StatefulWidget {
   final int numberOfTasker;
   final VoidCallback loading;
   final int id;
+  final int taskTypeId;
   final String serviceName;
   final DateTime startDay;
   final DateTime createAt;
@@ -33,6 +34,7 @@ class ApprovedActivityWidget extends StatefulWidget {
   const ApprovedActivityWidget(
       {this.isFinished = false,
       required this.onShowLabel,
+      required this.taskTypeId,
       required this.id,
       required this.createAt,
       this.ungCuVien = 0,
@@ -81,6 +83,7 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
               builder: (context) => Finishtab(
                 numberOfTasker: widget.numberOfTasker,
                 id: widget.id,
+                taskTypeId: widget.taskTypeId,
               ),
             ),
           );

@@ -13,7 +13,9 @@ abstract class TaskRemoteDatasource {
   Future<List<TaskModel>> getTS4Tasks(int userId);
   Future<TaskModel> getATask(int taskId);
   Future<List<TaskerListModel>> getTaskerList(int userId);
-  Future<void> deleteTask(int taskId, cancelCode);
+
+  Future<void> deleteTask(int taskId, int cancelCode);
+  Future<void> finishTask(int taskId);
 }
 
 class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
@@ -339,6 +341,44 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed to delete task');
+    }
+  }
+
+  @override
+  Future<void> finishTask(int taskId) async {
+    final http.Response response;
+    try {
+      response = await client.put(
+        Uri.parse('$baseUrl/$apiVersion/finish-a-task'),
+        body: json.encode({'taskId': taskId}),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': AppInfor1.user_token
+        },
+      );
+    } on SocketException {
+      // Handle network errors
+      print("No Internet connection");
+      throw Exception('No Internet connection');
+    } on HttpException {
+      // Handle HTTP errors
+      print("HTTP error occurred");
+      throw Exception('HTTP error occurred');
+    } on FormatException {
+      // Handle JSON format errors
+      print("Bad response format");
+      throw Exception('Bad response format');
+    } catch (e) {
+      // Handle any other exceptions
+      print("Unexpected error: $e");
+      throw Exception('Unexpected error: $e');
+    }
+
+    if (response.statusCode == 200) {
+      print("Task finish successfully");
+    } else {
+      print("response.body failed: ${response.body}");
+      throw Exception('Failed to finish task');
     }
   }
 }

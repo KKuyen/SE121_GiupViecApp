@@ -323,6 +323,14 @@ export class UserService {
         console.log("sum:" + sum);
         console.log("totalPrice:" + totalPrice);
         console.log("pricedetail:" + pricedetail);
+        //+ rpoint
+
+        const userRepository = AppDataSource.getRepository(User);
+        const user = await userRepository.findOne({ where: { id: userId } });
+        if (user) {
+          user.Rpoints += 5;
+          await userRepository.save(user);
+        }
 
         return addPriceRepository.create({
           taskId: newTask.id,

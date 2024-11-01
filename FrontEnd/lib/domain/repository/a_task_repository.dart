@@ -9,4 +9,5 @@ abstract class ATaskRepository {
   Future<List<TaskerList>> getTaskerList(int taskId);
 
   Future<void> deleteTask(int taskId, int cancelCode);
+  Future<void> finishTask(int taskId);
 }

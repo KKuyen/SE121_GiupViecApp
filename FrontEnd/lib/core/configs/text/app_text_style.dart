@@ -28,6 +28,12 @@ class AppTextStyle {
       color: AppColors.xam72,
       decoration: TextDecoration.none,
       fontWeight: FontWeight.normal);
+  static const textnhoxam = TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 15,
+      color: AppColors.xam72,
+      decoration: TextDecoration.none,
+      fontWeight: FontWeight.normal);
   static const textthuongxanhmain = TextStyle(
       fontFamily: 'Inter',
       fontSize: 16,

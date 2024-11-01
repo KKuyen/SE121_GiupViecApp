@@ -469,6 +469,7 @@ class _CanceltabState extends State<Canceltab> {
                     id: widget.id,
                     numberOfTasker: task.numberOfTasker,
                     cancel: _hideLabel,
+                    taskStatus: 'TS4',
                   ),
                 ),
             ]);

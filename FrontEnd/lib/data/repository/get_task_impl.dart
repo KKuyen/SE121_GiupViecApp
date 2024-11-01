@@ -28,4 +28,9 @@ class ATaskRepositoryImpl implements ATaskRepository {
   Future<void> deleteTask(int taskId, int cancelCode) async {
     return await remoteDataSource.deleteTask(taskId, cancelCode);
   }
+
+  @override
+  Future<void> finishTask(int taskId) async {
+    return await remoteDataSource.finishTask(taskId);
+  }
 }

@@ -729,6 +729,7 @@ class _WaitingtabState extends State<Waitingtab> {
                   id: widget.id,
                   numberOfTasker: task.numberOfTasker,
                   cancel: _hideLabel,
+                  taskStatus: 'TS1',
                 ),
               ),
           ]);

@@ -21,4 +21,8 @@ class GetATasksUsecase {
   deleteTask(int taskId, int cancelCode) async {
     return await repository.deleteTask(taskId, cancelCode);
   }
+
+  fishishTask(int taskId) async {
+    return await repository.finishTask(taskId);
+  }
 }
