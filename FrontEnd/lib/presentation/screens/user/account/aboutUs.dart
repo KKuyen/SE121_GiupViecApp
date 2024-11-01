@@ -91,7 +91,7 @@ class _AboutusState extends State<Aboutus> {
               icon: Icon(
                 Icons.phone,
                 color: AppColors.xanh_main,
-                size: 38,
+                size: 33,
               )),
           const Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -103,7 +103,7 @@ class _AboutusState extends State<Aboutus> {
               icon: Icon(
                 Icons.email,
                 color: AppColors.xanh_main,
-                size: 36,
+                size: 30,
               )),
           const Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -115,7 +115,7 @@ class _AboutusState extends State<Aboutus> {
               icon: Icon(
                 FontAwesomeIcons.earth,
                 color: AppColors.xanh_main,
-                size: 36,
+                size: 30,
               )),
           const Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -127,7 +127,7 @@ class _AboutusState extends State<Aboutus> {
               icon: Icon(
                 FontAwesomeIcons.facebook,
                 color: AppColors.xanh_main,
-                size: 34,
+                size: 30,
               )),
           const Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),

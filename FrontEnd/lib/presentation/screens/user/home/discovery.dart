@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/search/search.dart';
@@ -10,6 +11,8 @@ import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../bloc/Voucher/voucher_cubit.dart';
+import '../../../bloc/Voucher/voucher_state.dart';
 
 class DiscoveryPage extends StatefulWidget {
   const DiscoveryPage({super.key});
@@ -25,6 +28,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    final voucherCubit = BlocProvider.of<VoucherCubit>(context).getAllVoucher();
   }
 
   @override
@@ -199,14 +203,39 @@ class _financeCardState extends State<_financeCard> {
               }
             },
           ),
-          const _finaceChild(
-            icon: Icon(
-              FontAwesomeIcons.gift,
-              color: AppColors.cam_main,
-              size: 25,
-            ),
-            title: 'Mã giảm giá',
-            value: 100,
+          BlocBuilder<VoucherCubit, VoucherState>(
+            builder: (context, state) {
+              if (state is VoucherLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is VoucherSuccess) {
+                final vouchers = state.vouchers;
+                return _finaceChild(
+                  icon: const Icon(
+                    FontAwesomeIcons.gift,
+                    color: AppColors.cam_main,
+                    size: 25,
+                  ),
+                  title: 'Mã giảm giá',
+                  value: vouchers.length,
+                );
+              } else if (state is VoucherError) {
+                return Center(child: Text('Error: ${state.message}'));
+              } else {
+                return const Center(child: Text('Không tìm thấy voucher'));
+              }
+
+              // return const _finaceChild(
+              //   icon: Icon(
+              //     FontAwesomeIcons.gift,
+              //     color: AppColors.cam_main,
+              //     size: 25,
+              //   ),
+              //   title: 'Mã giảm giá',
+              //   value: 100,
+              // );
+            },
           )
         ],
       ),

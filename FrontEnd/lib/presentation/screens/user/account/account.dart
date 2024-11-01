@@ -11,6 +11,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/aboutUs.dar
 import 'package:se121_giupviec_app/presentation/screens/user/account/blockTaskers.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/loveTaskers.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
 
@@ -146,7 +147,10 @@ class _AccountPageState extends State<AccountPage> {
                             title: const Text('Chia sẻ'),
                             leading: const Icon(Icons.share_outlined),
                             trailing: const Icon(Icons.navigate_next_rounded),
-                            onTap: () {},
+                            onTap: () {
+                              Share.share(
+                                  'https://play.google.com/store/apps/details?id=com.se121_giupviec_app');
+                            },
                           ),
                           const Divider(
                             height: 1,
