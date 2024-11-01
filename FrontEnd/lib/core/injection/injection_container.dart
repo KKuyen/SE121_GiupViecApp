@@ -34,6 +34,7 @@ import '../../domain/usecases/Location/get_my_location_usecase.dart';
 import '../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
 import '../../domain/usecases/Voucher/claim_voucher_usecase.dart';
 import '../../domain/usecases/Voucher/get_all_vouchcer_usecase.dart';
+import '../../domain/usecases/Voucher/get_my_voucher_usecase.dart';
 import '../../domain/usecases/get_all_tasks_usecase.dart'; // Import GetAllTasksUseCase
 import '../../domain/usecases/Auth/verifyOTP.dart';
 import '../../presentation/bloc/Auth/auth_cubit.dart';
@@ -86,6 +87,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => VoucherCubit(
       getAllVoucherUseCase: sl(),
+      getMyVoucherUseCase: sl(),
     ),
   );
   sl.registerFactory(
@@ -129,6 +131,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteLocationUseCase(sl()));
   sl.registerLazySingleton(() => EditProfileUsecase(sl()));
   sl.registerLazySingleton(() => ClaimVoucherUseCase(sl()));
+  sl.registerLazySingleton(() => GetMyVoucherUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),

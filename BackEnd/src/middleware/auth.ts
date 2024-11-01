@@ -37,7 +37,11 @@ const userPaths: string[] = [
   "/api/v1/finish-a-task","/api/v1/get-my-location",
   "/api/v1/add-new-location",
   "/api/v1/edit-my-location",
-  "/api/v1/delete-my-location",  "/api/v1/change-password","/api/v1/get-my-default-location","/api/v1/edit-user-profile"
+  "/api/v1/delete-my-location",
+  "/api/v1/change-password",
+  "/api/v1/get-my-default-location",
+  "/api/v1/edit-user-profile",
+  "/api/v1/delete-my-voucher"
 
 ];
 const taskerPaths: string[] = [

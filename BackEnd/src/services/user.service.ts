@@ -1089,4 +1089,12 @@ export class UserService {
       errMessage: "OK",
     };
   }
+  static async deleteMyVoucher(userId: number, myVoucherId: number) {
+    const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
+    await myVoucherRepository.delete({ userId: userId, voucherId: myVoucherId });
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
 }

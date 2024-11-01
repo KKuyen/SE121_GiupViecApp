@@ -543,4 +543,18 @@ export class UserController {
       message: message.errMessage,
     });
   }
+  static async deleteMyVoucher(req: Request, res: Response) {
+    const { userId, voucherId } = req.body;
+    if (userId === undefined || voucherId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.deleteMyVoucher(userId, voucherId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+    });
+  }
 }
