@@ -25,7 +25,6 @@ class _VouchersState extends State<Vouchers> {
   @override
   void initState() {
     super.initState();
-    final voucherCubit = BlocProvider.of<VoucherCubit>(context).getAllVoucher();
   }
 
   Future<int> _initialize() async {

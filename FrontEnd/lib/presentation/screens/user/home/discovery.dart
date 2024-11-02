@@ -28,7 +28,8 @@ class _DiscoveryPageState extends State<DiscoveryPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    final voucherCubit = BlocProvider.of<VoucherCubit>(context).getAllVoucher();
+    final voucherCubit =
+        BlocProvider.of<VoucherCubit>(context).getAllVoucher(0);
   }
 
   @override
@@ -78,41 +79,96 @@ class _DiscoveryPageState extends State<DiscoveryPage>
           ),
           isHideBackButton: false,
         ),
-        body: const Padding(
-          padding: EdgeInsets.all(AppInfo.main_padding),
+        body: Padding(
+          padding: const EdgeInsets.all(AppInfo.main_padding),
           child: SingleChildScrollView(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _financeCard(),
-                  SizedBox(
+                  const _financeCard(),
+                  const SizedBox(
                     height: 20,
                   ),
                   Row(
                     children: [
-                      Expanded(
-                          child: const Search(
+                      const Expanded(
+                          child: Search(
                         hint: "Tìm kiếm ưu đãi",
                       )),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
-                      Icon(
-                        Icons.filter_alt_rounded,
-                        color: AppColors.xanh_main,
-                        size: 35,
-                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: 150,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(
+                                      AppInfo.main_padding),
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: const Icon(
+                                          Icons.arrow_circle_up,
+                                          color: AppColors.xanh_main,
+                                        ),
+                                        title:
+                                            const Text('Tăng dần theo RPoints'),
+                                        onTap: () {
+                                          final voucherCubit =
+                                              BlocProvider.of<VoucherCubit>(
+                                                      context)
+                                                  .getAllVoucher(1);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      const Divider(),
+                                      ListTile(
+                                        leading: const Icon(
+                                          Icons.arrow_circle_down,
+                                          color: AppColors.xanh_main,
+                                        ),
+                                        title:
+                                            const Text('Giảm dần theo RPoints'),
+                                        onTap: () {
+                                          final voucherCubit =
+                                              BlocProvider.of<VoucherCubit>(
+                                                      context)
+                                                  .getAllVoucher(2);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => FilterPage()));
+                        },
+                        child: const Icon(
+                          Icons.filter_alt_rounded,
+                          color: AppColors.xanh_main,
+                          size: 35,
+                        ),
+                      )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  Text(
+                  const Text(
                     'Ưu đãi',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 6,
                   ),
                   const SizedBox(
@@ -122,14 +178,14 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                             horizontal: AppInfo.main_padding),
                         child: Vouchers(),
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Text(
+                  const Text(
                     'Sắp hết hạn',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 6,
                   ),
                   const SizedBox(
