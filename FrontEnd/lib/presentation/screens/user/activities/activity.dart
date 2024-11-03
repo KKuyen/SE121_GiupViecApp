@@ -43,6 +43,14 @@ class _ActivityPageState extends State<ActivityPage> {
     BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
   }
 
+  Future<void> _reload() async {
+    print("bố mày đây");
+    setState(() {
+      BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
+      BlocProvider.of<TaskCubit>(context).getTS2Tasks(1);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +72,7 @@ class _ActivityPageState extends State<ActivityPage> {
         if (_isLabelVisible)
           Center(
             child: Taskerlist(
+              callBackFun: () => _reload(),
               id: id,
               numberOfTasker: numberOfTasker,
               cancel: _hideLabel,
@@ -216,19 +225,14 @@ class WaitingList extends StatelessWidget {
               itemCount: state.TS1tasks!.length,
               itemBuilder: (context, index) {
                 var task = state.TS1tasks![index];
-                int maxTasker = 0;
-                int appTasker = 0;
-                for (var tasker in task.taskerLists ?? []) {
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
-                    maxTasker++;
-                  }
-                  if ((tasker)['status'] == 'S2') {
-                    appTasker++;
-                  }
-                }
 
                 return WatingActivityWidget(
-                  ungCuVien: maxTasker,
+                  ungCuVien: task.taskerLists
+                          ?.where((tasker) =>
+                              (tasker as Map<String, dynamic>)['status'] ==
+                              'S1')
+                          .length ??
+                      0,
                   loading: () async {
                     DefaultTabController.of(context).animateTo(3);
 
@@ -237,7 +241,12 @@ class WaitingList extends StatelessWidget {
                     BlocProvider.of<TaskCubit>(context).getTS4Tasks(1);
                     BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
                   },
-                  daNhan: appTasker,
+                  daNhan: task.taskerLists
+                          ?.where((tasker) =>
+                              (tasker as Map<String, dynamic>)['status'] ==
+                              'S2')
+                          .length ??
+                      0,
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   onShowLabel: () => showLabel(task.id,
@@ -304,16 +313,6 @@ class ApprovedList extends StatelessWidget {
               itemCount: state.TS2tasks!.length,
               itemBuilder: (context, index) {
                 var task = state.TS2tasks![index];
-                int maxTasker = 0;
-                int appTasker = 0;
-                for (var tasker in task.taskerLists ?? []) {
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
-                    maxTasker++;
-                  }
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
-                    appTasker++;
-                  }
-                }
 
                 return ApprovedActivityWidget(
                   taskTypeId: task.taskTypeId,
@@ -322,8 +321,18 @@ class ApprovedList extends StatelessWidget {
                     BlocProvider.of<TaskCubit>(context).getTS2Tasks(1),
                     BlocProvider.of<TaskCubit>(context).getTS4Tasks(1),
                   },
-                  ungCuVien: maxTasker,
-                  daNhan: appTasker,
+                  ungCuVien: task.taskerLists
+                          ?.where((tasker) =>
+                              (tasker as Map<String, dynamic>)['status'] ==
+                              'S1')
+                          .length ??
+                      0,
+                  daNhan: task.taskerLists
+                          ?.where((tasker) =>
+                              (tasker as Map<String, dynamic>)['status'] ==
+                              'S2')
+                          .length ??
+                      0,
                   onShowLabel: () => showLabel(task.id,
                       task.numberOfTasker ?? 0, task.taskStatus ?? 'TS2'),
                   createAt: task.createdAt,
@@ -380,16 +389,6 @@ class FinishedList extends StatelessWidget {
               itemCount: state.TS3tasks!.length,
               itemBuilder: (context, index) {
                 var task = state.TS3tasks![index];
-                int maxTasker = 0;
-                int appTasker = 0;
-                for (var tasker in task.taskerLists ?? []) {
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
-                    maxTasker++;
-                  }
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
-                    appTasker++;
-                  }
-                }
 
                 return ApprovedActivityWidget(
                   taskTypeId: task.taskTypeId,
@@ -399,8 +398,18 @@ class FinishedList extends StatelessWidget {
                     BlocProvider.of<TaskCubit>(context).getTS4Tasks(1),
                   },
                   isFinished: true,
-                  ungCuVien: maxTasker,
-                  daNhan: appTasker,
+                  ungCuVien: task.taskerLists
+                          ?.where((tasker) =>
+                              (tasker as Map<String, dynamic>)['status'] ==
+                              'S1')
+                          .length ??
+                      0,
+                  daNhan: task.taskerLists
+                          ?.where((tasker) =>
+                              (tasker as Map<String, dynamic>)['status'] ==
+                              'S2')
+                          .length ??
+                      0,
                   onShowLabel: () => showLabel(task.id,
                       task.numberOfTasker ?? 0, task.taskStatus ?? 'TS2'),
                   createAt: task.createdAt,
@@ -468,6 +477,7 @@ class CancelList extends StatelessWidget {
                 }
 
                 return CancelActivityWidget(
+                  taskStatus: task.taskStatus ?? '',
                   cancelAt: task.cancelAt ?? DateTime.now(),
                   cancelReason: task.cancelReason ?? '',
                   ungCuVien: maxTasker,

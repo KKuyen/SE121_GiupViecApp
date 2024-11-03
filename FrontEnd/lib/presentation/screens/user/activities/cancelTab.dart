@@ -17,8 +17,17 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerLi
 // import statements here
 
 class Canceltab extends StatefulWidget {
+  final DateTime cancelAt;
+  final String cancelReason;
+  final String cancelBy;
+
   final int id;
-  const Canceltab({super.key, required this.id});
+  const Canceltab(
+      {super.key,
+      required this.id,
+      required this.cancelAt,
+      required this.cancelReason,
+      required this.cancelBy});
 
   @override
   State<Canceltab> createState() => _CanceltabState();
@@ -382,7 +391,7 @@ class _CanceltabState extends State<Canceltab> {
                                         const SizedBox(width: 47),
                                         Expanded(
                                           child: Text(
-                                            'Khách hàng',
+                                            widget.cancelBy ?? '',
                                             softWrap: true,
                                             style: TextStyle(
                                                 fontFamily: 'Inter',
@@ -407,7 +416,8 @@ class _CanceltabState extends State<Canceltab> {
                                         const SizedBox(width: 42),
                                         Expanded(
                                           child: Text(
-                                            task.cancelAt?.toIso8601String() ??
+                                            widget.cancelAt
+                                                    ?.toIso8601String() ??
                                                 '',
                                             softWrap: true,
                                             style: TextStyle(
@@ -433,7 +443,7 @@ class _CanceltabState extends State<Canceltab> {
                                         const SizedBox(width: 25),
                                         Expanded(
                                           child: Text(
-                                            task.cancelReason ?? '',
+                                            widget.cancelReason ?? '',
                                             softWrap: true,
                                             style: TextStyle(
                                                 fontFamily: 'Inter',

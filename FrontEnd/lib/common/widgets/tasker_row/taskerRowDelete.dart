@@ -7,11 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerrowdelete extends StatefulWidget {
+  final VoidCallback onPressFun;
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
   final int taskerId;
   const Taskerrowdelete({
+    required this.onPressFun,
     required this.taskerId,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
@@ -91,7 +93,7 @@ class _TaskerrowdeleteState extends State<Taskerrowdelete> {
               color: AppColors.do_main,
               icon: const FaIcon(FontAwesomeIcons.trash),
               onPressed: () {
-                // Do something
+                widget.onPressFun();
               },
             ),
           ],

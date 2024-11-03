@@ -8,6 +8,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerPr
 
 class Taskerrowaccept extends StatefulWidget {
   final int taskerId;
+  final VoidCallback onPressFun;
 
   final String taskerName;
   final String taskerPhone;
@@ -15,6 +16,7 @@ class Taskerrowaccept extends StatefulWidget {
 
   const Taskerrowaccept({
     required this.taskerId,
+    required this.onPressFun,
     super.key,
     this.taskerName = 'Nguyễn Văn A',
     this.taskerPhone = '0123456759',
@@ -94,7 +96,7 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
               iconSize: 20,
               icon: const FaIcon(FontAwesomeIcons.check),
               onPressed: () {
-                // Do something
+                widget.onPressFun();
               },
             ),
           ],

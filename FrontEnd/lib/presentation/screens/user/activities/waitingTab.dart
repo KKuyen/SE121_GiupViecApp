@@ -29,8 +29,17 @@ class _WaitingtabState extends State<Waitingtab> {
   String _formattedDate = '20:58';
   String _formattedTime = '16/10/2024';
   bool _isLabelVisible = false;
+  bool firstTime = true;
+  void setFalse() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        firstTime = false;
+      });
+    });
+  }
 
   bool _isEditableNote = false;
+  final TextEditingController _noteController = TextEditingController();
 
   void _showLabel() {
     setState(() {
@@ -44,10 +53,21 @@ class _WaitingtabState extends State<Waitingtab> {
     });
   }
 
-  void _toggleEditableNote() {
+  void _toggleEditableNote() async {
+    if (_isEditableNote) {
+      await BlocProvider.of<ATaskCubit>(context).editTask(widget.id, null, null,
+          _noteController.text); // Call the editTask function here
+      // Call the updateTaskerStatus function here
+    }
     setState(() {
       _isEditableNote =
           !_isEditableNote; // Chuyển trạng thái từ có thể chỉnh sửa sang không và ngược lại
+    });
+  }
+
+  Future<void> _reload() async {
+    setState(() {
+      final st = BlocProvider.of<ATaskCubit>(context).getATasks(widget.id);
     });
   }
 
@@ -78,6 +98,11 @@ class _WaitingtabState extends State<Waitingtab> {
           );
         } else if (state is ATaskSuccess) {
           final task = state.task;
+          if (firstTime) {
+            _noteController.text = task.note ?? '';
+            setFalse();
+          }
+
           final taskerList = state.taskerList;
           int maxTasker = 0;
           int appTasker = 0;
@@ -93,6 +118,7 @@ class _WaitingtabState extends State<Waitingtab> {
             Scaffold(
                 backgroundColor: AppColors.nen_the,
                 appBar: BasicAppbar(
+                  result: true,
                   title: const Text(
                     'Thông tin',
                     style: TextStyle(
@@ -631,6 +657,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                       const SizedBox(width: 9),
                                       DisableInput(
                                         enabled: _isEditableNote,
+                                        controller: _noteController,
                                         text: task.note ?? '',
                                       ),
                                       SizedBox(
@@ -726,6 +753,7 @@ class _WaitingtabState extends State<Waitingtab> {
             if (_isLabelVisible)
               Center(
                 child: Taskerlist(
+                  callBackFunforTab: () => _reload(),
                   id: widget.id,
                   numberOfTasker: task.numberOfTasker,
                   cancel: _hideLabel,

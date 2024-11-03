@@ -52,10 +52,10 @@ class _ApprovetabState extends State<Approvetab> {
   }
 
   String returnText(DateTime time) {
-    if (time.day < DateTime.now().day) {
+    if (time.day > DateTime.now().day) {
       return 'Còn ${time.difference(DateTime.now()).inDays} ngày nữa là tới lịch ${time.day}/${time.month}/${time.year}. Lưu ý chú ý thời gian';
     } else {
-      return 'Đã tới ngày làm';
+      return 'Đã tới ngày làm. Công việc bắt đầu lúc ${time.hour}giờ ${time.minute} phút';
     }
   }
 
@@ -291,7 +291,7 @@ class _ApprovetabState extends State<Approvetab> {
                     child: Column(
                   children: [
                     Header(
-                      text1: (task.time.day < DateTime.now().day)
+                      text1: (task.time.day > DateTime.now().day)
                           ? "Đang chờ tới ngày làm"
                           : "Đã tới ngày làm",
                       text2: returnText(task.time),

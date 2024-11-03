@@ -48,7 +48,7 @@ class _LovetaskersState extends State<Lovetaskers> {
                     child: Container(
                         height: 40,
                         width: 40,
-                        child: CircularProgressIndicator()))),
+                        child: const CircularProgressIndicator()))),
           );
         } else if (state is LoveTaskersSuccess) {
           return Scaffold(
@@ -70,11 +70,12 @@ class _LovetaskersState extends State<Lovetaskers> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  const Header(
-                    text1: "Bạn đã yêu thích 2 tasker",
+                  Header(
+                    text1:
+                        "Bạn đã yêu thích ${state.loveTaskers.length} tasker",
                     text2:
                         "Những tasker bạn yêu thích có thể được ưu tiên tự động nhận việc làm",
-                    icon: Icon(
+                    icon: const Icon(
                       FontAwesomeIcons.solidHeart,
                       color: Colors.white,
                       size: 47,
@@ -94,14 +95,17 @@ class _LovetaskersState extends State<Lovetaskers> {
                                 as Map<String, dynamic>)['id'],
                             taskerName: (state.loveTaskers[index].tasker
                                 as Map<String, dynamic>)['name'],
-                            iconButton: const TwoSttButton(
+                            iconButton: TwoSttButton(
+                              isLove: true,
+                              TaskerId: (state.loveTaskers[index].tasker
+                                  as Map<String, dynamic>)['id'],
                               sttkey: true,
-                              icon: Icon(
+                              icon: const Icon(
                                 FontAwesomeIcons.solidHeart,
                                 color: AppColors.xanh_main,
                                 size: 32,
                               ),
-                              icon2: Icon(
+                              icon2: const Icon(
                                 FontAwesomeIcons.heart,
                                 color: AppColors.xam72,
                                 size: 32,

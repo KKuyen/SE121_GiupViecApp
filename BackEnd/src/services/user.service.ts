@@ -478,6 +478,7 @@ export class UserService {
     if (taskStatus !== undefined) {
       task.taskStatus = taskStatus;
     }
+    await taskRepository.save(task);
 
     return {
       errCode: 0,
@@ -1071,30 +1072,34 @@ export class UserService {
       return fileNames;
     }
   }
-  static async edittkls(taskId: number, taskerId: number, status: string) {
+  static async edittkls(taskerListId: number, status: string) {
     const currentDate = new Date();
     const taskerListRepository = AppDataSource.getRepository(TaskerList);
     const taskerList = await taskerListRepository.findOne({
-      where: { taskId: taskId, taskerId: taskerId },
+      where: { id: taskerListId },
     });
     if (taskerList) {
       taskerList.status = status;
       await taskerListRepository.save(taskerList);
     }
     const taskRepository = AppDataSource.getRepository(Tasks);
-    const task = await taskRepository.findOne({ where: { id: taskId } });
-    if (task) {
-      const taskerListCount = await taskerListRepository.count({
-        where: { taskId: taskId, status: "S2" },
+    if (taskerList) {
+      const task = await taskRepository.findOne({
+        where: { id: taskerList.taskId },
       });
+      if (task) {
+        const taskerListCount = await taskerListRepository.count({
+          where: { taskId: taskerList.taskId, status: "S2" },
+        });
 
-      if (taskerListCount === task.numberOfTasker) {
-        task.taskStatus = "TS2";
-        await taskRepository.save(task);
-        task.approvedAt = currentDate;
-      } else {
-        task.taskStatus = "TS1";
-        await taskRepository.save(task);
+        if (taskerListCount === task.numberOfTasker) {
+          task.taskStatus = "TS2";
+          await taskRepository.save(task);
+          task.approvedAt = currentDate;
+        } else {
+          task.taskStatus = "TS1";
+          await taskRepository.save(task);
+        }
       }
     }
 

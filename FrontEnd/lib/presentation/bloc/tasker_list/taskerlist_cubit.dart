@@ -24,4 +24,8 @@ class TaskerlistCubit extends Cubit<TaskerListState> {
       emit(TaskerListError(e.toString()));
     }
   }
+
+  Future<void> emitLoading() async {
+    emit(TaskerListLoading());
+  }
 }

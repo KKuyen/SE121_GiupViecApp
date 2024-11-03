@@ -16,4 +16,20 @@ class GetAllLoveTaskersUsecase {
   Future<List<BlockTasker>> execute2(int userId) async {
     return await repository.getAllBlockTaskers(userId);
   }
+
+  Future<void> love(int userId, int taskerId) async {
+    return await repository.love(userId, taskerId);
+  }
+
+  Future<void> unlove(int userId, int taskerId) async {
+    return await repository.unlove(userId, taskerId);
+  }
+
+  Future<void> block(int userId, int taskerId) async {
+    return await repository.block(userId, taskerId);
+  }
+
+  Future<void> unblock(int userId, int taskerId) async {
+    return await repository.unblock(userId, taskerId);
+  }
 }

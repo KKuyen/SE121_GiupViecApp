@@ -52,7 +52,7 @@ class _blocktaskersState extends State<Blocktaskers> {
                     child: Container(
                         height: 40,
                         width: 40,
-                        child: CircularProgressIndicator()))),
+                        child: const CircularProgressIndicator()))),
           );
         } else if (state is LoveTaskersSuccess) {
           return Scaffold(
@@ -74,12 +74,12 @@ class _blocktaskersState extends State<Blocktaskers> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  const Header(
+                  Header(
                     color: AppColors.do_main,
-                    text1: "Bạn đã chặn 2 tasker",
+                    text1: "Bạn đã chặn ${state.blockTaskers.length} tasker",
                     text2:
                         "Những tasker bị hạn chế không thể ứng cử công việc của bạn",
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.block,
                       color: Colors.white,
                       size: 47,
@@ -99,14 +99,17 @@ class _blocktaskersState extends State<Blocktaskers> {
                                 as Map<String, dynamic>)['id'],
                             taskerName: (state.blockTaskers[index].tasker
                                 as Map<String, dynamic>)['name'],
-                            iconButton: const TwoSttButton(
+                            iconButton: TwoSttButton(
+                              isLove: false,
+                              TaskerId: (state.blockTaskers[index].tasker
+                                  as Map<String, dynamic>)['id'],
                               sttkey: true,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.block,
                                 color: AppColors.do_main,
                                 size: 33,
                               ),
-                              icon2: Icon(
+                              icon2: const Icon(
                                 Icons.block,
                                 color: AppColors.xam72,
                                 size: 33,

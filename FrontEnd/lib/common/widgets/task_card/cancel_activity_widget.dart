@@ -11,6 +11,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/cancelTa
 class CancelActivityWidget extends StatefulWidget {
   final int numberOfTasker;
   final int id;
+  final String taskStatus;
   final String serviceName;
   final DateTime startDay;
   final DateTime createAt;
@@ -28,6 +29,7 @@ class CancelActivityWidget extends StatefulWidget {
   final String price;
   final String note;
   const CancelActivityWidget({
+    required this.taskStatus,
     super.key,
     required this.id,
     required this.createAt,
@@ -61,6 +63,14 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
           context,
           MaterialPageRoute(
               builder: (context) => Canceltab(
+                    cancelAt: widget.taskStatus == "TS1"
+                        ? widget.startDay
+                        : widget.cancelAt,
+                    cancelReason: widget.taskStatus == "TS1"
+                        ? 'Đã hủy vì không tìm đủ người giúp việc'
+                        : widget.cancelReason,
+                    cancelBy:
+                        widget.taskStatus == "TS1" ? 'Hệ thống' : 'Khách hàng',
                     id: widget.id,
                   )),
         );
@@ -305,7 +315,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontWeight: FontWeight.normal,
                               )),
                           Spacer(),
-                          Text(widget.cancelReason,
+                          Text(
+                              widget.taskStatus == "TS1"
+                                  ? 'Đã hủy vì không tìm đủ người giúp việc'
+                                  : widget.cancelReason,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -325,7 +338,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontWeight: FontWeight.normal,
                               )),
                           Spacer(),
-                          Text(widget.cancelAt.toIso8601String(),
+                          Text(
+                              widget.taskStatus == "TS1"
+                                  ? widget.startDay.toIso8601String()
+                                  : widget.cancelAt.toIso8601String(),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

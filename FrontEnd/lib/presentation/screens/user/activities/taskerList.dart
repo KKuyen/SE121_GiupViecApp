@@ -4,28 +4,38 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:collection/collection.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowAccept.dart';
+import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowDelete.dart';
+import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
+import 'package:se121_giupviec_app/domain/repository/BlockTaskers_repository.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerlist extends StatefulWidget {
   final VoidCallback cancel;
+  final Future<void> Function()? callBackFun;
+  final Future<void> Function()? callBackFunforTab;
+
   final int id;
   final numberOfTasker;
   final String taskStatus;
 
-  const Taskerlist(
+  Taskerlist(
       {required this.numberOfTasker,
       required this.taskStatus,
       this.id = 1,
       super.key,
+      this.callBackFun,
+      this.callBackFunforTab,
       required this.cancel});
 
   @override
@@ -34,11 +44,38 @@ class Taskerlist extends StatefulWidget {
 
 class _TaskerListState extends State<Taskerlist> {
   int type = 1;
+  late ValueNotifier<List<TaskerList>> approvedTaskersNotifier;
+  late ValueNotifier<List<TaskerList>> pendingTaskerNotifier;
+  int approvedLength = 0;
+  int pendingLength = 0;
+
   @override
   void initState() {
     super.initState();
+    approvedTaskersNotifier = ValueNotifier([]);
+    pendingTaskerNotifier = ValueNotifier([]);
     final taskerlistCubit =
         BlocProvider.of<TaskerlistCubit>(context).getTaskerList(widget.id);
+  }
+
+  void moveTaskerToPending(TaskerList taskerList) {
+    print("roi");
+    approvedTaskersNotifier.value = List.from(approvedTaskersNotifier.value)
+      ..remove(taskerList);
+    pendingTaskerNotifier.value = List.from(pendingTaskerNotifier.value)
+      ..add(taskerList);
+    pendingTaskerNotifier.notifyListeners();
+    approvedTaskersNotifier.notifyListeners();
+    print(pendingTaskerNotifier.value.length);
+  }
+
+  void moveTaskerToApprove(TaskerList taskerList) {
+    pendingTaskerNotifier.value = List.from(pendingTaskerNotifier.value)
+      ..remove(taskerList);
+    approvedTaskersNotifier.value = List.from(approvedTaskersNotifier.value)
+      ..add(taskerList);
+    pendingTaskerNotifier.notifyListeners();
+    approvedTaskersNotifier.notifyListeners();
   }
 
   @override
@@ -69,13 +106,13 @@ class _TaskerListState extends State<Taskerlist> {
             }
           }
 
-          List<Object> approvedTaskers =
+          approvedTaskersNotifier.value =
               taskerList.where((tasker) => tasker.status == "S2").toList();
           if (widget.taskStatus == 'TS3') {
-            approvedTaskers =
+            approvedTaskersNotifier.value =
                 taskerList.where((tasker) => tasker.status == "S5").toList();
           }
-          List<Object> pendingTasker =
+          pendingTaskerNotifier.value =
               taskerList.where((tasker) => tasker.status == "S1").toList();
           return Padding(
             padding: EdgeInsets.all(15),
@@ -132,56 +169,151 @@ class _TaskerListState extends State<Taskerlist> {
                               decoration: TextDecoration.none,
                             ),
                           ),
-                        Spacer(),
-                        Text(
-                          '${approvedTaskers.length}/${widget.numberOfTasker} vị trí',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: AppColors.xanh_main,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
+                        if (widget.taskStatus == 'TS1') Spacer(),
                         SizedBox(width: 15)
                       ],
                     ),
+                    SizedBox(height: 10),
 
                     // Sử dụng Container để giới hạn chiều cao của danh sách đã xác nhận
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: approvedTaskers.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Taskerprofile(
-                                        taskerId: taskerList[index].id,
-                                      )),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 12, 0),
-                            child: Column(
-                              children: [
-                                Taskerrowdelete(
-                                  taskerName: (taskerList[index].tasker
-                                      as Map<String, dynamic>)['name'],
-                                  taskerId: (taskerList[index].tasker
-                                      as Map<String, dynamic>)['id'],
-                                  taskerPhone: (taskerList[index].tasker
-                                      as Map<String, dynamic>)['phoneNumber'],
+                    if (widget.taskStatus == 'TS1')
+                      ValueListenableBuilder<List<TaskerList>>(
+                        valueListenable: approvedTaskersNotifier,
+                        builder: (context, approvedTaskers, _) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: approvedTaskers.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Taskerprofile(
+                                              taskerId:
+                                                  approvedTaskers[index].id,
+                                            )),
+                                  );
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 0, 12, 0),
+                                  child: Column(
+                                    children: [
+                                      Taskerrowdelete(
+                                        onPressFun: () {
+                                          moveTaskerToPending(
+                                              approvedTaskers[index]);
+                                        },
+                                        taskerName: (approvedTaskers[index]
+                                                .tasker
+                                            as Map<String, dynamic>)['name'],
+                                        taskerId: (approvedTaskers[index].tasker
+                                            as Map<String, dynamic>)['id'],
+                                        taskerPhone:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String, dynamic>)[
+                                                'phoneNumber'],
+                                      ),
+                                      Divider()
+                                    ],
+                                  ),
                                 ),
-                                Divider()
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    if (approvedTaskers.isEmpty)
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    if (widget.taskStatus == 'TS3')
+                      ValueListenableBuilder<List<TaskerList>>(
+                        valueListenable: approvedTaskersNotifier,
+                        builder: (context, approvedTaskers, _) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: approvedTaskers.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Taskerprofile(
+                                              taskerId:
+                                                  approvedTaskers[index].id,
+                                            )),
+                                  );
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 0, 12, 0),
+                                  child: Column(
+                                    children: [
+                                      Taskerrowreview(
+                                        taskerName: (approvedTaskers[index]
+                                                .tasker
+                                            as Map<String, dynamic>)['name'],
+                                        taskerId: (approvedTaskers[index].tasker
+                                            as Map<String, dynamic>)['id'],
+                                        taskerPhone:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String, dynamic>)[
+                                                'phoneNumber'],
+                                      ),
+                                      Divider()
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    if (widget.taskStatus == 'TS2')
+                      ValueListenableBuilder<List<TaskerList>>(
+                        valueListenable: approvedTaskersNotifier,
+                        builder: (context, approvedTaskers, _) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: approvedTaskers.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Taskerprofile(
+                                              taskerId:
+                                                  approvedTaskers[index].id,
+                                            )),
+                                  );
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 0, 12, 0),
+                                  child: Column(
+                                    children: [
+                                      Taskerrowbasic(
+                                        taskerName: (approvedTaskers[index]
+                                                .tasker
+                                            as Map<String, dynamic>)['name'],
+                                        taskerId: (approvedTaskers[index].tasker
+                                            as Map<String, dynamic>)['id'],
+                                        taskerPhone:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String, dynamic>)[
+                                                'phoneNumber'],
+                                      ),
+                                      Divider()
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    if (approvedTaskersNotifier.value.length == 0 &&
+                        pendingTaskerNotifier.value.length == 0)
                       Column(
                         children: [
                           SizedBox(height: 10),
@@ -223,52 +355,62 @@ class _TaskerListState extends State<Taskerlist> {
                           const SizedBox(height: 10),
 
                           // Sử dụng Container để giới hạn chiều cao của danh sách ứng cử viên
-                          if (pendingTasker.isNotEmpty)
-                            Container(
-                              height: min(
-                                  200,
-                                  MediaQuery.of(context).size.height *
-                                      0.3), // Giới hạn chiều cao
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: pendingTasker.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Taskerprofile(
+
+                          Container(
+                            child: ValueListenableBuilder<List<TaskerList>>(
+                                valueListenable: pendingTaskerNotifier,
+                                builder: (context, pendingTasker, _) {
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: pendingTasker.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Taskerprofile(
+                                                        taskerId:
+                                                            pendingTasker[index]
+                                                                .id)),
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              5, 0, 12, 0),
+                                          child: Column(
+                                            children: [
+                                              Taskerrowaccept(
+                                                onPressFun: () {
+                                                  moveTaskerToApprove(
+                                                      pendingTasker[index]);
+                                                },
+                                                taskerName:
+                                                    (pendingTasker[index].tasker
+                                                        as Map<String,
+                                                            dynamic>)['name'],
                                                 taskerId:
-                                                    taskerList[index].id)),
+                                                    (pendingTasker[index].tasker
+                                                        as Map<String,
+                                                            dynamic>)['id'],
+                                                taskerPhone:
+                                                    (pendingTasker[index].tasker
+                                                            as Map<String,
+                                                                dynamic>)[
+                                                        'phoneNumber'],
+                                              ),
+                                              Divider()
+                                            ],
+                                          ),
+                                        ),
                                       );
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          5, 0, 12, 0),
-                                      child: Column(
-                                        children: [
-                                          Taskerrowaccept(
-                                            taskerName:
-                                                (taskerList[index].tasker
-                                                    as Map<String,
-                                                        dynamic>)['name'],
-                                            taskerId: (taskerList[index].tasker
-                                                as Map<String, dynamic>)['id'],
-                                            taskerPhone: (taskerList[index]
-                                                        .tasker
-                                                    as Map<String, dynamic>)[
-                                                'phoneNumber'],
-                                          ),
-                                          Divider()
-                                        ],
-                                      ),
-                                    ),
                                   );
-                                },
-                              ),
-                            ),
-                          if (pendingTasker.isEmpty)
+                                }),
+                          ),
+                          if (pendingTaskerNotifier.value.length == 0 &&
+                              approvedTaskersNotifier.value.length == 0)
                             Column(
                               children: [
                                 SizedBox(height: 10),
@@ -289,29 +431,75 @@ class _TaskerListState extends State<Taskerlist> {
                               ],
                             ),
                           const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Sizedbutton(
-                                onPressFun: () {},
-                                text: 'Xác nhận',
-                                height: 45,
-                                width: MediaQuery.of(context).size.width * 0.5 -
-                                    40,
-                              ),
-                              const SizedBox(width: 10),
-                              Sizedbutton(
-                                onPressFun: () {},
-                                text: 'Hủy',
-                                height: 45,
-                                backgroundColor: Colors.white,
-                                textColor: AppColors.do_main,
-                                isStroke: true,
-                                StrokeColor: AppColors.do_main,
-                                width: MediaQuery.of(context).size.width * 0.5 -
-                                    40,
-                              )
-                            ],
-                          )
+                          if (pendingTaskerNotifier.value.length != 0 ||
+                              approvedTaskersNotifier.value.length != 0)
+                            Row(
+                              children: [
+                                Sizedbutton(
+                                  onPressFun: () async {
+                                    BlocProvider.of<TaskerlistCubit>(context)
+                                        .emitLoading();
+
+                                    for (var tasker
+                                        in approvedTaskersNotifier.value) {
+                                      await BlocProvider.of<ATaskCubit>(context)
+                                          .updateTaskerStatus(tasker.id, 'S2');
+                                    }
+                                    for (var tasker
+                                        in pendingTaskerNotifier.value) {
+                                      await BlocProvider.of<ATaskCubit>(context)
+                                          .updateTaskerStatus(tasker.id, 'S1');
+                                    }
+                                    if (approvedTaskersNotifier.value.length ==
+                                        state.taskerList.length) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ActivityPage()),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: Text(
+                                            'Công việc đã đủ người giúp việc, đang chờ tới ngày làm'),
+                                        backgroundColor: AppColors.xanh_main,
+                                      ));
+                                    }
+                                    if (widget.callBackFun == null) {
+                                      print("vào cái này");
+
+                                      await widget.callBackFunforTab!();
+
+                                      widget.cancel();
+                                    } else {
+                                      await widget.callBackFun!();
+
+                                      widget.cancel();
+                                    }
+                                  },
+                                  text: 'Xác nhận',
+                                  height: 45,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5 -
+                                          40,
+                                ),
+                                const SizedBox(width: 10),
+                                Sizedbutton(
+                                  onPressFun: () {
+                                    widget.cancel();
+                                  },
+                                  text: 'Hủy',
+                                  height: 45,
+                                  backgroundColor: Colors.white,
+                                  textColor: AppColors.do_main,
+                                  isStroke: true,
+                                  StrokeColor: AppColors.do_main,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5 -
+                                          40,
+                                )
+                              ],
+                            )
                         ],
                       ),
                   ],

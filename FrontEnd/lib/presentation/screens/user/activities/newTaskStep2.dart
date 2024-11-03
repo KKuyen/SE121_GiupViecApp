@@ -43,7 +43,8 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+
+    _selectedDate = DateTime.now().add(const Duration(days: 1));
     _selectedTime = const TimeOfDay(hour: 8, minute: 0);
     final NewTask2 = BlocProvider.of<NewTask2Cubit>(context).getLocation(1);
   }
@@ -153,10 +154,20 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                           },
                         );
                         if (pickedDate != null) {
-                          setState(() {
-                            _selectedDate = pickedDate;
-                            _dateController.text = _formatDate(_selectedDate);
-                          });
+                          if (pickedDate.isBefore(DateTime.now())) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Chọn ngày làm sớm nhất là ngày mai'),
+                                backgroundColor: AppColors.cam_main,
+                              ),
+                            );
+                          } else {
+                            setState(() {
+                              _selectedDate = pickedDate;
+                              _dateController.text = _formatDate(_selectedDate);
+                            });
+                          }
                         }
                       },
                     ),

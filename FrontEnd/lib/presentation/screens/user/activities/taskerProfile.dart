@@ -128,6 +128,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 TwoSttButton(
+                                  isLove: false,
+                                  TaskerId: (state.tasker.tasker
+                                          as Map<String, dynamic>)['id'] ??
+                                      '',
                                   sttkey: isBlock,
                                   icon: const Icon(
                                     Icons.block,
@@ -144,6 +148,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                   width: 8,
                                 ),
                                 TwoSttButton(
+                                  isLove: true,
+                                  TaskerId: (state.tasker.tasker
+                                          as Map<String, dynamic>)['id'] ??
+                                      '',
                                   sttkey: isLove,
                                   icon: const Icon(
                                     FontAwesomeIcons.solidHeart,
@@ -264,8 +272,9 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         (index) {
                                           // Convert 'taskList' from tasker.taskerInfo into a list of integers
                                           String taskList = (tasker.taskerInfo
-                                                  as Map<String, dynamic>)[
-                                              'taskList'];
+                                                      as Map<String, dynamic>)[
+                                                  'taskList'] ??
+                                              '';
 
                                           List<int> taskListIds = taskList
                                               .split('_')

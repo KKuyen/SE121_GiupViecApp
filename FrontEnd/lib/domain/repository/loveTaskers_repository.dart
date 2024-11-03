@@ -8,4 +8,8 @@ import '../entities/task.dart';
 abstract class LoveTaskersRepository {
   Future<List<LoveTasker>> getAllLoveTaskers(int userId);
   Future<List<BlockTasker>> getAllBlockTaskers(int userId);
+  Future<void> love(int userId, int taskerId);
+  Future<void> unlove(int userId, int taskerId);
+  Future<void> block(int userId, int taskerId);
+  Future<void> unblock(int userId, int taskerId);
 }

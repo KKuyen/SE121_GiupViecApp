@@ -16,6 +16,9 @@ abstract class TaskRemoteDatasource {
 
   Future<void> deleteTask(int taskId, int cancelCode);
   Future<void> finishTask(int taskId);
+  Future<void> updateTaskerStatus(int taskerListId, String status);
+  Future<void> editTask(
+      int taskId, DateTime? time, int? locationId, String? note);
 }
 
 class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
@@ -66,7 +69,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
       return taskListJson
           .map((json) => TaskModel.fromJson(json))
-          .where((task) => task.taskStatus == 'TS1')
+          .where((task) =>
+              task.taskStatus == 'TS1' && task.time.isAfter(DateTime.now()))
           .toList();
     } else {
       print("response.body failed: ${response.body}");
@@ -158,7 +162,9 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       print(taskListJson);
       final List<TaskModel> taskList = taskListJson
           .map((json) => TaskModel.fromJson(json))
-          .where((task) => task.taskStatus == 'TS4')
+          .where((task) =>
+              task.taskStatus == 'TS4' ||
+              (task.taskStatus == 'TS1' && task.time.isBefore(DateTime.now())))
           .toList();
       taskList.sort((a, b) =>
           (b.cancelAt ?? DateTime(0)).compareTo(a.cancelAt ?? DateTime(0)));
@@ -379,6 +385,166 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed to finish task');
+    }
+  }
+
+  @override
+  Future<void> updateTaskerStatus(int taskerListId, String status) async {
+    final http.Response response;
+    try {
+      response = await client.put(
+        Uri.parse('$baseUrl/$apiVersion/edit-tasker-list-status'),
+        body: json.encode({'taskerListId': taskerListId, 'status': status}),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': AppInfor1.user_token
+        },
+      );
+    } on SocketException {
+      // Handle network errors
+      print("No Internet connection");
+      throw Exception('No Internet connection');
+    } on HttpException {
+      // Handle HTTP errors
+      print("HTTP error occurred");
+      throw Exception('HTTP error occurred');
+    } on FormatException {
+      // Handle JSON format errors
+      print("Bad response format");
+      throw Exception('Bad response format');
+    } catch (e) {
+      // Handle any other exceptions
+      print("Unexpected error: $e");
+      throw Exception('Unexpected error: $e');
+    }
+
+    if (response.statusCode == 200) {
+      print("edit successfully");
+    } else {
+      print("response.body failed: ${response.body}");
+      throw Exception('Failed to finish task');
+    }
+  }
+
+  @override
+  Future<void> editTask(
+      int TaskId, DateTime? time, int? locationId, String? note) async {
+    if (time != null) {
+      final http.Response response;
+      try {
+        response = await client.put(
+          Uri.parse('$baseUrl/$apiVersion/edit-a-task'),
+          body: json.encode({
+            'taskId': TaskId,
+            'time': time,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': AppInfor1.user_token
+          },
+        );
+      } on SocketException {
+        // Handle network errors
+        print("No Internet connection");
+        throw Exception('No Internet connection');
+      } on HttpException {
+        // Handle HTTP errors
+        print("HTTP error occurred");
+        throw Exception('HTTP error occurred');
+      } on FormatException {
+        // Handle JSON format errors
+        print("Bad response format");
+        throw Exception('Bad response format');
+      } catch (e) {
+        // Handle any other exceptions
+        print("Unexpected error: $e");
+        throw Exception('Unexpected error: $e');
+      }
+
+      if (response.statusCode == 200) {
+        print("edit successfully");
+      } else {
+        print("response.body failed: ${response.body}");
+        throw Exception('Failed to finish task');
+      }
+    }
+    if (locationId != null) {
+      final http.Response response;
+      try {
+        response = await client.put(
+          Uri.parse('$baseUrl/$apiVersion/edit-a-task'),
+          body: json.encode({
+            'taskId': TaskId,
+            'locationId': locationId,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': AppInfor1.user_token
+          },
+        );
+      } on SocketException {
+        // Handle network errors
+        print("No Internet connection");
+        throw Exception('No Internet connection');
+      } on HttpException {
+        // Handle HTTP errors
+        print("HTTP error occurred");
+        throw Exception('HTTP error occurred');
+      } on FormatException {
+        // Handle JSON format errors
+        print("Bad response format");
+        throw Exception('Bad response format');
+      } catch (e) {
+        // Handle any other exceptions
+        print("Unexpected error: $e");
+        throw Exception('Unexpected error: $e');
+      }
+
+      if (response.statusCode == 200) {
+        print("edit successfully");
+      } else {
+        print("response.body failed: ${response.body}");
+        throw Exception('Failed to finish task');
+      }
+    }
+    if (note != null) {
+      final http.Response response;
+      try {
+        response = await client.put(
+          Uri.parse('$baseUrl/$apiVersion/edit-a-task'),
+          body: json.encode({
+            'taskId': TaskId,
+            'note': note,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': AppInfor1.user_token
+          },
+        );
+      } on SocketException {
+        // Handle network errors
+        print("No Internet connection");
+        throw Exception('No Internet connection');
+      } on HttpException {
+        // Handle HTTP errors
+        print("HTTP error occurred");
+        throw Exception('HTTP error occurred');
+      } on FormatException {
+        // Handle JSON format errors
+        print("Bad response format");
+        throw Exception('Bad response format');
+      } catch (e) {
+        // Handle any other exceptions
+        print("Unexpected error: $e");
+        throw Exception('Unexpected error: $e');
+      }
+
+      if (response.statusCode == 200) {
+        print("edit successfully");
+      } else {
+        print("response.body failed: ${response.body}");
+        throw Exception('Failed to finish task');
+      }
     }
   }
 }

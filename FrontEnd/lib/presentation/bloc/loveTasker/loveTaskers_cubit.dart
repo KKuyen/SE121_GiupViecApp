@@ -27,4 +27,38 @@ class LoveTaskersCubit extends Cubit<LoveTaskersState> {
       emit(LoveTaskersError(e.toString()));
     }
   }
+
+  Future<void> loveTaskers(int userId, int taskerId) async {
+    try {
+      await getLoveTaskerssUsercase.love(userId, taskerId);
+    } catch (e) {
+      emit(LoveTaskersError(e.toString()));
+    }
+  }
+
+  Future<void> unloveTasker(int userId, int taskerId) async {
+    try {
+      print("chay vao Acubit");
+      await getLoveTaskerssUsercase.unlove(userId, taskerId);
+    } catch (e) {
+      emit(LoveTaskersError(e.toString()));
+    }
+  }
+
+  Future<void> blockTasker(int userId, int taskerId) async {
+    try {
+      await getLoveTaskerssUsercase.block(userId, taskerId);
+    } catch (e) {
+      emit(LoveTaskersError(e.toString()));
+    }
+  }
+
+  Future<void> unblockTasker(int userId, int taskerId) async {
+    try {
+      print("chay vao Acubit");
+      await getLoveTaskerssUsercase.unblock(userId, taskerId);
+    } catch (e) {
+      emit(LoveTaskersError(e.toString()));
+    }
+  }
 }

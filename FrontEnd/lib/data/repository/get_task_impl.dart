@@ -33,4 +33,15 @@ class ATaskRepositoryImpl implements ATaskRepository {
   Future<void> finishTask(int taskId) async {
     return await remoteDataSource.finishTask(taskId);
   }
+
+  @override
+  Future<void> updateTaskerStatus(int taskerListId, String status) async {
+    return await remoteDataSource.updateTaskerStatus(taskerListId, status);
+  }
+
+  @override
+  Future<void> editTask(
+      int taskId, DateTime? time, int? locationId, String? note) async {
+    return await remoteDataSource.editTask(taskId, time, locationId, note);
+  }
 }

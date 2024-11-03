@@ -18,4 +18,6 @@ class TaskerInfo {
     this.isLove,
     this.isBlock,
   });
+
+  get id => null;
 }

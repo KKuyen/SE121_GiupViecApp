@@ -32,7 +32,7 @@ class FinishedActivityWidget extends StatefulWidget {
       this.id = 1,
       required this.createAt,
       this.ungCuVien = 0,
-      this.daNhan = 0,
+      required this.daNhan,
       required this.numberOfTasker,
       required this.serviceName,
       required this.startDay,

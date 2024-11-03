@@ -34,7 +34,7 @@ export class UserController {
     user.role = role;
     user.phoneNumber = phoneNumber;
 
-    let userData: any  = await UserService.createUser(user);
+    let userData: any = await UserService.createUser(user);
     res.status(200).json({
       errCode: userData.errCode,
       message: userData.errMessage,
@@ -69,7 +69,7 @@ export class UserController {
       });
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Tạo OTP ngẫu nhiên
-    const expiresAt = new Date(Date.now() + 24*60 * 60 * 1000); // OTP hết hạn sau 5 phút
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // OTP hết hạn sau 5 phút
     const message = await UserService.sendOTP(phoneNumber, otp);
     otps[phoneNumber] = { otp, expiresAt };
     res.status(200).json(message);
@@ -78,11 +78,13 @@ export class UserController {
     const { phoneNumber, otp } = req.body;
     const otpDetails = otps[phoneNumber];
     if (!otpDetails) {
-      res.status(400).json({errCode:1, message: "OTP not found for this phone number" });
+      res
+        .status(400)
+        .json({ errCode: 1, message: "OTP not found for this phone number" });
     } else {
       const { otp: actualOtp, expiresAt } = otpDetails;
       if (new Date() > expiresAt) {
-        res.status(400).json({errCode:2,  message: "OTP has expired" });
+        res.status(400).json({ errCode: 2, message: "OTP has expired" });
       } else {
         const message = await UserService.verifyOtp(otp, actualOtp);
         res.status(200).json(message);
@@ -504,18 +506,14 @@ export class UserController {
     } catch (error) {}
   }
   static async edittkls(req: Request, res: Response) {
-    const { taskId, taskerId, status } = req.body;
-    if (
-      taskId === undefined ||
-      taskerId === undefined ||
-      status === undefined
-    ) {
+    const { taskerListId, status } = req.body;
+    if (taskerListId === undefined || status === undefined) {
       res.status(500).json({
         errCode: 1,
         message: "Missing required fields",
       });
     }
-    let message = await UserService.edittkls(taskId, taskerId, status);
+    let message = await UserService.edittkls(taskerListId, status);
     res.status(200).json({
       errCode: message.errCode,
       message: message.errMessage,

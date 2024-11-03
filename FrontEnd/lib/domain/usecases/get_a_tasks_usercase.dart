@@ -25,4 +25,13 @@ class GetATasksUsecase {
   fishishTask(int taskId) async {
     return await repository.finishTask(taskId);
   }
+
+  Future<void> updateTaskerStatus(int taskerListId, String status) async {
+    return await repository.updateTaskerStatus(taskerListId, status);
+  }
+
+  Future<void> editTask(
+      int taskId, DateTime? time, int? locationId, String? note) {
+    return repository.editTask(taskId, time, locationId, note);
+  }
 }

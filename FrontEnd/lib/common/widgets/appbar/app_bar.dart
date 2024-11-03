@@ -9,9 +9,11 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHavePadding;
   final bool isCenter;
   final bool otherBackButton;
+  final bool result;
 
   const BasicAppbar(
       {this.title,
+      this.result = false,
       this.isHideBackButton = false,
       this.action,
       this.color,
@@ -76,7 +78,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context, result);
                   },
                 ),
     );
