@@ -37,6 +37,7 @@ dependencies:
   lottie: ^1.4.2
   geocoding: ^2.0.5
   share_plus:
+  socket_io_client:
 
 dev_dependencies:
   flutter_test:

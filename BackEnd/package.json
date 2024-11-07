@@ -38,6 +38,7 @@
     "nodemon": "^3.1.7",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
+    "socket.io": "^4.8.1",
     "ts-node": "^10.9.2",
     "twilio": "^5.3.3",
     "typeorm": "^0.3.20"

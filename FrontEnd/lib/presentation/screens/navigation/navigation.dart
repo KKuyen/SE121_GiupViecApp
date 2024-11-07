@@ -24,15 +24,18 @@ class _NavigationState extends State<Navigation> {
     String? id = await secureStorage.readId();
     String? email = await secureStorage.readEmail();
     String? Rpoints = await secureStorage.readRpoints();
+    String? name = await secureStorage.readName();
+    String? avatar = await secureStorage.readAvatar();
 
     print("Data from local: ${id}");
     print("Data from local: ${email}");
     print("Data from local: ${Rpoints}");
+    print("Data from local: ${name}");
+    print("Data from local: ${avatar}");
   }
 
   @override
   Widget build(BuildContext context) {
-    print("aaaaaaaaaaaaaaaaaa");
     _printUser();
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
