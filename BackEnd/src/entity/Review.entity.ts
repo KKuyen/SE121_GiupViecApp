@@ -35,16 +35,16 @@ export class Reviews {
   @Column({ type: "varchar", nullable: false })
   content!: string;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   image1!: number;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   image2!: number;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   image3!: number;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   image4!: number;
 
   @ManyToOne(() => Tasks, (task) => task.reviews)

@@ -47,8 +47,7 @@ class positionState extends State<position> {
               '${location.detailAddress}, ${location.district}, ${location.province}',
               style: const TextStyle(fontSize: 15),
             ),
-            subtitle:
-                Text('${location.map}', style: const TextStyle(fontSize: 13)),
+            subtitle: Text(location.map, style: const TextStyle(fontSize: 13)),
             trailing: const Icon(
               Icons.navigate_next_outlined,
             ),
@@ -56,7 +55,7 @@ class positionState extends State<position> {
         } else if (state is DefaultLocationError) {
           return Center(child: Text('Error: ${state.message}'));
         } else {
-          print("chay vao else: " + state.toString());
+          print("chay vao else: $state");
           return const Center(child: Text('Không tìm thấy địa chỉ'));
         }
       },

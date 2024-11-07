@@ -2,12 +2,9 @@ import '../../domain/entities/response.dart';
 
 class ResponseModel extends Response {
   ResponseModel({
-    required String message,
-    required int errCode,
-  }) : super(
-          message: message,
-          errCode: errCode,
-        );
+    required super.message,
+    required super.errCode,
+  });
 
   factory ResponseModel.fromJson(Map<String, dynamic> json) {
     return ResponseModel(

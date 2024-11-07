@@ -63,22 +63,22 @@ export class ReviewsMigration1698324600528 implements MigrationInterface {
           {
             name: "image1",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "image2",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "image3",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "image4",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "createdAt",

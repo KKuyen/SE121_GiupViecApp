@@ -4,9 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/BlockTasker_model.dart';
 import 'package:se121_giupviec_app/data/models/loveTasker_model.dart';
-import 'package:se121_giupviec_app/data/models/review_model.dart';
-
-import 'package:se121_giupviec_app/data/models/taskerInfo_model.dart';
 
 abstract class LoveTaskersRemoteDatasource {
   Future<List<LoveTaskerModel>> getAllLoveTaskers(int userId);
@@ -157,7 +154,7 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
   @override
   Future<void> unlove(int userId, int taskerId) async {
     final http.Response response;
-    print(userId.toString() + "" + taskerId.toString());
+    print("$userId$taskerId");
     try {
       response = await client.delete(
         Uri.parse('$baseUrl/$apiVersion/delete-a-love-tasker'),

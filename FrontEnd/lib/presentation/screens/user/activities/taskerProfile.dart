@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/button/2sttbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/common/widgets/review_card/review_card_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_type_mini_card/mini_tt_card_widget.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
@@ -11,7 +10,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/allReview.dart';
 
 class Taskerprofile extends StatefulWidget {
@@ -25,8 +24,8 @@ class Taskerprofile extends StatefulWidget {
 
 class _TaskerprofileState extends State<Taskerprofile> {
   bool isLove = false;
-
   bool isBlock = false;
+
   void toggleLove() {
     setState(() {
       isLove = !isLove;
@@ -42,7 +41,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
   @override
   void initState() {
     super.initState();
-    final TaskerList = BlocProvider.of<TaskerCubit>(context)
+    BlocProvider.of<TaskerCubit>(context)
         .getATasker(widget.userId, widget.taskerId);
   }
 
@@ -96,7 +95,8 @@ class _TaskerprofileState extends State<Taskerprofile> {
                         child: Column(
                           children: [
                             Text(
-                              (tasker.tasker as Map<String, dynamic>)['name'] ??
+                              (tasker.tasker
+                                      as Map<String, dynamic>?)?['name'] ??
                                   '',
                               style: const TextStyle(
                                   fontFamily: 'Inter',
@@ -110,7 +110,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                               height: 10,
                             ),
                             Text(
-                              (tasker.taskerInfo as Map<String, dynamic>)[
+                              (tasker.taskerInfo as Map<String, dynamic>?)?[
                                       'introduction'] ??
                                   '',
                               style: const TextStyle(
@@ -130,7 +130,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                 TwoSttButton(
                                   isLove: false,
                                   TaskerId: (state.tasker.tasker
-                                          as Map<String, dynamic>)['id'] ??
+                                          as Map<String, dynamic>?)?['id'] ??
                                       '',
                                   sttkey: isBlock,
                                   icon: const Icon(
@@ -150,7 +150,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                 TwoSttButton(
                                   isLove: true,
                                   TaskerId: (state.tasker.tasker
-                                          as Map<String, dynamic>)['id'] ??
+                                          as Map<String, dynamic>?)?['id'] ??
                                       '',
                                   sttkey: isLove,
                                   icon: const Icon(
@@ -206,7 +206,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         Expanded(
                                           child: Text(
                                             (tasker.tasker as Map<String,
-                                                    dynamic>)['name'] ??
+                                                    dynamic>?)?['name'] ??
                                                 '',
                                             softWrap: true,
                                             style: AppTextStyle.textthuong,
@@ -226,7 +226,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         Expanded(
                                           child: Text(
                                             (tasker.tasker as Map<String,
-                                                    dynamic>)['email'] ??
+                                                    dynamic>?)?['email'] ??
                                                 '',
                                             softWrap: true,
                                             style: AppTextStyle.textthuong,
@@ -246,7 +246,8 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         Expanded(
                                           child: Text(
                                             (tasker.tasker as Map<String,
-                                                    dynamic>)['phoneNumber'] ??
+                                                        dynamic>?)?[
+                                                    'phoneNumber'] ??
                                                 '',
                                             softWrap: true,
                                             style: AppTextStyle.textthuong,
@@ -267,19 +268,26 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                       spacing: 10,
                                       runSpacing: 5,
                                       children: List.generate(
-                                        state.taskTypeList
-                                            .length, // Replace with the number of items you want
+                                        state.taskTypeList.length,
                                         (index) {
                                           // Convert 'taskList' from tasker.taskerInfo into a list of integers
                                           String taskList = (tasker.taskerInfo
-                                                      as Map<String, dynamic>)[
-                                                  'taskList'] ??
+                                                  as Map<String,
+                                                      dynamic>?)?['taskList'] ??
                                               '';
 
-                                          List<int> taskListIds = taskList
-                                              .split('_')
-                                              .map((e) => int.parse(e))
-                                              .toList();
+                                          List<int> taskListIds = [];
+                                          if (taskList.isNotEmpty) {
+                                            try {
+                                              taskListIds = taskList
+                                                  .split('_')
+                                                  .map((e) => int.parse(e))
+                                                  .toList();
+                                            } catch (e) {
+                                              print(
+                                                  'Error parsing taskList: $e');
+                                            }
+                                          }
 
                                           // Check if taskTypeList[index].id exists in taskListIds
                                           bool containsId =
@@ -290,13 +298,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                             return MiniTtCardWidget(
                                               taskType: state
                                                   .taskTypeList[index].name,
-                                              // Pass checked value to the widget
                                             );
                                           } else {
                                             return Container();
                                           }
-
-                                          // Return an empty container if ID is not found
                                         },
                                       ),
                                     ),
@@ -328,7 +333,9 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                     Row(
                                       children: [
                                         Text(
-                                          '${totalStar / totalReviews}/5',
+                                          totalReviews > 0
+                                              ? '${(totalStar / totalReviews).toStringAsFixed(1)}/5'
+                                              : '0/5',
                                           style: const TextStyle(
                                               color: Colors.amber,
                                               fontSize: 22,
@@ -346,97 +353,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                         ),
                                         const Spacer(),
                                         Text(
-                                          'Từ ${totalReviews} lượt đánh giá',
+                                          'Từ $totalReviews lượt đánh giá',
                                           style: AppTextStyle.textthuongxam,
                                         ),
                                       ],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: 2,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              ReviewCardWidget(
-                                                taskTypeImage: (tasker
-                                                                    .reviewList?[
-                                                                index]
-                                                            as Map<String,
-                                                                dynamic>)[
-                                                        'taskType']['image'] ??
-                                                    '',
-                                                taskTypeName: (tasker
-                                                                    .reviewList?[
-                                                                index]
-                                                            as Map<String,
-                                                                dynamic>)[
-                                                        'taskType']['name'] ??
-                                                    '',
-                                                time: (tasker.reviewList?[index]
-                                                            as Map<String,
-                                                                dynamic>)[
-                                                        'task']['time'] ??
-                                                    '',
-                                                userAvatar:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'userAvatar'] ??
-                                                        '',
-                                                userName:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'userName'] ??
-                                                        '',
-                                                content:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'content'] ??
-                                                        '',
-                                                image1:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'image1'] ??
-                                                        null,
-                                                image2:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'image2'] ??
-                                                        null,
-                                                image3:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'image3'] ??
-                                                        null,
-                                                image4:
-                                                    (tasker.reviewList?[index]
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'image4'] ??
-                                                        null,
-                                                star: (tasker.reviewList?[index]
-                                                        as Map<String,
-                                                            dynamic>)['star'] ??
-                                                    0,
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              const Divider()
-                                            ],
-                                          ),
-                                        );
-                                      },
                                     ),
                                     const SizedBox(
                                       height: 10,
@@ -479,14 +399,38 @@ class _TaskerprofileState extends State<Taskerprofile> {
                       child: Center(
                         child: Column(
                           children: [
-                            Container(
-                              width: 120,
-                              height: 120,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: const Color.fromARGB(255, 171, 28, 28),
-                                border:
-                                    Border.all(color: Colors.white, width: 4),
+                            CachedNetworkImage(
+                              imageUrl: (state.tasker.tasker
+                                      as Map<String, dynamic>?)?['avatar'] ??
+                                  '',
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => Container(
+                                width: 120.0,
+                                height: 120.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey,
+                                ),
+                                child: const Icon(
+                                  Icons.person,
+                                  size: 60,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 120.0,
+                                height: 120.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border:
+                                      Border.all(color: Colors.white, width: 6),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -500,7 +444,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                   ],
                 ),
                 Positioned(
-                  top: 35,
+                  top: 10,
                   left: 10,
                   child: GestureDetector(
                     onTap: () {

@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
+import 'package:se121_giupviec_app/presentation/tasker/activities/ApplyTaskTab.dart';
+
 class TaskerWatingActivityWidget extends StatefulWidget {
-  final VoidCallback onShowLabel;
-  const TaskerWatingActivityWidget({required this.onShowLabel, super.key});
+  final VoidCallback loading;
+  final int numberOfTasker;
+  final int id;
+  final String serviceName;
+  final DateTime startDay;
+  final DateTime createAt;
+  final String ownerName;
+  final String district;
+  final String detailAddress;
+  final String country;
+  final String province;
+  final String phone;
+  final int ungCuVien;
+  final int daNhan;
+  final String avatar;
+  final String price;
+  final String note;
+
+  const TaskerWatingActivityWidget(
+      {required this.id,
+      required this.createAt,
+      this.ungCuVien = 0,
+      this.daNhan = 0,
+      required this.numberOfTasker,
+      required this.serviceName,
+      required this.startDay,
+      required this.ownerName,
+      required this.district,
+      required this.detailAddress,
+      required this.country,
+      required this.province,
+      required this.phone,
+      required this.price,
+      required this.note,
+      required this.avatar,
+      required this.loading,
+      super.key});
 
   @override
   State<TaskerWatingActivityWidget> createState() =>
@@ -18,11 +56,20 @@ class TaskerWatingActivityWidgetState
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const Waitingtab()),
-        // );
+      onTap: () async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ApplyTaskTab(
+                    loading: widget.loading,
+                    numberOfTasker: widget.numberOfTasker,
+                    id: widget.id,
+                  )),
+        );
+        if (result == true) {
+          print("pop thanh cong lan 1");
+          widget.loading();
+        }
       },
       child: Center(
         child: Padding(
@@ -48,28 +95,24 @@ class TaskerWatingActivityWidgetState
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                        child: SvgPicture.asset(
-                          AppVectors.baby_carriage_icon,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
-                      const Column(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
+                          child: AppIcon.getIconCamMain(widget.avatar)),
+
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Text(
-                                'Trông trẻ',
+                                widget.serviceName,
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 '#',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
@@ -80,9 +123,9 @@ class TaskerWatingActivityWidgetState
                                 ),
                               ),
                               Text(
-                                'DV01',
+                                'DV${widget.id}',
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: AppColors.cam_main,
                                   fontSize: 17,
                                   fontFamily: 'Inter',
@@ -92,9 +135,9 @@ class TaskerWatingActivityWidgetState
                             ],
                           ),
                           Text(
-                            'Đã đăng 20 phút trước',
+                            widget.createAt.toIso8601String(),
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF727272),
                               fontSize: 12,
                               fontFamily: 'Inter',
@@ -113,11 +156,11 @@ class TaskerWatingActivityWidgetState
                   ),
                   const SizedBox(height: 5),
                   const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Ngày bắt đầu:   ',
                           style: TextStyle(
                             color: Color(0xFF727272),
@@ -126,10 +169,10 @@ class TaskerWatingActivityWidgetState
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         Text(
-                          'Thứ 7, 20/11/2021',
-                          style: TextStyle(
+                          widget.startDay.toIso8601String(),
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                             fontFamily: 'Inter',
@@ -139,12 +182,12 @@ class TaskerWatingActivityWidgetState
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Địa chỉ:   ',
                           style: TextStyle(
                             color: Color(0xFF727272),
@@ -153,14 +196,14 @@ class TaskerWatingActivityWidgetState
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 25),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Trần Hồng Quyền',
-                                style: TextStyle(
+                                widget.ownerName,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontFamily: 'Inter',
@@ -168,8 +211,8 @@ class TaskerWatingActivityWidgetState
                                 ),
                               ),
                               Text(
-                                'Quốc lộ 13/47B 479, Khu Phố 5, Thủ Đức, Hồ Chí Minh, Việt Nam',
-                                style: TextStyle(
+                                '${widget.detailAddress}, ${widget.district}, ${widget.province}, ${widget.country}',
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontFamily: 'Inter',
@@ -179,8 +222,8 @@ class TaskerWatingActivityWidgetState
                                 overflow: TextOverflow.visible,
                               ),
                               Text(
-                                '+(54) 345664xxx',
-                                style: TextStyle(
+                                widget.phone,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontFamily: 'Inter',
@@ -193,11 +236,11 @@ class TaskerWatingActivityWidgetState
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Giá:   ',
                           style: TextStyle(
                             color: Color(0xFF727272),
@@ -206,10 +249,10 @@ class TaskerWatingActivityWidgetState
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 48),
+                        const SizedBox(width: 48),
                         Text(
-                          'Thứ 7, 20/11/2021',
-                          style: TextStyle(
+                          widget.price,
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                             fontFamily: 'Inter',
@@ -219,41 +262,54 @@ class TaskerWatingActivityWidgetState
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Ghi chú:   ',
-                          style: TextStyle(
-                            color: Color(0xFF727272),
-                            fontSize: 15,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        SizedBox(width: 18),
-                        Expanded(
-                          child: Text(
-                            'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+                  if (widget.note != '')
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Ghi chú:   ',
                             style: TextStyle(
-                              color: AppColors.xam72,
+                              color: Color(0xFF727272),
                               fontSize: 15,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 18),
+                          Expanded(
+                            child: Text(
+                              widget.note,
+                              style: const TextStyle(
+                                color: AppColors.xam72,
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 0),
                   const Divider(),
-                  Sizedbutton(
-                    onPressFun: () {},
-                    text: 'Ứng cử',
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: AppColors.cam_main,
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: [
+                        Sizedbutton(
+                          isEnabled: false,
+                          onPressFun: () {},
+                          text: 'Chờ khách hàng liên hệ',
+                          backgroundColor: Colors.white,
+                          textColor: AppColors.xam72,
+                          isStroke: true,
+                          StrokeColor: AppColors.xam72,
+                          width: MediaQuery.of(context).size.width - 50,
+                          height: 45,
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),

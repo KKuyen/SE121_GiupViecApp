@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Sizedbutton extends StatefulWidget {

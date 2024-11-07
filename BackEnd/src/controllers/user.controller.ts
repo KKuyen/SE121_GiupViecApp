@@ -215,6 +215,36 @@ export class UserController {
       reviewList: message.reviewList,
     });
   }
+  static async getAReviews(req: Request, res: Response) {
+    const { taskerId, taskId } = req.body;
+    if (taskerId === undefined || taskId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getAReviews(taskerId, taskId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      review: message.review,
+    });
+  }
+  static async getSetting(req: Request, res: Response) {
+    const { userId } = req.body;
+    if (userId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getSetting(userId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      setting: message.setting,
+    });
+  }
   static async getAllVoucher(req: Request, res: Response) {
     let message = await UserService.getAllVoucher();
     res.status(200).json({
@@ -363,24 +393,15 @@ export class UserController {
     });
   }
   static async review(req: Request, res: Response) {
-    const {
-      taskId,
-      taskerId,
-      star,
-      content,
-      imageArray,
-      userId,
-      userName,
-      userAvatar,
-    } = req.body;
+    const { taskId, taskerId, star, content, imageArray, userId, taskTypeId } =
+      req.body;
     if (
       taskId === undefined ||
       taskerId === undefined ||
       star === undefined ||
       content === undefined ||
       userId === undefined ||
-      userName === undefined ||
-      userAvatar === undefined
+      taskTypeId === undefined
     ) {
       res.status(500).json({
         errCode: 1,
@@ -395,9 +416,9 @@ export class UserController {
       content,
 
       userId,
-      userName,
-      userAvatar,
-      imageArray
+
+      imageArray,
+      taskTypeId
     );
     res.status(200).json({
       errCode: message.errCode,

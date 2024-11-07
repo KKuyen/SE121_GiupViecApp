@@ -82,7 +82,7 @@ class _DisableInputStatew extends State<DisableInputWaiting> {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.edit),
+          icon: const Icon(Icons.edit),
           onPressed: () {
             setState(() {
               enabled = !enabled;

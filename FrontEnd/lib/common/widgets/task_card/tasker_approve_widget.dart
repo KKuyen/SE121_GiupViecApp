@@ -1,28 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
+import 'package:se121_giupviec_app/presentation/tasker/activities/MyTaskTab.dart';
 
 class TaskerApproveWidget extends StatefulWidget {
-  final VoidCallback onShowLabel;
-  const TaskerApproveWidget({required this.onShowLabel, super.key});
+  final VoidCallback loading;
+  final int numberOfTasker;
+  final int id;
+  final String serviceName;
+  final DateTime startDay;
+  final DateTime createAt;
+  final String ownerName;
+  final String district;
+  final String detailAddress;
+  final String country;
+  final String province;
+  final String phone;
+  final int ungCuVien;
+  final int daNhan;
+  final String avatar;
+  final String price;
+  final String note;
+
+  const TaskerApproveWidget(
+      {required this.id,
+      required this.createAt,
+      this.ungCuVien = 0,
+      this.daNhan = 0,
+      required this.numberOfTasker,
+      required this.serviceName,
+      required this.startDay,
+      required this.ownerName,
+      required this.district,
+      required this.detailAddress,
+      required this.country,
+      required this.province,
+      required this.phone,
+      required this.price,
+      required this.note,
+      required this.avatar,
+      required this.loading,
+      super.key});
 
   @override
-  State<TaskerApproveWidget> createState() => TaskerApproveWidgetState();
+  State<TaskerApproveWidget> createState() => TaskerWatingActivityWidgetState();
 }
 
-class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
+class TaskerWatingActivityWidgetState extends State<TaskerApproveWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const Approvetab()),
-        // );
+      onTap: () async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Mytasktab(
+                    id: widget.id,
+                    numberOfTasker: widget.numberOfTasker,
+                    loading: widget.loading,
+                  )),
+        );
+        if (result == true) {
+          print("pop thanh cong lan 1");
+          widget.loading();
+        }
       },
       child: Center(
         child: Padding(
@@ -48,28 +92,24 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                        child: SvgPicture.asset(
-                          AppVectors.baby_carriage_icon,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
-                      const Column(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
+                          child: AppIcon.getIconCamMain(widget.avatar)),
+
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Text(
-                                'Trông trẻ',
+                                widget.serviceName,
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 '#',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
@@ -80,9 +120,9 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                                 ),
                               ),
                               Text(
-                                'DV01',
+                                'DV${widget.id}',
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: AppColors.cam_main,
                                   fontSize: 17,
                                   fontFamily: 'Inter',
@@ -92,9 +132,9 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                             ],
                           ),
                           Text(
-                            'Đã đăng 20 phút trước',
+                            widget.createAt.toIso8601String(),
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color(0xFF727272),
                               fontSize: 12,
                               fontFamily: 'Inter',
@@ -113,11 +153,11 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                   ),
                   const SizedBox(height: 5),
                   const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Ngày bắt đầu:   ',
                           style: TextStyle(
                             color: Color(0xFF727272),
@@ -126,10 +166,10 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         Text(
-                          'Thứ 7, 20/11/2021',
-                          style: TextStyle(
+                          widget.startDay.toIso8601String(),
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                             fontFamily: 'Inter',
@@ -139,12 +179,12 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Địa chỉ:   ',
                           style: TextStyle(
                             color: Color(0xFF727272),
@@ -153,14 +193,14 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 25),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Trần Hồng Quyền',
-                                style: TextStyle(
+                                widget.ownerName,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontFamily: 'Inter',
@@ -168,8 +208,8 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                                 ),
                               ),
                               Text(
-                                'Quốc lộ 13/47B 479, Khu Phố 5, Thủ Đức, Hồ Chí Minh, Việt Nam',
-                                style: TextStyle(
+                                '${widget.detailAddress}, ${widget.district}, ${widget.province}, ${widget.country}',
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontFamily: 'Inter',
@@ -179,8 +219,8 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                                 overflow: TextOverflow.visible,
                               ),
                               Text(
-                                '+(54) 345664xxx',
-                                style: TextStyle(
+                                widget.phone,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontFamily: 'Inter',
@@ -193,11 +233,11 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Giá:   ',
                           style: TextStyle(
                             color: Color(0xFF727272),
@@ -206,10 +246,10 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(width: 48),
+                        const SizedBox(width: 48),
                         Text(
-                          'Thứ 7, 20/11/2021',
-                          style: TextStyle(
+                          widget.price,
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                             fontFamily: 'Inter',
@@ -219,54 +259,62 @@ class TaskerApproveWidgetState extends State<TaskerApproveWidget> {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Ghi chú:   ',
-                          style: TextStyle(
-                            color: Color(0xFF727272),
-                            fontSize: 15,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        SizedBox(width: 18),
-                        Expanded(
-                          child: Text(
-                            'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+                  if (widget.note != '')
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Ghi chú:   ',
                             style: TextStyle(
-                              color: AppColors.xam72,
+                              color: Color(0xFF727272),
                               fontSize: 15,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.normal,
                             ),
                           ),
+                          const SizedBox(width: 18),
+                          Expanded(
+                            child: Text(
+                              widget.note,
+                              style: const TextStyle(
+                                color: AppColors.xam72,
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 0),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: [
+                        Sizedbutton(
+                          onPressFun: () {},
+                          text: 'Nhắn tin',
+                          backgroundColor: Colors.white,
+                          textColor: AppColors.cam_main,
+                          isStroke: true,
+                          StrokeColor: AppColors.cam_main,
+                          width: MediaQuery.of(context).size.width / 2 - 30,
+                          height: 45,
                         ),
+                        const SizedBox(width: 10),
+                        Sizedbutton(
+                          onPressFun: () {},
+                          text: 'Gọi điện',
+                          backgroundColor: AppColors.cam_main,
+                          width: MediaQuery.of(context).size.width / 2 - 30,
+                          height: 45,
+                        )
                       ],
                     ),
                   ),
-                  const SizedBox(height: 0),
-                  const Divider(),
-                  Row(children: [
-                    Sizedbutton(
-                      onPressFun: () {},
-                      text: 'Nhắn tin',
-                      width: MediaQuery.of(context).size.width / 2 - 40,
-                      backgroundColor: Colors.white,
-                      textColor: AppColors.cam_main,
-                      isStroke: true,
-                      StrokeColor: AppColors.cam_main,
-                    ),
-                    const SizedBox(width: 20),
-                    Sizedbutton(
-                      onPressFun: () {},
-                      text: 'Gọi',
-                      width: MediaQuery.of(context).size.width / 2 - 40,
-                      backgroundColor: AppColors.cam_main,
-                    ),
-                  ]),
                 ],
               ),
             ),

@@ -1,20 +1,43 @@
 import 'dart:io'; // Import thêm để dùng File class
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart'; // Import thêm gói image_picker
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/note_Watingtab.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/finishTab.dart';
+import 'package:se121_giupviec_app/domain/entities/task.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 
 class Newreview extends StatefulWidget {
-  const Newreview({super.key});
+  final Task task;
+  final String taskerName;
+  final String taskerPhone;
+  final String taskerImageLink;
+
+  final String taskTypeAvatar;
+  final String taskTypeName;
+  final int taskTypeId;
+
+  final int taskerId;
+
+  const Newreview(
+      {super.key,
+      required this.taskerId,
+      required this.task,
+      required this.taskTypeAvatar,
+      required this.taskTypeName,
+      required this.taskerName,
+      required this.taskerPhone,
+      required this.taskerImageLink,
+      required this.taskTypeId});
 
   @override
   State<Newreview> createState() => _NewreviewState();
@@ -22,7 +45,9 @@ class Newreview extends StatefulWidget {
 
 class _NewreviewState extends State<Newreview> {
   int Star = 5;
+  final TextEditingController _reviewController = TextEditingController();
   List<File> images = []; // Sử dụng File để lưu hình ảnh
+  List<String> pushImages = [];
   final ImagePicker _picker = ImagePicker(); // Khởi tạo ImagePicker
   void _changeStar(int newStar) {
     setState(() {
@@ -44,17 +69,19 @@ class _NewreviewState extends State<Newreview> {
     } else {
       // Hiển thị cảnh báo nếu số lượng ảnh vượt quá 5
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Bạn chỉ có thể thêm tối đa 5 ảnh')),
+        const SnackBar(content: Text('Bạn chỉ có thể thêm tối đa 5 ảnh')),
       );
     }
   }
+
+  Future<void> convertToLink() async {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.nen_the,
-      appBar: BasicAppbar(
-        title: const Text(
+      appBar: const BasicAppbar(
+        title: Text(
           'Đánh giá',
           style: TextStyle(
             fontFamily: 'Inter',
@@ -103,29 +130,26 @@ class _NewreviewState extends State<Newreview> {
                         Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                              child: SvgPicture.asset(
-                                AppVectors.baby_carriage_icon,
-                                height: 30,
-                                width: 30,
-                              ),
-                            ),
-                            const Column(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 10, 15, 5),
+                                child: AppIcon.getIconXanhMain(
+                                    widget.taskTypeAvatar)),
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
                                     Text(
-                                      'Trông trẻ',
+                                      widget.taskTypeName,
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
-                                    Text(
-                                      '#',
+                                    const Text(
+                                      '#DV',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: 'Inter',
@@ -135,9 +159,9 @@ class _NewreviewState extends State<Newreview> {
                                       ),
                                     ),
                                     Text(
-                                      'DV01',
+                                      widget.task.id.toString(),
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color(0xFF4AB7B6),
                                         fontSize: 17,
                                         fontFamily: 'Inter',
@@ -147,9 +171,9 @@ class _NewreviewState extends State<Newreview> {
                                   ],
                                 ),
                                 Text(
-                                  '9:00 20/4/2024',
+                                  widget.task.finishedAt.toString(),
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color(0xFF727272),
                                     fontSize: 12,
                                     fontFamily: 'Inter',
@@ -165,31 +189,25 @@ class _NewreviewState extends State<Newreview> {
                         ),
                         row(
                           tieude: 'Giá:',
-                          noidung: '200 000 đ / 2 cháu / 2 giờ',
+                          noidung: widget.task.price.toString(),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        row(
-                          tieude: 'Số người giúp việc:',
-                          noidung: '2',
-                        ),
                         const SizedBox(
                           height: 5,
                         ),
-                        row(
+                        const row(
                           tieude: 'Người giúp việc:',
                           noidung: '',
                         ),
-                        Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            //comment vì chưa làm
-                            // child: Taskerrowbasic(
-                            //   taskerImageLink:
-                            //       'https://lh3.googleusercontent.com/a/ACg8ocIbTWK1I0NcPM8SuGtujEanJwtR6OKWulhhvljuu5Td5VtEYxgD=s389-c-no',
-                            //   taskerName: 'Nguyễn Văn A',
-                            // ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Taskerrowbasic(
+                            taskerPhone: widget.taskerPhone,
+                            taskerId: widget.taskerId,
+                            taskerImageLink: widget.taskerImageLink,
+                            taskerName: widget.taskerName,
                           ),
                         ),
                       ],
@@ -246,11 +264,24 @@ class _NewreviewState extends State<Newreview> {
               const SizedBox(
                 height: 15,
               ),
-              CTextfield(
-                hintText: 'Đánh giá của bạn',
-              ),
+              TextField(
+                  controller: _reviewController,
+                  maxLength: 200,
+                  cursorColor: AppColors.xanh_main,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText: "Nhập đánh giá của bạn",
+                    hintStyle: TextStyle(
+                        color: AppColors.xam72, fontWeight: FontWeight.normal),
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.xanh_main),
+                    ),
+                    labelStyle: TextStyle(color: Colors.black),
+                    floatingLabelStyle: TextStyle(color: AppColors.xanh_main),
+                  )),
               const Text('Thêm ảnh', style: AppTextStyle.tieudebox),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Wrap(
@@ -266,7 +297,7 @@ class _NewreviewState extends State<Newreview> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add_a_photo,
                         size: 40,
                       ),
@@ -310,11 +341,11 @@ class _NewreviewState extends State<Newreview> {
                               });
                             },
                             child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(127, 158, 158, 158),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(127, 158, 158, 158),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.close,
                                 color: Colors.white,
                               ),
@@ -323,14 +354,30 @@ class _NewreviewState extends State<Newreview> {
                         ),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
               const SizedBox(
                 height: 20,
               ),
               Sizedbutton(
-                  onPressFun: () {},
+                  onPressFun: () async {
+                    await context.read<ATaskCubit>().review(
+                        widget.task.id,
+                        widget.taskerId,
+                        Star,
+                        widget.taskTypeId,
+                        widget.taskTypeId,
+                        _reviewController.text,
+                        images.isNotEmpty ? images[0].path : null,
+                        images.length > 1 ? images[1].path : null,
+                        images.length > 2 ? images[2].path : null,
+                        images.length > 3 ? images[3].path : null);
+                    String result =
+                        await context.read<ATaskCubit>().pushImage(images[0]);
+                    print('result: $result');
+                    Navigator.pop(context, Star);
+                  },
                   text: 'Gửi đánh giá',
                   width: MediaQuery.of(context).size.width),
             ],
@@ -377,7 +424,7 @@ class row extends StatelessWidget {
       children: [
         Text(
           tieude,
-          style: TextStyle(
+          style: const TextStyle(
               fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.bold),
         ),
         const SizedBox(

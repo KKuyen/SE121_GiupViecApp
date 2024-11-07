@@ -52,7 +52,7 @@ class _ChooseLocationPageState extends State<ChooseLocationPage> {
             bottom: 0,
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Padding(
                     padding: const EdgeInsets.only(right: AppInfo.main_padding),

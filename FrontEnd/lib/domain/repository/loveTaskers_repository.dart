@@ -1,9 +1,7 @@
 // lib/domain/repository/task_repository.dart
-import 'package:se121_giupviec_app/data/models/task_model.dart';
+
 import 'package:se121_giupviec_app/domain/entities/BlockTasker.dart';
 import 'package:se121_giupviec_app/domain/entities/loveTasker.dart';
-
-import '../entities/task.dart';
 
 abstract class LoveTaskersRepository {
   Future<List<LoveTasker>> getAllLoveTaskers(int userId);

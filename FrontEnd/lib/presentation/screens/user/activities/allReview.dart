@@ -10,7 +10,7 @@ import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart
 import 'package:se121_giupviec_app/presentation/bloc/review/allReview_state.dart';
 
 class Allreview extends StatefulWidget {
-  final int taskerId;
+  final int? taskerId;
   const Allreview({super.key, required this.taskerId});
 
   @override
@@ -29,7 +29,7 @@ class _AllreviewState extends State<Allreview> {
   @override
   void initState() {
     super.initState();
-    context.read<allReviewCubit>().getAllReviews(1);
+    context.read<allReviewCubit>().getAllReviews(widget.taskerId ?? 0);
   }
 
   @override
@@ -70,10 +70,10 @@ class _AllreviewState extends State<Allreview> {
 
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: BasicAppbar(
+            appBar: const BasicAppbar(
               title: Text(
                 'Tất cả đánh giá',
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -119,7 +119,7 @@ class _AllreviewState extends State<Allreview> {
                                   onTap: () => updateSelectedStar('6'),
                                   child: AllStar(
                                     star: '6',
-                                    review: reviewLs.length.toString(),
+                                    review: reviewLs.length.toString() ?? '',
                                     sang: selectedStar,
                                   ),
                                 ),
@@ -128,7 +128,7 @@ class _AllreviewState extends State<Allreview> {
                                   onTap: () => updateSelectedStar('5'),
                                   child: SelectStar(
                                     star: '5',
-                                    review: starCount[4].toString(),
+                                    review: starCount[4].toString() ?? '',
                                     sang: selectedStar,
                                   ),
                                 ),
@@ -137,7 +137,7 @@ class _AllreviewState extends State<Allreview> {
                                   onTap: () => updateSelectedStar('4'),
                                   child: SelectStar(
                                     star: '4',
-                                    review: starCount[3].toString(),
+                                    review: starCount[3].toString() ?? '',
                                     sang: selectedStar,
                                   ),
                                 ),
@@ -150,7 +150,7 @@ class _AllreviewState extends State<Allreview> {
                                   onTap: () => updateSelectedStar('3'),
                                   child: SelectStar(
                                     star: '3',
-                                    review: starCount[2].toString(),
+                                    review: starCount[2].toString() ?? '',
                                     sang: selectedStar,
                                   ),
                                 ),
@@ -159,7 +159,7 @@ class _AllreviewState extends State<Allreview> {
                                   onTap: () => updateSelectedStar('2'),
                                   child: SelectStar(
                                     star: '2',
-                                    review: starCount[1].toString(),
+                                    review: starCount[1].toString() ?? '',
                                     sang: selectedStar,
                                   ),
                                 ),
@@ -168,7 +168,7 @@ class _AllreviewState extends State<Allreview> {
                                   onTap: () => updateSelectedStar('1'),
                                   child: SelectStar(
                                     star: '1',
-                                    review: starCount[0].toString(),
+                                    review: starCount[0].toString() ?? '',
                                     sang: selectedStar,
                                   ),
                                 ),
@@ -187,26 +187,33 @@ class _AllreviewState extends State<Allreview> {
                         itemCount: reviewLs.length,
                         itemBuilder: (context, index) {
                           if (selectedStar == '6' ||
-                              reviewLs[index].star.toString() == selectedStar) {
+                              (reviewLs[index].star.toString() ?? 0) ==
+                                  selectedStar) {
                             return Column(
                               children: [
                                 ReviewCardWidget(
-                                  taskTypeImage: (reviewLs[index].taskType
-                                          as Map<String, dynamic>)['image'] ??
+                                  taskTypeImage: (reviewLs[index].taskType !=
+                                              null
+                                          ? (reviewLs[index].taskType
+                                              as Map<String, dynamic>)['avatar']
+                                          : '') ??
                                       '',
-                                  taskTypeName: (reviewLs[index].taskType
-                                          as Map<String, dynamic>)['name'] ??
+                                  taskTypeName: (reviewLs[index].taskType !=
+                                              null
+                                          ? (reviewLs[index].taskType
+                                              as Map<String, dynamic>)['name']
+                                          : '') ??
                                       '',
-                                  time: (reviewLs[index].task
-                                          as Map<String, dynamic>)['time'] ??
-                                      '',
+                                  time: reviewLs[index]
+                                      .createdAt
+                                      .toIso8601String(),
                                   userAvatar: reviewLs[index].userAvatar ?? '',
                                   userName: reviewLs[index].userName ?? '',
                                   content: reviewLs[index].content ?? '',
-                                  image1: reviewLs[index].image1,
-                                  image2: reviewLs[index].image2,
-                                  image3: reviewLs[index].image3,
-                                  image4: reviewLs[index].image4,
+                                  image1: reviewLs[index].image1 ?? '',
+                                  image2: reviewLs[index].image2 ?? '',
+                                  image3: reviewLs[index].image3 ?? '',
+                                  image4: reviewLs[index].image4 ?? '',
                                   star: reviewLs[index].star ?? 0,
                                 ),
                                 const SizedBox(height: 10),
@@ -214,7 +221,7 @@ class _AllreviewState extends State<Allreview> {
                               ],
                             );
                           }
-                          return SizedBox
+                          return const SizedBox
                               .shrink(); // Return an empty widget if the condition is not met.
                         },
                       ),
@@ -339,7 +346,7 @@ class _allStarState extends State<AllStar> {
               ),
             ),
             Text(
-              " (" + widget.review + ")",
+              " (${widget.review})",
               style: TextStyle(
                 color: widget.sang == widget.star ? Colors.amber : Colors.black,
                 fontSize: 14,

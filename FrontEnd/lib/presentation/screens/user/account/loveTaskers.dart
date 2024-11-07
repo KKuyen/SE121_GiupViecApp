@@ -28,8 +28,7 @@ class _LovetaskersState extends State<Lovetaskers> {
   @override
   void initState() {
     super.initState();
-    final TaskerList =
-        BlocProvider.of<LoveTaskersCubit>(context).getLoveTaskers(2);
+    BlocProvider.of<LoveTaskersCubit>(context).getLoveTaskers(2);
   }
 
   @override
@@ -45,7 +44,7 @@ class _LovetaskersState extends State<Lovetaskers> {
                   color: Colors.black.withOpacity(0.5),
                 ),
                 child: Center(
-                    child: Container(
+                    child: SizedBox(
                         height: 40,
                         width: 40,
                         child: const CircularProgressIndicator()))),
@@ -91,6 +90,10 @@ class _LovetaskersState extends State<Lovetaskers> {
                       itemBuilder: (context, index) {
                         // tamm thoi comment
                         return Taskerrowabutton(
+                            taskerPhone: (state.loveTaskers[index].tasker
+                                as Map<String, dynamic>)['phoneNumber'],
+                            taskerImageLink: (state.loveTaskers[index].tasker
+                                as Map<String, dynamic>)['avatar'],
                             taskerId: (state.loveTaskers[index].tasker
                                 as Map<String, dynamic>)['id'],
                             taskerName: (state.loveTaskers[index].tasker

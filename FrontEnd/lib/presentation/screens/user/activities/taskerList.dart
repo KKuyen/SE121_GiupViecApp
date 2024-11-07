@@ -1,19 +1,16 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:collection/collection.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowAccept.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowDelete.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
-import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/domain/entities/task.dart';
+
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
-import 'package:se121_giupviec_app/domain/repository/BlockTaskers_repository.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_state.dart';
@@ -25,14 +22,25 @@ class Taskerlist extends StatefulWidget {
   final Future<void> Function()? callBackFun;
   final Future<void> Function()? callBackFunforTab;
 
+  final Future<void> Function()? approveAll;
+
   final int id;
   final numberOfTasker;
   final String taskStatus;
+  final Task? task;
+  final String? taskTypeAvatar;
+  final String? taskTypeName;
+  final int? taskTypeId;
 
-  Taskerlist(
+  const Taskerlist(
       {required this.numberOfTasker,
+      this.approveAll,
       required this.taskStatus,
-      this.id = 1,
+      this.task,
+      this.taskTypeAvatar,
+      this.taskTypeName,
+      this.taskTypeId,
+      required this.id,
       super.key,
       this.callBackFun,
       this.callBackFunforTab,
@@ -54,8 +62,7 @@ class _TaskerListState extends State<Taskerlist> {
     super.initState();
     approvedTaskersNotifier = ValueNotifier([]);
     pendingTaskerNotifier = ValueNotifier([]);
-    final taskerlistCubit =
-        BlocProvider.of<TaskerlistCubit>(context).getTaskerList(widget.id);
+    BlocProvider.of<TaskerlistCubit>(context).getTaskerList(widget.id);
   }
 
   void moveTaskerToPending(TaskerList taskerList) {
@@ -70,12 +77,19 @@ class _TaskerListState extends State<Taskerlist> {
   }
 
   void moveTaskerToApprove(TaskerList taskerList) {
-    pendingTaskerNotifier.value = List.from(pendingTaskerNotifier.value)
-      ..remove(taskerList);
-    approvedTaskersNotifier.value = List.from(approvedTaskersNotifier.value)
-      ..add(taskerList);
-    pendingTaskerNotifier.notifyListeners();
-    approvedTaskersNotifier.notifyListeners();
+    if (approvedTaskersNotifier.value.length < widget.numberOfTasker) {
+      pendingTaskerNotifier.value = List.from(pendingTaskerNotifier.value)
+        ..remove(taskerList);
+      approvedTaskersNotifier.value = List.from(approvedTaskersNotifier.value)
+        ..add(taskerList);
+      pendingTaskerNotifier.notifyListeners();
+      approvedTaskersNotifier.notifyListeners();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Đã đủ người giúp việc'),
+        backgroundColor: AppColors.do_main,
+      ));
+    }
   }
 
   @override
@@ -91,7 +105,7 @@ class _TaskerListState extends State<Taskerlist> {
                   color: Colors.black.withOpacity(0.5),
                 ),
                 child: Center(
-                    child: Container(
+                    child: SizedBox(
                         height: 40,
                         width: 40,
                         child: CircularProgressIndicator()))),
@@ -205,15 +219,18 @@ class _TaskerListState extends State<Taskerlist> {
                                           moveTaskerToPending(
                                               approvedTaskers[index]);
                                         },
-                                        taskerName: (approvedTaskers[index]
-                                                .tasker
-                                            as Map<String, dynamic>)['name'],
+                                        taskerName:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['name'] ??
+                                                '',
                                         taskerId: (approvedTaskers[index].tasker
                                             as Map<String, dynamic>)['id'],
-                                        taskerPhone:
-                                            (approvedTaskers[index].tasker
+                                        taskerPhone: (approvedTaskers[index]
+                                                        .tasker
                                                     as Map<String, dynamic>)[
-                                                'phoneNumber'],
+                                                'phoneNumber'] ??
+                                            '',
                                       ),
                                       Divider()
                                     ],
@@ -249,11 +266,28 @@ class _TaskerListState extends State<Taskerlist> {
                                   child: Column(
                                     children: [
                                       Taskerrowreview(
-                                        taskerName: (approvedTaskers[index]
-                                                .tasker
-                                            as Map<String, dynamic>)['name'],
+                                        Star: approvedTaskers[index]
+                                            .reviewStar
+                                            ?.toDouble(),
+                                        task: widget.task!,
+                                        taskTypeId: widget.taskTypeId ?? 1,
+                                        taskTypeName: widget.taskTypeName ?? '',
+                                        taskTypeAvatar:
+                                            widget.taskTypeAvatar ?? '',
+                                        taskerImageLink:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['avatar'] ??
+                                                '',
+                                        taskerName:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['name'] ??
+                                                '',
                                         taskerId: (approvedTaskers[index].tasker
-                                            as Map<String, dynamic>)['id'],
+                                                    as Map<String, dynamic>)[
+                                                'id'] ??
+                                            1,
                                         taskerPhone:
                                             (approvedTaskers[index].tasker
                                                     as Map<String, dynamic>)[
@@ -293,15 +327,23 @@ class _TaskerListState extends State<Taskerlist> {
                                   child: Column(
                                     children: [
                                       Taskerrowbasic(
-                                        taskerName: (approvedTaskers[index]
-                                                .tasker
-                                            as Map<String, dynamic>)['name'],
+                                        taskerImageLink:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['avatar'] ??
+                                                '',
+                                        taskerName:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['name'] ??
+                                                '',
                                         taskerId: (approvedTaskers[index].tasker
                                             as Map<String, dynamic>)['id'],
-                                        taskerPhone:
-                                            (approvedTaskers[index].tasker
+                                        taskerPhone: (approvedTaskers[index]
+                                                        .tasker
                                                     as Map<String, dynamic>)[
-                                                'phoneNumber'],
+                                                'phoneNumber'] ??
+                                            '',
                                       ),
                                       Divider()
                                     ],
@@ -312,8 +354,8 @@ class _TaskerListState extends State<Taskerlist> {
                           );
                         },
                       ),
-                    if (approvedTaskersNotifier.value.length == 0 &&
-                        pendingTaskerNotifier.value.length == 0)
+                    if (approvedTaskersNotifier.value.isEmpty &&
+                        pendingTaskerNotifier.value.isEmpty)
                       Column(
                         children: [
                           SizedBox(height: 10),
@@ -382,23 +424,27 @@ class _TaskerListState extends State<Taskerlist> {
                                           child: Column(
                                             children: [
                                               Taskerrowaccept(
+                                                taskerImageLink: '',
                                                 onPressFun: () {
                                                   moveTaskerToApprove(
                                                       pendingTasker[index]);
                                                 },
                                                 taskerName:
                                                     (pendingTasker[index].tasker
-                                                        as Map<String,
-                                                            dynamic>)['name'],
+                                                                as Map<String,
+                                                                    dynamic>)[
+                                                            'name'] ??
+                                                        '',
                                                 taskerId:
                                                     (pendingTasker[index].tasker
                                                         as Map<String,
                                                             dynamic>)['id'],
                                                 taskerPhone:
                                                     (pendingTasker[index].tasker
-                                                            as Map<String,
-                                                                dynamic>)[
-                                                        'phoneNumber'],
+                                                                as Map<String,
+                                                                    dynamic>)[
+                                                            'phoneNumber'] ??
+                                                        '',
                                               ),
                                               Divider()
                                             ],
@@ -409,8 +455,8 @@ class _TaskerListState extends State<Taskerlist> {
                                   );
                                 }),
                           ),
-                          if (pendingTaskerNotifier.value.length == 0 &&
-                              approvedTaskersNotifier.value.length == 0)
+                          if (pendingTaskerNotifier.value.isEmpty &&
+                              approvedTaskersNotifier.value.isEmpty)
                             Column(
                               children: [
                                 SizedBox(height: 10),
@@ -431,8 +477,8 @@ class _TaskerListState extends State<Taskerlist> {
                               ],
                             ),
                           const SizedBox(height: 10),
-                          if (pendingTaskerNotifier.value.length != 0 ||
-                              approvedTaskersNotifier.value.length != 0)
+                          if (pendingTaskerNotifier.value.isNotEmpty ||
+                              approvedTaskersNotifier.value.isNotEmpty)
                             Row(
                               children: [
                                 Sizedbutton(
@@ -450,8 +496,10 @@ class _TaskerListState extends State<Taskerlist> {
                                       await BlocProvider.of<ATaskCubit>(context)
                                           .updateTaskerStatus(tasker.id, 'S1');
                                     }
+                                    print(approvedTaskersNotifier.value.length);
+                                    print(widget.numberOfTasker);
                                     if (approvedTaskersNotifier.value.length ==
-                                        state.taskerList.length) {
+                                        widget.numberOfTasker) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

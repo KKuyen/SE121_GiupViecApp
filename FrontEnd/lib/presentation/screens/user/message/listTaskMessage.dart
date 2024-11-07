@@ -118,7 +118,6 @@ class _time extends StatelessWidget {
   final String time;
   const _time({
     required this.time,
-    super.key,
   });
 
   @override

@@ -2,22 +2,14 @@ import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
 
 class TaskerInfoModel extends TaskerInfo {
   TaskerInfoModel({
-    required int errCode,
-    required Object? tasker,
-    required Object? taskerInfo,
-    required List<Object>? reviewList,
-    required bool? isLove,
-    required bool? isBlock,
-    required String message,
-  }) : super(
-          errCode: errCode,
-          tasker: tasker,
-          taskerInfo: taskerInfo,
-          reviewList: reviewList,
-          isLove: isLove,
-          isBlock: isBlock,
-          message: message,
-        );
+    required super.errCode,
+    required super.tasker,
+    required super.taskerInfo,
+    required super.reviewList,
+    required super.isLove,
+    required super.isBlock,
+    required super.message,
+  });
 
   factory TaskerInfoModel.fromJson(Map<String, dynamic> json) {
     return TaskerInfoModel(

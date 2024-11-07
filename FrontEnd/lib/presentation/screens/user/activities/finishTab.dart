@@ -6,7 +6,7 @@ import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
+
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
@@ -32,17 +32,9 @@ class Finishtab extends StatefulWidget {
 }
 
 class _FinishTabState extends State<Finishtab> {
-  String _formattedDate = '20:58';
-  String _formattedTime = '16/10/2024';
   bool _isLabelVisible = false;
 
-  bool _isEditableNote = false;
-
-  void _showLabel() {
-    setState(() {
-      _isLabelVisible = true;
-    });
-  }
+  final bool _isEditableNote = false;
 
   void _hideLabel() {
     setState(() {
@@ -50,18 +42,11 @@ class _FinishTabState extends State<Finishtab> {
     });
   }
 
-  void _toggleEditableNote() {
-    setState(() {
-      _isEditableNote =
-          !_isEditableNote; // Chuyển trạng thái từ có thể chỉnh sửa sang không và ngược lại
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id);
+
+    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
   }
 
   @override
@@ -78,7 +63,7 @@ class _FinishTabState extends State<Finishtab> {
                     color: Colors.black.withOpacity(0.5),
                   ),
                   child: Center(
-                      child: Container(
+                      child: SizedBox(
                           height: 40,
                           width: 40,
                           child: CircularProgressIndicator()))),
@@ -92,7 +77,7 @@ class _FinishTabState extends State<Finishtab> {
               if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
                 maxTasker++;
               }
-              if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+              if ((tasker)['status'] == 'S2') {
                 appTasker++;
               }
             }
@@ -191,12 +176,31 @@ class _FinishTabState extends State<Finishtab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S5") {
                                     return Taskerrowreview(
+                                      reload: () {
+                                        print('reload');
+                                        BlocProvider.of<ATaskCubit>(context)
+                                            .getATasks(widget.id, 1);
+                                      },
+                                      Star: (atasker.reviewStar?.toDouble()),
+                                      task: state.task,
+                                      taskTypeAvatar: (task.taskType as Map<
+                                              String, dynamic>)['avatar'] ??
+                                          "",
+                                      taskTypeName: (task.taskType as Map<
+                                              String, dynamic>)['name'] ??
+                                          '',
+                                      taskTypeId: (task.taskType
+                                              as Map<String, dynamic>)['id'] ??
+                                          1,
                                       taskerId: (atasker.tasker
-                                          as Map<String, dynamic>)['id'],
-                                      taskerName: (atasker.tasker
-                                          as Map<String, dynamic>)['name'],
-                                      taskerImageLink: (atasker.tasker
-                                          as Map<String, dynamic>)['avatar'],
+                                              as Map<String, dynamic>)['id'] ??
+                                          1,
+                                      taskerName: (atasker.tasker as Map<String,
+                                              dynamic>)['name'] ??
+                                          '',
+                                      taskerImageLink: (atasker.tasker as Map<
+                                              String, dynamic>)['avatar'] ??
+                                          '',
                                       taskerPhone: (atasker.tasker as Map<
                                           String, dynamic>)['phoneNumber'],
                                     );
@@ -276,8 +280,9 @@ class _FinishTabState extends State<Finishtab> {
                                               fontWeight: FontWeight.normal)),
                                       const SizedBox(width: 38),
                                       Text(
-                                        (task.taskType
-                                            as Map<String, dynamic>)['name'],
+                                        (task.taskType as Map<String, dynamic>)[
+                                                'name'] ??
+                                            '',
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             color: Colors.black,
@@ -350,7 +355,7 @@ class _FinishTabState extends State<Finishtab> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
+                                              '${(task.location as Map<String, dynamic>)['detailAddress'] ?? ""}, ${(task.location as Map<String, dynamic>)['district'] ?? ""}, ${(task.location as Map<String, dynamic>)['province'] ?? ''}, ${(task.location as Map<String, dynamic>)['country'] ?? ''}',
                                               softWrap: true,
                                               maxLines:
                                                   3, // Số dòng tối đa, có thể tăng tùy ý
@@ -573,6 +578,7 @@ class _FinishTabState extends State<Finishtab> {
       if (_isLabelVisible)
         Center(
           child: Taskerlist(
+            id: widget.id,
             cancel: _hideLabel,
             numberOfTasker: widget.numberOfTasker,
             taskStatus: 'TS3',

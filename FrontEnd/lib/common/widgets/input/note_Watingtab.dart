@@ -3,6 +3,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class CTextfield extends StatefulWidget {
   final String? hintText;
+
   const CTextfield({super.key, this.hintText = ""});
 
   @override
@@ -20,7 +21,7 @@ class _TextfieldState extends State<CTextfield> {
           hintText: widget.hintText,
           hintStyle: const TextStyle(
               color: AppColors.xam72, fontWeight: FontWeight.normal),
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.xanh_main),
           ),

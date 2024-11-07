@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
@@ -9,8 +8,6 @@ import 'package:se121_giupviec_app/common/widgets/button/2sttbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowAbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_state.dart';
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_state.dart';
 
@@ -32,8 +29,7 @@ class _blocktaskersState extends State<Blocktaskers> {
   @override
   void initState() {
     super.initState();
-    final TaskerList =
-        BlocProvider.of<LoveTaskersCubit>(context).getLoveTaskers(2);
+    BlocProvider.of<LoveTaskersCubit>(context).getLoveTaskers(2);
   }
 
   @override
@@ -48,11 +44,11 @@ class _blocktaskersState extends State<Blocktaskers> {
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.5),
                 ),
-                child: Center(
-                    child: Container(
+                child: const Center(
+                    child: SizedBox(
                         height: 40,
                         width: 40,
-                        child: const CircularProgressIndicator()))),
+                        child: CircularProgressIndicator()))),
           );
         } else if (state is LoveTaskersSuccess) {
           return Scaffold(
@@ -95,6 +91,10 @@ class _blocktaskersState extends State<Blocktaskers> {
                       itemBuilder: (context, index) {
                         // tam thoi comment
                         return Taskerrowabutton(
+                            taskerImageLink: (state.blockTaskers[index].tasker
+                                as Map<String, dynamic>)['avatar'],
+                            taskerPhone: (state.blockTaskers[index].tasker
+                                as Map<String, dynamic>)['phoneNumber'],
                             taskerId: (state.blockTaskers[index].tasker
                                 as Map<String, dynamic>)['id'],
                             taskerName: (state.blockTaskers[index].tasker

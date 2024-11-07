@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
 
@@ -23,6 +21,8 @@ class FinishedActivityWidget extends StatefulWidget {
   final String phone;
   final int ungCuVien;
   final int daNhan;
+  final String avatar;
+  final VoidCallback loading;
 
   final String price;
   final String note;
@@ -30,7 +30,9 @@ class FinishedActivityWidget extends StatefulWidget {
   const FinishedActivityWidget(
       {required this.onShowLabel,
       this.id = 1,
+      required this.loading,
       required this.createAt,
+      required this.avatar,
       this.ungCuVien = 0,
       required this.daNhan,
       required this.numberOfTasker,
@@ -54,8 +56,8 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => Approvetab(
@@ -63,7 +65,8 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
               id: widget.id,
             ),
           ),
-        ),
+        );
+        widget.loading();
       },
       child: Center(
           child: Padding(
@@ -90,11 +93,7 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                      child: SvgPicture.asset(
-                        AppVectors.baby_carriage_icon,
-                        height: 30,
-                        width: 30,
-                      ),
+                      child: AppIcon.getIconXanhMain(widget.avatar),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,13 +208,7 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                               ),
                             ),
                             Text(
-                              widget.deltailAddress +
-                                  ', ' +
-                                  widget.district +
-                                  ', ' +
-                                  widget.province +
-                                  ', ' +
-                                  widget.country,
+                              '${widget.deltailAddress}, ${widget.district}, ${widget.province}, ${widget.country}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

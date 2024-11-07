@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
@@ -36,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
 
   bool _obscureText = true;
   bool isShowErrText = false;
-  SecureStorage secureStorage = new SecureStorage();
+  SecureStorage secureStorage = SecureStorage();
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
@@ -426,15 +426,15 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  bool _isOtpError = false;
+  final bool _isOtpError = false;
   void _showOtpBottomSheet(BuildContext context) {
-    final TextEditingController _OTPController = TextEditingController();
+    final TextEditingController OTPController = TextEditingController();
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
-        bool _isOtpError = false;
+        bool isOtpError = false;
 
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -456,7 +456,7 @@ class _SignInPageState extends State<SignInPage> {
                   if (state is AuthResponseSuccess) {
                     // Reset error flag
                     setState(() {
-                      _isOtpError = false;
+                      isOtpError = false;
                     });
                     // Show Thành công message after dialog is dismissed
                     await Future.delayed(Duration.zero);
@@ -469,7 +469,7 @@ class _SignInPageState extends State<SignInPage> {
                   } else if (state is AuthError) {
                     // Set error flag
                     setState(() {
-                      _isOtpError = true;
+                      isOtpError = true;
                     });
                   }
                 }
@@ -514,7 +514,7 @@ class _SignInPageState extends State<SignInPage> {
                       const SizedBox(height: 20),
                       PinCodeTextField(
                         appContext: context,
-                        controller: _OTPController,
+                        controller: OTPController,
                         length: 6,
                         onChanged: (value) {
                           setState(() {
@@ -538,7 +538,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       const SizedBox(height: 10),
                       Visibility(
-                        visible: _isOtpError,
+                        visible: isOtpError,
                         child: const Text(
                           "OTP không hợp lệ hoặc hết hạn",
                           style: TextStyle(color: Colors.red),
@@ -549,7 +549,7 @@ class _SignInPageState extends State<SignInPage> {
                         onPressFun: () {
                           context.read<AuthCubit>().verifyOTP(
                                 _phoneDialogController.text,
-                                _OTPController.text,
+                                OTPController.text,
                               );
                         },
                         text: 'Tiếp tục',
@@ -572,13 +572,13 @@ class _SignInPageState extends State<SignInPage> {
       context: context,
       isScrollControlled: true, // Cho phép BottomSheet cuộn
       builder: (BuildContext context) {
-        bool _obscureText = true;
-        bool _isOtpError = false;
+        bool obscureText = true;
+        bool isOtpError = false;
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           return BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
-              print("state: " + state.toString());
+              print("state: $state");
               if (state is AuthLoading) {
                 print("state is AuthLoading");
                 // Show loading dialog
@@ -659,18 +659,18 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureText
+                              obscureText
                                   ? Icons.visibility_off
                                   : Icons.visibility,
                               color: const Color.fromARGB(255, 63, 63, 63),
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                obscureText = !obscureText;
                               });
                             },
                           )),
-                      obscureText: _obscureText,
+                      obscureText: obscureText,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập mật khẩu';
@@ -691,18 +691,18 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureText
+                              obscureText
                                   ? Icons.visibility_off
                                   : Icons.visibility,
                               color: const Color.fromARGB(255, 63, 63, 63),
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                obscureText = !obscureText;
                               });
                             },
                           )),
-                      obscureText: _obscureText,
+                      obscureText: obscureText,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vui lòng nhập mật khẩu';
@@ -715,7 +715,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     const SizedBox(height: 10),
                     Visibility(
-                      visible: _isOtpError,
+                      visible: isOtpError,
                       child: const Text(
                         "Mật khẩu không khớp",
                         style: TextStyle(color: Colors.red),
@@ -737,7 +737,7 @@ class _SignInPageState extends State<SignInPage> {
                               );
                         } else {
                           setState(() {
-                            _isOtpError = true;
+                            isOtpError = true;
                           });
                         }
                       },

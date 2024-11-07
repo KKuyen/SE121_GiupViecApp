@@ -5,6 +5,7 @@ import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widg
 
 import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/domain/entities/task.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
@@ -21,15 +22,24 @@ class _ActivityPageState extends State<ActivityPage> {
   bool _isLabelVisible = false;
   int numberOfTasker = 0;
   int id = 1;
-  bool _isTaskerList = false;
+  final bool _isTaskerList = false;
   String taskStatus = '';
+  late Task currentTask;
+  late int taskTypeId;
+  late String TaskTypeName;
+  late String TaskTypeAvatar;
 
-  void _showLabel(int id, int numberOfTasker, String status) {
+  void _showLabel(int id, int numberOfTasker, String status, Task task,
+      int taskTypeId, String TaskTypeName, String TaskTypeAvatar) {
     setState(() {
       _isLabelVisible = true;
       this.numberOfTasker = numberOfTasker;
       this.id = id;
-      this.taskStatus = status;
+      taskStatus = status;
+      currentTask = task;
+      this.taskTypeId = taskTypeId;
+      this.TaskTypeName = TaskTypeName;
+      this.TaskTypeAvatar = TaskTypeAvatar;
     });
   }
 
@@ -39,12 +49,11 @@ class _ActivityPageState extends State<ActivityPage> {
     });
   }
 
-  void _refreshScreen() {
-    BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
+  void _refreshScreen() async {
+    await BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
   }
 
   Future<void> _reload() async {
-    print("bố mày đây");
     setState(() {
       BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
       BlocProvider.of<TaskCubit>(context).getTS2Tasks(1);
@@ -72,6 +81,10 @@ class _ActivityPageState extends State<ActivityPage> {
         if (_isLabelVisible)
           Center(
             child: Taskerlist(
+              task: currentTask,
+              taskTypeId: taskTypeId,
+              taskTypeAvatar: TaskTypeAvatar,
+              taskTypeName: TaskTypeName,
               callBackFun: () => _reload(),
               id: id,
               numberOfTasker: numberOfTasker,
@@ -85,10 +98,11 @@ class _ActivityPageState extends State<ActivityPage> {
 }
 
 class JobCardScreen extends StatefulWidget {
-  final void Function(int, int, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String) showLabel;
   final VoidCallback hideLabel;
 
-  const JobCardScreen({required this.showLabel, required this.hideLabel});
+  const JobCardScreen(
+      {super.key, required this.showLabel, required this.hideLabel});
 
   @override
   State<JobCardScreen> createState() => _JobCardScreenState();
@@ -122,8 +136,9 @@ class _JobCardScreenState extends State<JobCardScreen>
         if (!_isTS1Loaded) {
           BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
           _isTS1Loaded = !_isTS1Loaded;
-        } else
+        } else {
           break;
+        }
       case 1:
         if (!_isTS2Loaded) {
           BlocProvider.of<TaskCubit>(context).getTS2Tasks(1);
@@ -187,7 +202,7 @@ class _JobCardScreenState extends State<JobCardScreen>
         onPressed: () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Newtaskstep1()),
+            MaterialPageRoute(builder: (context) => const Newtaskstep1()),
           );
           if (result == true) {
             BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
@@ -203,7 +218,7 @@ class _JobCardScreenState extends State<JobCardScreen>
 }
 
 class WaitingList extends StatelessWidget {
-  final void Function(int, int, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String) showLabel;
 
   const WaitingList({super.key, required this.showLabel});
 
@@ -221,62 +236,88 @@ class WaitingList extends StatelessWidget {
           if (state.TS1tasks!.isEmpty) {
             return const Center(child: Text('Không có công việc nào'));
           }
-          return ListView.builder(
-              itemCount: state.TS1tasks!.length,
-              itemBuilder: (context, index) {
-                var task = state.TS1tasks![index];
+          return Column(
+            children: [
+              if (state.setting?.autoAcceptStatus == true)
+                const Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 5),
+                  child: Text(
+                    'Tự động duyệt công việc đang bật, điều chỉnh ở cài đặt',
+                    style: TextStyle(
+                        color: AppColors.xanh_main,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: state.TS1tasks!.length,
+                    itemBuilder: (context, index) {
+                      var task = state.TS1tasks![index];
 
-                return WatingActivityWidget(
-                  ungCuVien: task.taskerLists
-                          ?.where((tasker) =>
-                              (tasker as Map<String, dynamic>)['status'] ==
-                              'S1')
-                          .length ??
-                      0,
-                  loading: () async {
-                    DefaultTabController.of(context).animateTo(3);
-
-                    // Add a short delay to allow tab animation to complete
-                    await Future.delayed(const Duration(milliseconds: 100));
-                    BlocProvider.of<TaskCubit>(context).getTS4Tasks(1);
-                    BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
-                  },
-                  daNhan: task.taskerLists
-                          ?.where((tasker) =>
-                              (tasker as Map<String, dynamic>)['status'] ==
-                              'S2')
-                          .length ??
-                      0,
-                  createAt: task.createdAt,
-                  numberOfTasker: task.numberOfTasker ?? 0,
-                  onShowLabel: () => showLabel(task.id,
-                      task.numberOfTasker ?? 0, task.taskStatus ?? 'TS1'),
-                  id: task.id,
-                  startDay: task.time,
-                  price: task.price ?? '',
-                  note: task.note ?? '',
-                  ownerName:
-                      (task.location as Map<String, dynamic>?)?['ownerName'] ??
-                          '',
-                  phone: (task.location
-                          as Map<String, dynamic>?)?['ownerPhoneNumber'] ??
-                      '',
-                  detailAddress: (task.location
-                          as Map<String, dynamic>?)?['detailAddress'] ??
-                      '',
-                  province:
-                      (task.location as Map<String, dynamic>?)?['province'] ??
-                          '',
-                  district:
-                      (task.location as Map<String, dynamic>?)?['district'] ??
-                          '',
-                  country:
-                      (task.location as Map<String, dynamic>?)?['country'] ??
-                          '',
-                  serviceName:
-                      (task.taskType as Map<String, dynamic>?)?['name'] ?? '',
-                );
-              });
+                      return WatingActivityWidget(
+                        avatar:
+                            (task.taskType as Map<String, dynamic>)['avatar'] ??
+                                '',
+                        ungCuVien: task.taskerLists
+                                ?.where((tasker) =>
+                                    (tasker
+                                        as Map<String, dynamic>)['status'] ==
+                                    'S1')
+                                .length ??
+                            0,
+                        loading: () async {
+                          BlocProvider.of<TaskCubit>(context).getTS1Tasks(1);
+                          BlocProvider.of<TaskCubit>(context).getTS2Tasks(1);
+                          BlocProvider.of<TaskCubit>(context).getTS4Tasks(1);
+                        },
+                        daNhan: task.taskerLists
+                                ?.where((tasker) =>
+                                    (tasker
+                                        as Map<String, dynamic>)['status'] ==
+                                    'S2')
+                                .length ??
+                            0,
+                        createAt: task.createdAt,
+                        numberOfTasker: task.numberOfTasker ?? 0,
+                        onShowLabel: () => showLabel(
+                            task.id,
+                            task.numberOfTasker ?? 0,
+                            task.taskStatus ?? 'TS1',
+                            task,
+                            task.taskTypeId,
+                            (task.taskType as Map<String, dynamic>)['name'],
+                            (task.taskType as Map<String, dynamic>)['avatar']),
+                        id: task.id,
+                        startDay: task.time,
+                        price: task.price ?? '',
+                        note: task.note ?? '',
+                        ownerName: (task.location
+                                as Map<String, dynamic>?)?['ownerName'] ??
+                            '',
+                        phone: (task.location as Map<String, dynamic>?)?[
+                                'ownerPhoneNumber'] ??
+                            '',
+                        detailAddress: (task.location
+                                as Map<String, dynamic>?)?['detailAddress'] ??
+                            '',
+                        province: (task.location
+                                as Map<String, dynamic>?)?['province'] ??
+                            '',
+                        district: (task.location
+                                as Map<String, dynamic>?)?['district'] ??
+                            '',
+                        country: (task.location
+                                as Map<String, dynamic>?)?['country'] ??
+                            '',
+                        serviceName:
+                            (task.taskType as Map<String, dynamic>?)?['name'] ??
+                                '',
+                      );
+                    }),
+              ),
+            ],
+          );
         } else if (state is TaskError) {
           return Center(child: Text('Error: ${state.message}'));
         } else {
@@ -288,9 +329,9 @@ class WaitingList extends StatelessWidget {
 }
 
 class ApprovedList extends StatelessWidget {
-  final void Function(int, int, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String) showLabel;
 
-  const ApprovedList({required this.showLabel});
+  const ApprovedList({super.key, required this.showLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +341,7 @@ class ApprovedList extends StatelessWidget {
           final taskCubit = BlocProvider.of<TaskCubit>(context).getAllTasks(1);
           return Center(
             child: Center(
-                child: Container(
+                child: SizedBox(
                     height: 40,
                     width: 40,
                     child: const CircularProgressIndicator())),
@@ -315,10 +356,13 @@ class ApprovedList extends StatelessWidget {
                 var task = state.TS2tasks![index];
 
                 return ApprovedActivityWidget(
+                  avatar:
+                      (task.taskType as Map<String, dynamic>)['avatar'] ?? '',
                   taskTypeId: task.taskTypeId,
                   loading: () => {
                     DefaultTabController.of(context).animateTo(3),
                     BlocProvider.of<TaskCubit>(context).getTS2Tasks(1),
+                    BlocProvider.of<TaskCubit>(context).getTS3Tasks(1),
                     BlocProvider.of<TaskCubit>(context).getTS4Tasks(1),
                   },
                   ungCuVien: task.taskerLists
@@ -333,8 +377,14 @@ class ApprovedList extends StatelessWidget {
                               'S2')
                           .length ??
                       0,
-                  onShowLabel: () => showLabel(task.id,
-                      task.numberOfTasker ?? 0, task.taskStatus ?? 'TS2'),
+                  onShowLabel: () => showLabel(
+                      task.id,
+                      task.numberOfTasker ?? 0,
+                      task.taskStatus ?? 'TS2',
+                      task,
+                      task.taskTypeId,
+                      (task.taskType as Map<String, dynamic>)['name'],
+                      (task.taskType as Map<String, dynamic>)['avatar']),
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   id: task.id,
@@ -364,9 +414,9 @@ class ApprovedList extends StatelessWidget {
 }
 
 class FinishedList extends StatelessWidget {
-  final void Function(int, int, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String) showLabel;
 
-  const FinishedList({required this.showLabel});
+  const FinishedList({super.key, required this.showLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -375,7 +425,7 @@ class FinishedList extends StatelessWidget {
         if (state is TaskLoading) {
           return Center(
             child: Center(
-                child: Container(
+                child: SizedBox(
                     height: 40,
                     width: 40,
                     child: const CircularProgressIndicator())),
@@ -391,6 +441,8 @@ class FinishedList extends StatelessWidget {
                 var task = state.TS3tasks![index];
 
                 return ApprovedActivityWidget(
+                  avatar:
+                      (task.taskType as Map<String, dynamic>)['avatar'] ?? '',
                   taskTypeId: task.taskTypeId,
                   loading: () => {
                     DefaultTabController.of(context).animateTo(3),
@@ -407,11 +459,17 @@ class FinishedList extends StatelessWidget {
                   daNhan: task.taskerLists
                           ?.where((tasker) =>
                               (tasker as Map<String, dynamic>)['status'] ==
-                              'S2')
+                              'S5')
                           .length ??
                       0,
-                  onShowLabel: () => showLabel(task.id,
-                      task.numberOfTasker ?? 0, task.taskStatus ?? 'TS2'),
+                  onShowLabel: () => showLabel(
+                      task.id,
+                      task.numberOfTasker ?? 0,
+                      task.taskStatus ?? 'TS2',
+                      task,
+                      task.taskTypeId,
+                      (task.taskType as Map<String, dynamic>)['name'],
+                      (task.taskType as Map<String, dynamic>)['avatar']),
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   id: task.id,
@@ -441,9 +499,9 @@ class FinishedList extends StatelessWidget {
 }
 
 class CancelList extends StatelessWidget {
-  final void Function(int, int, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String) showLabel;
 
-  const CancelList({required this.showLabel});
+  const CancelList({super.key, required this.showLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -452,7 +510,7 @@ class CancelList extends StatelessWidget {
         if (state is TaskLoading) {
           return Center(
             child: Center(
-                child: Container(
+                child: SizedBox(
                     height: 40,
                     width: 40,
                     child: const CircularProgressIndicator())),
@@ -471,12 +529,14 @@ class CancelList extends StatelessWidget {
                   if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
                     maxTasker++;
                   }
-                  if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+                  if ((tasker)['status'] == 'S2') {
                     appTasker++;
                   }
                 }
 
                 return CancelActivityWidget(
+                  avatar:
+                      (task.taskType as Map<String, dynamic>)['avatar'] ?? '',
                   taskStatus: task.taskStatus ?? '',
                   cancelAt: task.cancelAt ?? DateTime.now(),
                   cancelReason: task.cancelReason ?? '',

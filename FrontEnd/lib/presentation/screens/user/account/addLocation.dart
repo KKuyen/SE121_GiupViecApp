@@ -161,7 +161,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                     selectedProvinceName!,
                     selectedDistrictName!,
                     selectedWardName!,
-                    "${_chitiet.text}",
+                    _chitiet.text,
                     1,
                     _isDefault,
                   );
@@ -333,7 +333,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                         },
                       ),
                       const Divider(height: 1, thickness: 1),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       TextField(
                         controller: _chitiet,
                         decoration: InputDecoration(

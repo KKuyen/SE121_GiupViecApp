@@ -1,4 +1,5 @@
 import { User } from "../entity/User.entity";
+import { In } from "typeorm";
 import { TaskerInfo } from "../entity/TaskerInfo.entity";
 import { AppDataSource } from "../data-source";
 import { Reviews } from "../entity/Review.entity";
@@ -209,132 +210,334 @@ export class TaskerService {
     return new Promise(async (resolve, reject) => {
       try {
         const taskerListRepository = AppDataSource.getRepository(TaskerList);
-        const taskerList = await taskerListRepository
-          .createQueryBuilder("taskerList")
-          .leftJoinAndSelect("taskerList.task", "task")
-          .leftJoinAndSelect("task.taskType", "taskType")
+
+        // Fetch task IDs for the tasker with status "S1"
+        const taskerList = await taskerListRepository.find({
+          where: { taskerId: taskerId, status: "S2" },
+        });
+
+        // Extract task IDs from the tasker list
+        const taskIds = taskerList.map((tasker) => tasker.taskId);
+
+        // If taskIds is empty, return an empty array directly
+        if (taskIds.length === 0) {
+          return resolve({
+            errCode: 0,
+            taskerList: [],
+          });
+        }
+
+        const taskRepository = AppDataSource.getRepository(Tasks);
+
+        // Query tasks with the specified task IDs
+        const tasks = await taskRepository
+          .createQueryBuilder("task")
           .leftJoinAndSelect("task.location", "location")
+          .leftJoinAndSelect("task.user", "user")
+          .leftJoinAndSelect("task.taskType", "taskType")
+          .leftJoinAndSelect("task.taskerLists", "taskerLists")
+          .orderBy("task.createdAt", "DESC")
+          .where("task.id IN (:...taskIds)", { taskIds })
           .select([
-            "taskerList.id",
             "task.id",
             "task.userId",
             "task.taskTypeId",
             "task.time",
             "task.locationId",
             "task.note",
+            "task.isReTaskChildren",
             "task.taskStatus",
+            "task.createdAt",
+            "task.updatedAt",
+            "task.price",
             "task.approvedAt",
             "task.cancelAt",
-            "task.cancelReason",
             "task.finishedAt",
+            "task.cancelReason",
             "task.numberOfTasker",
-            "task.price",
-            "taskType.name",
+
+            "user.id",
+            "user.name",
+            "user.email",
+            "user.phoneNumber",
+            "user.role",
+            "user.avatar",
+            "user.birthday",
+            "user.Rpoints",
+
+            "location.id",
             "location.country",
             "location.province",
             "location.district",
-            "location.detailAddress",
-            "location.map",
             "location.ownerName",
             "location.ownerPhoneNumber",
+            "location.detailAddress",
+            "location.map",
+
+            "taskType.id",
+            "taskType.name",
+            "taskType.avatar",
+
+            "taskerLists.id",
+            "taskerLists.status",
           ])
-          .where(
-            "(taskerList.status = 'S1' OR taskerList.status = 'S2' )AND taskerList.taskerId= :taskerId",
-            { taskerId: taskerId }
-          )
           .getMany();
 
+        // Return tasks result if taskIds were found
         resolve({
           errCode: 0,
-          taskerList: taskerList,
+          taskerList: tasks,
         });
       } catch (e) {
         reject(e);
       }
     });
   };
+  static getApplyTask = async (taskerId: number) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const taskerListRepository = AppDataSource.getRepository(TaskerList);
+
+        // Fetch task IDs for the tasker with status "S1"
+        const taskerList = await taskerListRepository.find({
+          where: { taskerId: taskerId, status: "S1" },
+        });
+
+        // Extract task IDs from the tasker list
+        const taskIds = taskerList.map((tasker) => tasker.taskId);
+
+        // If taskIds is empty, return an empty array directly
+        if (taskIds.length === 0) {
+          return resolve({
+            errCode: 0,
+            taskerList: [],
+          });
+        }
+
+        const taskRepository = AppDataSource.getRepository(Tasks);
+
+        // Query tasks with the specified task IDs
+        const tasks = await taskRepository
+          .createQueryBuilder("task")
+          .leftJoinAndSelect("task.location", "location")
+          .leftJoinAndSelect("task.user", "user")
+          .leftJoinAndSelect("task.taskType", "taskType")
+          .leftJoinAndSelect("task.taskerLists", "taskerLists")
+          .orderBy("task.createdAt", "DESC")
+          .where("task.id IN (:...taskIds)", { taskIds })
+          .select([
+            "task.id",
+            "task.userId",
+            "task.taskTypeId",
+            "task.time",
+            "task.locationId",
+            "task.note",
+            "task.isReTaskChildren",
+            "task.taskStatus",
+            "task.createdAt",
+            "task.updatedAt",
+            "task.price",
+            "task.approvedAt",
+            "task.cancelAt",
+            "task.finishedAt",
+            "task.cancelReason",
+            "task.numberOfTasker",
+
+            "user.id",
+            "user.name",
+            "user.email",
+            "user.phoneNumber",
+            "user.role",
+            "user.avatar",
+            "user.birthday",
+            "user.Rpoints",
+
+            "location.id",
+            "location.country",
+            "location.province",
+            "location.district",
+            "location.ownerName",
+            "location.ownerPhoneNumber",
+            "location.detailAddress",
+            "location.map",
+
+            "taskType.id",
+            "taskType.name",
+            "taskType.avatar",
+
+            "taskerLists.id",
+            "taskerLists.status",
+          ])
+          .getMany();
+
+        // Return tasks result if taskIds were found
+        resolve({
+          errCode: 0,
+          taskerList: tasks,
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
   static getMyHistoryTask = async (taskerId: number) => {
     return new Promise(async (resolve, reject) => {
       try {
         const taskerListRepository = AppDataSource.getRepository(TaskerList);
-        const taskerList = await taskerListRepository
-          .createQueryBuilder("taskerList")
-          .leftJoinAndSelect("taskerList.task", "task")
-          .leftJoinAndSelect("task.taskType", "taskType")
+
+        // Fetch task IDs for the tasker with status "S1"
+        const taskerList = await taskerListRepository.find({
+          where: { taskerId: taskerId, status: "S5" },
+        });
+
+        // Extract task IDs from the tasker list
+        const taskIds = taskerList.map((tasker) => tasker.taskId);
+
+        // If taskIds is empty, return an empty array directly
+        if (taskIds.length === 0) {
+          return resolve({
+            errCode: 0,
+            taskerList: [],
+          });
+        }
+
+        const taskRepository = AppDataSource.getRepository(Tasks);
+
+        // Query tasks with the specified task IDs
+        const tasks = await taskRepository
+          .createQueryBuilder("task")
           .leftJoinAndSelect("task.location", "location")
+          .leftJoinAndSelect("task.user", "user")
+          .leftJoinAndSelect("task.taskType", "taskType")
+          .leftJoinAndSelect("task.taskerLists", "taskerLists")
+          .orderBy("task.createdAt", "DESC")
+          .where("task.id IN (:...taskIds)", { taskIds })
           .select([
-            "taskerList.id",
             "task.id",
             "task.userId",
             "task.taskTypeId",
             "task.time",
             "task.locationId",
             "task.note",
+            "task.isReTaskChildren",
             "task.taskStatus",
+            "task.createdAt",
+            "task.updatedAt",
+            "task.price",
             "task.approvedAt",
             "task.cancelAt",
-            "task.cancelReason",
             "task.finishedAt",
+            "task.cancelReason",
             "task.numberOfTasker",
-            "task.price",
-            "taskType.name",
+
+            "user.id",
+            "user.name",
+            "user.email",
+            "user.phoneNumber",
+            "user.role",
+            "user.avatar",
+            "user.birthday",
+            "user.Rpoints",
+
+            "location.id",
             "location.country",
             "location.province",
             "location.district",
-            "location.detailAddress",
-            "location.map",
             "location.ownerName",
             "location.ownerPhoneNumber",
+            "location.detailAddress",
+            "location.map",
+
+            "taskType.id",
+            "taskType.name",
+            "taskType.avatar",
+
+            "taskerLists.id",
+            "taskerLists.status",
           ])
-          .where(
-            "(taskerList.status = 'S3' OR taskerList.status = 'S4' OR taskerList.status = 'S5' )AND taskerList.taskerId= :taskerId",
-            { taskerId: taskerId }
-          )
           .getMany();
 
+        // Return tasks result if taskIds were found
         resolve({
           errCode: 0,
-          errMessage: "OK",
-          taskerList: taskerList,
+          taskerList: tasks,
         });
       } catch (e) {
         reject(e);
       }
     });
   };
-  static getAllTask = async () => {
+  static getAllTask = async (taskerId: number) => {
     return new Promise(async (resolve, reject) => {
       try {
         const taskeRepository = AppDataSource.getRepository(Tasks);
         const tasks = await taskeRepository
           .createQueryBuilder("task")
-          .leftJoinAndSelect("task.taskType", "taskType")
           .leftJoinAndSelect("task.location", "location")
+          .leftJoinAndSelect("task.user", "user")
+          .leftJoinAndSelect("task.taskType", "taskType")
+          .leftJoinAndSelect("task.taskerLists", "taskerLists")
+          .orderBy("task.createdAt", "DESC")
           .select([
             "task.id",
+
             "task.userId",
             "task.taskTypeId",
             "task.time",
             "task.locationId",
             "task.note",
+            "task.isReTaskChildren",
             "task.taskStatus",
+            "task.createdAt",
+            "task.updatedAt",
+            "task.price",
             "task.approvedAt",
             "task.cancelAt",
-            "task.cancelReason",
             "task.finishedAt",
+            "task.cancelReason",
+
             "task.numberOfTasker",
-            "task.price",
-            "taskType.name",
+            "user.id",
+            "user.name",
+            "user.email",
+            "user.phoneNumber",
+            "user.role",
+            "user.avatar",
+            "user.birthday",
+            "user.Rpoints",
+
+            "location.id",
+
             "location.country",
             "location.province",
             "location.district",
-            "location.detailAddress",
-            "location.map",
             "location.ownerName",
             "location.ownerPhoneNumber",
+            "location.detailAddress",
+            "location.map",
+            "taskType.id",
+            "taskType.name",
+            "taskType.avatar",
+            "taskerLists.id",
+            "taskerLists.status",
           ])
           .where("(task.taskStatus = 'TS1' AND task.time > CURRENT_TIMESTAMP)")
           .getMany();
+        const taskerListRepository = AppDataSource.getRepository(TaskerList);
+        const taskerLists = await taskerListRepository.find({
+          where: { taskerId: taskerId },
+        });
+        const taskerListWithTasks = taskerLists.map((taskerList) => {
+          const taskIndex = tasks.findIndex(
+            (task) => task.id === taskerList.taskId
+          );
+
+          if (taskIndex !== -1) {
+            const task = tasks[taskIndex];
+            tasks.splice(taskIndex, 1); // Xóa task khỏi mảng tasks
+          }
+        });
 
         resolve({
           errCode: 0,
@@ -406,5 +609,5 @@ export class TaskerService {
         reject(e);
       }
     });
-  }
+  };
 }

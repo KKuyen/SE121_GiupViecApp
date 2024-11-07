@@ -12,6 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg:
+  firebase_core:
+  firebase_messaging:
+  firebase_storage:
+  flutter_widget_from_html:
 
   flutter_dash: ^1.0.0
   cupertino_icons: ^1.0.6
@@ -27,8 +31,8 @@ dependencies:
   emoji_picker_flutter: ^1.5.1
   image_picker:
   flutter_slidable:
-  equatable: 
-  http: 
+  equatable:
+  http:
   get_it:
   shared_preferences:
   flutter_secure_storage:

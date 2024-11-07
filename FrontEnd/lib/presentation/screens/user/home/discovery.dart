@@ -86,7 +86,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   Row(
                     children: [
                       Expanded(
-                          child: const Search(
+                          child: Search(
                         hint: "Tìm kiếm ưu đãi",
                       )),
                       SizedBox(
@@ -109,7 +109,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   SizedBox(
                     height: 6,
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 170,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -126,7 +126,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   SizedBox(
                     height: 6,
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 170,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -144,9 +144,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
 }
 
 class _financeCard extends StatelessWidget {
-  const _financeCard({
-    super.key,
-  });
+  const _financeCard();
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +195,6 @@ class _finaceChild extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
-    super.key,
   });
 
   @override

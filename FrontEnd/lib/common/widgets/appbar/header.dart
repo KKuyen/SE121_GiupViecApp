@@ -26,7 +26,7 @@ class _HeaderState extends State<Header> {
     return Container(
         decoration: BoxDecoration(color: widget.color),
         child: Padding(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
               vertical: 22, horizontal: AppInfor1.horizontal_padding),
           child: Row(
             children: [
@@ -37,18 +37,18 @@ class _HeaderState extends State<Header> {
                   children: [
                     Text(
                       widget.text1,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Inter',
                         color: Colors.white,
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 5), // Khoảng cách giữa các đoạn text
+                    const SizedBox(height: 5), // Khoảng cách giữa các đoạn text
                     Text(
                       widget.text2,
                       softWrap: true,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 13,
                         fontFamily: 'Inter',
                         color: Colors.white,
@@ -58,7 +58,7 @@ class _HeaderState extends State<Header> {
                   ],
                 ),
               ),
-              SizedBox(width: 20), // Khoảng cách giữa văn bản và icon
+              const SizedBox(width: 20), // Khoảng cách giữa văn bản và icon
               // Ic
               widget.icon,
             ],

@@ -1,11 +1,8 @@
 // lib/presentation/cubit/task_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se121_giupviec_app/domain/entities/BlockTasker.dart';
-import 'package:se121_giupviec_app/domain/entities/loveTasker.dart';
-import 'package:se121_giupviec_app/domain/entities/task.dart';
+
 import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 
-import 'package:se121_giupviec_app/domain/usecases/get_all_love_taskers_usecase.dart';
 import 'package:se121_giupviec_app/domain/usecases/new_task1_usecase.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_state.dart';
 

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
@@ -13,6 +11,12 @@ class AppTextStyle {
   static const tieudebox20 = TextStyle(
       fontFamily: 'Inter',
       fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+      decoration: TextDecoration.none);
+  static const tieudebox25 = TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 21,
       fontWeight: FontWeight.bold,
       color: Colors.black,
       decoration: TextDecoration.none);

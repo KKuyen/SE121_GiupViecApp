@@ -170,7 +170,7 @@ class CustomListItemExample extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(13),
                 image: const DecorationImage(
-                  image: const AssetImage(AppImages.voucher2),
+                  image: AssetImage(AppImages.voucher2),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -184,7 +184,7 @@ class CustomListItemExample extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(13),
                 image: const DecorationImage(
-                  image: const AssetImage(AppImages.voucher2),
+                  image: AssetImage(AppImages.voucher2),
                   fit: BoxFit.fill,
                 ),
               ),

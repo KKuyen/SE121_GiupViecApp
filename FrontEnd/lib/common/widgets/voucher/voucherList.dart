@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherCard.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
-import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 
 import '../../../core/configs/theme/app_colors.dart';
 import '../../../presentation/bloc/Voucher/voucher_cubit.dart';
@@ -51,6 +50,7 @@ class _VouchersState extends State<Vouchers> {
                 }
 
                 return VoucherCard(
+                  isBorder: false,
                   imageUrl: AppImages.voucher1,
                   title: voucher.header,
                   description: voucher.content,

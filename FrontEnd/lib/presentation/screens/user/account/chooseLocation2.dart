@@ -9,7 +9,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 
 class ChooseLocationPage2 extends StatefulWidget {
-  const ChooseLocationPage2({Key? key}) : super(key: key);
+  const ChooseLocationPage2({super.key});
 
   @override
   State<ChooseLocationPage2> createState() => _ChooseLocationPage2State();
@@ -17,7 +17,7 @@ class ChooseLocationPage2 extends StatefulWidget {
 
 class _ChooseLocationPage2State extends State<ChooseLocationPage2> {
   //get map controller to access map
-  Completer<GoogleMapController> _googleMapController = Completer();
+  final Completer<GoogleMapController> _googleMapController = Completer();
   CameraPosition? _cameraPosition;
   late LatLng _defaultLatLng;
   late LatLng _draggedLatlng;
@@ -97,7 +97,7 @@ class _ChooseLocationPage2State extends State<ChooseLocationPage2> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Padding(
               padding: const EdgeInsets.only(right: AppInfo.main_padding),
@@ -175,7 +175,7 @@ class _ChooseLocationPage2State extends State<ChooseLocationPage2> {
                       String detailedAddress = parts[0];
 
                       Navigator.pop(context,
-                          "${detailedAddress}, ${_draggedLatlng.latitude} - ${_draggedLatlng.longitude}");
+                          "$detailedAddress, ${_draggedLatlng.latitude} - ${_draggedLatlng.longitude}");
                     },
                     text: "Chọn vị trí này",
                     width: double.infinity,
@@ -216,7 +216,7 @@ class _ChooseLocationPage2State extends State<ChooseLocationPage2> {
 
   Widget _getCustomPin() {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 90,
         child: Lottie.asset(
           "assets/images/pin.json",

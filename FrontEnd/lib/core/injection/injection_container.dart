@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/data/datasources/allReview_remote_datasource.
 import 'package:se121_giupviec_app/data/datasources/blockTaskers_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/loveTaskers_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/newTask1_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/setting_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/tasker_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/repository/allReview_repository_impl.dart';
@@ -11,6 +12,7 @@ import 'package:se121_giupviec_app/data/repository/blockTaskers_repository_impl.
 import 'package:se121_giupviec_app/data/repository/get_task_impl.dart';
 import 'package:se121_giupviec_app/data/repository/loveTaskers_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/newtask1_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/setting_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/tasker_repository_impl.dart';
 import 'package:se121_giupviec_app/domain/repository/BlockTaskers_repository.dart';
@@ -18,9 +20,11 @@ import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/allReview_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/loveTaskers_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/newTask1_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/setting_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
 
 import 'package:se121_giupviec_app/domain/repository/tasker_repository.dart';
+import 'package:se121_giupviec_app/domain/usecases/Setting_usecaces.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasker_usercase.dart';
 
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
@@ -30,14 +34,18 @@ import 'package:se121_giupviec_app/domain/usecases/get_all_block_taskers_usecase
 import 'package:se121_giupviec_app/domain/usecases/get_all_love_taskers_usecase.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_all_reviews_usercase.dart';
 import 'package:se121_giupviec_app/domain/usecases/new_task1_usecase.dart';
+import 'package:se121_giupviec_app/presentation/bloc/Setting/Setting_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/review/aReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 
@@ -92,6 +100,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => TaskCubit(
       getAllTasksUseCase: sl(),
+      SettingUsecase: sl(),
     ),
   );
   sl.registerFactory(
@@ -168,6 +177,26 @@ Future<void> init() async {
       NewTask2Usecase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => AReviewCubit(
+      getAReviewsUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => SettingCubit(
+      SettingUsecase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => TaskerTaskCubit(
+      getAllTasksUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => TaskerFindTaskCubit(
+      getAllTasksUseCase: sl(),
+    ),
+  );
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -189,7 +218,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMyDefaultLocationUseCase(sl()));
   sl.registerLazySingleton(() => AddNewLocationUseCase(sl()));
   sl.registerLazySingleton(() => DeleteLocationUseCase(sl()));
-
+  sl.registerLazySingleton(() => SettingUsecaces(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
@@ -225,6 +254,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<SettingRepository>(
+    () => SettingRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -298,6 +330,13 @@ Future<void> init() async {
 
   sl.registerLazySingleton<LocationRemoteDatasource>(
     () => LocationRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<SettingRemoteDatasource>(
+    () => SettingRemoteDataSourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,

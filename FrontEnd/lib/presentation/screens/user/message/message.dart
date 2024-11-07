@@ -54,9 +54,7 @@ class _MessagePageState extends State<MessagePage> {
 }
 
 class _listMessage extends StatelessWidget {
-  const _listMessage({
-    super.key,
-  });
+  const _listMessage();
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +140,6 @@ class _messageCard extends StatelessWidget {
     this.message = 'Mình chia tay đi',
     this.time = '12:00',
     this.isSeen = false,
-    super.key,
   });
 
   @override

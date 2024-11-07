@@ -38,8 +38,7 @@ class _AddpriceState extends State<Addprice> {
     setState(() {
       sang = x;
     });
-    print("vao day " +
-        ((x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice).toString());
+    print("vao day ${(x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice}");
     widget
         .onPriceUpdate((x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice);
     widget.onXUpdate(widget.index, x, widget.id);

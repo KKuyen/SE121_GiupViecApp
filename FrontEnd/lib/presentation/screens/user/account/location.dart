@@ -243,7 +243,6 @@ class _addressCard extends StatelessWidget {
   Location location;
   _addressCard({
     required this.location,
-    super.key,
   });
 
   @override

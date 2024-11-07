@@ -1,53 +1,41 @@
 import 'package:se121_giupviec_app/domain/entities/task.dart';
 
 class TaskModel extends Task {
+  @override
   final Map<String, dynamic>? user; // Allow null
+  @override
   final Map<String, dynamic>? location; // Allow null
+  @override
   final Map<String, dynamic>? taskType; // Allow null
+  @override
   final List<Map<String, dynamic>>? taskerLists; // Allow null
 
   TaskModel({
-    required int id,
-    required int userId,
-    required int taskTypeId,
-    required DateTime time,
-    required int locationId,
-    String? note,
-    int? isReTaskChildren,
-    required String taskStatus,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    String? price,
+    required super.id,
+    required super.userId,
+    required super.taskTypeId,
+    required super.time,
+    required super.locationId,
+    super.note,
+    super.isReTaskChildren,
+    required super.taskStatus,
+    required super.createdAt,
+    required super.updatedAt,
+    super.price,
     this.user,
     this.location,
     this.taskType,
     this.taskerLists,
-    int? numberOfTasker,
-    DateTime? approvedAt,
-    DateTime? cancelAt,
-    DateTime? finishedAt,
-    String? cancelReason,
+    super.numberOfTasker,
+    super.approvedAt,
+    super.cancelAt,
+    super.finishedAt,
+    super.cancelReason,
   }) : super(
-          id: id,
-          userId: userId,
-          taskTypeId: taskTypeId,
-          time: time,
-          locationId: locationId,
-          note: note,
-          isReTaskChildren: isReTaskChildren,
-          taskStatus: taskStatus,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          price: price,
           location: location,
           user: user,
           taskType: taskType,
           taskerLists: taskerLists,
-          numberOfTasker: numberOfTasker,
-          approvedAt: approvedAt,
-          cancelAt: cancelAt,
-          finishedAt: finishedAt,
-          cancelReason: cancelReason,
         );
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {

@@ -2,7 +2,7 @@
 
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
 import 'package:se121_giupviec_app/domain/entities/location.dart';
-import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
+import 'package:se121_giupviec_app/domain/entities/voucher.dart';
 
 abstract class Newtask1Repository {
   Future<TasktypeModel> getATaskType(int TaskTypeId);
@@ -17,4 +17,5 @@ abstract class Newtask1Repository {
       List<Map<String, dynamic>> addPriceDetail);
   Future<List<Location>> getMyLocation(int userId);
   Future<Location> getMyDefaultLocation(int userId);
+  Future<List<Voucher>> getAvailableVoucherList(int userId, int taskTypeId);
 }

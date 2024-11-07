@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:se121_giupviec_app/domain/entities/review.dart';
-import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
-import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
-import '../../../../../domain/entities/task.dart';
 
 abstract class AllReviewState extends Equatable {
   const AllReviewState();

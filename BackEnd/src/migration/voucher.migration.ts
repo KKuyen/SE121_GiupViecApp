@@ -28,6 +28,7 @@ export class VouchersMigration1698324600530 implements MigrationInterface {
             type: "varchar",
             isNullable: false,
           },
+
           {
             name: "applyTasks",
             type: "varchar",
@@ -63,6 +64,7 @@ export class VouchersMigration1698324600530 implements MigrationInterface {
             type: "timestamp",
             isNullable: false,
           },
+
           {
             name: "createdAt",
             type: "timestamp",

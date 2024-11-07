@@ -1,3 +1,4 @@
+// import { UserSettings } from "./../entity/UserSetting.entity";
 import { User } from "../entity/User.entity";
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
@@ -354,7 +355,12 @@ export class UserService {
             const discount = parseFloat(voucher.value.replace("%", ""));
             totalPrice = (totalPrice * (100 - discount)) / 100;
           } else {
-            totalPrice = totalPrice - parseFloat(voucher.value);
+            const giamgia = parseFloat(voucher.value.replace("đ", ""));
+            console.log("giảm giá nè");
+            console.log(giamgia);
+
+            totalPrice =
+              totalPrice - parseFloat(voucher.value.replace("đ", ""));
           }
         } else {
           const taskIds = voucher.applyTasks.split("_");
@@ -363,15 +369,21 @@ export class UserService {
               const discount = parseFloat(voucher.value.replace("%", ""));
               totalPrice = (totalPrice * (100 - discount)) / 100;
             } else {
-              totalPrice = totalPrice - parseFloat(voucher.value);
+              const giamgia = parseFloat(voucher.value.replace("đ", ""));
+              console.log("giảm giá nè");
+              console.log(giamgia);
+
+              totalPrice -= parseFloat(voucher.value.replace("đ", ""));
             }
           }
         }
         const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
         const myVoucher = await myVoucherRepository.findOne({
-          where: { id: myVoucherId },
+          where: { id: myVoucherId, isUsed: false },
         });
         if (myVoucher) {
+          console.log("vào đây rồi ");
+          console.log(myVoucher.id);
           myVoucher.isUsed = true;
           await myVoucherRepository.save(myVoucher);
         }
@@ -495,7 +507,7 @@ export class UserService {
       .leftJoinAndSelect("task.taskType", "taskType")
       .leftJoinAndSelect("task.taskerLists", "taskerLists")
       .orderBy("task.createdAt", "DESC")
-      .where("task.userId = :userId", { userId })
+
       .select([
         "task.id",
 
@@ -535,6 +547,7 @@ export class UserService {
         "location.map",
         "taskType.id",
         "taskType.name",
+        "taskType.avatar",
         "taskerLists.id",
         "taskerLists.status",
       ])
@@ -615,6 +628,19 @@ export class UserService {
       taskType: taskType,
     };
   }
+  static async getSetting(userId: number) {
+    const userSettingRepository = AppDataSource.getRepository(UserSettings);
+
+    const userSetting = await userSettingRepository.findOne({
+      where: { userId: userId },
+    });
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      setting: userSetting,
+    };
+  }
   static async getTaskerList(taskId: number) {
     const taskerListRepository = AppDataSource.getRepository(TaskerList);
 
@@ -637,6 +663,7 @@ export class UserService {
         "user.role",
         "user.avatar",
         "user.birthday",
+        "user.avatar",
       ])
       .getMany();
 
@@ -750,19 +777,23 @@ export class UserService {
     content: string,
 
     userId: number,
-    userName: string,
-    userAvatar: string,
-    imageArray: any
+
+    imageArray: any,
+    taskTypeId: number
   ) {
     const reviewRepository = AppDataSource.getRepository(Reviews);
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: userId } });
+
     const review = reviewRepository.create({
       taskId: taskId,
       taskerId: taskerId,
       star: star,
       content: content,
       userId: userId,
-      userName: userName,
-      userAvatar: userAvatar,
+      userName: user?.name,
+      userAvatar: user?.avatar,
+      taskTypeId: taskTypeId,
     });
     if (imageArray.length > 0) review.image1 = imageArray[0];
     if (imageArray.length > 1) review.image2 = imageArray[1];
@@ -770,6 +801,14 @@ export class UserService {
     if (imageArray.length > 3) review.image4 = imageArray[3];
 
     await reviewRepository.save(review);
+    const taskerListRepository = AppDataSource.getRepository(TaskerList);
+    const taskerList = await taskerListRepository.findOne({
+      where: { taskId: taskId, taskerId: taskerId },
+    });
+    if (taskerList) {
+      taskerList.reviewStar = star;
+      await taskerListRepository.save(taskerList);
+    }
 
     return {
       errCode: 0,
@@ -825,6 +864,7 @@ export class UserService {
         "location.map",
         "taskType.id",
         "taskType.name",
+        "taskType.avatar",
         "taskerLists.id",
         "taskerLists.status",
       ])
@@ -939,7 +979,7 @@ export class UserService {
         "task.note",
         "taskType.id",
         "taskType.name",
-        "taskType.image",
+        "taskType.avatar",
       ])
       .getMany();
 
@@ -947,6 +987,46 @@ export class UserService {
       errCode: 0,
       errMessage: "OK",
       reviewList: reviews,
+    };
+  }
+  static async getAReviews(taskerId: number, taskId: number) {
+    const reviewRepository = AppDataSource.getRepository(Reviews);
+    const reviews = await reviewRepository
+      .createQueryBuilder("review")
+      .leftJoinAndSelect("review.task", "task")
+      .leftJoinAndSelect("review.taskType", "taskType")
+      .where("review.taskerId = :taskerId AND review.taskId = :taskId", {
+        taskerId,
+        taskId,
+      })
+      .select([
+        "review.id",
+        "review.taskId",
+        "review.taskerId",
+        "review.star",
+        "review.content",
+        "review.userId",
+        "review.userName",
+        "review.userAvatar",
+        "review.image1",
+        "review.image2",
+        "review.image3",
+        "review.image4",
+        "review.createdAt",
+        "review.updatedAt",
+        "task.id",
+        "task.time",
+        "task.note",
+        "taskType.id",
+        "taskType.name",
+        "taskType.image",
+      ])
+      .getOne();
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      review: reviews,
     };
   }
   static async editSetting(

@@ -2,16 +2,11 @@ import 'package:se121_giupviec_app/domain/entities/BlockTasker.dart';
 
 class BlockTaskerModel extends BlockTasker {
   BlockTaskerModel({
-    required int id,
-    required int userId,
-    required int taskerId,
-    required Object? tasker,
-  }) : super(
-          id: id,
-          userId: userId,
-          taskerId: taskerId,
-          tasker: tasker,
-        );
+    required super.id,
+    required super.userId,
+    required super.taskerId,
+    required super.tasker,
+  });
 
   factory BlockTaskerModel.fromJson(Map<String, dynamic> json) {
     return BlockTaskerModel(

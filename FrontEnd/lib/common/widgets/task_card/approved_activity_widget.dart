@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/finishTab.dart';
@@ -27,12 +26,14 @@ class ApprovedActivityWidget extends StatefulWidget {
   final String phone;
   final int ungCuVien;
   final int daNhan;
+  final String avatar;
 
   final String price;
   final String note;
 
   const ApprovedActivityWidget(
       {this.isFinished = false,
+      required this.avatar,
       required this.onShowLabel,
       required this.taskTypeId,
       required this.id,
@@ -114,11 +115,7 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                      child: SvgPicture.asset(
-                        AppVectors.baby_carriage_icon,
-                        height: 30,
-                        width: 30,
-                      ),
+                      child: AppIcon.getIconXanhMain(widget.avatar),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,13 +230,7 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
                               ),
                             ),
                             Text(
-                              widget.deltailAddress +
-                                  ', ' +
-                                  widget.district +
-                                  ', ' +
-                                  widget.province +
-                                  ', ' +
-                                  widget.country,
+                              '${widget.deltailAddress}, ${widget.district}, ${widget.province}, ${widget.country}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

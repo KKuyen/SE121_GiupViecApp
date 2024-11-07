@@ -220,7 +220,6 @@ class _time extends StatelessWidget {
   final String time;
   const _time({
     required this.time,
-    super.key,
   });
 
   @override
@@ -243,10 +242,7 @@ class _messageCard extends StatelessWidget {
   final bool isMe;
   final String message;
   const _messageCard(
-      {required this.avatar,
-      required this.isMe,
-      required this.message,
-      super.key});
+      {required this.avatar, required this.isMe, required this.message});
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class _TextfieldState extends State<CTextfield> {
           hintText: widget.hintText,
           hintStyle: const TextStyle(
               color: AppColors.xam72, fontWeight: FontWeight.normal),
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.xanh_main),
           ),

@@ -9,22 +9,52 @@ class TaskRepositoryImpl implements TaskRepository {
   TaskRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<Task>> getTS1Tasks(int taskId) async {
-    return await remoteDataSource.getTS1Tasks(taskId);
+  Future<List<Task>> getTS1Tasks(int userId) async {
+    return await remoteDataSource.getTS1Tasks(userId);
   }
 
   @override
-  Future<List<Task>> getTS2Tasks(int taskId) async {
-    return await remoteDataSource.getTS2Tasks(taskId);
+  Future<List<Task>> getTS2Tasks(int userId) async {
+    return await remoteDataSource.getTS2Tasks(userId);
   }
 
   @override
-  Future<List<Task>> getTS3Tasks(int taskId) async {
-    return await remoteDataSource.getTS3Tasks(taskId);
+  Future<List<Task>> getTS3Tasks(int userId) async {
+    return await remoteDataSource.getTS3Tasks(userId);
   }
 
   @override
-  Future<List<Task>> getTS4Tasks(int taskId) async {
-    return await remoteDataSource.getTS4Tasks(taskId);
+  Future<List<Task>> getTS4Tasks(int userId) async {
+    return await remoteDataSource.getTS4Tasks(userId);
+  }
+
+  @override
+  Future<List<Task>> TaskergetTS1Tasks(int userId) async {
+    return await remoteDataSource.TaskergetTS1Tasks(userId);
+  }
+
+  @override
+  Future<List<Task>> TaskergetTS2Tasks(int userId) async {
+    return await remoteDataSource.TaskergetTS2Tasks(userId);
+  }
+
+  @override
+  Future<List<Task>> TaskergetTS3Tasks(int userId) async {
+    return await remoteDataSource.TaskergetTS3Tasks(userId);
+  }
+
+  @override
+  Future<List<Task>> TaskergetTS4Tasks(int userId) async {
+    return await remoteDataSource.TaskergetTS4Tasks(userId);
+  }
+
+  @override
+  Future<List<Task>> taskerFindTask(int taskerId) async {
+    return await remoteDataSource.taskerFindTask(taskerId);
+  }
+
+  @override
+  Future<void> applyTask(int taskerId, int taskId) async {
+    return await remoteDataSource.applyTask(taskerId, taskId);
   }
 }

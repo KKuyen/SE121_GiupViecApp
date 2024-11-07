@@ -12,7 +12,7 @@ import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
@@ -26,8 +26,8 @@ class Approvetab extends StatefulWidget {
 }
 
 class _ApprovetabState extends State<Approvetab> {
-  String _formattedDate = '20:58';
-  String _formattedTime = '16/10/2024';
+  final String _formattedDate = '20:58';
+  final String _formattedTime = '16/10/2024';
   bool _isLabelVisible = false;
 
   bool _isEditableNote = false;
@@ -52,8 +52,8 @@ class _ApprovetabState extends State<Approvetab> {
   }
 
   String returnText(DateTime time) {
-    if (time.day > DateTime.now().day) {
-      return 'Còn ${time.difference(DateTime.now()).inDays} ngày nữa là tới lịch ${time.day}/${time.month}/${time.year}. Lưu ý chú ý thời gian';
+    if (time.isAfter(DateTime.now())) {
+      return 'Ngày ${time.day}/${time.month}/${time.year} là lịch làm việc. Lưu ý chú ý thời gian';
     } else {
       return 'Đã tới ngày làm. Công việc bắt đầu lúc ${time.hour}giờ ${time.minute} phút';
     }
@@ -63,7 +63,7 @@ class _ApprovetabState extends State<Approvetab> {
   void initState() {
     super.initState();
     final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id);
+        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
   }
 
   @override
@@ -80,7 +80,7 @@ class _ApprovetabState extends State<Approvetab> {
                     color: Colors.black.withOpacity(0.5),
                   ),
                   child: Center(
-                      child: Container(
+                      child: SizedBox(
                           height: 40,
                           width: 40,
                           child: CircularProgressIndicator()))),
@@ -94,7 +94,7 @@ class _ApprovetabState extends State<Approvetab> {
               if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
                 maxTasker++;
               }
-              if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+              if ((tasker)['status'] == 'S2') {
                 appTasker++;
               }
             }
@@ -291,7 +291,7 @@ class _ApprovetabState extends State<Approvetab> {
                     child: Column(
                   children: [
                     Header(
-                      text1: (task.time.day > DateTime.now().day)
+                      text1: (task.time.isAfter(DateTime.now()))
                           ? "Đang chờ tới ngày làm"
                           : "Đã tới ngày làm",
                       text2: returnText(task.time),
@@ -330,12 +330,16 @@ class _ApprovetabState extends State<Approvetab> {
                                     return Taskerrowbasic(
                                       taskerId: (atasker.tasker
                                           as Map<String, dynamic>)['id'],
-                                      taskerName: (atasker.tasker
-                                          as Map<String, dynamic>)['name'],
-                                      taskerImageLink: (atasker.tasker
-                                          as Map<String, dynamic>)['avatar'],
+                                      taskerName: (atasker.tasker as Map<String,
+                                              dynamic>)['name'] ??
+                                          '',
+                                      taskerImageLink: (atasker.tasker as Map<
+                                              String, dynamic>)['avatar'] ??
+                                          '',
                                       taskerPhone: (atasker.tasker as Map<
-                                          String, dynamic>)['phoneNumber'],
+                                              String,
+                                              dynamic>)['phoneNumber'] ??
+                                          '',
                                     );
                                   } else {
                                     return Container(); // Return an empty container if the status is not "S1"
@@ -413,8 +417,9 @@ class _ApprovetabState extends State<Approvetab> {
                                               fontWeight: FontWeight.normal)),
                                       const SizedBox(width: 38),
                                       Text(
-                                        (task.taskType
-                                            as Map<String, dynamic>)['name'],
+                                        (task.taskType as Map<String, dynamic>)[
+                                                'name'] ??
+                                            '',
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             color: Colors.black,
@@ -486,7 +491,7 @@ class _ApprovetabState extends State<Approvetab> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
+                                              '${(task.location as Map<String, dynamic>)['detailAddress'] ?? ''}, ${(task.location as Map<String, dynamic>)['district'] ?? ""}, ${(task.location as Map<String, dynamic>)['province'] ?? ''}, ${(task.location as Map<String, dynamic>)['country'] ?? ''}',
                                               softWrap: true,
                                               style: TextStyle(
                                                   fontFamily: 'Inter',
@@ -678,6 +683,7 @@ class _ApprovetabState extends State<Approvetab> {
       if (_isLabelVisible)
         Center(
           child: Taskerlist(
+            id: widget.id,
             cancel: _hideLabel,
             numberOfTasker: widget.numberOfTasker,
             taskStatus: 'TS2',

@@ -16,7 +16,7 @@ class _AboutusState extends State<Aboutus> {
     return Scaffold(
         backgroundColor: AppColors.nen_the,
         appBar: const BasicAppbar(
-          title: const Text(
+          title: Text(
             'Trợ giúp',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -53,7 +53,7 @@ class _AboutusState extends State<Aboutus> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -94,7 +94,7 @@ class _AboutusState extends State<Aboutus> {
                 size: 38,
               )),
           const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Divider(),
           ),
           const row(
@@ -106,7 +106,7 @@ class _AboutusState extends State<Aboutus> {
                 size: 36,
               )),
           const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Divider(),
           ),
           const row(
@@ -118,7 +118,7 @@ class _AboutusState extends State<Aboutus> {
                 size: 36,
               )),
           const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Divider(),
           ),
           const row(
@@ -130,7 +130,7 @@ class _AboutusState extends State<Aboutus> {
                 size: 34,
               )),
           const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Divider(),
           ),
           const Padding(

@@ -1,5 +1,6 @@
 // lib/presentation/cubit/task_state.dart
 import 'package:equatable/equatable.dart';
+import 'package:se121_giupviec_app/domain/entities/location.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
 import '../../../../../domain/entities/task.dart';
 
@@ -17,8 +18,11 @@ class ATaskLoading extends ATaskState {}
 class ATaskSuccess extends ATaskState {
   final Task task;
   final List<TaskerList> taskerList;
+  final Location dfLocation;
+  final List<Location> Mylocations;
 
-  const ATaskSuccess(this.task, this.taskerList);
+  const ATaskSuccess(
+      this.task, this.taskerList, this.dfLocation, this.Mylocations);
 
   @override
   List<Object> get props => [task, taskerList];

@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
-import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
@@ -34,17 +31,9 @@ class Canceltab extends StatefulWidget {
 }
 
 class _CanceltabState extends State<Canceltab> {
-  String _formattedDate = '20:58';
-  String _formattedTime = '16/10/2024';
   bool _isLabelVisible = false;
 
-  bool _isEditableNote = false;
-
-  void _showLabel() {
-    setState(() {
-      _isLabelVisible = true;
-    });
-  }
+  final bool _isEditableNote = false;
 
   void _hideLabel() {
     setState(() {
@@ -52,18 +41,10 @@ class _CanceltabState extends State<Canceltab> {
     });
   }
 
-  void _toggleEditableNote() {
-    setState(() {
-      _isEditableNote =
-          !_isEditableNote; // Chuyển trạng thái từ có thể chỉnh sửa sang không và ngược lại
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id);
+    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
   }
 
   @override
@@ -80,7 +61,7 @@ class _CanceltabState extends State<Canceltab> {
                     color: Colors.black.withOpacity(0.5),
                   ),
                   child: Center(
-                      child: Container(
+                      child: SizedBox(
                           height: 40,
                           width: 40,
                           child: CircularProgressIndicator()))),
@@ -94,7 +75,7 @@ class _CanceltabState extends State<Canceltab> {
               if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
                 maxTasker++;
               }
-              if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+              if ((tasker)['status'] == 'S2') {
                 appTasker++;
               }
             }
@@ -122,7 +103,7 @@ class _CanceltabState extends State<Canceltab> {
                       Header(
                         color: AppColors.do_main,
                         text1: 'Đã hủy dịch vụ',
-                        text2: 'Đã hủy dịch vụ vào ngày 23/10/2024',
+                        text2: 'Dịch vụ đã được hủy, không thể thực hiện',
                         icon: Icon(
                           Icons.cancel, // Icon kiểu hình tròn
                           color: Colors.white, // Màu của icon
@@ -192,8 +173,9 @@ class _CanceltabState extends State<Canceltab> {
                                                 fontWeight: FontWeight.normal)),
                                         const SizedBox(width: 38),
                                         Text(
-                                          (task.taskType
-                                              as Map<String, dynamic>)['name'],
+                                          (task.taskType as Map<String,
+                                                  dynamic>)['name'] ??
+                                              '',
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               color: Colors.black,
@@ -265,7 +247,7 @@ class _CanceltabState extends State<Canceltab> {
                                               ),
                                               const SizedBox(height: 5),
                                               Text(
-                                                '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
+                                                '${(task.location as Map<String, dynamic>)['detailAddress'] ?? ''}, ${(task.location as Map<String, dynamic>)['district'] ?? ''}, ${(task.location as Map<String, dynamic>)['province'] ?? ''}, ${(task.location as Map<String, dynamic>)['country'] ?? ''}',
                                                 softWrap: true,
                                                 style: TextStyle(
                                                     fontFamily: 'Inter',
@@ -416,8 +398,7 @@ class _CanceltabState extends State<Canceltab> {
                                         const SizedBox(width: 42),
                                         Expanded(
                                           child: Text(
-                                            widget.cancelAt
-                                                    ?.toIso8601String() ??
+                                            widget.cancelAt.toIso8601String() ??
                                                 '',
                                             softWrap: true,
                                             style: TextStyle(

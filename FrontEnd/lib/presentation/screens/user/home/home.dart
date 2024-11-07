@@ -167,9 +167,7 @@ class _HomePageState extends State<HomePage>
 }
 
 class _services extends StatelessWidget {
-  const _services({
-    super.key,
-  });
+  const _services();
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +231,6 @@ class _serviceItem extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.color,
-    super.key,
   });
   @override
   Widget build(BuildContext context) {
@@ -269,16 +266,14 @@ class _serviceItem extends StatelessWidget {
 }
 
 class _banner extends StatelessWidget {
-  const _banner({
-    super.key,
-  });
+  const _banner();
 
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(height: 150.0, autoPlay: true),
       items: [1, 2, 3, 4, 5].map((index) {
-        final String img = 'assets/images/album${index}.jpg';
+        final String img = 'assets/images/album$index.jpg';
         return Builder(
           builder: (BuildContext context) {
             return Container(

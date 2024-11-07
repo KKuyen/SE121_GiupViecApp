@@ -1,18 +1,12 @@
 import 'package:se121_giupviec_app/domain/entities/loveTasker.dart';
-import 'package:se121_giupviec_app/domain/entities/review.dart';
 
 class LoveTaskerModel extends LoveTasker {
   LoveTaskerModel({
-    required int id,
-    required int userId,
-    required int taskerId,
-    required Object? tasker,
-  }) : super(
-          id: id,
-          userId: userId,
-          taskerId: taskerId,
-          tasker: tasker,
-        );
+    required super.id,
+    required super.userId,
+    required super.taskerId,
+    required super.tasker,
+  });
 
   factory LoveTaskerModel.fromJson(Map<String, dynamic> json) {
     return LoveTaskerModel(

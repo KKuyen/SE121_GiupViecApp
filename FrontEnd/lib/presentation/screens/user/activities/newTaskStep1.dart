@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:se121_giupviec_app/common/widgets/addPrice/addPrice.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
-import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton2text.dart';
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep2.dart';
@@ -43,18 +42,16 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
   }
 
   void updateMoney(int amount) {
-    print("vao day 2 " + sumMoney.toString());
+    print("vao day 2 $sumMoney");
     setState(() {
       sumMoney += amount;
     });
-    print("vao day 2 " + sumMoney.toString());
   }
 
   @override
   void initState() {
     super.initState();
-    final NewTask1 =
-        BlocProvider.of<NewTask1Cubit>(context).getTaskType(widget.taskTypeId);
+    BlocProvider.of<NewTask1Cubit>(context).getTaskType(widget.taskTypeId);
   }
 
   @override
@@ -111,6 +108,8 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                               border: Border.all(
                                   color: AppColors.xanh_main, width: 2),
                             ),
+                            child: AppIcon.getIconXanhMain(
+                                taskType.avatar.toString()),
                           ),
                           const SizedBox(width: 10),
                           Column(
@@ -290,6 +289,7 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Newtaskstep2(
+                                      firstPrice: sumMoney,
                                       taskTypeId: widget.taskTypeId,
                                       addPriceDetail: xValues,
                                     )),

@@ -1,7 +1,6 @@
 // lib/presentation/cubit/task_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
-import '../../../../domain/entities/task.dart';
 
 abstract class AWState extends Equatable {
   const AWState();

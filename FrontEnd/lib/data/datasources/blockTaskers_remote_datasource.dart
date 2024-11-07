@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/BlockTasker_model.dart';
-import 'package:se121_giupviec_app/data/models/review_model.dart';
 
 abstract class BlockTaskersRemoteDatasource {
   Future<List<BlockTaskerModel>> getAllBlockTaskers(int userId);

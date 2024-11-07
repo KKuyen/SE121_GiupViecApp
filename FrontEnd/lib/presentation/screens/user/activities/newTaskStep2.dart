@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
+import 'package:se121_giupviec_app/common/widgets/voucher/voucherCard.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -15,16 +16,17 @@ class Newtaskstep2 extends StatefulWidget {
   final int taskTypeId;
   final int? myvoucherId;
   int? locationId;
-  final int? voucherId;
+  final int firstPrice;
+
   final List<Map<String, dynamic>> addPriceDetail;
 
   Newtaskstep2({
+    required this.firstPrice,
     required this.taskTypeId,
     super.key,
     required this.addPriceDetail,
     this.myvoucherId,
     this.locationId,
-    this.voucherId,
   });
 
   @override
@@ -32,6 +34,10 @@ class Newtaskstep2 extends StatefulWidget {
 }
 
 class _Newtaskstep2State extends State<Newtaskstep2> {
+  int? voucherId = 0;
+  String voucherName = 'Chưa có mã giảm giá nào';
+  String voucherValue = '0 đ';
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   final TextEditingController _dateController = TextEditingController();
@@ -46,7 +52,38 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
 
     _selectedDate = DateTime.now().add(const Duration(days: 1));
     _selectedTime = const TimeOfDay(hour: 8, minute: 0);
-    final NewTask2 = BlocProvider.of<NewTask2Cubit>(context).getLocation(1);
+    final NewTask2 = BlocProvider.of<NewTask2Cubit>(context)
+        .getLocationAndVoucher(1, widget.taskTypeId);
+  }
+
+  void setVoucherId(int id, String voucherName, String value) {
+    print(voucherName);
+    setState(() {
+      voucherId = id;
+      this.voucherName = voucherName;
+      voucherValue = value;
+    });
+  }
+
+  String tongThanhToan(int firstPrice, String voucherValue) {
+    String sum = firstPrice.toString();
+    if (voucherValue.contains('%')) {
+      double discountPercentage =
+          double.parse(voucherValue.replaceAll('%', ''));
+      double discountAmount = firstPrice * (discountPercentage / 100);
+      sum = (firstPrice - discountAmount).toString();
+    } else {
+      int discountAmount =
+          int.parse(voucherValue.replaceAll(' đ', '').replaceAll(',', ''));
+      sum = (firstPrice - discountAmount).toString();
+    }
+    return sum;
+  }
+
+  void setVoucherValue(String value) {
+    setState(() {
+      voucherValue = value;
+    });
   }
 
   // Hàm định dạng ngày
@@ -81,7 +118,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                 color: Colors.black.withOpacity(0.5),
               ),
               child: Center(
-                child: Container(
+                child: SizedBox(
                   height: 40,
                   width: 40,
                   child: const CircularProgressIndicator(),
@@ -520,7 +557,29 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Mã giảm giá'),
-                              content: const Text('Chưa có mã giảm giá nào.'),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  children: state.vouchers.map((voucher) {
+                                    return Container(
+                                      child: VoucherCard(
+                                        isBorder: (voucher.id == voucherId)
+                                            ? true
+                                            : false,
+                                        imageUrl: voucher.image ?? '',
+                                        title: voucher.header ?? '',
+                                        description: voucher.content ?? '',
+                                        onPressed: () {
+                                          setVoucherId(voucher.id,
+                                              voucher.header, voucher.value);
+                                          Navigator.pop(context);
+                                        },
+                                        RpointCost:
+                                            voucher.RpointCost.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('Đóng'),
@@ -538,9 +597,11 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                           const Text('Mã giảm giá',
                               style: AppTextStyle.tieudebox),
                           const SizedBox(width: 10),
-                          Spacer(),
-                          Text('Chưa chọn mã giảm giá nào',
-                              style: AppTextStyle.textthuong),
+                          const Spacer(),
+                          Text(voucherName,
+                              style: (voucherId == 0
+                                  ? AppTextStyle.textthuong
+                                  : AppTextStyle.textthuongxanhmain)),
                           const SizedBox(width: 10),
                           const Icon(
                             FontAwesomeIcons.angleRight,
@@ -551,34 +612,37 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                       ),
                     ),
                     const SizedBox(height: 15),
-                    Text('Chi tiết thanh toán', style: AppTextStyle.tieudebox),
+                    const Text('Chi tiết thanh toán',
+                        style: AppTextStyle.tieudebox),
                     const SizedBox(height: 5),
                     Row(
                       children: [
-                        Text('Tổng tiền dịch vụ',
+                        const Text('Tổng tiền dịch vụ',
                             style: AppTextStyle.textnhoxam),
-                        Spacer(),
-                        Text('100.000đ', style: AppTextStyle.textnhoxam),
+                        const Spacer(),
+                        Text('${widget.firstPrice} đ',
+                            style: AppTextStyle.textnhoxam),
                       ],
                     ),
                     Row(
                       children: [
-                        Text('Giảm giá', style: AppTextStyle.textnhoxam),
-                        Spacer(),
-                        Text('100.000đ', style: AppTextStyle.textnhoxam),
+                        const Text('Giảm giá', style: AppTextStyle.textnhoxam),
+                        const Spacer(),
+                        Text(voucherValue, style: AppTextStyle.textnhoxam),
                       ],
                     ),
                     Row(
                       children: [
-                        Text('Tổng thanh toán',
+                        const Text('Tổng thanh toán',
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             )),
-                        Spacer(),
-                        Text('100.000đ',
-                            style: TextStyle(
+                        const Spacer(),
+                        Text(
+                            '${tongThanhToan(widget.firstPrice, voucherValue)} đ',
+                            style: const TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -599,8 +663,8 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                         );
                         int locationId = selectLocaion.id;
                         String note = this.note;
-                        int myvoucherId = widget.myvoucherId ?? 0;
-                        int voucherId = widget.voucherId ?? 0;
+                        int? myvoucherId = widget.myvoucherId ?? 0;
+                        int selectedvoucher = voucherId ?? 0;
                         List<Map<String, dynamic>> addPriceDetail =
                             widget.addPriceDetail;
                         showDialog(
@@ -619,7 +683,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                               locationId,
                               note,
                               myvoucherId,
-                              voucherId,
+                              selectedvoucher,
                               addPriceDetail,
                             );
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -631,7 +695,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Navigation(tab: 1),
+                            builder: (context) => const Navigation(tab: 1),
                           ),
                         );
                       },

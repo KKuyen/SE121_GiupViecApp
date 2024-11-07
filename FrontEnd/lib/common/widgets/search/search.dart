@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Search extends StatelessWidget {

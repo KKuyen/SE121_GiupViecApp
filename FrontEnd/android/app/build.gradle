@@ -22,6 +22,8 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
+apply plugin:"com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace = "com.example.se121_giupviec_app"
@@ -39,10 +41,11 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 21
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
-        minSdkVersion 23
+        minSdkVersion 30
+        multiDexEnabled true
     }
 
     buildTypes {

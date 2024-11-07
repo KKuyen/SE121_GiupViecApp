@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/location_model.dart';
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
-import 'package:se121_giupviec_app/data/models/task_model.dart';
+import 'package:se121_giupviec_app/data/models/voucher_model.dart';
 
 abstract class NewTask1RemoteDatasource {
   Future<TasktypeModel> getAtTaskType(int taskTypeId);
@@ -19,6 +19,8 @@ abstract class NewTask1RemoteDatasource {
       List<Map<String, dynamic>> addPriceDetail);
   Future<List<LocationModel>> getMyLocation(int userId);
   Future<LocationModel> getMyDefaultLocation(int userId);
+  Future<List<VoucherModel>> getAvailableVoucherList(
+      int userId, int taskTypeId);
 }
 
 class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
@@ -199,6 +201,35 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
 
     if (response.statusCode == 201) {
       print('thanh cong');
+    } else {
+      print("response.body failed: ${response.body}");
+      throw Exception('Failed to create task');
+    }
+  }
+
+  @override
+  Future<List<VoucherModel>> getAvailableVoucherList(
+      int userId, int taskTypeId) async {
+    final response = await client.post(
+      Uri.parse('$baseUrl/$apiVersion/get-avaiable-voucher'),
+      body: json.encode({
+        'userId': userId,
+        'taskTypeId': taskTypeId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AppInfor1.user_token,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> voucherListJson =
+          json.decode(response.body)['availableVouchers'];
+      print("avalable vourchers");
+      print(voucherListJson);
+      return voucherListJson
+          .map((json) => VoucherModel.fromJson(json))
+          .toList();
     } else {
       print("response.body failed: ${response.body}");
       throw Exception('Failed to create task');

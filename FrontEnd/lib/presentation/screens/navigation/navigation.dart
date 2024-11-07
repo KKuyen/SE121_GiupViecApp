@@ -20,18 +20,19 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentPageIndex = 0;
+  @override
   void initState() {
     super.initState();
     currentPageIndex = widget.tab ?? 0;
   }
 
-  SecureStorage secureStorage = new SecureStorage();
+  SecureStorage secureStorage = SecureStorage();
   void _printUser() async {
     String? id = await secureStorage.readId();
     String? email = await secureStorage.readEmail();
 
-    print("Data from local: ${id}");
-    print("Data from local: ${email}");
+    print("Data from local: $id");
+    print("Data from local: $email");
   }
 
   @override

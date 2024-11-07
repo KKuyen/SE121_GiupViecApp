@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
@@ -21,7 +22,7 @@ class WatingActivityWidget extends StatefulWidget {
   final String phone;
   final int ungCuVien;
   final int daNhan;
-
+  final String avatar;
   final String price;
   final String note;
 
@@ -42,6 +43,7 @@ class WatingActivityWidget extends StatefulWidget {
       required this.price,
       required this.note,
       required this.onShowLabel,
+      required this.avatar,
       required this.loading,
       super.key});
 
@@ -90,13 +92,9 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                        child: SvgPicture.asset(
-                          AppVectors.baby_carriage_icon,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
+                          child: AppIcon.getIconXanhMain(widget.avatar)),
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

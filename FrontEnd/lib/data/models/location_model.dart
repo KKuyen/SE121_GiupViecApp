@@ -4,32 +4,19 @@ import 'package:se121_giupviec_app/domain/entities/location.dart';
 
 class LocationModel extends Location {
   LocationModel({
-    required int id,
-    required String ownerName,
-    required String ownerPhoneNumber,
-    required String country,
-    required String province,
-    required String district,
-    required String detailAddress,
-    required String map,
-    required int userId,
-    required bool isDefault,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) : super(
-          id: id,
-          ownerName: ownerName,
-          ownerPhoneNumber: ownerPhoneNumber,
-          country: country,
-          province: province,
-          district: district,
-          detailAddress: detailAddress,
-          map: map,
-          userId: userId,
-          isDefault: isDefault,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+    required super.id,
+    required super.ownerName,
+    required super.ownerPhoneNumber,
+    required super.country,
+    required super.province,
+    required super.district,
+    required super.detailAddress,
+    required super.map,
+    required super.userId,
+    required super.isDefault,
+    required super.createdAt,
+    required super.updatedAt,
+  });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
