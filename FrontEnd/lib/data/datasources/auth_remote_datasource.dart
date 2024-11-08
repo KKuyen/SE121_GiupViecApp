@@ -129,6 +129,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
+  @override
   Future<ResponseModel> verifyOTP(String phoneNumber, String otp) async {
     final response = await client.post(
       Uri.parse('$baseUrl/$apiVersion/verify-otp'),
@@ -146,6 +147,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
+  @override
   Future<ResponseModel> forgetPassword(
       String phoneNumber, String newPassword) async {
     final response = await client.put(

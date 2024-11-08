@@ -10,9 +10,11 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/domain/entities/location.dart';
+
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
@@ -25,11 +27,92 @@ class Waitingtab extends StatefulWidget {
 }
 
 class _WaitingtabState extends State<Waitingtab> {
-  String _formattedDate = '20:58';
-  String _formattedTime = '16/10/2024';
   bool _isLabelVisible = false;
-
+  bool firstTime = true;
   bool _isEditableNote = false;
+  final TextEditingController _noteController = TextEditingController();
+  DateTime time = DateTime.now();
+  String location1 = '';
+  String location2 = '';
+  String location3 = '';
+  int locationId = 0;
+  void setLocationId(int id) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        locationId = id;
+      });
+    });
+  }
+
+  void setNewLocationId(int newlocationId) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        locationId = newlocationId;
+      });
+    });
+  }
+
+  void setFalse() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        firstTime = false;
+      });
+    });
+  }
+
+  void setLocation(String ownerName, String detailAddress, String district) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        location1 = ownerName;
+        location2 = detailAddress;
+        location3 = district;
+      });
+    });
+  }
+
+  void setNewLocation(Location newlocation) async {
+    await BlocProvider.of<ATaskCubit>(context)
+        .editTask(widget.id, null, newlocation.id, null);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        location1 = newlocation.ownerName;
+        location2 =
+            '${newlocation.detailAddress}, ${newlocation.district}, ${newlocation.province}, ${newlocation.country}';
+        location3 = newlocation.ownerPhoneNumber;
+      });
+    });
+  }
+
+  void setDateTime(DateTime gettime) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        time = gettime;
+      });
+    });
+  }
+
+  void setNewDattime(DateTime newtime) async {
+    // Kiem tra dịnh dạng thời gian
+    if (newtime.isBefore(time.add(Duration(days: 1))) ||
+        newtime.isAfter(time.add(Duration(days: 7)))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Chỉ có thể thay đổi so với thời gian gốc trong vòng 7 ngày tiếp theo'),
+          backgroundColor: AppColors.do_main,
+        ),
+      );
+      return;
+    } else {
+      await BlocProvider.of<ATaskCubit>(context)
+          .editTask(widget.id, newtime, null, null);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          time = newtime;
+        });
+      });
+    }
+  }
 
   void _showLabel() {
     setState(() {
@@ -43,55 +126,89 @@ class _WaitingtabState extends State<Waitingtab> {
     });
   }
 
-  void _toggleEditableNote() {
+  void _toggleEditableNote() async {
+    if (_isEditableNote) {
+      await BlocProvider.of<ATaskCubit>(context).editTask(widget.id, null, null,
+          _noteController.text); // Call the editTask function here
+      // Call the updateTaskerStatus function here
+    }
     setState(() {
       _isEditableNote =
           !_isEditableNote; // Chuyển trạng thái từ có thể chỉnh sửa sang không và ngược lại
     });
   }
 
+  Future<void> _reload() async {
+    setState(() {
+      final st = BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id);
+
+    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      BlocBuilder<ATaskCubit, ATaskState>(
-        builder: (context, state) {
-          if (state is ATaskLoading) {
-            return Center(
-              child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                  ),
-                  child: Center(
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          child: CircularProgressIndicator()))),
-            );
-          } else if (state is ATaskSuccess) {
-            final task = state.task;
-            final taskerList = state.taskerList;
-            int maxTasker = 0;
-            int appTasker = 0;
-            for (var tasker in task.taskerLists ?? []) {
-              if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
-                maxTasker++;
-              }
-              if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
-                appTasker++;
-              }
+    return BlocBuilder<ATaskCubit, ATaskState>(
+      builder: (context, state) {
+        if (state is ATaskLoading) {
+          return Center(
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                child: Center(
+                    child: SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: CircularProgressIndicator()))),
+          );
+        } else if (state is ATaskSuccess) {
+          final task = state.task;
+          print(task.id);
+          if (firstTime) {
+            _noteController.text = task.note ?? '';
+            setDateTime(task.time);
+
+            setLocationId((task.location as Map<String, dynamic>)['id']);
+            setLocation(
+                (task.location as Map<String, dynamic>)['ownerName'] ?? '',
+                ((task.location as Map<String, dynamic>)['detailAddress'] +
+                        ', ' +
+                        (task.location as Map<String, dynamic>)['district'] +
+                        ', ' +
+                        (task.location as Map<String, dynamic>)['province'] +
+                        ', ' +
+                        (task.location as Map<String, dynamic>)['country']) ??
+                    '',
+                (task.location as Map<String, dynamic>)['ownerPhoneNumber'] ??
+                    '');
+
+            setFalse();
+          }
+
+          final taskerList = state.taskerList;
+          int maxTasker = 0;
+          int appTasker = 0;
+          for (var tasker in task.taskerLists ?? []) {
+            if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
+              maxTasker++;
             }
-            return Scaffold(
+            if ((tasker)['status'] == 'S2') {
+              appTasker++;
+            }
+          }
+          return Stack(children: [
+            Scaffold(
                 backgroundColor: AppColors.nen_the,
                 appBar: BasicAppbar(
+                  result: true,
                   title: const Text(
                     'Thông tin',
                     style: TextStyle(
@@ -112,8 +229,101 @@ class _WaitingtabState extends State<Waitingtab> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Sizedbutton(
-                          onPressFun: () {
-                            // Add your logic here
+                          onPressFun: () async {
+                            bool? confirmDelete = await showDialog<bool>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Xác nhận'),
+                                  content: Text(
+                                      'Bạn có chắc chắn muốn xóa công việc này không?'),
+                                  actions: <Widget>[
+                                    Sizedbutton(
+                                      onPressFun: () {
+                                        Navigator.of(context).pop(
+                                            true); // Return false if not confirmed
+                                      },
+                                      text: 'Hủy',
+                                      backgroundColor: AppColors.xanh_main,
+                                      height: 45,
+                                    ),
+                                    Spacer(),
+                                    Sizedbutton(
+                                      onPressFun: () {
+                                        Navigator.of(context).pop(
+                                            true); // Return true if confirmed
+                                      },
+                                      text: 'Xóa',
+                                      backgroundColor: AppColors.do_main,
+                                      height: 45,
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirmDelete == true) {
+                              // Show a second dialog to select an integer cancelCode
+                              int? cancelCode = await showDialog<int>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Lý do hủy',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                              'Tôi không có nhu cầu  nữa',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(0),
+                                        ),
+                                        ListTile(
+                                          title: Text(
+                                              'Tôi có công việc đột xuất',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(1),
+                                        ),
+                                        ListTile(
+                                          title: Text(
+                                              'Tôi muốn đặt công việc khác',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(2),
+                                        ),
+                                        ListTile(
+                                          title: Text('Lý do khác',
+                                              style: AppTextStyle.textthuong),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(3),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+
+                              if (cancelCode != null) {
+                                await BlocProvider.of<ATaskCubit>(context)
+                                    .deleteTask(widget.id, cancelCode);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Đã hủy công việc '),
+                                    backgroundColor: AppColors.do_main,
+                                  ),
+                                );
+                                Navigator.pop(context, true);
+                              }
+                            }
                           },
                           text: 'Xác nhận hủy',
                           StrokeColor: AppColors.cam_main,
@@ -181,12 +391,18 @@ class _WaitingtabState extends State<Waitingtab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S2") {
                                     return Taskerrowbasic(
-                                      taskerName: (atasker.tasker
-                                          as Map<String, dynamic>)['name'],
-                                      taskerImageLink: (atasker.tasker
-                                          as Map<String, dynamic>)['avatar'],
+                                      taskerId: (atasker.tasker
+                                          as Map<String, dynamic>)['id'],
+                                      taskerName: (atasker.tasker as Map<String,
+                                              dynamic>)['name'] ??
+                                          '',
+                                      taskerImageLink: (atasker.tasker as Map<
+                                              String, dynamic>)['avatar'] ??
+                                          '',
                                       taskerPhone: (atasker.tasker as Map<
-                                          String, dynamic>)['phoneNumber'],
+                                              String,
+                                              dynamic>)['phoneNumber'] ??
+                                          '',
                                     );
                                   } else {
                                     return Container(); // Return an empty container if the status is not "S1"
@@ -303,8 +519,9 @@ class _WaitingtabState extends State<Waitingtab> {
                                               fontWeight: FontWeight.normal)),
                                       const SizedBox(width: 38),
                                       Text(
-                                        (task.taskType
-                                            as Map<String, dynamic>)['name'],
+                                        (task.taskType as Map<String, dynamic>)[
+                                                'name'] ??
+                                            '',
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             color: Colors.black,
@@ -331,7 +548,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                       const SizedBox(width: 25),
                                       Expanded(
                                         child: Text(
-                                          task.time.toString(),
+                                          time.toIso8601String(),
                                           softWrap: true,
                                           style: TextStyle(
                                               fontFamily: 'Inter',
@@ -344,7 +561,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                         onPressed: () {
                                           showDatePicker(
                                             context: context,
-                                            initialDate: DateTime.now(),
+                                            initialDate: time,
                                             firstDate: DateTime(2000),
                                             lastDate: DateTime(2100),
                                             builder: (BuildContext context,
@@ -402,14 +619,12 @@ class _WaitingtabState extends State<Waitingtab> {
                                                 },
                                               ).then((selectedTime) {
                                                 if (selectedTime != null) {
-                                                  setState(() {
-                                                    // Update the date and time here
-                                                    // For example, you can format and display the selected date and time
-                                                    _formattedDate =
-                                                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-                                                    _formattedTime =
-                                                        "${selectedTime.format(context)}";
-                                                  });
+                                                  setNewDattime(DateTime(
+                                                      selectedDate.year,
+                                                      selectedDate.month,
+                                                      selectedDate.day,
+                                                      selectedTime.hour,
+                                                      selectedTime.minute));
                                                 }
                                               });
                                             }
@@ -444,9 +659,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              (task.location as Map<String,
-                                                      dynamic>)['ownerName']
-                                                  .toString(),
+                                              location1,
                                               style: TextStyle(
                                                   fontFamily: 'Inter',
                                                   color: Colors.black,
@@ -456,7 +669,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
+                                              location2,
                                               softWrap: true,
                                               style: TextStyle(
                                                   fontFamily: 'Inter',
@@ -467,10 +680,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              (task.location as Map<String,
-                                                          dynamic>)[
-                                                      'ownerPhoneNumber']
-                                                  .toString(),
+                                              location3,
                                               style: TextStyle(
                                                   fontFamily: 'Inter',
                                                   color: Colors.black,
@@ -483,7 +693,202 @@ class _WaitingtabState extends State<Waitingtab> {
                                       ),
                                       Spacer(),
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          print(state.dfLocation);
+                                          print(
+                                              "________________________________");
+
+                                          print(state.Mylocations);
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Dialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Container(
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                    minHeight: 300,
+                                                    maxHeight: 500,
+                                                  ),
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          const Text(
+                                                            'Chọn địa chỉ',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColors
+                                                                  .xanh_main,
+                                                            ),
+                                                          ),
+                                                          const Spacer(),
+                                                          IconButton(
+                                                            icon: const Icon(
+                                                              Icons.close,
+                                                              color: AppColors
+                                                                  .xam72,
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 10),
+                                                      Expanded(
+                                                        child: ListView.builder(
+                                                          itemCount: state
+                                                              .Mylocations
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            final location =
+                                                                state.Mylocations[
+                                                                    index];
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .fromLTRB(
+                                                                      0,
+                                                                      0,
+                                                                      0,
+                                                                      5),
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  //
+                                                                  setNewLocation(
+                                                                      location);
+                                                                  setNewLocationId(
+                                                                      location
+                                                                          .id);
+
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  _reload();
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border: Border.all(
+                                                                        color: location.id ==
+                                                                                locationId
+                                                                            ? AppColors
+                                                                                .xanh_main
+                                                                            : const Color.fromARGB(
+                                                                                255,
+                                                                                202,
+                                                                                202,
+                                                                                202)),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            10.0),
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        if (location.isDefault ==
+                                                                            true)
+                                                                          const Text(
+                                                                            'Địa chỉ mặc định',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Inter',
+                                                                              fontSize: 15,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: AppColors.xanh_main,
+                                                                            ),
+                                                                          ),
+                                                                        Text(
+                                                                          location
+                                                                              .ownerName,
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            fontFamily:
+                                                                                'Inter',
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                            height:
+                                                                                2),
+                                                                        Text(
+                                                                          '${location.detailAddress}, ${location.district}, ${location.province}, ${location.country}',
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            fontFamily:
+                                                                                'Inter',
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.normal,
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                            height:
+                                                                                2),
+                                                                        Text(
+                                                                          location
+                                                                              .ownerPhoneNumber,
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            fontFamily:
+                                                                                'Inter',
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.normal,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
                                         icon: const Icon(
                                           Icons.location_on,
                                           size: 30,
@@ -535,6 +940,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                       const SizedBox(width: 9),
                                       DisableInput(
                                         enabled: _isEditableNote,
+                                        controller: _noteController,
                                         text: task.note ?? '',
                                       ),
                                       SizedBox(
@@ -622,24 +1028,28 @@ class _WaitingtabState extends State<Waitingtab> {
                       height: 10,
                     ),
                   ],
-                )));
-          } else if (state is ATaskError) {
-            return Center(child: Text('Error: ${state.message}'));
-          } else {
-            return const Center(child: Text('No tasks found'));
-          }
-        },
-      ),
-      if (_isLabelVisible)
-        Container(
-          color: Colors.black.withOpacity(0.5),
-        ),
-      if (_isLabelVisible)
-        Center(
-          child: Taskerlist(
-            cancel: _hideLabel,
-          ),
-        ),
-    ]);
+                ))),
+            if (_isLabelVisible)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            if (_isLabelVisible)
+              Center(
+                child: Taskerlist(
+                  callBackFunforTab: () => _reload(),
+                  id: widget.id,
+                  numberOfTasker: task.numberOfTasker,
+                  cancel: _hideLabel,
+                  taskStatus: 'TS1',
+                ),
+              ),
+          ]);
+        } else if (state is ATaskError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No tasks found'));
+        }
+      },
+    );
   }
 }

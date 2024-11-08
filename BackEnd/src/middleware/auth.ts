@@ -34,15 +34,22 @@ const userPaths: string[] = [
   "/api/v1/edit-tasker-list-status",
   "/api/v1/delete-account",
   "/api/v1/cancel-a-task",
-  "/api/v1/finish-a-task","/api/v1/get-my-location",
+
+  "/api/v1/finish-a-task",
+  "/api/v1/get-all-reviews",
+  "/api/v1/get-a-task-type",
+  "/api/v1/get-my-location",
+  "/api/v1/finish-a-task",
+  "/api/v1/get-my-location",
   "/api/v1/add-new-location",
   "/api/v1/edit-my-location",
   "/api/v1/delete-my-location",
   "/api/v1/change-password",
   "/api/v1/get-my-default-location",
   "/api/v1/edit-user-profile",
-  "/api/v1/delete-my-voucher"
-
+  "/api/v1/delete-my-voucher",
+  "/api/v1/get-a-review",
+  "/api/v1/get-user-setting",
 ];
 const taskerPaths: string[] = [
   "/api/v1/get-tasker-profile",
@@ -53,12 +60,14 @@ const taskerPaths: string[] = [
   "/api/v1/edit-my-location",
   "/api/v1/delete-my-location",
   "/api/v1/change-password",
-  "/api/v1/get-all-tasks",
+  "/api/v1/get-find-tasks",
   "/api/v1/get-all-tasks",
   "/api/v1/get-my-task",
   "/api/v1/get-my-task-history",
   "/api/v1/apply-task",
-  "/api/v1/cancel-task","/api/v1/get-my-default-location"
+  "/api/v1/cancel-task",
+  "/api/v1/get-my-default-location",
+  "/api/v1/get-apply-tasks",
 ];
 const commonPaths: string[] = [];
 

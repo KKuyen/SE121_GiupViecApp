@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "464358819305",
+    "project_id": "se100-af7bc",
+    "storage_bucket": "se100-af7bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464358819305:android:6da47dcd4a2f3ac0ecb778",
+        "android_client_info": {
+          "package_name": "com.example.se121_giupviec_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKmdiKcL_0kykthhGJsgURCNefRXSFhlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

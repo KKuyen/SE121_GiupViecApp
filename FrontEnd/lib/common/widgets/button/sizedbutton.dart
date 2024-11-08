@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Sizedbutton extends StatefulWidget {
-  final VoidCallback onPressFun;
+  final onPressFun;
   final String text;
   final double width;
   final double height;

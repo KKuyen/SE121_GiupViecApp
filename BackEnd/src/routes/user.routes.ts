@@ -50,8 +50,13 @@ userRouter.post("/api/v1/push-image", UserController.uploadImage);
 userRouter.delete("/api/v1/delete-account", UserController.deleteAccount);
 userRouter.put("/api/v1/cancel-a-task", UserController.cancelTask);
 userRouter.put("/api/v1/finish-a-task", UserController.finishTask);
+
 userRouter.put("/api/v1/edit-user-profile", UserController.editUserProfile);
 userRouter.post("/api/v1/delete-my-voucher", UserController.deleteMyVoucher);
 
+userRouter.post("/api/v1/get-all-reviews", UserController.getAllReviews);
+userRouter.post("/api/v1/get-a-task-type", UserController.getATaskType);
+userRouter.post("/api/v1/get-a-review", UserController.getAReviews);
+userRouter.post("/api/v1/get-user-setting", UserController.getSetting);
 
 export default userRouter;

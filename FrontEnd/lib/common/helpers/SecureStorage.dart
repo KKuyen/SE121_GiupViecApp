@@ -3,8 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../domain/entities/user.dart';
 
 class SecureStorage {
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 //state.blockTaskers[index].tasker as Map<String, dynamic>)['id'],
+
   Future<void> writeUserInfo(User user, String access_token) async {
     final userMap = user.user as Map<String, dynamic>;
     await _secureStorage.write(key: 'id', value: userMap['id'].toString());
@@ -82,8 +83,8 @@ class SecureStorage {
   }
 
   Future<String> readAccess_token() async {
-    String? access_token = await _secureStorage.read(key: 'access_token');
-    return access_token!;
+    String? accessToken = await _secureStorage.read(key: 'access_token');
+    return accessToken!;
   }
 
   Future<String> readRpoints() async {

@@ -62,7 +62,7 @@ class _SizedbuttonState2 extends State<Sizedbutton2> {
               // Text color
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             widget.text2,
             style: TextStyle(

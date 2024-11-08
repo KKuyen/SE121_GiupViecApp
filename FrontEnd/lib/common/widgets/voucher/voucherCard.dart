@@ -10,6 +10,7 @@ class VoucherCard extends StatelessWidget {
   final String description;
   final String RpointCost;
   final VoidCallback onPressed;
+  final bool isBorder;
 
   const VoucherCard({
     required this.imageUrl,
@@ -18,6 +19,7 @@ class VoucherCard extends StatelessWidget {
     required this.onPressed,
     required this.RpointCost,
     super.key,
+    required this.isBorder,
   });
 
   @override
@@ -30,9 +32,10 @@ class VoucherCard extends StatelessWidget {
         child: Container(
           height: 150,
           width: 220,
-          decoration: const BoxDecoration(
-              border: Border.fromBorderSide(BorderSide(color: Colors.grey)),
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+          decoration: BoxDecoration(
+              border: Border.fromBorderSide(BorderSide(
+                  color: isBorder ? AppColors.xanh_main : Colors.grey)),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Column(
             children: [
               Container(

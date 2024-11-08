@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/message/jobCard.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
-import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
+
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class ListTaskMessage extends StatefulWidget {
@@ -118,7 +117,6 @@ class _time extends StatelessWidget {
   final String time;
   const _time({
     required this.time,
-    super.key,
   });
 
   @override

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 
 class TwoSttButton extends StatefulWidget {
   final Icon icon;
   final Icon icon2;
   final bool sttkey;
+  final int TaskerId;
+  final isLove;
 
   const TwoSttButton({
+    required this.TaskerId,
+    required this.isLove,
     super.key,
     this.sttkey = true,
     required this.icon,
@@ -18,6 +23,7 @@ class TwoSttButton extends StatefulWidget {
 }
 
 class _TwoSttButtonState extends State<TwoSttButton> {
+  int userId = 2;
   late bool isStt;
 
   @override
@@ -30,6 +36,23 @@ class _TwoSttButtonState extends State<TwoSttButton> {
     setState(() {
       isStt = !isStt;
     });
+    if (isStt) {
+      if (widget.isLove) {
+        BlocProvider.of<LoveTaskersCubit>(context)
+            .loveTaskers(userId, widget.TaskerId);
+      } else {
+        BlocProvider.of<LoveTaskersCubit>(context)
+            .blockTasker(userId, widget.TaskerId);
+      }
+    } else {
+      if (widget.isLove) {
+        BlocProvider.of<LoveTaskersCubit>(context)
+            .unloveTasker(userId, widget.TaskerId);
+      } else {
+        BlocProvider.of<LoveTaskersCubit>(context)
+            .unblockTasker(userId, widget.TaskerId);
+      }
+    }
   }
 
   @override

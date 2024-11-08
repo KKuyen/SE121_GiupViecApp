@@ -14,10 +14,12 @@ class LocationRepositoryImpl implements LocationRepository {
     return await remoteDataSource.getMyLocation(userId);
   }
 
+  @override
   Future<Location> getMyDefaultLocation(int userId) async {
     return await remoteDataSource.getMyDefaultLocation(userId);
   }
 
+  @override
   Future<Response> addNewLocation(
       String ownerName,
       String ownerPhoneNumber,
@@ -32,6 +34,7 @@ class LocationRepositoryImpl implements LocationRepository {
         country, province, district, detailAddress, map, userId, isDefault);
   }
 
+  @override
   Future<Response> deleteLocation(int id) async {
     return await remoteDataSource.deleteLocation(id);
   }

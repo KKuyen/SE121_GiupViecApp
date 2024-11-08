@@ -1,3 +1,4 @@
+// import { UserSettings } from "./../entity/UserSetting.entity";
 import { User } from "../entity/User.entity";
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
@@ -60,7 +61,7 @@ export class UserService {
   static createUser = async (user: User) => {
     return new Promise(async (resolve, reject) => {
       try {
-         let userData: any = {};
+        let userData: any = {};
         if (await UserService.checkUserPhone(user.phoneNumber)) {
           userData.errCode = 1;
           userData.errMessage = "Phone number already exists";
@@ -83,13 +84,13 @@ export class UserService {
           userData.errCode = 0;
           userData.errMessage = "OK";
           let payload = {
-                userId: user.id,
-                phoneNumber: user.phoneNumber,
-                role: user.role,
-                expiresIn: process.env.JWT_EXPIRES_IN,
-              };
-              userData.access_token = await createJWT(payload);
-           
+            userId: user.id,
+            phoneNumber: user.phoneNumber,
+            role: user.role,
+            expiresIn: process.env.JWT_EXPIRES_IN,
+          };
+          userData.access_token = await createJWT(payload);
+
           userData.user = user;
           resolve(userData);
         }
@@ -156,22 +157,23 @@ export class UserService {
     });
   };
   static convertToShortPhoneNumber(phoneNumber: string): string {
-  if (phoneNumber.startsWith('+84')) {
-    return '0' + phoneNumber.slice(3);
+    if (phoneNumber.startsWith("+84")) {
+      return "0" + phoneNumber.slice(3);
     }
-  
-  return phoneNumber; // Return the original if it doesn't start with +84
+
+    return phoneNumber; // Return the original if it doesn't start with +84
   }
   static convertToFullPhoneNumber(phoneNumber: string): string {
-    if (phoneNumber.startsWith('0')) {
-      return '+84' + phoneNumber.slice(1);
+    if (phoneNumber.startsWith("0")) {
+      return "+84" + phoneNumber.slice(1);
     }
     return phoneNumber; // Return the original if it doesn't start with '0'
   }
   static sendOTP = async (phoneNumber: string, otp: string) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let shortPhoneNumber = UserService.convertToShortPhoneNumber(phoneNumber);
+        let shortPhoneNumber =
+          UserService.convertToShortPhoneNumber(phoneNumber);
         let checkUserPhone = await UserService.checkUserPhone(shortPhoneNumber);
         if (checkUserPhone) {
           await client.messages.create({
@@ -181,7 +183,10 @@ export class UserService {
           });
           resolve({ errCode: 0, message: "Ok" });
         }
-        resolve({ errCode: 1, message: "Your phone number isn`t exist in system. Please try again!" });
+        resolve({
+          errCode: 1,
+          message: "Your phone number isn`t exist in system. Please try again!",
+        });
       } catch (error) {
         reject(error);
       }
@@ -253,7 +258,6 @@ export class UserService {
     addPriceDetail: any,
     locationId: number,
     note: string,
-    isReTaskChildren: number,
     voucherId: number,
     myVoucherId: number
   ) {
@@ -280,7 +284,7 @@ export class UserService {
       time,
       locationId,
       note,
-      isReTaskChildren,
+
       taskStatus: "TS1", // Set default value for taskStatus
       numberOfTasker: 0,
       voucherId,
@@ -320,22 +324,21 @@ export class UserService {
         console.log("sum:" + sum);
         console.log("totalPrice:" + totalPrice);
         console.log("pricedetail:" + pricedetail);
+        //+ rpoint
 
-        if (isReTaskChildren === 0) {
-          return addPriceRepository.create({
-            taskId: newTask.id,
-            addPriceDetailId: detail.addPriceDetailId,
-            quantity: detail.quantity,
-            price: detail.price,
-          });
-        } else {
-          return addPriceRepository.create({
-            reTaskId: newTask.id,
-            addPriceDetailId: detail.addPriceDetailId,
-            quantity: detail.quantity,
-            price: detail.price,
-          });
+        const userRepository = AppDataSource.getRepository(User);
+        const user = await userRepository.findOne({ where: { id: userId } });
+        if (user) {
+          user.Rpoints += 5;
+          await userRepository.save(user);
         }
+
+        return addPriceRepository.create({
+          taskId: newTask.id,
+          addPriceDetailId: detail.addPriceDetailId,
+          quantity: detail.quantity,
+          price: 0,
+        });
       })
     );
 
@@ -352,7 +355,12 @@ export class UserService {
             const discount = parseFloat(voucher.value.replace("%", ""));
             totalPrice = (totalPrice * (100 - discount)) / 100;
           } else {
-            totalPrice = totalPrice - parseFloat(voucher.value);
+            const giamgia = parseFloat(voucher.value.replace("đ", ""));
+            console.log("giảm giá nè");
+            console.log(giamgia);
+
+            totalPrice =
+              totalPrice - parseFloat(voucher.value.replace("đ", ""));
           }
         } else {
           const taskIds = voucher.applyTasks.split("_");
@@ -361,15 +369,21 @@ export class UserService {
               const discount = parseFloat(voucher.value.replace("%", ""));
               totalPrice = (totalPrice * (100 - discount)) / 100;
             } else {
-              totalPrice = totalPrice - parseFloat(voucher.value);
+              const giamgia = parseFloat(voucher.value.replace("đ", ""));
+              console.log("giảm giá nè");
+              console.log(giamgia);
+
+              totalPrice -= parseFloat(voucher.value.replace("đ", ""));
             }
           }
         }
         const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
         const myVoucher = await myVoucherRepository.findOne({
-          where: { id: myVoucherId },
+          where: { id: myVoucherId, isUsed: false },
         });
         if (myVoucher) {
+          console.log("vào đây rồi ");
+          console.log(myVoucher.id);
           myVoucher.isUsed = true;
           await myVoucherRepository.save(myVoucher);
         }
@@ -476,6 +490,7 @@ export class UserService {
     if (taskStatus !== undefined) {
       task.taskStatus = taskStatus;
     }
+    await taskRepository.save(task);
 
     return {
       errCode: 0,
@@ -491,7 +506,8 @@ export class UserService {
       .leftJoinAndSelect("task.user", "user")
       .leftJoinAndSelect("task.taskType", "taskType")
       .leftJoinAndSelect("task.taskerLists", "taskerLists")
-      .where("task.userId = :userId", { userId })
+      .orderBy("task.createdAt", "DESC")
+
       .select([
         "task.id",
 
@@ -531,6 +547,7 @@ export class UserService {
         "location.map",
         "taskType.id",
         "taskType.name",
+        "taskType.avatar",
         "taskerLists.id",
         "taskerLists.status",
       ])
@@ -559,6 +576,7 @@ export class UserService {
       voucherList: vouchers,
     };
   }
+
   static async getMyVoucher(userId: number) {
     const voucherRepository = AppDataSource.getRepository(Vouchers);
     const currentDate = new Date();
@@ -595,6 +613,34 @@ export class UserService {
       taskTypeList: taskTypes,
     };
   }
+  static async getATaskType(taskTypeId: number) {
+    const taskTypeRepository = AppDataSource.getRepository(TaskTypes);
+
+    const taskType = await taskTypeRepository
+      .createQueryBuilder("taskType")
+      .leftJoinAndSelect("taskType.addPriceDetails", "addPriceDetails")
+      .where("taskType.id = :taskTypeId", { taskTypeId })
+      .getOne();
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      taskType: taskType,
+    };
+  }
+  static async getSetting(userId: number) {
+    const userSettingRepository = AppDataSource.getRepository(UserSettings);
+
+    const userSetting = await userSettingRepository.findOne({
+      where: { userId: userId },
+    });
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      setting: userSetting,
+    };
+  }
   static async getTaskerList(taskId: number) {
     const taskerListRepository = AppDataSource.getRepository(TaskerList);
 
@@ -617,6 +663,7 @@ export class UserService {
         "user.role",
         "user.avatar",
         "user.birthday",
+        "user.avatar",
       ])
       .getMany();
 
@@ -728,14 +775,25 @@ export class UserService {
     taskerId: number,
     star: number,
     content: string,
-    imageArray: any
+
+    userId: number,
+
+    imageArray: any,
+    taskTypeId: number
   ) {
     const reviewRepository = AppDataSource.getRepository(Reviews);
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: userId } });
+
     const review = reviewRepository.create({
       taskId: taskId,
       taskerId: taskerId,
       star: star,
       content: content,
+      userId: userId,
+      userName: user?.name,
+      userAvatar: user?.avatar,
+      taskTypeId: taskTypeId,
     });
     if (imageArray.length > 0) review.image1 = imageArray[0];
     if (imageArray.length > 1) review.image2 = imageArray[1];
@@ -743,6 +801,14 @@ export class UserService {
     if (imageArray.length > 3) review.image4 = imageArray[3];
 
     await reviewRepository.save(review);
+    const taskerListRepository = AppDataSource.getRepository(TaskerList);
+    const taskerList = await taskerListRepository.findOne({
+      where: { taskId: taskId, taskerId: taskerId },
+    });
+    if (taskerList) {
+      taskerList.reviewStar = star;
+      await taskerListRepository.save(taskerList);
+    }
 
     return {
       errCode: 0,
@@ -798,6 +864,7 @@ export class UserService {
         "location.map",
         "taskType.id",
         "taskType.name",
+        "taskType.avatar",
         "taskerLists.id",
         "taskerLists.status",
       ])
@@ -812,11 +879,51 @@ export class UserService {
   }
   static async getTaskerInfo(taskerId: number, userId: number) {
     const userRepository = AppDataSource.getRepository(User);
-    const tasker = await userRepository.findOne({ where: { id: taskerId } });
-    const reviewRepository = AppDataSource.getRepository(Reviews);
-    const reviews = await reviewRepository.find({
-      where: { taskerId: taskerId },
+    const tasker = await userRepository.findOne({
+      where: { id: taskerId },
+      select: [
+        "id",
+        "name",
+        "email",
+        "phoneNumber",
+        "role",
+        "avatar",
+        "birthday",
+        "Rpoints",
+        "taskerInfoId",
+        "createdAt",
+        "updatedAt",
+      ],
     });
+    const reviewRepository = AppDataSource.getRepository(Reviews);
+    const reviews = await reviewRepository
+      .createQueryBuilder("review")
+      .leftJoinAndSelect("review.task", "task")
+      .leftJoinAndSelect("review.taskType", "taskType")
+      .where("review.taskerId = :taskerId", { taskerId })
+      .select([
+        "review.id",
+        "review.taskId",
+        "review.taskerId",
+        "review.star",
+        "review.content",
+        "review.userId",
+        "review.userName",
+        "review.userAvatar",
+        "review.image1",
+        "review.image2",
+        "review.image3",
+        "review.image4",
+        "review.createdAt",
+        "review.updatedAt",
+        "task.id",
+        "task.time",
+        "task.note",
+        "taskType.id",
+        "taskType.name",
+        "taskType.image",
+      ])
+      .getMany();
     const loveTaskerRepository = AppDataSource.getRepository(LoveTaskers);
     const loveTasker = await loveTaskerRepository.findOne({
       where: { userId: userId, taskerId: taskerId },
@@ -843,6 +950,83 @@ export class UserService {
 
       blockTasker: blockTasker ? true : false,
       taskerInfo: taskerInfo,
+    };
+  }
+  static async getAllReviews(taskerId: number) {
+    const reviewRepository = AppDataSource.getRepository(Reviews);
+    const reviews = await reviewRepository
+      .createQueryBuilder("review")
+      .leftJoinAndSelect("review.task", "task")
+      .leftJoinAndSelect("review.taskType", "taskType")
+      .where("review.taskerId = :taskerId", { taskerId })
+      .select([
+        "review.id",
+        "review.taskId",
+        "review.taskerId",
+        "review.star",
+        "review.content",
+        "review.userId",
+        "review.userName",
+        "review.userAvatar",
+        "review.image1",
+        "review.image2",
+        "review.image3",
+        "review.image4",
+        "review.createdAt",
+        "review.updatedAt",
+        "task.id",
+        "task.time",
+        "task.note",
+        "taskType.id",
+        "taskType.name",
+        "taskType.avatar",
+      ])
+      .getMany();
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      reviewList: reviews,
+    };
+  }
+  static async getAReviews(taskerId: number, taskId: number) {
+    const reviewRepository = AppDataSource.getRepository(Reviews);
+    const reviews = await reviewRepository
+      .createQueryBuilder("review")
+      .leftJoinAndSelect("review.task", "task")
+      .leftJoinAndSelect("review.taskType", "taskType")
+      .where("review.taskerId = :taskerId AND review.taskId = :taskId", {
+        taskerId,
+        taskId,
+      })
+      .select([
+        "review.id",
+        "review.taskId",
+        "review.taskerId",
+        "review.star",
+        "review.content",
+        "review.userId",
+        "review.userName",
+        "review.userAvatar",
+        "review.image1",
+        "review.image2",
+        "review.image3",
+        "review.image4",
+        "review.createdAt",
+        "review.updatedAt",
+        "task.id",
+        "task.time",
+        "task.note",
+        "taskType.id",
+        "taskType.name",
+        "taskType.image",
+      ])
+      .getOne();
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      review: reviews,
     };
   }
   static async editSetting(
@@ -985,30 +1169,34 @@ export class UserService {
       return fileNames;
     }
   }
-  static async edittkls(taskId: number, taskerId: number, status: string) {
+  static async edittkls(taskerListId: number, status: string) {
     const currentDate = new Date();
     const taskerListRepository = AppDataSource.getRepository(TaskerList);
     const taskerList = await taskerListRepository.findOne({
-      where: { taskId: taskId, taskerId: taskerId },
+      where: { id: taskerListId },
     });
     if (taskerList) {
       taskerList.status = status;
       await taskerListRepository.save(taskerList);
     }
     const taskRepository = AppDataSource.getRepository(Tasks);
-    const task = await taskRepository.findOne({ where: { id: taskId } });
-    if (task) {
-      const taskerListCount = await taskerListRepository.count({
-        where: { taskId: taskId, status: "S2" },
+    if (taskerList) {
+      const task = await taskRepository.findOne({
+        where: { id: taskerList.taskId },
       });
+      if (task) {
+        const taskerListCount = await taskerListRepository.count({
+          where: { taskId: taskerList.taskId, status: "S2" },
+        });
 
-      if (taskerListCount === task.numberOfTasker) {
-        task.taskStatus = "TS2";
-        await taskRepository.save(task);
-        task.approvedAt = currentDate;
-      } else {
-        task.taskStatus = "TS1";
-        await taskRepository.save(task);
+        if (taskerListCount === task.numberOfTasker) {
+          task.taskStatus = "TS2";
+          await taskRepository.save(task);
+          task.approvedAt = currentDate;
+        } else {
+          task.taskStatus = "TS1";
+          await taskRepository.save(task);
+        }
       }
     }
 
@@ -1036,7 +1224,16 @@ export class UserService {
     if (task) {
       task.taskStatus = "TS4";
       if (cancelCode === 0) {
-        task.cancelReason = "Không có lý do";
+        task.cancelReason = "Khách hàng không có nhu cầu  nữa";
+      }
+      if (cancelCode === 1) {
+        task.cancelReason = "Khách hàng có công việc đột xuất";
+      }
+      if (cancelCode === 2) {
+        task.cancelReason = "Khách hàng muốn đặt công việc khác";
+      }
+      if (cancelCode === 3) {
+        task.cancelReason = "Lý do khác";
       }
       task.cancelAt = currentDate;
       await taskRepository.save(task);

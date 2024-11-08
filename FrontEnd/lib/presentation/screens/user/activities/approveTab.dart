@@ -10,22 +10,24 @@ import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Approvetab extends StatefulWidget {
   final int id;
-  const Approvetab({super.key, required this.id});
+  final int numberOfTasker;
+  const Approvetab({super.key, required this.id, required this.numberOfTasker});
 
   @override
   State<Approvetab> createState() => _ApprovetabState();
 }
 
 class _ApprovetabState extends State<Approvetab> {
-  String _formattedDate = '20:58';
-  String _formattedTime = '16/10/2024';
+  final String _formattedDate = '20:58';
+  final String _formattedTime = '16/10/2024';
   bool _isLabelVisible = false;
 
   bool _isEditableNote = false;
@@ -49,11 +51,19 @@ class _ApprovetabState extends State<Approvetab> {
     });
   }
 
+  String returnText(DateTime time) {
+    if (time.isAfter(DateTime.now())) {
+      return 'Ngày ${time.day}/${time.month}/${time.year} là lịch làm việc. Lưu ý chú ý thời gian';
+    } else {
+      return 'Đã tới ngày làm. Công việc bắt đầu lúc ${time.hour}giờ ${time.minute} phút';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id);
+        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
   }
 
   @override
@@ -70,7 +80,7 @@ class _ApprovetabState extends State<Approvetab> {
                     color: Colors.black.withOpacity(0.5),
                   ),
                   child: Center(
-                      child: Container(
+                      child: SizedBox(
                           height: 40,
                           width: 40,
                           child: CircularProgressIndicator()))),
@@ -84,7 +94,7 @@ class _ApprovetabState extends State<Approvetab> {
               if ((tasker as Map<String, dynamic>)['status'] == 'S1') {
                 maxTasker++;
               }
-              if ((tasker as Map<String, dynamic>)['status'] == 'S2') {
+              if ((tasker)['status'] == 'S2') {
                 appTasker++;
               }
             }
@@ -110,27 +120,167 @@ class _ApprovetabState extends State<Approvetab> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Sizedbutton(
-                          onPressFun: () {
-                            // Add your logic here
-                          },
-                          text: 'Xác nhận hủy',
-                          StrokeColor: AppColors.cam_main,
-                          isStroke: true,
-                          textColor: AppColors.cam_main,
-                          backgroundColor: Colors.white,
-                          width: MediaQuery.of(context).size.width / 2 - 15,
-                          height: 45,
-                        ),
-                        Sizedbutton(
-                          onPressFun: () {
-                            // Add your logic here
-                          },
-                          isEnabled: false,
-                          text: 'Đã hoàn thành',
-                          width: MediaQuery.of(context).size.width / 2 - 15,
-                          height: 45,
-                        ),
+                        if (!task.time.isBefore(DateTime.now()))
+                          Sizedbutton(
+                            onPressFun: () async {
+                              bool? confirmDelete = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Xác nhận'),
+                                    content: Text(
+                                        'Bạn có chắc chắn muốn xóa công việc này không?'),
+                                    actions: <Widget>[
+                                      Sizedbutton(
+                                        onPressFun: () {
+                                          Navigator.of(context).pop(
+                                              false); // Return false if not confirmed
+                                        },
+                                        text: 'Hủy',
+                                        backgroundColor: AppColors.xanh_main,
+                                        height: 45,
+                                      ),
+                                      Spacer(),
+                                      Sizedbutton(
+                                        onPressFun: () {
+                                          Navigator.of(context).pop(
+                                              true); // Return true if confirmed
+                                        },
+                                        text: 'Xóa',
+                                        backgroundColor: AppColors.do_main,
+                                        height: 45,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmDelete == true) {
+                                // Show a second dialog to select an integer cancelCode
+                                int? cancelCode = await showDialog<int>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        'Lý do hủy',
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ListTile(
+                                            title: Text(
+                                                'Tôi không có nhu cầu  nữa',
+                                                style: AppTextStyle.textthuong),
+                                            onTap: () =>
+                                                Navigator.of(context).pop(0),
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                                'Tôi có công việc đột xuất',
+                                                style: AppTextStyle.textthuong),
+                                            onTap: () =>
+                                                Navigator.of(context).pop(1),
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                                'Tôi muốn đặt công việc khác',
+                                                style: AppTextStyle.textthuong),
+                                            onTap: () =>
+                                                Navigator.of(context).pop(2),
+                                          ),
+                                          ListTile(
+                                            title: Text('Lý do khác',
+                                                style: AppTextStyle.textthuong),
+                                            onTap: () =>
+                                                Navigator.of(context).pop(3),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+
+                                if (cancelCode != null) {
+                                  await BlocProvider.of<ATaskCubit>(context)
+                                      .deleteTask(widget.id, cancelCode);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Đã hủy công việc '),
+                                      backgroundColor: AppColors.do_main,
+                                    ),
+                                  );
+                                  Navigator.pop(context, true);
+                                }
+                              }
+                            },
+                            text: 'Xác nhận hủy',
+                            StrokeColor: AppColors.cam_main,
+                            isStroke: true,
+                            textColor: AppColors.cam_main,
+                            backgroundColor: Colors.white,
+                            width: MediaQuery.of(context).size.width - 15,
+                            height: 45,
+                          ),
+                        if (task.time.isBefore(DateTime.now()))
+                          Sizedbutton(
+                            onPressFun: () async {
+                              bool? confirmComplete = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Xác nhận'),
+                                    content: Text(
+                                        'Bạn có chắc chắn muốn xác nhận hoàn thành công việc này không?'),
+                                    actions: <Widget>[
+                                      Sizedbutton(
+                                        onPressFun: () {
+                                          Navigator.of(context).pop(
+                                              false); // Return false if not confirmed
+                                        },
+                                        text: 'Hủy',
+                                        backgroundColor: Colors.white,
+                                        isStroke: true,
+                                        textColor: AppColors.xanh_main,
+                                        StrokeColor: AppColors.xanh_main,
+                                        height: 45,
+                                      ),
+                                      Spacer(),
+                                      Sizedbutton(
+                                        onPressFun: () {
+                                          Navigator.of(context).pop(true); //
+                                        },
+                                        text: 'Xác nhận',
+                                        backgroundColor: AppColors.xanh_main,
+                                        height: 45,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmComplete == true) {
+                                await BlocProvider.of<ATaskCubit>(context)
+                                    .finishTask(widget.id);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Đã xác nhận hoàn thành công việc '),
+                                    backgroundColor: AppColors.xanh_main,
+                                  ),
+                                );
+                                Navigator.pop(context, true);
+                              }
+                              // Add your logic here
+                            },
+                            text: 'Đã hoàn thành',
+                            width: MediaQuery.of(context).size.width - 15,
+                            height: 45,
+                          ),
                       ],
                     ),
                   ),
@@ -141,9 +291,10 @@ class _ApprovetabState extends State<Approvetab> {
                     child: Column(
                   children: [
                     Header(
-                      text1: "Đang chờ tới ngày làm",
-                      text2:
-                          'Còn 3 ngày nữa là tới lịch 23/2/2004. Lưu ý chú ý thời gian',
+                      text1: (task.time.isAfter(DateTime.now()))
+                          ? "Đang chờ tới ngày làm"
+                          : "Đã tới ngày làm",
+                      text2: returnText(task.time),
                       icon: Icon(
                         Icons.timelapse,
                         color: Colors.white, // Màu của icon
@@ -177,12 +328,18 @@ class _ApprovetabState extends State<Approvetab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S2") {
                                     return Taskerrowbasic(
-                                      taskerName: (atasker.tasker
-                                          as Map<String, dynamic>)['name'],
-                                      taskerImageLink: (atasker.tasker
-                                          as Map<String, dynamic>)['avatar'],
+                                      taskerId: (atasker.tasker
+                                          as Map<String, dynamic>)['id'],
+                                      taskerName: (atasker.tasker as Map<String,
+                                              dynamic>)['name'] ??
+                                          '',
+                                      taskerImageLink: (atasker.tasker as Map<
+                                              String, dynamic>)['avatar'] ??
+                                          '',
                                       taskerPhone: (atasker.tasker as Map<
-                                          String, dynamic>)['phoneNumber'],
+                                              String,
+                                              dynamic>)['phoneNumber'] ??
+                                          '',
                                     );
                                   } else {
                                     return Container(); // Return an empty container if the status is not "S1"
@@ -260,8 +417,9 @@ class _ApprovetabState extends State<Approvetab> {
                                               fontWeight: FontWeight.normal)),
                                       const SizedBox(width: 38),
                                       Text(
-                                        (task.taskType
-                                            as Map<String, dynamic>)['name'],
+                                        (task.taskType as Map<String, dynamic>)[
+                                                'name'] ??
+                                            '',
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             color: Colors.black,
@@ -333,7 +491,7 @@ class _ApprovetabState extends State<Approvetab> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              '${(task.location as Map<String, dynamic>)['detailAddress']}, ${(task.location as Map<String, dynamic>)['district']}, ${(task.location as Map<String, dynamic>)['province']}, ${(task.location as Map<String, dynamic>)['country']}',
+                                              '${(task.location as Map<String, dynamic>)['detailAddress'] ?? ''}, ${(task.location as Map<String, dynamic>)['district'] ?? ""}, ${(task.location as Map<String, dynamic>)['province'] ?? ''}, ${(task.location as Map<String, dynamic>)['country'] ?? ''}',
                                               softWrap: true,
                                               style: TextStyle(
                                                   fontFamily: 'Inter',
@@ -525,7 +683,10 @@ class _ApprovetabState extends State<Approvetab> {
       if (_isLabelVisible)
         Center(
           child: Taskerlist(
+            id: widget.id,
             cancel: _hideLabel,
+            numberOfTasker: widget.numberOfTasker,
+            taskStatus: 'TS2',
           ),
         ),
     ]);

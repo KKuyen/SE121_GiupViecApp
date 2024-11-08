@@ -4,25 +4,19 @@ import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 
 class TaskTypeModel extends TaskType {
   TaskTypeModel({
-    required int id,
-    required String name,
+    required super.id,
+    required super.name,
     required String? avatar,
-    required String value,
+    required super.value,
     required String? description,
     required String? image,
-    required double originalPrice,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required super.originalPrice,
+    required super.createdAt,
+    required super.updatedAt,
   }) : super(
-          id: id,
-          name: name,
           avatar: avatar ?? '',
-          value: value,
           description: description ?? '',
           image: image ?? '',
-          originalPrice: originalPrice,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
         );
 
   factory TaskTypeModel.fromJson(Map<String, dynamic> json) {

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
@@ -16,6 +14,12 @@ class AppTextStyle {
       fontWeight: FontWeight.bold,
       color: Colors.black,
       decoration: TextDecoration.none);
+  static const tieudebox25 = TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 21,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+      decoration: TextDecoration.none);
   static const textthuong = TextStyle(
       fontFamily: 'Inter',
       fontSize: 16,
@@ -25,6 +29,12 @@ class AppTextStyle {
   static const textthuongxam = TextStyle(
       fontFamily: 'Inter',
       fontSize: 16,
+      color: AppColors.xam72,
+      decoration: TextDecoration.none,
+      fontWeight: FontWeight.normal);
+  static const textnhoxam = TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 15,
       color: AppColors.xam72,
       decoration: TextDecoration.none,
       fontWeight: FontWeight.normal);

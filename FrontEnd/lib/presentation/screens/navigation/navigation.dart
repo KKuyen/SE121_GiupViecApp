@@ -11,7 +11,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/message/message.dar
 import '../../../common/helpers/SecureStorage.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+  final int? tab;
+  const Navigation({super.key, this.tab});
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -19,7 +20,13 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentPageIndex = 0;
-  SecureStorage secureStorage = new SecureStorage();
+  @override
+  void initState() {
+    super.initState();
+    currentPageIndex = widget.tab ?? 0;
+  }
+
+  SecureStorage secureStorage = SecureStorage();
   void _printUser() async {
     String? id = await secureStorage.readId();
     String? email = await secureStorage.readEmail();

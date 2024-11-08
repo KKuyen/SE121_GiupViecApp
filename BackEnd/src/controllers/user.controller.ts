@@ -6,6 +6,7 @@ import { Tasks } from "../entity/Task.entity";
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import * as admin from "firebase-admin";
+import { TaskTypes } from "../entity/TaskTypes.entity";
 
 // import { encrypt } from "../helpers/encrypt";
 // import * as cache from "memory-cache";
@@ -33,7 +34,7 @@ export class UserController {
     user.role = role;
     user.phoneNumber = phoneNumber;
 
-    let userData: any  = await UserService.createUser(user);
+    let userData: any = await UserService.createUser(user);
     res.status(200).json({
       errCode: userData.errCode,
       message: userData.errMessage,
@@ -68,7 +69,7 @@ export class UserController {
       });
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Tạo OTP ngẫu nhiên
-    const expiresAt = new Date(Date.now() + 24*60 * 60 * 1000); // OTP hết hạn sau 5 phút
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // OTP hết hạn sau 5 phút
     const message = await UserService.sendOTP(phoneNumber, otp);
     otps[phoneNumber] = { otp, expiresAt };
     res.status(200).json(message);
@@ -77,11 +78,13 @@ export class UserController {
     const { phoneNumber, otp } = req.body;
     const otpDetails = otps[phoneNumber];
     if (!otpDetails) {
-      res.status(400).json({errCode:1, message: "OTP not found for this phone number" });
+      res
+        .status(400)
+        .json({ errCode: 1, message: "OTP not found for this phone number" });
     } else {
       const { otp: actualOtp, expiresAt } = otpDetails;
       if (new Date() > expiresAt) {
-        res.status(400).json({errCode:2,  message: "OTP has expired" });
+        res.status(400).json({ errCode: 2, message: "OTP has expired" });
       } else {
         const message = await UserService.verifyOtp(otp, actualOtp);
         res.status(200).json(message);
@@ -127,7 +130,7 @@ export class UserController {
       addPriceDetail,
       locationId,
       note,
-      isReTaskChildren,
+
       voucherId,
       myVoucherId,
     } = req.body;
@@ -137,7 +140,6 @@ export class UserController {
       time === undefined ||
       locationId === undefined ||
       note === undefined ||
-      isReTaskChildren === undefined ||
       addPriceDetail === undefined
     ) {
       res.status(500).json({
@@ -152,7 +154,6 @@ export class UserController {
         addPriceDetail,
         locationId,
         note,
-        isReTaskChildren,
         voucherId,
         myVoucherId
       );
@@ -199,6 +200,51 @@ export class UserController {
       taskList: message.tasklist,
     });
   }
+  static async getAllReviews(req: Request, res: Response) {
+    const { taskerId } = req.body;
+    if (taskerId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getAllReviews(taskerId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      reviewList: message.reviewList,
+    });
+  }
+  static async getAReviews(req: Request, res: Response) {
+    const { taskerId, taskId } = req.body;
+    if (taskerId === undefined || taskId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getAReviews(taskerId, taskId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      review: message.review,
+    });
+  }
+  static async getSetting(req: Request, res: Response) {
+    const { userId } = req.body;
+    if (userId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getSetting(userId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      setting: message.setting,
+    });
+  }
   static async getAllVoucher(req: Request, res: Response) {
     let message = await UserService.getAllVoucher();
     res.status(200).json({
@@ -228,6 +274,21 @@ export class UserController {
       errCode: message.errCode,
       message: message.errMessage,
       taskTypeList: message.taskTypeList,
+    });
+  }
+  static async getATaskType(req: Request, res: Response) {
+    const { taskTypeId } = req.body;
+    if (taskTypeId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getATaskType(taskTypeId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      TaskType: message.taskType,
     });
   }
   static async getTaskerList(req: Request, res: Response) {
@@ -332,24 +393,32 @@ export class UserController {
     });
   }
   static async review(req: Request, res: Response) {
-    const { taskId, taskerId, star, content, imageArray } = req.body;
+    const { taskId, taskerId, star, content, imageArray, userId, taskTypeId } =
+      req.body;
     if (
       taskId === undefined ||
       taskerId === undefined ||
       star === undefined ||
-      content === undefined
+      content === undefined ||
+      userId === undefined ||
+      taskTypeId === undefined
     ) {
       res.status(500).json({
         errCode: 1,
         message: "Missing required fields",
       });
     }
+
     let message = await UserService.review(
       taskId,
       taskerId,
       star,
       content,
-      imageArray
+
+      userId,
+
+      imageArray,
+      taskTypeId
     );
     res.status(200).json({
       errCode: message.errCode,
@@ -458,18 +527,14 @@ export class UserController {
     } catch (error) {}
   }
   static async edittkls(req: Request, res: Response) {
-    const { taskId, taskerId, status } = req.body;
-    if (
-      taskId === undefined ||
-      taskerId === undefined ||
-      status === undefined
-    ) {
+    const { taskerListId, status } = req.body;
+    if (taskerListId === undefined || status === undefined) {
       res.status(500).json({
         errCode: 1,
         message: "Missing required fields",
       });
     }
-    let message = await UserService.edittkls(taskId, taskerId, status);
+    let message = await UserService.edittkls(taskerListId, status);
     res.status(200).json({
       errCode: message.errCode,
       message: message.errMessage,

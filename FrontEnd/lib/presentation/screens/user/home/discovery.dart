@@ -171,7 +171,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   const SizedBox(
                     height: 6,
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 170,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -188,7 +188,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   const SizedBox(
                     height: 6,
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 170,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -307,7 +307,6 @@ class _finaceChild extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
-    super.key,
   });
 
   @override

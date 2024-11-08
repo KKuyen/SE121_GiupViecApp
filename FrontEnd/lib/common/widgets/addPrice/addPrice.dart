@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
+
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class Addprice extends StatefulWidget {
   final String name;
-  final String description;
+  final int index;
+  final int id;
+
   final String unit;
   final int stepValue;
   final int beginValue;
   final int stepPrice;
-
+  final Function(int) onPriceUpdate; // Thêm callback
+  final Function(int, int, int) onXUpdate;
   const Addprice({
+    required this.index,
     super.key,
-    this.description = 'Đây là mô tả',
-    this.name = 'Trông trẻ',
-    this.unit = 'cháu',
-    this.stepValue = 1,
-    this.beginValue = 0,
-    this.stepPrice = 100000,
+    required this.id,
+    required this.name,
+    required this.unit,
+    required this.stepValue,
+    required this.beginValue,
+    required this.stepPrice,
+    required this.onPriceUpdate, // Nhận callback
+    required this.onXUpdate,
   });
 
   @override
@@ -26,10 +32,16 @@ class Addprice extends StatefulWidget {
 
 class _AddpriceState extends State<Addprice> {
   int sang = 1;
+
   void _Select(int x) {
+    int y = sang;
     setState(() {
       sang = x;
     });
+    print("vao day ${(x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice}");
+    widget
+        .onPriceUpdate((x - 1) * widget.stepPrice - (y - 1) * widget.stepPrice);
+    widget.onXUpdate(widget.index, x, widget.id);
   }
 
   @override
@@ -38,20 +50,13 @@ class _AddpriceState extends State<Addprice> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.name,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.xanh_main,
                 decoration: TextDecoration.none)),
-        Text(widget.description,
-            style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: AppColors.xam72,
-                decoration: TextDecoration.none)),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           children: [
             GestureDetector(
@@ -62,7 +67,7 @@ class _AddpriceState extends State<Addprice> {
                 unit: widget.unit,
                 stepValue: widget.stepValue,
                 beginValue: widget.beginValue,
-                stepPrice: 100000,
+                stepPrice: widget.stepPrice,
               ),
             ),
             const SizedBox(width: 10),
@@ -74,7 +79,7 @@ class _AddpriceState extends State<Addprice> {
                 unit: widget.unit,
                 stepValue: widget.stepValue,
                 beginValue: widget.beginValue,
-                stepPrice: 100000,
+                stepPrice: widget.stepPrice,
               ),
             )
           ],
@@ -90,7 +95,7 @@ class _AddpriceState extends State<Addprice> {
                 unit: widget.unit,
                 stepValue: widget.stepValue,
                 beginValue: widget.beginValue,
-                stepPrice: 100000,
+                stepPrice: widget.stepPrice,
               ),
             ),
             const SizedBox(width: 10),
@@ -102,7 +107,7 @@ class _AddpriceState extends State<Addprice> {
                 unit: widget.unit,
                 stepValue: widget.stepValue,
                 beginValue: widget.beginValue,
-                stepPrice: 100000,
+                stepPrice: widget.stepPrice,
               ),
             )
           ],
@@ -133,6 +138,15 @@ class container extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 75,
+      width: MediaQuery.of(context).size.width / 2 - 20,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: sang == doiso ? AppColors.xanh_main : AppColors.xam72,
+          width: sang == doiso ? 2 : 1,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -140,7 +154,7 @@ class container extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              (beginValue + (doiso) * stepValue).toString() + ' ' + unit,
+              '${beginValue + (doiso - 1) * stepValue} $unit',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
@@ -151,18 +165,9 @@ class container extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              '+ ' + ((doiso - 1) * stepPrice).toString() + ' ' + ' đ',
+              '+ ${(doiso - 1) * stepPrice}  đ',
             ),
           ],
-        ),
-      ),
-      height: 75,
-      width: MediaQuery.of(context).size.width / 2 - 20,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: sang == doiso ? AppColors.xanh_main : AppColors.xam72,
-          width: sang == doiso ? 2 : 1,
         ),
       ),
     );

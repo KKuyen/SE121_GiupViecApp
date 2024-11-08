@@ -6,20 +6,11 @@ class UserModel extends User {
     // required String name,
     // required String email,
     // required String phoneNumber,
-    required dynamic access_token,
-    required String message,
-    required Object? user,
-    required int errCode,
-  }) : super(
-          // id: id,
-          // name: name,
-          // email: email,
-          // phoneNumber: phoneNumber,
-          access_token: access_token,
-          message: message,
-          user: user,
-          errCode: errCode,
-        );
+    required super.access_token,
+    required super.message,
+    required super.user,
+    required super.errCode,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(

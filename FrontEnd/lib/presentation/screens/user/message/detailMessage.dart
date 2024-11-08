@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
-import 'package:se121_giupviec_app/common/widgets/message/jobCard.dart';
 import 'package:se121_giupviec_app/core/configs/constants/api_constants.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';

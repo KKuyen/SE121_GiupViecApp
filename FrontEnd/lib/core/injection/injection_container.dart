@@ -1,16 +1,56 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/data/datasources/allReview_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/blockTaskers_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/loveTaskers_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/newTask1_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/setting_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/tasker_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/repository/allReview_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/blockTaskers_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/get_task_impl.dart';
+import 'package:se121_giupviec_app/data/repository/loveTaskers_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/newtask1_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/setting_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/tasker_repository_impl.dart';
+import 'package:se121_giupviec_app/domain/repository/BlockTaskers_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/allReview_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/loveTaskers_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/newTask1_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/setting_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
+
+import 'package:se121_giupviec_app/domain/repository/tasker_repository.dart';
+import 'package:se121_giupviec_app/domain/usecases/Setting_usecaces.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_a_tasker_usercase.dart';
+
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
+
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
+
 import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/a_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/approveWidget_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
+
+import 'package:se121_giupviec_app/domain/usecases/get_all_block_taskers_usecase.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_all_love_taskers_usecase.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_all_reviews_usercase.dart';
+import 'package:se121_giupviec_app/domain/usecases/new_task1_usecase.dart';
+import 'package:se121_giupviec_app/presentation/bloc/Setting/Setting_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/review/aReview_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/approveWidget_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/location_remote_datasource.dart';
@@ -74,6 +114,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => TaskCubit(
       getAllTasksUseCase: sl(),
+      SettingUsecase: sl(),
     ),
   );
   sl.registerFactory(
@@ -91,6 +132,35 @@ Future<void> init() async {
       getATasksUsercase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => TaskerlistCubit(
+      getATasksUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => TaskerCubit(
+      getATaskerUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => allReviewCubit(
+      getAllReviewsUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => LoveTaskersCubit(
+      getLoveTaskerssUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => BlockTaskersCubit(
+      getBlockTaskerssUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(() => NewTask1Cubit(
+        newTask1Usecase: sl(),
+      ));
+
   sl.registerFactory(
     () => VoucherCubit(
       getAllVoucherUseCase: sl(),
@@ -127,9 +197,34 @@ Future<void> init() async {
       getMyDefaultLocationUseCase: sl(),
     ),
   );
+
+  sl.registerFactory(() => MessageCubit(
+        getMyMessageUseCase: sl(),
+      ));
   sl.registerFactory(
-    () => MessageCubit(
-      getMyMessageUseCase: sl(),
+    () => NewTask2Cubit(
+      NewTask2Usecase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => AReviewCubit(
+      getAReviewsUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => SettingCubit(
+      SettingUsecase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => TaskerTaskCubit(
+      getAllTasksUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => TaskerFindTaskCubit(
+      getAllTasksUseCase: sl(),
+      getATaskerUsercase: sl(),
     ),
   );
   // Use cases
@@ -140,17 +235,28 @@ Future<void> init() async {
   sl.registerLazySingleton(() => VerifyOTPUseCase(sl()));
   sl.registerLazySingleton(() => ForgetPassUseCase(sl()));
   sl.registerLazySingleton(() => GetATasksUsecase(sl()));
+
+  sl.registerLazySingleton(() => GetATaskerUsercase(sl()));
+  sl.registerLazySingleton(() => GetAllReviewsUsercase(sl()));
+  sl.registerLazySingleton(() => GetAllLoveTaskersUsecase(sl()));
+  sl.registerLazySingleton(() => GetAllBlockTaskersUsecase(sl()));
+  sl.registerLazySingleton(() => NewTask1Usecase(sl()));
+
   sl.registerLazySingleton(() => GetAllTasksTypeUseCase(sl()));
   sl.registerLazySingleton(() => GetAllVoucherUseCase(sl()));
   sl.registerLazySingleton(() => GetMyLocationUseCase(sl()));
   sl.registerLazySingleton(() => GetMyDefaultLocationUseCase(sl()));
   sl.registerLazySingleton(() => AddNewLocationUseCase(sl()));
   sl.registerLazySingleton(() => DeleteLocationUseCase(sl()));
+
   sl.registerLazySingleton(() => EditProfileUsecase(sl()));
   sl.registerLazySingleton(() => ClaimVoucherUseCase(sl()));
   sl.registerLazySingleton(() => GetMyVoucherUseCase(sl()));
   sl.registerLazySingleton(() => DeleteMyVoucherUseCase(sl()));
   sl.registerLazySingleton(() => GetMyMessageUseCase(sl()));
+
+  sl.registerLazySingleton(() => SettingUsecaces(sl()));
+
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
@@ -161,6 +267,23 @@ Future<void> init() async {
   sl.registerLazySingleton<ATaskRepository>(
     () => ATaskRepositoryImpl(sl()),
   );
+
+  sl.registerLazySingleton<TaskerRepository>(
+    () => TaskerRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<AllReviewRepository>(
+    () => AllReviewRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<LoveTaskersRepository>(
+    () => LoveTaskersRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<BlockTaskersRepository>(
+    () => BlockTaskersRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<Newtask1Repository>(
+    () => Newtask1RepositoryImpl(sl()),
+  );
+
   sl.registerLazySingleton<TaskTypeRepository>(
     () => TaskTypeRepositoryImpl(sl()),
   );
@@ -170,8 +293,13 @@ Future<void> init() async {
   sl.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(sl()),
   );
+
   sl.registerLazySingleton<MessageRepository>(
     () => MessageRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton<SettingRepository>(
+    () => SettingRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -188,6 +316,15 @@ Future<void> init() async {
       apiVersion: ApiConstants.apiVersion,
     ),
   );
+
+  sl.registerLazySingleton<TaskerRemoteDataSourceImpl>(
+    () => TaskerRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+
   sl.registerLazySingleton<TaskTypeRemoteDatasource>(
     () => TaskTypeRemoteDatasourceImpl(
       client: sl(),
@@ -195,6 +332,15 @@ Future<void> init() async {
       apiVersion: ApiConstants.apiVersion,
     ),
   );
+
+  sl.registerLazySingleton<AllReviewRemoteDatasource>(
+    () => AllReviewRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+
   sl.registerLazySingleton<VoucherRemoteDatasource>(
     () => VoucherRemoteDatasourceImpl(
       client: sl(),
@@ -202,6 +348,29 @@ Future<void> init() async {
       apiVersion: ApiConstants.apiVersion,
     ),
   );
+
+  sl.registerLazySingleton<LoveTaskersRemoteDatasource>(
+    () => LoveTaskersRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<BlockTaskersRemoteDatasource>(
+    () => BlockTaskersRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<NewTask1RemoteDatasource>(
+    () => NewTask1RemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+
   sl.registerLazySingleton<LocationRemoteDatasource>(
     () => LocationRemoteDatasourceImpl(
       client: sl(),
@@ -209,8 +378,16 @@ Future<void> init() async {
       apiVersion: ApiConstants.apiVersion,
     ),
   );
+
   sl.registerLazySingleton<MessageRemoteDatasource>(
     () => MessageRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<SettingRemoteDatasource>(
+    () => SettingRemoteDataSourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,

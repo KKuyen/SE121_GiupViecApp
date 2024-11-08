@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/approveTab.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/waitingTab.dart';
 
 class WatingActivityWidget extends StatefulWidget {
   final VoidCallback onShowLabel;
+  final VoidCallback loading;
   final int numberOfTasker;
   final int id;
   final String serviceName;
@@ -15,13 +16,13 @@ class WatingActivityWidget extends StatefulWidget {
   final DateTime createAt;
   final String ownerName;
   final String district;
-  final String deltailAddress;
+  final String detailAddress;
   final String country;
   final String province;
   final String phone;
   final int ungCuVien;
   final int daNhan;
-
+  final String avatar;
   final String price;
   final String note;
 
@@ -31,17 +32,19 @@ class WatingActivityWidget extends StatefulWidget {
       this.ungCuVien = 0,
       this.daNhan = 0,
       required this.numberOfTasker,
-      this.serviceName = 'Trông trẻ',
+      required this.serviceName,
       required this.startDay,
-      this.ownerName = 'Trần Hồng Quyền',
+      required this.ownerName,
       required this.district,
-      required this.deltailAddress,
+      required this.detailAddress,
       required this.country,
       required this.province,
-      this.phone = '+(54) 345664xxx',
-      this.price = '200000 đ',
-      this.note = 'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+      required this.phone,
+      required this.price,
+      required this.note,
       required this.onShowLabel,
+      required this.avatar,
+      required this.loading,
       super.key});
 
   @override
@@ -52,14 +55,18 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Waitingtab(
                     id: widget.id,
                   )),
         );
+        if (result == true) {
+          print("pop thanh cong lan 1");
+          widget.loading();
+        }
       },
       child: Center(
         child: Padding(
@@ -85,13 +92,9 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                        child: SvgPicture.asset(
-                          AppVectors.baby_carriage_icon,
-                          height: 30,
-                          width: 30,
-                        ),
-                      ),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
+                          child: AppIcon.getIconXanhMain(widget.avatar)),
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -205,13 +208,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                                 ),
                               ),
                               Text(
-                                widget.deltailAddress +
-                                    ', ' +
-                                    widget.district +
-                                    ', ' +
-                                    widget.province +
-                                    ', ' +
-                                    widget.country,
+                                '${widget.detailAddress}, ${widget.district}, ${widget.province}, ${widget.country}',
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
@@ -262,34 +259,35 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Ghi chú:   ',
-                          style: TextStyle(
-                            color: Color(0xFF727272),
-                            fontSize: 15,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        SizedBox(width: 18),
-                        Expanded(
-                          child: Text(
-                            'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+                  if (widget.note != '')
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 5),
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Ghi chú:   ',
                             style: TextStyle(
-                              color: AppColors.xam72,
+                              color: Color(0xFF727272),
                               fontSize: 15,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 18),
+                          Expanded(
+                            child: Text(
+                              widget.note,
+                              style: const TextStyle(
+                                color: AppColors.xam72,
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 0),
                   const Divider(),
                   Padding(

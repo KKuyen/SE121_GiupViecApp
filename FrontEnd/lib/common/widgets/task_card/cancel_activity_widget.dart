@@ -1,16 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
-import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
+
+import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/cancelTab.dart';
 
 class CancelActivityWidget extends StatefulWidget {
   final int numberOfTasker;
   final int id;
+  final String taskStatus;
   final String serviceName;
   final DateTime startDay;
   final DateTime createAt;
@@ -24,26 +23,28 @@ class CancelActivityWidget extends StatefulWidget {
   final int daNhan;
   final String cancelReason;
   final DateTime cancelAt;
-
+  final String avatar;
   final String price;
   final String note;
   const CancelActivityWidget({
+    required this.taskStatus,
     super.key,
+    required this.avatar,
     required this.id,
     required this.createAt,
     this.ungCuVien = 0,
     this.daNhan = 0,
     required this.numberOfTasker,
-    this.serviceName = 'Trông trẻ',
+    required this.serviceName,
     required this.startDay,
-    this.ownerName = 'Trần Hồng Quyền',
+    required this.ownerName,
     required this.district,
     required this.deltailAddress,
     required this.country,
     required this.province,
     required this.phone,
     required this.price,
-    this.note = 'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+    required this.note,
     this.cancelReason = 'Lý do khác',
     required this.cancelAt,
   });
@@ -61,6 +62,14 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
           context,
           MaterialPageRoute(
               builder: (context) => Canceltab(
+                    cancelAt: widget.taskStatus == "TS1"
+                        ? widget.startDay
+                        : widget.cancelAt,
+                    cancelReason: widget.taskStatus == "TS1"
+                        ? 'Đã hủy vì không tìm đủ người giúp việc'
+                        : widget.cancelReason,
+                    cancelBy:
+                        widget.taskStatus == "TS1" ? 'Hệ thống' : 'Khách hàng',
                     id: widget.id,
                   )),
         );
@@ -90,11 +99,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                      child: SvgPicture.asset(
-                        AppVectors.baby_carriage_icon,
-                        height: 30,
-                        width: 30,
-                      ),
+                      child: AppIcon.getIconXanhMain(widget.avatar),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,34 +265,35 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Ghi chú:   ',
-                        style: TextStyle(
-                          color: Color(0xFF727272),
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      SizedBox(width: 18),
-                      Expanded(
-                        child: Text(
-                          'Nhân viên hổ trợ mang theo dụng cụ, đến sớm 15 phút',
+                if (widget.note != '')
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5, 2, 5, 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Ghi chú:   ',
                           style: TextStyle(
-                            color: AppColors.xam72,
+                            color: Color(0xFF727272),
                             fontSize: 15,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 18),
+                        Expanded(
+                          child: Text(
+                            widget.note,
+                            style: TextStyle(
+                              color: AppColors.xam72,
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 SizedBox(height: 5),
                 Divider(),
                 Padding(
@@ -304,7 +310,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontWeight: FontWeight.normal,
                               )),
                           Spacer(),
-                          Text(widget.cancelReason,
+                          Text(
+                              widget.taskStatus == "TS1"
+                                  ? 'Đã hủy vì không tìm đủ người giúp việc'
+                                  : widget.cancelReason,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -324,7 +333,10 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontWeight: FontWeight.normal,
                               )),
                           Spacer(),
-                          Text(widget.cancelAt.toIso8601String(),
+                          Text(
+                              widget.taskStatus == "TS1"
+                                  ? widget.startDay.toIso8601String()
+                                  : widget.cancelAt.toIso8601String(),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

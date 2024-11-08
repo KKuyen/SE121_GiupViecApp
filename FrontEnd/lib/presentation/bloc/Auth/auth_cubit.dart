@@ -27,7 +27,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final user = await loginUseCase.execute(email, password);
-      print("user:" + user.user.toString());
+      print("user:${user.user}");
       if (user.errCode == 0) {
         emit(AuthSuccess(user));
       } else {
