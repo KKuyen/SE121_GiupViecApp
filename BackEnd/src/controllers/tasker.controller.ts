@@ -149,14 +149,20 @@ export class TaskerController {
     res.status(200).json(message);
   }
   static async handleGetAllTasks(req: Request, res: Response) {
-    const { taskerId } = req.body;
+    const { taskerId, fromDate, toDate, taskTypes } = req.body;
     if (taskerId === undefined) {
       res.status(500).json({
         errCode: 1,
         message: "Missing required fields",
       });
     }
-    let message = await TaskerService.getAllTask(taskerId);
+
+    let message = await TaskerService.getAllTask(
+      taskerId,
+      fromDate,
+      toDate,
+      taskTypes
+    );
     res.status(200).json(message);
   }
   static async handleGetMyTask(req: Request, res: Response) {

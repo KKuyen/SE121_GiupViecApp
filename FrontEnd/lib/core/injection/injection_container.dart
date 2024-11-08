@@ -195,6 +195,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => TaskerFindTaskCubit(
       getAllTasksUseCase: sl(),
+      getATaskerUsercase: sl(),
     ),
   );
   // Use cases

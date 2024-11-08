@@ -136,7 +136,7 @@ class _MyAppState extends State<MyApp> {
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-        home: Navigation(),
+        home: TaskerNavigation(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );

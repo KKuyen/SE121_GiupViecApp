@@ -468,11 +468,16 @@ export class TaskerService {
       }
     });
   };
-  static getAllTask = async (taskerId: number) => {
+  static getAllTask = async (
+    taskerId: number,
+    fromDate: Date | null,
+    toDate: Date | null,
+    taskTypes: any | null
+  ) => {
     return new Promise(async (resolve, reject) => {
       try {
         const taskeRepository = AppDataSource.getRepository(Tasks);
-        const tasks = await taskeRepository
+        const tasksQuery = taskeRepository
           .createQueryBuilder("task")
           .leftJoinAndSelect("task.location", "location")
           .leftJoinAndSelect("task.user", "user")
@@ -481,7 +486,6 @@ export class TaskerService {
           .orderBy("task.createdAt", "DESC")
           .select([
             "task.id",
-
             "task.userId",
             "task.taskTypeId",
             "task.time",
@@ -496,7 +500,6 @@ export class TaskerService {
             "task.cancelAt",
             "task.finishedAt",
             "task.cancelReason",
-
             "task.numberOfTasker",
             "user.id",
             "user.name",
@@ -506,9 +509,7 @@ export class TaskerService {
             "user.avatar",
             "user.birthday",
             "user.Rpoints",
-
             "location.id",
-
             "location.country",
             "location.province",
             "location.district",
@@ -522,8 +523,21 @@ export class TaskerService {
             "taskerLists.id",
             "taskerLists.status",
           ])
-          .where("(task.taskStatus = 'TS1' AND task.time > CURRENT_TIMESTAMP)")
-          .getMany();
+          .where("(task.taskStatus = 'TS1' AND task.time > CURRENT_TIMESTAMP)");
+
+        if (fromDate) {
+          tasksQuery.andWhere("task.time > :fromDate", { fromDate });
+        }
+        if (toDate) {
+          tasksQuery.andWhere("task.time < :toDate", { toDate });
+        }
+        if (taskTypes) {
+          tasksQuery.andWhere("task.taskTypeId IN (:...taskTypes)", {
+            taskTypes,
+          });
+        }
+
+        const tasks = await tasksQuery.getMany();
         const taskerListRepository = AppDataSource.getRepository(TaskerList);
         const taskerLists = await taskerListRepository.find({
           where: { taskerId: taskerId },

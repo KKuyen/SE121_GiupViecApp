@@ -7,8 +7,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/account.dar
 import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/message.dart';
-import 'package:se121_giupviec_app/presentation/tasker/activities/activity.dart';
-import 'package:se121_giupviec_app/presentation/tasker/home/home.dart';
+import 'package:se121_giupviec_app/presentation/screens/tasker/activities/activity.dart';
+import 'package:se121_giupviec_app/presentation/screens/tasker/home/home.dart';
 
 import '../../../common/helpers/SecureStorage.dart';
 

@@ -375,7 +375,7 @@ class _NewreviewState extends State<Newreview> {
                         images.length > 3 ? images[3].path : null);
                     String result =
                         await context.read<ATaskCubit>().pushImage(images[0]);
-                    print('result: $result');
+
                     Navigator.pop(context, Star);
                   },
                   text: 'Gửi đánh giá',

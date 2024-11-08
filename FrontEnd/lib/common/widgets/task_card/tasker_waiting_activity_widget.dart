@@ -5,7 +5,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
-import 'package:se121_giupviec_app/presentation/tasker/activities/ApplyTaskTab.dart';
+import 'package:se121_giupviec_app/presentation/screens/tasker/activities/ApplyTaskTab.dart';
 
 class TaskerWatingActivityWidget extends StatefulWidget {
   final VoidCallback loading;
