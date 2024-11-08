@@ -66,11 +66,15 @@ export class MessageService {
               "message_review.targetId",
               "target.id",
               "target.name",
-              "target.avatar"
+            "target.avatar",
+            "target.phoneNumber",
+              
             ])
             .where(`message_review.sourceId = :sourceId`, { sourceId })
-            .getMany();
-  
+          .getMany();
+        if (!messages) {
+          return {"messages": []};
+        }
         return {"messages": messages};
       } catch (error) {
         console.error("Error fetching chat review:", error);
