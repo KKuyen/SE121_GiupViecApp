@@ -250,7 +250,8 @@ class _DetailmessageState extends State<Detailmessage> {
                         time: messages[index].createdAt.length == 16
                             ? messages[index].createdAt
                             : DateFormat('dd-MM-yyyy HH:mm').format(
-                                DateTime.parse(messages[index].createdAt)),
+                                DateTime.parse(messages[index].createdAt)
+                                    .toLocal()),
                       );
                     },
                   );

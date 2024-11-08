@@ -9,7 +9,7 @@ export class CreateMessageTable1634567890123 implements MigrationInterface {
                 "content" character varying NOT NULL,
                 "sourceId" integer NOT NULL,
                 "targetId" integer NOT NULL,
-                "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+                "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
                 CONSTRAINT "PK_ba01f0a3e0123651915008bc578" PRIMARY KEY ("id")
             )
         `);
