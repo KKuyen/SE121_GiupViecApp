@@ -34,6 +34,8 @@ import { ReTasksMigration1698324600526 } from "./migration/reTask.migration"
 import { UserSettingsMigration1698323600521 } from "./migration/userSetting.migration"
 import { TasksMigration1698324600524 } from "./migration/taskt.migration"
 import { VouchersMigration1698324600530 } from "./migration/voucher.migration"
+import { Message } from "./entity/Message.entity";
+import { CreateMessageTable1634567890123 } from "./migration/message.migration";
 
 
 export const AppDataSource = new DataSource({
@@ -45,7 +47,7 @@ export const AppDataSource = new DataSource({
     database:   process.env.DB_NAME,
     synchronize: false,
     logging: false,
-    entities: [User,TaskerInfo, AddPriceDetails, AddPrices, BlockTaskers, LoveTaskers, MyVouchers, Notifications, Reviews, TaskerList, TaskTypes, Location, ReTasks, UserSettings, Tasks, Vouchers],
-    migrations: [UsersMigration1698321500515,TaskerInfoMigration1698321400516, AddPriceDetailsMigration1698324600523, AddPricesMigration1698324600525, BlockTaskersMigration1698322600520, LoveTaskersMigration1698322600519, MyVouchersMigration1698324600531, NotificationsMigration1698324600529, ReviewsMigration1698324600528, TaskerListMigration1698324600527, TaskTypesMigration1698324600522, LocationsMigration1698321600518, ReTasksMigration1698324600526, UserSettingsMigration1698323600521, TasksMigration1698324600524, VouchersMigration1698324600530],
+    entities: [User,Message,TaskerInfo, AddPriceDetails, AddPrices, BlockTaskers, LoveTaskers, MyVouchers, Notifications, Reviews, TaskerList, TaskTypes, Location, ReTasks, UserSettings, Tasks, Vouchers],
+    migrations: [UsersMigration1698321500515,CreateMessageTable1634567890123,TaskerInfoMigration1698321400516, AddPriceDetailsMigration1698324600523, AddPricesMigration1698324600525, BlockTaskersMigration1698322600520, LoveTaskersMigration1698322600519, MyVouchersMigration1698324600531, NotificationsMigration1698324600529, ReviewsMigration1698324600528, TaskerListMigration1698324600527, TaskTypesMigration1698324600522, LocationsMigration1698321600518, ReTasksMigration1698324600526, UserSettingsMigration1698323600521, TasksMigration1698324600524, VouchersMigration1698324600530],
     subscribers: [],
 })

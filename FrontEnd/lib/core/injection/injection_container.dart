@@ -14,14 +14,17 @@ import 'package:se121_giupviec_app/presentation/bloc/get_all_task_cubit.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/location_remote_datasource.dart';
+import '../../data/datasources/message_remote_datasource.dart';
 import '../../data/datasources/task_type_remote_datasourse.dart';
 import '../../data/datasources/voucher_remote_datasourse.dart';
 import '../../data/repository/auth_repository_impl.dart';
 import '../../data/repository/location_repository_impl.dart';
+import '../../data/repository/message_repository_impl.dart';
 import '../../data/repository/task_type_repository_impl.dart';
 import '../../data/repository/voucher_repository_impl.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../../domain/repository/location_repository.dart';
+import '../../domain/repository/message_repository.dart';
 import '../../domain/repository/task_type_repository.dart';
 import '../../domain/repository/voucher_repository.dart';
 import '../../domain/usecases/Auth/edit_profile_usecase.dart';
@@ -32,6 +35,7 @@ import '../../domain/usecases/Location/add_new_location_usecase.dart';
 import '../../domain/usecases/Location/delete_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_default_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_location_usecase.dart';
+import '../../domain/usecases/Message/get_messages_usecase.dart';
 import '../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
 import '../../domain/usecases/Voucher/claim_voucher_usecase.dart';
 import '../../domain/usecases/Voucher/delete_my_voucher_usecase.dart';
@@ -46,6 +50,7 @@ import '../../presentation/bloc/Location/delete_location_cubit.dart';
 
 import '../../presentation/bloc/Location/default_location_cubit.dart';
 import '../../presentation/bloc/Location/location_cubit.dart';
+import '../../presentation/bloc/Message/message_cubit.dart';
 import '../../presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import '../../presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import '../../presentation/bloc/Voucher/voucher_cubit.dart';
@@ -122,6 +127,11 @@ Future<void> init() async {
       getMyDefaultLocationUseCase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => MessageCubit(
+      getMyMessageUseCase: sl(),
+    ),
+  );
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -140,6 +150,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ClaimVoucherUseCase(sl()));
   sl.registerLazySingleton(() => GetMyVoucherUseCase(sl()));
   sl.registerLazySingleton(() => DeleteMyVoucherUseCase(sl()));
+  sl.registerLazySingleton(() => GetMyMessageUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl()),
@@ -158,6 +169,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<MessageRepository>(
+    () => MessageRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -190,6 +204,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<LocationRemoteDatasource>(
     () => LocationRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<MessageRemoteDatasource>(
+    () => MessageRemoteDatasourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,

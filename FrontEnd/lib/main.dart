@@ -13,6 +13,7 @@ import 'presentation/bloc/Location/add_location_cubit.dart';
 import 'presentation/bloc/Location/default_location_cubit.dart';
 import 'presentation/bloc/Location/delete_location_cubit.dart';
 import 'presentation/bloc/Location/location_cubit.dart';
+import 'presentation/bloc/Message/message_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
@@ -68,6 +69,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<DeleteMyVoucherCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<MessageCubit>(),
         ),
       ],
       child: MaterialApp(
