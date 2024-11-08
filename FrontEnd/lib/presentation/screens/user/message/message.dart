@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/search/search.dart';
@@ -10,6 +11,8 @@ import 'package:se121_giupviec_app/data/models/User.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/detailMessage.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../bloc/Message/message_review_cubit.dart';
+import '../../../bloc/Message/message_state.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});
@@ -81,7 +84,7 @@ class _MessagePageState extends State<MessagePage> {
   }
 }
 
-class _listMessage extends StatelessWidget {
+class _listMessage extends StatefulWidget {
   final User sourseUser;
   const _listMessage({
     super.key,
@@ -89,92 +92,54 @@ class _listMessage extends StatelessWidget {
   });
 
   @override
+  State<_listMessage> createState() => _listMessageState();
+}
+
+class _listMessageState extends State<_listMessage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<MessageReviewCubit>(context)
+        .getMyMessageReview(widget.sourseUser.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("user" + sourseUser.id.toString());
-    return Column(
-      children: [
-        _messageCard(
-          id: 2,
-          avatar: AppVectors.google,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: false,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 3,
-          avatar: AppVectors.facebook,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: true,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 4,
-          avatar: AppVectors.facebook,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: true,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 5,
-          avatar: AppVectors.google,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: false,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 6,
-          avatar: AppVectors.facebook,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: true,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 7,
-          avatar: AppVectors.google,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: false,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 8,
-          avatar: AppVectors.facebook,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: true,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 9,
-          avatar: AppVectors.google,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: false,
-          sourseUser: sourseUser,
-        ),
-        _messageCard(
-          id: 10,
-          avatar: AppVectors.google,
-          name: 'Nguyễn Văn A',
-          message: 'Mình chia tay đi',
-          time: '12:00',
-          isSeen: true,
-          sourseUser: sourseUser,
-        ),
-      ],
+    return BlocBuilder<MessageReviewCubit, MessageState>(
+      builder: (context, state) {
+        if (state is MessageLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is MessageReviewSuccess) {
+          final messages = state.messageReviews;
+          return Container(
+              height: MediaQuery.of(context).size.height - 400,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final name = (messages[index].target
+                        as Map<String, dynamic>)['name'];
+                    return _messageCard(
+                      id: messages[index].targetId,
+                      avatar: AppVectors.google,
+                      name: name,
+                      message: messages[index].lastMessage,
+                      time: messages[index].lastMessageTime,
+                      isSeen: true,
+                      sourseUser: widget.sourseUser,
+                    );
+                  }));
+        } else if (state is MessageError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('Bạn chưa có tin nhắn nào!'));
+        }
+      },
     );
   }
 }

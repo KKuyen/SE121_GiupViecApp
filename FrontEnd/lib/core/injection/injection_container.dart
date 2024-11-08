@@ -75,6 +75,7 @@ import '../../domain/usecases/Location/add_new_location_usecase.dart';
 import '../../domain/usecases/Location/delete_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_default_location_usecase.dart';
 import '../../domain/usecases/Location/get_my_location_usecase.dart';
+import '../../domain/usecases/Message/get_message_review_usecase.dart';
 import '../../domain/usecases/Message/get_messages_usecase.dart';
 import '../../domain/usecases/TaskType/get_all_tasktype_usecase.dart';
 import '../../domain/usecases/Voucher/claim_voucher_usecase.dart';
@@ -91,6 +92,7 @@ import '../../presentation/bloc/Location/delete_location_cubit.dart';
 import '../../presentation/bloc/Location/default_location_cubit.dart';
 import '../../presentation/bloc/Location/location_cubit.dart';
 import '../../presentation/bloc/Message/message_cubit.dart';
+import '../../presentation/bloc/Message/message_review_cubit.dart';
 import '../../presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import '../../presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import '../../presentation/bloc/Voucher/voucher_cubit.dart';
@@ -201,6 +203,9 @@ Future<void> init() async {
   sl.registerFactory(() => MessageCubit(
         getMyMessageUseCase: sl(),
       ));
+  sl.registerFactory(() => MessageReviewCubit(
+        getMyMessageReviewUseCase: sl(),
+      ));
   sl.registerFactory(
     () => NewTask2Cubit(
       NewTask2Usecase: sl(),
@@ -254,6 +259,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMyVoucherUseCase(sl()));
   sl.registerLazySingleton(() => DeleteMyVoucherUseCase(sl()));
   sl.registerLazySingleton(() => GetMyMessageUseCase(sl()));
+  sl.registerLazySingleton(() => GetMyMessageReviewUseCase(sl()));
 
   sl.registerLazySingleton(() => SettingUsecaces(sl()));
 

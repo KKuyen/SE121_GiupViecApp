@@ -31,6 +31,7 @@ import 'presentation/bloc/Location/default_location_cubit.dart';
 import 'presentation/bloc/Location/delete_location_cubit.dart';
 import 'presentation/bloc/Location/location_cubit.dart';
 import 'presentation/bloc/Message/message_cubit.dart';
+import 'presentation/bloc/Message/message_review_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
@@ -141,6 +142,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) => di.sl<TaskerFindTaskCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<MessageReviewCubit>(),
         ),
       ],
       child: MaterialApp(

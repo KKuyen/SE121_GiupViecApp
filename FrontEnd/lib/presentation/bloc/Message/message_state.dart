@@ -2,6 +2,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../domain/entities/message.dart';
+import '../../../domain/entities/messageReview.dart';
 import '../../../domain/entities/response.dart';
 
 abstract class MessageState extends Equatable {
@@ -26,6 +27,15 @@ class MessageSuccess extends MessageState {
 
   @override
   List<Object> get props => [messages];
+}
+
+class MessageReviewSuccess extends MessageState {
+  final List<MessageReview> messageReviews;
+
+  const MessageReviewSuccess(this.messageReviews);
+
+  @override
+  List<Object> get props => [messageReviews];
 }
 
 class MessageResponseSuccess extends MessageState {

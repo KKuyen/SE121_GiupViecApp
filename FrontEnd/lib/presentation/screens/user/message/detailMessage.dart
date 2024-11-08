@@ -10,6 +10,7 @@ import 'package:se121_giupviec_app/data/models/User.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/listTaskMessage.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../data/models/message_model.dart';
@@ -110,6 +111,14 @@ class _DetailmessageState extends State<Detailmessage> {
         {"message": message, "sourceId": sourceId, "targetId": targetId});
   }
 
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   @override
   Widget build(BuildContext context) {
     TextEditingController messageController = TextEditingController();
@@ -121,10 +130,16 @@ class _DetailmessageState extends State<Detailmessage> {
             isHideBackButton: false,
             action: Row(
               children: [
-                const Icon(
-                  Icons.phone,
-                  size: 27,
-                  color: AppColors.xanh_main,
+                GestureDetector(
+                  onTap: () => {
+                    // Code to initiate a phone call
+                    _makePhoneCall("0345664024")
+                  },
+                  child: const Icon(
+                    Icons.phone,
+                    size: 27,
+                    color: AppColors.xanh_main,
+                  ),
                 ),
                 const SizedBox(
                   width: 10,
