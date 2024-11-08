@@ -151,7 +151,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
 
-        home: TaskerNavigation(),
+        home: SplashPage(),
 
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),

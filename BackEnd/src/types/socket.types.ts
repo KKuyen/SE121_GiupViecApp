@@ -3,3 +3,9 @@ export interface IMessagePayload {
   sourceId: number;
   targetId: number;
 }
+export interface IMessageReviewPayload {
+  lastMessage: string;
+  lastMessageTime: string;
+  sourceId: number;
+  targetId: number;
+}

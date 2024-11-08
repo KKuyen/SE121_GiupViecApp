@@ -36,6 +36,30 @@ io.on("connection", (socket:any) => {
     try {
       let targetId = e.targetId;
       const savedMessage = await MessageService.saveMessage(e);
+      let lastMessageTime = "";
+      const createdAt = new Date(savedMessage.createdAt);
+      const now = new Date();
+      if (
+        createdAt.getDate() === now.getDate() &&
+        createdAt.getMonth() === now.getMonth() &&
+        createdAt.getFullYear() === now.getFullYear()
+      ) {
+        lastMessageTime = createdAt.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      } else {
+        lastMessageTime = createdAt.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+        });
+      }
+      await MessageService.saveMessageReview({
+        lastMessage: e.message,
+        lastMessageTime: lastMessageTime,
+        sourceId: e.sourceId,
+        targetId: e.targetId,
+      });
       console.log(e.message);
       console.log(e.targetId);
       console.log(e);
@@ -130,6 +154,21 @@ app.get("/api/v1/messages", async (req, res) => {
         const messages = await MessageService.getChatHistory(
           parseInt(sourceId),
           parseInt(targetId)
+        );
+        res.json(messages);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to fetch messages" });
+      }
+});
+app.get("/api/v1/messages-review", async (req, res) => {
+      try {
+        let sourceId: string = req.query.sourceId as string;
+        if (!sourceId) {
+          res.status(400).json({ error: "sourceId is required" });
+          return;
+        }
+        const messages = await MessageService.getChatReview(
+          parseInt(sourceId),
         );
         res.json(messages);
       } catch (error) {
