@@ -13,9 +13,14 @@ import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/allReview.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../data/models/User.dart';
+import '../message/detailMessage.dart';
+
 class Taskerprofile extends StatefulWidget {
   final int taskerId;
   final int userId;
+
   const Taskerprofile({super.key, required this.taskerId, this.userId = 2});
 
   @override
@@ -25,6 +30,15 @@ class Taskerprofile extends StatefulWidget {
 class _TaskerprofileState extends State<Taskerprofile> {
   bool isLove = false;
   bool isBlock = false;
+  SecureStorage secureStorage = SecureStorage();
+  Future<User> _fetchUserData() async {
+    String name = await secureStorage.readName();
+    String id = await secureStorage.readId();
+    String avatar = await secureStorage.readAvatar();
+    User user = User(id: int.parse(id), name: name, avatar: avatar);
+    print("user" + user.id.toString());
+    return user;
+  }
 
   void toggleLove() {
     setState(() {
@@ -168,7 +182,25 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                   width: 8,
                                 ),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    User user = await _fetchUserData();
+                                    User targetUser = User(
+                                        id: (state.tasker.tasker as Map<String,
+                                                dynamic>?)?['id'] ??
+                                            0,
+                                        name: (state.tasker.tasker as Map<
+                                                String, dynamic>?)?['name'] ??
+                                            '',
+                                        avatar: (state.tasker.tasker
+                                                as Map<String, dynamic>?)?['avatar'] ??
+                                            '');
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Detailmessage(
+                                                targetUser: targetUser,
+                                                sourseUser: user)));
+                                  },
                                   icon: const Icon(
                                     FontAwesomeIcons.solidMessage,
                                     color: AppColors.xam72,
