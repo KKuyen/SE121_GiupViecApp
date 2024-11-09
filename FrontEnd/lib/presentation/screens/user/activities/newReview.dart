@@ -365,6 +365,12 @@ class _NewreviewState extends State<Newreview> {
               ),
               Sizedbutton(
                   onPressFun: () async {
+                    for (int i = 0; i < images.length; i++) {
+                      pushImages.add(await context
+                          .read<ATaskCubit>()
+                          .pushImage(images[i]));
+                    }
+
                     await context.read<ATaskCubit>().review(
                         widget.task.id,
                         widget.taskerId,
@@ -372,12 +378,10 @@ class _NewreviewState extends State<Newreview> {
                         widget.taskTypeId,
                         widget.taskTypeId,
                         _reviewController.text,
-                        images.isNotEmpty ? images[0].path : null,
-                        images.length > 1 ? images[1].path : null,
-                        images.length > 2 ? images[2].path : null,
-                        images.length > 3 ? images[3].path : null);
-                    String result =
-                        await context.read<ATaskCubit>().pushImage(images[0]);
+                        pushImages.isNotEmpty ? pushImages[0] : null,
+                        pushImages.length > 1 ? pushImages[1] : null,
+                        pushImages.length > 2 ? pushImages[2] : null,
+                        pushImages.length > 3 ? pushImages[3] : null);
 
                     Navigator.pop(context, Star);
                   },

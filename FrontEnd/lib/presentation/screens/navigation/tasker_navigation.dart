@@ -3,9 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
-import 'package:se121_giupviec_app/presentation/screens/user/account/account.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/message.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/home/home.dart';
@@ -22,9 +19,20 @@ class TaskerNavigation extends StatefulWidget {
 
 class _TaskerNavigationState extends State<TaskerNavigation> {
   int currentPageIndex = 0;
+  int userId = 0;
+  Future<void> userID() async {
+    final id = await SecureStorage().readId();
+    print("id nef");
+    print(id);
+    setState(() {
+      userId = int.parse(id);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    userID();
     currentPageIndex = widget.tab ?? 0;
   }
 
@@ -44,8 +52,10 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [
-          const TaskerHomePage(),
-          const TaskerActivityPage(),
+          TaskerHomePage(accountId: userId),
+          TaskerActivityPage(
+            userId: userId,
+          ),
           const MessagePage(),
           // const AccountPage(),
         ][currentPageIndex]);

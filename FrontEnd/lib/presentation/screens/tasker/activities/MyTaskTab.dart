@@ -9,24 +9,25 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/isuTaskerRow.dart';
 
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/common/widgets/userRow/userRow.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Mytasktab extends StatefulWidget {
+  final int accountId;
+  final int customerId;
   final int id;
   final int numberOfTasker;
   final VoidCallback loading;
 
   const Mytasktab({
     super.key,
+    required this.accountId,
+    required this.customerId,
     required this.loading,
     required this.id,
     required this.numberOfTasker,
@@ -52,7 +53,8 @@ class _MytasktabState extends State<Mytasktab> {
   void initState() {
     super.initState();
 
-    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+    BlocProvider.of<ATaskCubit>(context)
+        .getATasks(widget.id, widget.customerId);
   }
 
   @override
@@ -130,7 +132,8 @@ class _MytasktabState extends State<Mytasktab> {
                                       onPressed: () async {
                                         await BlocProvider.of<ATaskCubit>(
                                                 context)
-                                            .taskercanccel(3, widget.id);
+                                            .taskercanccel(
+                                                widget.accountId, widget.id);
                                         Navigator.of(context).pop();
                                         Navigator.of(context).pop();
                                         // Close the dialog
@@ -209,6 +212,9 @@ class _MytasktabState extends State<Mytasktab> {
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: Column(children: [
                                 Userrow(
+                                    taskerImageLink: (task.user as Map<String,
+                                            dynamic>)?['avatar'] ??
+                                        '',
                                     isContact: true,
                                     isCall: true,
                                     userId: task.userId,
@@ -486,6 +492,7 @@ class _MytasktabState extends State<Mytasktab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S2") {
                                     return Isutaskerrow(
+                                      accountId: widget.accountId,
                                       taskerId: (atasker.tasker
                                               as Map<String, dynamic>)['id'] ??
                                           1,

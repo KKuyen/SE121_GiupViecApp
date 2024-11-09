@@ -16,23 +16,23 @@ import upload from "../src/middleware/multer";
 import dotenv from "dotenv";
 
 dotenv.config();
-import cors from 'cors';
+import cors from "cors";
 import { IMessagePayload } from "./types/socket.types";
 
 const app = express();
 app.use(cors());
 //Socket.IO*******************************
-const  server = http.createServer(app);
+const server = http.createServer(app);
 const io = require("socket.io")(server);
 const clients: { [key: string]: any } = {};
-io.on("connection", (socket:any) => {
+io.on("connection", (socket: any) => {
   console.log("connected");
   console.log(socket.id, "has joined");
-  socket.on("login", (id:number) => {
+  socket.on("login", (id: number) => {
     console.log(id);
     clients[id] = socket;
   });
-  socket.on("message", async(e:IMessagePayload) => {
+  socket.on("message", async (e: IMessagePayload) => {
     try {
       let targetId = e.targetId;
       const savedMessage = await MessageService.saveMessage(e);
@@ -43,24 +43,23 @@ io.on("connection", (socket:any) => {
         console.log("sending message to: " + targetId);
         clients[targetId].emit("message", {
           ...e,
-          timestamp: savedMessage.createdAt
-  
+          timestamp: savedMessage.createdAt,
         });
         console.log(e);
       }
     } catch (error) {
-       console.error("Error handling message:", error);
+      console.error("Error handling message:", error);
     }
   });
   socket.on("disconnect", () => {
-        // Remove client from connected clients
-        const userId = Object.keys(clients).find(
-          key => clients[key].id === socket.id
-        );
-        if (userId) {
-          delete clients[userId];
-        }
-      });
+    // Remove client from connected clients
+    const userId = Object.keys(clients).find(
+      (key) => clients[key].id === socket.id
+    );
+    if (userId) {
+      delete clients[userId];
+    }
+  });
 });
 
 //Socket.IO*******************************
@@ -120,22 +119,22 @@ async function uploadImage(
   }
 }
 app.get("/api/v1/messages", async (req, res) => {
-      try {
-        let sourceId: string = req.query.sourceId as string;
-        let targetId: string = req.query.targetId as string;
-        if (!targetId) {
-          res.status(400).json({ error: "targetId is required" });
-          return;
-        }
-        const messages = await MessageService.getChatHistory(
-          parseInt(sourceId),
-          parseInt(targetId)
-        );
-        res.json(messages);
-      } catch (error) {
-        res.status(500).json({ error: "Failed to fetch messages" });
-      }
-    });
+  try {
+    let sourceId: string = req.query.sourceId as string;
+    let targetId: string = req.query.targetId as string;
+    if (!targetId) {
+      res.status(400).json({ error: "targetId is required" });
+      return;
+    }
+    const messages = await MessageService.getChatHistory(
+      parseInt(sourceId),
+      parseInt(targetId)
+    );
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+});
 app.post(
   "/upload-and-get-link",
   upload.single("image"),

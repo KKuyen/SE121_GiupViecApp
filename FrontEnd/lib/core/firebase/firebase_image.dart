@@ -9,19 +9,20 @@ class FirebaseImageService {
       Reference ref = _storage.ref().child(path);
       UploadTask uploadTask = ref.putFile(image);
       TaskSnapshot snapshot = await uploadTask;
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
+      return snapshot.ref.fullPath;
     } catch (e) {
       throw Exception('Error uploading image: $e');
     }
   }
 
-  Future<String> getImageUrl(String path) async {
+  Future<File> downloadImage(String path, String downloadPath) async {
     try {
-      String downloadUrl = await _storage.ref().child(path).getDownloadURL();
-      return downloadUrl;
+      Reference ref = _storage.ref().child(path);
+      File file = File(downloadPath);
+      await ref.writeToFile(file);
+      return file;
     } catch (e) {
-      throw Exception('Error getting image URL: $e');
+      throw Exception('Error downloading image: $e');
     }
   }
 }

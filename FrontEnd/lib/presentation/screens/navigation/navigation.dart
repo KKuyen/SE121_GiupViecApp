@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:se121_giupviec_app/domain/entities/user.dart';
 
 import 'package:se121_giupviec_app/presentation/screens/user/account/account.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';

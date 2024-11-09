@@ -39,8 +39,10 @@ class GetAllTasksUseCase {
     return await repository.TaskergetTS4Tasks(userId);
   }
 
-  Future<List<Task>> taskerfindtask(int taskerId) async {
-    return await repository.taskerFindTask(taskerId);
+  Future<List<Task>> taskerfindtask(int taskerId, List<int>? taskTypes,
+      DateTime? fromDate, DateTime? toDate) async {
+    return await repository.taskerFindTask(
+        taskerId, taskTypes, fromDate, toDate);
   }
 
   Future<void> applyTask(int taskerId, int taskId) async {

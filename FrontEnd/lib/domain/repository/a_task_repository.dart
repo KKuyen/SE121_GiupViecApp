@@ -31,4 +31,5 @@ abstract class ATaskRepository {
       String? image4);
   Future<void> taskercanccel(int taskerId, int taskId);
   Future<String> pushImage(File file);
+  Future<Location> getLocation(int taskId);
 }

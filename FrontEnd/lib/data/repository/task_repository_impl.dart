@@ -49,8 +49,10 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<List<Task>> taskerFindTask(int taskerId) async {
-    return await remoteDataSource.taskerFindTask(taskerId);
+  Future<List<Task>> taskerFindTask(int taskerId, List<int>? taskTypes,
+      DateTime? fromDate, DateTime? toDate) async {
+    return await remoteDataSource.taskerFindTask(
+        taskerId, taskTypes, fromDate, toDate);
   }
 
   @override

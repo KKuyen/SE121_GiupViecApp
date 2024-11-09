@@ -26,7 +26,8 @@ abstract class TaskRemoteDatasource {
       int taskId, DateTime? time, int? locationId, String? note);
   Future<Location> getdflocation(int userId);
   Future<List<Location>> getalllocation(int userId);
-  Future<List<TaskModel>> taskerFindTask(int taskerId);
+  Future<List<TaskModel>> taskerFindTask(
+      int taskerId, List<int>? taskTypes, DateTime? fromDate, DateTime? toDate);
   Future<void> applyTask(int taskerId, int taskId);
   Future<void> taskercancel(int taskerId, int taskId);
   Future<void> review(
@@ -41,6 +42,7 @@ abstract class TaskRemoteDatasource {
       String? image3,
       String? image4);
   Future<String> pushImage(File file);
+  Future<LocationModel> getLocation(int taskId);
 }
 
 class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
@@ -181,12 +183,23 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
   }
 
   @override
-  Future<List<TaskModel>> taskerFindTask(int taskerId) async {
+  Future<List<TaskModel>> taskerFindTask(int taskerId, List<int>? taskTypes,
+      DateTime? fromDate, DateTime? toDate) async {
     final http.Response response;
     try {
+      final Map<String, dynamic> body = {"taskerId": taskerId};
+      if (taskTypes != null) {
+        body['taskTypes'] = taskTypes;
+      }
+      if (fromDate != null) {
+        body['fromDate'] = fromDate.toIso8601String();
+      }
+      if (toDate != null) {
+        body['toDate'] = toDate.toIso8601String();
+      }
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-find-tasks'),
-        body: json.encode({"taskerId": taskerId}),
+        body: json.encode(body),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': AppInfor1.tasker_token
@@ -1075,6 +1088,50 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         print("response.body failed: ${response.body}");
         throw Exception('Failed to finish task');
       }
+    }
+  }
+
+  @override
+  Future<LocationModel> getLocation(int taskId) async {
+    final http.Response response;
+    try {
+      final uri = Uri.parse('$baseUrl/$apiVersion/get-task-location').replace(
+        queryParameters: {
+          'taskId': taskId.toString(),
+        },
+      );
+      response = await client.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+    } on SocketException {
+      // Handle network errors
+      print("No Internet connection");
+      throw Exception('No Internet connection');
+    } on HttpException {
+      // Handle HTTP errors
+      print("HTTP error occurred");
+      throw Exception('HTTP error occurred');
+    } on FormatException {
+      // Handle JSON format errors
+      print("Bad response format");
+      throw Exception('Bad response format');
+    } catch (e) {
+      // Handle any other exceptions
+      print("Unexpected errorrrrrrrr: $e");
+      throw Exception('Unexpected error: $e');
+    }
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+
+      print(responseBody);
+      return LocationModel.fromJson(responseBody['location']);
+    } else {
+      print("response.body failed: ${response.body}");
+      throw Exception('Failed ');
     }
   }
 }

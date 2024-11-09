@@ -10,6 +10,8 @@ import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signup_page.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
+
+import 'package:se121_giupviec_app/presentation/screens/navigation/tasker_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/helpers/SecureStorage.dart';
@@ -59,7 +61,7 @@ class _SignInPageState extends State<SignInPage> {
             // Navigate to home
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const Navigation()),
+              MaterialPageRoute(builder: (context) => const TaskerNavigation()),
             );
           } else if (state is AuthError) {
             // Show error message

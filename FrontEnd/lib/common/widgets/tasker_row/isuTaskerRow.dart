@@ -6,11 +6,13 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 class Isutaskerrow extends StatefulWidget {
   final String taskerName;
   final String taskerPhone;
+  final int accountId;
   final String taskerImageLink;
   final int taskerId;
   const Isutaskerrow({
     required this.taskerId,
     super.key,
+    required this.accountId,
     required this.taskerName,
     required this.taskerPhone,
     required this.taskerImageLink,
@@ -21,7 +23,6 @@ class Isutaskerrow extends StatefulWidget {
 }
 
 class _isuTaskerRowState extends State<Isutaskerrow> {
-  int yourId = 3;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -61,7 +62,7 @@ class _isuTaskerRowState extends State<Isutaskerrow> {
             ],
           ),
           const Spacer(),
-          if (widget.taskerId == yourId)
+          if (widget.taskerId == widget.accountId)
             Container(
               width: 50,
               padding: const EdgeInsets.all(5),

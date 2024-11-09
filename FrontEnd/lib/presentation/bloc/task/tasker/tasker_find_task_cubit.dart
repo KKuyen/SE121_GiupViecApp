@@ -12,11 +12,15 @@ class TaskerFindTaskCubit extends Cubit<TaskerFindTaskState> {
       {required this.getAllTasksUseCase, required this.getATaskerUsercase})
       : super(TaskerFindTaskInitial());
 
-  Future<void> getFindTasks(int taskerId) async {
+  Future<void> getFindTasks(int taskerId, List<int>? taskTypes,
+      DateTime? fromDate, DateTime? toDate) async {
     emit(TaskerFindTaskLoading());
     try {
       print("chay vao cubit");
-      final findTasks = await getAllTasksUseCase.taskerfindtask(taskerId);
+      if (taskTypes == []) taskTypes = null;
+
+      final findTasks = await getAllTasksUseCase.taskerfindtask(
+          taskerId, taskTypes, fromDate, toDate);
 
       final List<TaskType> taskTypeList = (await getATaskerUsercase.execute2());
       emit(TaskerFindTaskSuccess(findTasks, taskTypeList));

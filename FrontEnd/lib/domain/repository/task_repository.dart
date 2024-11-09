@@ -11,6 +11,7 @@ abstract class TaskRepository {
   Future<List<Task>> TaskergetTS2Tasks(int userId);
   Future<List<Task>> TaskergetTS3Tasks(int userId);
   Future<List<Task>> TaskergetTS4Tasks(int userId);
-  Future<List<Task>> taskerFindTask(int taskerId);
+  Future<List<Task>> taskerFindTask(
+      int taskerId, List<int>? taskTypes, DateTime? fromDate, DateTime? toDate);
   Future<void> applyTask(int taskerId, int taskId);
 }

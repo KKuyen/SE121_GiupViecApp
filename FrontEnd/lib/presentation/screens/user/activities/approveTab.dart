@@ -65,20 +65,12 @@ class _ApprovetabState extends State<Approvetab> {
     }
   }
 
-  late int userId;
-  Future<void> userID() async {
-    final id = await SecureStorage().readId();
-    setState(() {
-      userId = int.parse(id);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    userID();
-    final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, userId);
+
+    final aTaskCubit = BlocProvider.of<ATaskCubit>(context)
+        .getATasks2(widget.id, widget.userId);
   }
 
   @override
