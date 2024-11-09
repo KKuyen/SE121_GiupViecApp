@@ -25,6 +25,7 @@ class Taskerlist extends StatefulWidget {
   final Future<void> Function()? approveAll;
 
   final int id;
+  final int userId;
   final numberOfTasker;
   final String taskStatus;
   final Task? task;
@@ -34,6 +35,7 @@ class Taskerlist extends StatefulWidget {
 
   const Taskerlist(
       {required this.numberOfTasker,
+      required this.userId,
       this.approveAll,
       required this.taskStatus,
       this.task,
@@ -204,6 +206,7 @@ class _TaskerListState extends State<Taskerlist> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Taskerprofile(
+                                              userId: widget.userId,
                                               taskerId:
                                                   approvedTaskers[index].id,
                                             )),
@@ -215,6 +218,12 @@ class _TaskerListState extends State<Taskerlist> {
                                   child: Column(
                                     children: [
                                       Taskerrowdelete(
+                                        userId: widget.userId,
+                                        taskerImageLink:
+                                            (approvedTaskers[index].tasker
+                                                    as Map<String,
+                                                        dynamic>)['avatar'] ??
+                                                '',
                                         onPressFun: () {
                                           moveTaskerToPending(
                                               approvedTaskers[index]);
@@ -255,6 +264,7 @@ class _TaskerListState extends State<Taskerlist> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Taskerprofile(
+                                              userId: widget.userId,
                                               taskerId:
                                                   approvedTaskers[index].id,
                                             )),
@@ -266,6 +276,7 @@ class _TaskerListState extends State<Taskerlist> {
                                   child: Column(
                                     children: [
                                       Taskerrowreview(
+                                        userId: widget.userId,
                                         Star: approvedTaskers[index]
                                             .reviewStar
                                             ?.toDouble(),
@@ -316,6 +327,7 @@ class _TaskerListState extends State<Taskerlist> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Taskerprofile(
+                                              userId: widget.userId,
                                               taskerId:
                                                   approvedTaskers[index].id,
                                             )),
@@ -327,6 +339,7 @@ class _TaskerListState extends State<Taskerlist> {
                                   child: Column(
                                     children: [
                                       Taskerrowbasic(
+                                        userId: widget.userId,
                                         taskerImageLink:
                                             (approvedTaskers[index].tasker
                                                     as Map<String,
@@ -413,6 +426,7 @@ class _TaskerListState extends State<Taskerlist> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     Taskerprofile(
+                                                        userId: widget.userId,
                                                         taskerId:
                                                             pendingTasker[index]
                                                                 .id)),
@@ -424,6 +438,7 @@ class _TaskerListState extends State<Taskerlist> {
                                           child: Column(
                                             children: [
                                               Taskerrowaccept(
+                                                userId: widget.userId,
                                                 taskerImageLink: '',
                                                 onPressFun: () {
                                                   moveTaskerToApprove(
@@ -503,8 +518,9 @@ class _TaskerListState extends State<Taskerlist> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ActivityPage()),
+                                            builder: (context) => ActivityPage(
+                                                  allUserId: 1,
+                                                )),
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(

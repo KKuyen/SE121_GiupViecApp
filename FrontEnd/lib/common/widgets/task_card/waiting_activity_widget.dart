@@ -11,6 +11,7 @@ class WatingActivityWidget extends StatefulWidget {
   final VoidCallback loading;
   final int numberOfTasker;
   final int id;
+  final int userId;
   final String serviceName;
   final DateTime startDay;
   final DateTime createAt;
@@ -28,6 +29,7 @@ class WatingActivityWidget extends StatefulWidget {
 
   const WatingActivityWidget(
       {this.id = 1,
+      required this.userId,
       required this.createAt,
       this.ungCuVien = 0,
       this.daNhan = 0,
@@ -60,6 +62,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
           context,
           MaterialPageRoute(
               builder: (context) => Waitingtab(
+                    userId: widget.userId,
                     id: widget.id,
                   )),
         );

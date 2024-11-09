@@ -15,6 +15,7 @@ class Taskerrowreview extends StatefulWidget {
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
+  final int userId;
 
   final double? Star;
   final Task task;
@@ -23,6 +24,7 @@ class Taskerrowreview extends StatefulWidget {
   final int taskTypeId;
   final VoidCallback? reload;
   const Taskerrowreview({
+    required this.userId,
     this.reload,
     required this.taskerId,
     super.key,
@@ -61,7 +63,10 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
+            builder: (context) => Taskerprofile(
+              taskerId: widget.taskerId,
+              userId: widget.userId,
+            ),
           ),
         ),
       },
@@ -129,6 +134,7 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => Newreview(
+                          userId: widget.userId,
                           taskerImageLink: widget.taskerPhone,
                           taskerPhone: widget.taskerPhone,
                           taskerId: widget.taskerId,

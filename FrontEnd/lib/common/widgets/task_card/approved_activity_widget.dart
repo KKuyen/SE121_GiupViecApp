@@ -10,6 +10,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/finishTa
 
 class ApprovedActivityWidget extends StatefulWidget {
   final bool isFinished;
+  final int userId;
   final VoidCallback onShowLabel;
   final int numberOfTasker;
   final VoidCallback loading;
@@ -33,6 +34,7 @@ class ApprovedActivityWidget extends StatefulWidget {
 
   const ApprovedActivityWidget(
       {this.isFinished = false,
+      required this.userId,
       required this.avatar,
       required this.onShowLabel,
       required this.taskTypeId,
@@ -68,6 +70,7 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
             context,
             MaterialPageRoute(
               builder: (context) => Approvetab(
+                userId: widget.userId,
                 numberOfTasker: widget.numberOfTasker,
                 id: widget.id,
               ),
@@ -82,6 +85,7 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
             context,
             MaterialPageRoute(
               builder: (context) => Finishtab(
+                userId: widget.userId,
                 numberOfTasker: widget.numberOfTasker,
                 id: widget.id,
                 taskTypeId: widget.taskTypeId,

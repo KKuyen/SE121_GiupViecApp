@@ -8,6 +8,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/approveT
 
 class FinishedActivityWidget extends StatefulWidget {
   final VoidCallback onShowLabel;
+  final int userId;
   final int numberOfTasker;
   final int id;
   final String serviceName;
@@ -15,6 +16,7 @@ class FinishedActivityWidget extends StatefulWidget {
   final DateTime createAt;
   final String ownerName;
   final String district;
+
   final String deltailAddress;
   final String country;
   final String province;
@@ -29,6 +31,7 @@ class FinishedActivityWidget extends StatefulWidget {
 
   const FinishedActivityWidget(
       {required this.onShowLabel,
+      required this.userId,
       this.id = 1,
       required this.loading,
       required this.createAt,
@@ -61,6 +64,7 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
           context,
           MaterialPageRoute(
             builder: (context) => Approvetab(
+              userId: widget.userId,
               numberOfTasker: widget.numberOfTasker,
               id: widget.id,
             ),

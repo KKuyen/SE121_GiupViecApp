@@ -20,7 +20,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerLi
 
 class Waitingtab extends StatefulWidget {
   final int id;
-  const Waitingtab({super.key, required this.id});
+  final int userId;
+  const Waitingtab({super.key, required this.id, required this.userId});
 
   @override
   State<Waitingtab> createState() => _WaitingtabState();
@@ -140,7 +141,8 @@ class _WaitingtabState extends State<Waitingtab> {
 
   Future<void> _reload() async {
     setState(() {
-      final st = BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+      final st = BlocProvider.of<ATaskCubit>(context)
+          .getATasks(widget.id, widget.userId);
     });
   }
 
@@ -148,7 +150,7 @@ class _WaitingtabState extends State<Waitingtab> {
   void initState() {
     super.initState();
 
-    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, widget.userId);
   }
 
   @override
@@ -391,6 +393,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S2") {
                                     return Taskerrowbasic(
+                                      userId: widget.userId,
                                       taskerId: (atasker.tasker
                                           as Map<String, dynamic>)['id'],
                                       taskerName: (atasker.tasker as Map<String,
@@ -1036,6 +1039,7 @@ class _WaitingtabState extends State<Waitingtab> {
             if (_isLabelVisible)
               Center(
                 child: Taskerlist(
+                  userId: widget.userId,
                   callBackFunforTab: () => _reload(),
                   id: widget.id,
                   numberOfTasker: task.numberOfTasker,

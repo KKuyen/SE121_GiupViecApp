@@ -47,7 +47,7 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
           const TaskerHomePage(),
           const TaskerActivityPage(),
           const MessagePage(),
-          const AccountPage(),
+          // const AccountPage(),
         ][currentPageIndex]);
   }
 

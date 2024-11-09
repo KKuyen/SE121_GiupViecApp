@@ -19,12 +19,14 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerLi
 
 class Finishtab extends StatefulWidget {
   final int id;
+  final int userId;
   final int numberOfTasker;
   final int taskTypeId;
   const Finishtab(
       {super.key,
       required this.id,
       required this.numberOfTasker,
+      required this.userId,
       required this.taskTypeId});
 
   @override
@@ -46,7 +48,7 @@ class _FinishTabState extends State<Finishtab> {
   void initState() {
     super.initState();
 
-    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, widget.userId);
   }
 
   @override
@@ -121,6 +123,7 @@ class _FinishTabState extends State<Finishtab> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Newtaskstep1(
+                                  userId: 3,
                                   taskTypeId: widget.taskTypeId,
                                 ),
                               ),
@@ -176,10 +179,12 @@ class _FinishTabState extends State<Finishtab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S5") {
                                     return Taskerrowreview(
+                                      userId: widget.userId,
                                       reload: () {
                                         print('reload');
                                         BlocProvider.of<ATaskCubit>(context)
-                                            .getATasks(widget.id, 1);
+                                            .getATasks(
+                                                widget.id, widget.userId);
                                       },
                                       Star: (atasker.reviewStar?.toDouble()),
                                       task: state.task,
@@ -578,6 +583,7 @@ class _FinishTabState extends State<Finishtab> {
       if (_isLabelVisible)
         Center(
           child: Taskerlist(
+            userId: widget.userId,
             id: widget.id,
             cancel: _hideLabel,
             numberOfTasker: widget.numberOfTasker,

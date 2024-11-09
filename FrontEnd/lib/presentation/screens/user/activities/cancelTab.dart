@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
@@ -17,10 +18,12 @@ class Canceltab extends StatefulWidget {
   final DateTime cancelAt;
   final String cancelReason;
   final String cancelBy;
+  final int userId;
 
   final int id;
   const Canceltab(
       {super.key,
+      required this.userId,
       required this.id,
       required this.cancelAt,
       required this.cancelReason,
@@ -44,7 +47,7 @@ class _CanceltabState extends State<Canceltab> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, widget.userId);
   }
 
   @override
@@ -236,8 +239,10 @@ class _CanceltabState extends State<Canceltab> {
                                             children: [
                                               Text(
                                                 (task.location as Map<String,
-                                                        dynamic>)['ownerName']
-                                                    .toString(),
+                                                                dynamic>)[
+                                                            'ownerName']
+                                                        .toString() ??
+                                                    '',
                                                 style: TextStyle(
                                                     fontFamily: 'Inter',
                                                     color: Colors.black,
@@ -259,9 +264,10 @@ class _CanceltabState extends State<Canceltab> {
                                               const SizedBox(height: 5),
                                               Text(
                                                 (task.location as Map<String,
-                                                            dynamic>)[
-                                                        'ownerPhoneNumber']
-                                                    .toString(),
+                                                                dynamic>)[
+                                                            'ownerPhoneNumber']
+                                                        .toString() ??
+                                                    '',
                                                 style: TextStyle(
                                                     fontFamily: 'Inter',
                                                     color: Colors.black,
@@ -457,6 +463,7 @@ class _CanceltabState extends State<Canceltab> {
               if (_isLabelVisible)
                 Center(
                   child: Taskerlist(
+                    userId: widget.userId,
                     id: widget.id,
                     numberOfTasker: task.numberOfTasker,
                     cancel: _hideLabel,
