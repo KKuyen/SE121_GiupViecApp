@@ -8,6 +8,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/cancelTa
 
 class CancelActivityWidget extends StatefulWidget {
   final int numberOfTasker;
+  final int userId;
   final int id;
   final String taskStatus;
   final String serviceName;
@@ -27,6 +28,7 @@ class CancelActivityWidget extends StatefulWidget {
   final String price;
   final String note;
   const CancelActivityWidget({
+    required this.userId,
     required this.taskStatus,
     super.key,
     required this.avatar,
@@ -62,6 +64,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
           context,
           MaterialPageRoute(
               builder: (context) => Canceltab(
+                    userId: widget.userId,
                     cancelAt: widget.taskStatus == "TS1"
                         ? widget.startDay
                         : widget.cancelAt,

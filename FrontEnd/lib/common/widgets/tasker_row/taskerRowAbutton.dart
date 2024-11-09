@@ -7,6 +7,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerPr
 
 class Taskerrowabutton extends StatefulWidget {
   final int taskerId;
+  final int userId;
 
   final String taskerName;
   final String taskerPhone;
@@ -14,6 +15,7 @@ class Taskerrowabutton extends StatefulWidget {
   final TwoSttButton iconButton;
 
   const Taskerrowabutton({
+    required this.userId,
     required this.taskerId,
     required this.iconButton,
     super.key,
@@ -34,7 +36,10 @@ class _TaskerrowdaState extends State<Taskerrowabutton> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
+            builder: (context) => Taskerprofile(
+              taskerId: widget.taskerId,
+              userId: widget.userId,
+            ),
           ),
         ),
       },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherCard.dart';
@@ -17,10 +18,12 @@ class Newtaskstep2 extends StatefulWidget {
   final int? myvoucherId;
   int? locationId;
   final int firstPrice;
+  final int userId;
 
   final List<Map<String, dynamic>> addPriceDetail;
 
   Newtaskstep2({
+    required this.userId,
     required this.firstPrice,
     required this.taskTypeId,
     super.key,
@@ -53,7 +56,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
     _selectedDate = DateTime.now().add(const Duration(days: 1));
     _selectedTime = const TimeOfDay(hour: 8, minute: 0);
     final NewTask2 = BlocProvider.of<NewTask2Cubit>(context)
-        .getLocationAndVoucher(1, widget.taskTypeId);
+        .getLocationAndVoucher(widget.userId, widget.taskTypeId);
   }
 
   void setVoucherId(int id, String voucherName, String value) {
@@ -117,11 +120,11 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.5),
               ),
-              child: Center(
+              child: const Center(
                 child: SizedBox(
                   height: 40,
                   width: 40,
-                  child: const CircularProgressIndicator(),
+                  child: CircularProgressIndicator(),
                 ),
               ),
             ),
@@ -652,7 +655,8 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                     const SizedBox(height: 20),
                     Sizedbutton(
                       onPressFun: () async {
-                        int userId = 1;
+                        int userId = int.parse(await SecureStorage().readId());
+
                         int taskTypeId = widget.taskTypeId;
                         DateTime time = DateTime(
                           _selectedDate!.year,
@@ -695,7 +699,8 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Navigation(tab: 1),
+                            builder: (context) =>
+                                Navigation(tab: 1, userId: widget.userId),
                           ),
                         );
                       },

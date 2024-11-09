@@ -665,15 +665,7 @@ class _FinishtasktabState extends State<Finishtasktab> {
         Container(
           color: Colors.black.withOpacity(0.5),
         ),
-      if (_isLabelVisible)
-        Center(
-          child: Taskerlist(
-            id: widget.id,
-            cancel: _hideLabel,
-            numberOfTasker: widget.numberOfTasker,
-            taskStatus: 'TS3',
-          ),
-        ),
+      if (_isLabelVisible) Center(),
     ]);
   }
 }

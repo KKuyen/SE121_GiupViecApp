@@ -8,7 +8,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerPr
 class Taskerrowaccept extends StatefulWidget {
   final int taskerId;
   final VoidCallback onPressFun;
-
+  final int userId;
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
@@ -17,6 +17,7 @@ class Taskerrowaccept extends StatefulWidget {
     required this.taskerId,
     required this.onPressFun,
     super.key,
+    required this.userId,
     required this.taskerName,
     required this.taskerPhone,
     required this.taskerImageLink,
@@ -34,7 +35,10 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
+            builder: (context) => Taskerprofile(
+              taskerId: widget.taskerId,
+              userId: widget.userId,
+            ),
           ),
         ),
       },

@@ -14,7 +14,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskS
 
 class Newtaskstep1 extends StatefulWidget {
   final int taskTypeId;
-  const Newtaskstep1({super.key, this.taskTypeId = 1});
+  final int userId;
+  const Newtaskstep1({super.key, this.taskTypeId = 1, required this.userId});
 
   @override
   State<Newtaskstep1> createState() => _Newtaskstep1State();
@@ -289,6 +290,7 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Newtaskstep2(
+                                      userId: widget.userId,
                                       firstPrice: sumMoney,
                                       taskTypeId: widget.taskTypeId,
                                       addPriceDetail: xValues,

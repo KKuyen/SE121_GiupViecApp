@@ -466,7 +466,7 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                               },
                                                               selectedColor:
                                                                   AppColors
-                                                                      ., // Color when chip is selected
+                                                                      .cam_main, // Color when chip is selected
                                                               backgroundColor:
                                                                   Colors.grey[
                                                                       200], // Color when chip is not selected

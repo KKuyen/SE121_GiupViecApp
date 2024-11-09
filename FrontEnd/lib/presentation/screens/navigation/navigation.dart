@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/domain/entities/user.dart';
 
 import 'package:se121_giupviec_app/presentation/screens/user/account/account.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/home.dart';
@@ -12,17 +13,30 @@ import '../../../common/helpers/SecureStorage.dart';
 
 class Navigation extends StatefulWidget {
   final int? tab;
-  const Navigation({super.key, this.tab});
+  final int? userId;
+  const Navigation({super.key, this.tab, this.userId});
 
   @override
   State<Navigation> createState() => _NavigationState();
 }
 
 class _NavigationState extends State<Navigation> {
+  int userId = 0;
+  Future<void> userID() async {
+    final id = await SecureStorage().readId();
+    print("id nef");
+    print(id);
+    setState(() {
+      userId = int.parse(id);
+    });
+  }
+
   int currentPageIndex = 0;
   @override
   void initState() {
     super.initState();
+    userId = widget.userId ?? 0;
+    userID();
     currentPageIndex = widget.tab ?? 0;
   }
 
@@ -43,14 +57,20 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
+    print(" trước khi  print userId");
+    print(userId);
     _printUser();
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [
           const HomePage(),
-          const ActivityPage(),
+          ActivityPage(
+            allUserId: userId,
+          ),
           const MessagePage(),
-          const AccountPage(),
+          AccountPage(
+            userId: userId,
+          ),
         ][currentPageIndex]);
   }
 

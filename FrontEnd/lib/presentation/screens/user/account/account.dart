@@ -16,7 +16,9 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../common/helpers/SecureStorage.dart';
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+  final int userId;
+  
+  const AccountPage({super.key, required this.userId});
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -104,7 +106,8 @@ class _AccountPageState extends State<AccountPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const Lovetaskers()));
+                                           Lovetaskers(
+                                          userId: widget.userId)));
                             },
                           ),
                           const Divider(
@@ -120,7 +123,7 @@ class _AccountPageState extends State<AccountPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const Blocktaskers()));
+                                           Blocktaskers(userId: widget.userId,)));
                             },
                           ),
                           const Divider(

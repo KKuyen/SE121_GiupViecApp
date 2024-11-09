@@ -16,7 +16,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/allRevie
 class Taskerprofile extends StatefulWidget {
   final int taskerId;
   final int userId;
-  const Taskerprofile({super.key, required this.taskerId, this.userId = 2});
+  const Taskerprofile(
+      {super.key, required this.taskerId, required this.userId});
 
   @override
   State<Taskerprofile> createState() => _TaskerprofileState();
@@ -408,7 +409,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                               errorWidget: (context, url, error) => Container(
                                 width: 120.0,
                                 height: 120.0,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.grey,
                                 ),

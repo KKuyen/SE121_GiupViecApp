@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
@@ -19,7 +20,12 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerLi
 class Approvetab extends StatefulWidget {
   final int id;
   final int numberOfTasker;
-  const Approvetab({super.key, required this.id, required this.numberOfTasker});
+  final int userId;
+  const Approvetab(
+      {super.key,
+      required this.id,
+      required this.numberOfTasker,
+      required this.userId});
 
   @override
   State<Approvetab> createState() => _ApprovetabState();
@@ -59,11 +65,20 @@ class _ApprovetabState extends State<Approvetab> {
     }
   }
 
+  late int userId;
+  Future<void> userID() async {
+    final id = await SecureStorage().readId();
+    setState(() {
+      userId = int.parse(id);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    userID();
     final aTaskCubit =
-        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+        BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, userId);
   }
 
   @override
@@ -328,6 +343,7 @@ class _ApprovetabState extends State<Approvetab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S2") {
                                     return Taskerrowbasic(
+                                      userId: widget.userId,
                                       taskerId: (atasker.tasker
                                           as Map<String, dynamic>)['id'],
                                       taskerName: (atasker.tasker as Map<String,
@@ -683,6 +699,7 @@ class _ApprovetabState extends State<Approvetab> {
       if (_isLabelVisible)
         Center(
           child: Taskerlist(
+            userId: widget.userId,
             id: widget.id,
             cancel: _hideLabel,
             numberOfTasker: widget.numberOfTasker,

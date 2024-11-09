@@ -12,7 +12,8 @@ import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubi
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_state.dart';
 
 class Blocktaskers extends StatefulWidget {
-  const Blocktaskers({super.key});
+  final int userId;
+  const Blocktaskers({super.key, required this.userId});
 
   @override
   State<Blocktaskers> createState() => _blocktaskersState();
@@ -29,7 +30,7 @@ class _blocktaskersState extends State<Blocktaskers> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<LoveTaskersCubit>(context).getLoveTaskers(2);
+    BlocProvider.of<LoveTaskersCubit>(context).getLoveTaskers(widget.userId);
   }
 
   @override
@@ -91,6 +92,7 @@ class _blocktaskersState extends State<Blocktaskers> {
                       itemBuilder: (context, index) {
                         // tam thoi comment
                         return Taskerrowabutton(
+                            userId: widget.userId,
                             taskerImageLink: (state.blockTaskers[index].tasker
                                 as Map<String, dynamic>)['avatar'],
                             taskerPhone: (state.blockTaskers[index].tasker

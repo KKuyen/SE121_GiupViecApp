@@ -9,9 +9,11 @@ class Taskerrowbasic extends StatefulWidget {
   final String taskerPhone;
   final String taskerImageLink;
   final int taskerId;
+  final int userId;
   const Taskerrowbasic({
     required this.taskerId,
     super.key,
+    required this.userId,
     required this.taskerName,
     required this.taskerPhone,
     required this.taskerImageLink,
@@ -29,7 +31,10 @@ class _TaskerrowbasicState extends State<Taskerrowbasic> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Taskerprofile(taskerId: widget.taskerId),
+            builder: (context) => Taskerprofile(
+              taskerId: widget.taskerId,
+              userId: widget.userId,
+            ),
           ),
         ),
       },

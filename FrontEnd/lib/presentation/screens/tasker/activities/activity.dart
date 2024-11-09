@@ -84,20 +84,7 @@ class _TaskerActivityPageState extends State<TaskerActivityPage> {
           Container(
             color: Colors.black.withOpacity(0.5),
           ),
-        if (_isLabelVisible)
-          Center(
-            child: Taskerlist(
-              task: currentTask,
-              taskTypeId: taskTypeId,
-              taskTypeAvatar: TaskTypeAvatar,
-              taskTypeName: TaskTypeName,
-              callBackFun: () => _reload(),
-              id: id,
-              numberOfTasker: numberOfTasker,
-              cancel: _hideLabel,
-              taskStatus: taskStatus,
-            ),
-          ),
+        if (_isLabelVisible) Center(),
       ],
     );
   }

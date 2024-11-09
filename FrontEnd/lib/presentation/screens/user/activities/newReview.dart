@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart'; // Import thêm gói image_picker
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/common/widgets/input/note_Watingtab.dart';
+
 import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowBasic.dart';
 
 import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
@@ -18,6 +18,7 @@ import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 
 class Newreview extends StatefulWidget {
   final Task task;
+  final int userId;
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
@@ -30,6 +31,7 @@ class Newreview extends StatefulWidget {
 
   const Newreview(
       {super.key,
+      required this.userId,
       required this.taskerId,
       required this.task,
       required this.taskTypeAvatar,
@@ -204,6 +206,7 @@ class _NewreviewState extends State<Newreview> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Taskerrowbasic(
+                            userId: widget.userId,
                             taskerPhone: widget.taskerPhone,
                             taskerId: widget.taskerId,
                             taskerImageLink: widget.taskerImageLink,
