@@ -22,9 +22,18 @@ class AddLocationCubit extends Cubit<LocationState> {
       bool isDefault) async {
     emit(LocationLoading());
     try {
+      print("ownerName: $ownerName");
+      print("ownerPhoneNumber: $ownerPhoneNumber");
+      print("province: $province");
+      print("district: $district");
+      print("detailAddress: $detailAddress");
+      print("map: $map");
+      print("userId: $userId");
+      print("isDefault: $isDefault");
+
       final response = await addNewLocationUseCase.execute(
-          ownerName!,
-          ownerPhoneNumber!,
+          ownerName != null ? ownerName : " ",
+          ownerPhoneNumber != null ? ownerPhoneNumber : " ",
           country,
           province,
           district,
@@ -38,7 +47,7 @@ class AddLocationCubit extends Cubit<LocationState> {
         emit(LocationError(response.message));
       }
     } catch (e) {
-      emit(LocationError(e.toString()));
+      emit(LocationError("Error: $e"));
     }
   }
 }

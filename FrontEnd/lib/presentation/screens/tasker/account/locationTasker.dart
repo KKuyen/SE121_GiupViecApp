@@ -212,6 +212,7 @@ class _listLocationState extends State<listLocation> {
   Widget build(BuildContext context) {
     return BlocBuilder<LocationCubit, LocationState>(
       builder: (context, state) {
+        print("state" + state.toString());
         if (state is LocationLoading) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -257,15 +258,14 @@ class _addressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        location.ownerName,
+        "${location.map}, ${location.detailAddress}",
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              "${location.map}, ${location.detailAddress}, ${location.district}, ${location.province}, ${location.country}"),
-          Text(location.ownerPhoneNumber),
+              "${location.district}, ${location.province}, ${location.country}"),
         ],
       ),
       trailing: const Icon(

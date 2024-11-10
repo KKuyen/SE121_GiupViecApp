@@ -33,11 +33,21 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
     return {'name': name, 'phoneNumber': phoneNumber};
   }
 
+  Future<String> _fetchUserId() async {
+    String id = await secureStorage.readId();
+    return id;
+  }
+
+  int userId = 0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<TaskerCubit>(context).getATasker(1, 2);
+    _fetchUserId().then((value) {
+      userId = (int.parse(value));
+    });
   }
 
   @override
@@ -114,7 +124,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          Allreview(taskerId: 1)));
+                                          Allreview(taskerId: userId)));
                             },
                           ),
                           const Divider(

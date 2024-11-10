@@ -9,6 +9,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/presentation/screens/user/account/chooseLocation2.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
 import '../../../bloc/Location/add_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
 import 'location.dart';
@@ -35,11 +36,20 @@ class _AddLocationPageState extends State<AddLocationPage> {
   List<Map<String, dynamic>> provinces = [];
   List<Map<String, dynamic>> districts = [];
   List<Map<String, dynamic>> wards = [];
+  SecureStorage secureStorage = SecureStorage();
+  Future<String> _fetchUserId() async {
+    String id = await secureStorage.readId();
+    return id;
+  }
 
+  int userId = 0;
   @override
   void initState() {
     super.initState();
     fetchProvinces();
+    _fetchUserId().then((value) {
+      userId = (int.parse(value));
+    });
   }
 
   Future<void> fetchProvinces() async {
@@ -162,7 +172,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                     selectedDistrictName!,
                     selectedWardName!,
                     _chitiet.text,
-                    1,
+                    userId,
                     _isDefault,
                   );
             }

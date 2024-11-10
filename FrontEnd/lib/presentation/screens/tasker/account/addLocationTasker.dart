@@ -9,6 +9,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/presentation/screens/user/account/chooseLocation2.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
 import '../../../bloc/Location/add_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
 import 'locationTasker.dart';
@@ -27,19 +28,26 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
   String? selectedProvinceName;
   String? selectedDistrictName;
   String? selectedWardName;
-  final TextEditingController _hovaten = TextEditingController();
-  final TextEditingController _sdt = TextEditingController();
   final TextEditingController _chitiet = TextEditingController();
   bool _isDefault = false;
 
   List<Map<String, dynamic>> provinces = [];
   List<Map<String, dynamic>> districts = [];
   List<Map<String, dynamic>> wards = [];
+  SecureStorage secureStorage = SecureStorage();
+  Future<String> _fetchUserId() async {
+    String id = await secureStorage.readId();
+    return id;
+  }
 
+  int userId = 0;
   @override
   void initState() {
     super.initState();
     fetchProvinces();
+    _fetchUserId().then((value) {
+      userId = (int.parse(value));
+    });
   }
 
   Future<void> fetchProvinces() async {
@@ -140,9 +148,7 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
         ),
         child: Sizedbutton(
           onPressFun: () {
-            if (_hovaten.text.isEmpty ||
-                _sdt.text.isEmpty ||
-                _chitiet.text.isEmpty ||
+            if (_chitiet.text.isEmpty ||
                 selectedProvinceName == null ||
                 selectedDistrictName == null ||
                 selectedWardName == null) {
@@ -155,14 +161,14 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
                 selectedDistrictName != null &&
                 selectedWardName != null) {
               context.read<AddLocationCubit>().addNewLocation(
-                    _hovaten.text,
-                    _sdt.text,
+                    null,
+                    null,
                     "Việt Nam",
                     selectedProvinceName!,
                     selectedDistrictName!,
                     selectedWardName!,
                     _chitiet.text,
-                    1,
+                    userId,
                     _isDefault,
                   );
             }

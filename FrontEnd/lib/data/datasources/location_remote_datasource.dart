@@ -50,6 +50,7 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
               'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
         },
       );
+      print("response: ${response.body}");
     } on SocketException {
       // Handle network errors
       print("No Internet connection");
