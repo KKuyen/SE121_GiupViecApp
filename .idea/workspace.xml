@@ -4,7 +4,34 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd5d2e9f-7a89-40f9-8a54-54ea6dbea029" name="Changes" comment="" />
+    <list default="true" id="fd5d2e9f-7a89-40f9-8a54-54ea6dbea029" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SE121_GiupViecApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SE121_GiupViecApp.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot/chatSessions/00000000000.xd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot/chatSessions/blobs/version" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot/chatSessions/xd.lck" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/review_card/review_card_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/review_card/review_card_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/isuTaskerRow.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/isuTaskerRow.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowAbutton.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowAbutton.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowAccept.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowAccept.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowBasic.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowBasic.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowDelete.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowDelete.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowReview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/tasker_row/taskerRowReview.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/userRow/userRow.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/common/widgets/userRow/userRow.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/core/firebase/firebase_image.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/core/firebase/firebase_image.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/data/repository/setting_repository_impl.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/data/repository/setting_repository_impl.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/presentation/screens/auth/signin-page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/presentation/screens/auth/signin-page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/presentation/screens/user/activities/taskerProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/presentation/screens/user/activities/taskerProfile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/lib/presentation/screens/user/activities/test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/lib/presentation/screens/user/activities/test.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,9 +46,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2nSiSSE1K2ryLs9daUIoYbg19Qh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -29,17 +56,38 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Dart Command Line App.main.dart.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "dihung",
-    "last_opened_file_path": "C:/Users/PC/Desktop/SE121_GiupViecApp/FrontEnd",
+    "git-widget-placeholder": "Rebasing KAPI",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/Ca nhan/SE121/SE121_GiupViecApp",
+    "settings.editor.selected.configurable": "AndroidSdkUpdater",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
+  <component name="RunManager" selected="Flutter.main.dart">
+    <configuration name="main.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/FrontEnd/lib/main.dart" />
+      <option name="workingDirectory" value="$PROJECT_DIR$/FrontEnd" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/FrontEnd/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Dart Command Line App.main.dart" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

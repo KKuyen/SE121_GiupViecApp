@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:se121_giupviec_app/core/firebase/firebase_image.dart';
 
 class Userrow extends StatefulWidget {
   final int userId;
@@ -29,28 +30,40 @@ class Userrow extends StatefulWidget {
 }
 
 class _userRow extends State<Userrow> {
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
         children: [
-          CachedNetworkImage(
-            imageUrl: widget.taskerImageLink,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-            imageBuilder: (context, imageProvider) => Container(
-              width: 40.0,
-              height: 40.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+          FutureBuilder<String>(
+            future: _firebaseImageService.loadImage(widget.taskerImageLink),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Icon(Icons.error);
+              } else {
+                return CachedNetworkImage(
+                  imageUrl: snapshot.data!,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 40.0,
+                    height: 40.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
           ),
           const SizedBox(width: 10),
           Column(

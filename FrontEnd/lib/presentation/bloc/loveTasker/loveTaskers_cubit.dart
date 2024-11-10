@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/domain/entities/loveTasker.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_all_love_taskers_usecase.dart';
 
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_state.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 
 class LoveTaskersCubit extends Cubit<LoveTaskersState> {
   final GetAllLoveTaskersUsecase getLoveTaskerssUsercase;

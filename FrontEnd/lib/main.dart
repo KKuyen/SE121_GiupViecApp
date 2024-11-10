@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 
 import 'package:se121_giupviec_app/presentation/screens/auth/splash.dart';
 
@@ -22,7 +24,6 @@ import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_tas
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/test.dart';
 
 import 'core/injection/injection_container.dart' as di;
 import 'presentation/bloc/Auth/auth_cubit.dart';
@@ -39,19 +40,21 @@ import 'presentation/bloc/Voucher/voucher_cubit.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init(); // Initialize dependencies
-  WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
             apiKey: "AIzaSyB8JQVfpVOpmb-c7M-7wvkjRd8Qf1pBjqM",
-            appId: "1:464358819305:web:39d8f0c730192b28ecb778",
+            authDomain: "se100-af7bc.firebaseapp.com",
+            projectId: "se100-af7bc",
+            storageBucket: "se100-af7bc.appspot.com",
             messagingSenderId: "464358819305",
-            projectId: "se100-af7bc"));
-  } else {
-    await Firebase.initializeApp();
-  }
-  // await FirebaseNoti().initNotifications(); // Initialize Firebase Notifications
+            appId: "1:464358819305:web:39d8f0c730192b28ecb778",
+            measurementId: "G-1LZYHKS59L"));
+  } else {}
+  await Firebase.initializeApp();
+
+  await di.init();
+  // Initialize dependencies
 
   runApp(const MyApp());
 }
@@ -142,6 +145,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create: (context) => di.sl<TaskerFindTaskCubit>(),
         ),
+        BlocProvider(
+          create: (context) => di.sl<allNotificationCubit>(),
+        ),
       ],
       child: MaterialApp(
         title: 'TaskMate',
@@ -151,7 +157,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
 
-        home: FirebaseImageLoader(),
+        home: SplashPage(),
 
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),

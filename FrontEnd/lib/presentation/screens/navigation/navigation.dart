@@ -62,7 +62,9 @@ class _NavigationState extends State<Navigation> {
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [
-          const HomePage(),
+          HomePage(
+            accountId: userId,
+          ),
           ActivityPage(
             allUserId: userId,
           ),

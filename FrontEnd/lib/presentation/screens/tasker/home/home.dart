@@ -13,6 +13,7 @@ import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
 
 class TaskerHomePage extends StatefulWidget {
   final int accountId;
@@ -95,7 +96,15 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                     color: AppColors.cam_main,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationScreen(
+                              userId: widget.accountId,
+                            )),
+                  );
+                },
               ),
             ),
             body: Column(

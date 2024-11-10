@@ -42,7 +42,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthLoading) {
           // Show loading dialog
           showDialog(
@@ -57,11 +57,12 @@ class _SignInPageState extends State<SignInPage> {
           Navigator.of(context).pop();
 
           if (state is AuthSuccess) {
-            secureStorage.writeUserInfo(state.user, state.user.access_token);
+            await secureStorage.writeUserInfo(
+                state.user, state.user.access_token);
             // Navigate to home
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const TaskerNavigation()),
+              MaterialPageRoute(builder: (context) => const Navigation()),
             );
           } else if (state is AuthError) {
             // Show error message

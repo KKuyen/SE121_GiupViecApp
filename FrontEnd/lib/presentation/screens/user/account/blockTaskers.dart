@@ -102,6 +102,7 @@ class _blocktaskersState extends State<Blocktaskers> {
                             taskerName: (state.blockTaskers[index].tasker
                                 as Map<String, dynamic>)['name'],
                             iconButton: TwoSttButton(
+                              userId: widget.userId,
                               isLove: false,
                               TaskerId: (state.blockTaskers[index].tasker
                                   as Map<String, dynamic>)['id'],

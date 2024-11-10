@@ -7,6 +7,7 @@ import 'package:se121_giupviec_app/common/widgets/task_type_mini_card/mini_tt_ca
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/core/firebase/firebase_image.dart';
 
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
@@ -45,6 +46,8 @@ class _TaskerprofileState extends State<Taskerprofile> {
     BlocProvider.of<TaskerCubit>(context)
         .getATasker(widget.userId, widget.taskerId);
   }
+
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +132,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 TwoSttButton(
+                                  userId: widget.userId,
                                   isLove: false,
                                   TaskerId: (state.tasker.tasker
                                           as Map<String, dynamic>?)?['id'] ??
@@ -149,6 +153,7 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                   width: 8,
                                 ),
                                 TwoSttButton(
+                                  userId: widget.userId,
                                   isLove: true,
                                   TaskerId: (state.tasker.tasker
                                           as Map<String, dynamic>?)?['id'] ??
@@ -400,40 +405,70 @@ class _TaskerprofileState extends State<Taskerprofile> {
                       child: Center(
                         child: Column(
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: (state.tasker.tasker
-                                      as Map<String, dynamic>?)?['avatar'] ??
-                                  '',
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => Container(
-                                width: 120.0,
-                                height: 120.0,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey,
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  size: 60,
-                                  color: Colors.white,
-                                ),
+                            FutureBuilder<String>(
+                              future: _firebaseImageService.loadImage(
+                                (state.tasker.tasker
+                                        as Map<String, dynamic>?)?['avatar'] ??
+                                    '',
                               ),
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 120.0,
-                                height: 120.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border:
-                                      Border.all(color: Colors.white, width: 6),
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Container(
+                                    width: 120.0,
+                                    height: 120.0,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey,
+                                    ),
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                } else if (snapshot.hasData) {
+                                  return CachedNetworkImage(
+                                    imageUrl: snapshot.data!,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      width: 120.0,
+                                      height: 120.0,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey,
+                                      ),
+                                      child: const Icon(
+                                        Icons.person,
+                                        size: 60,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: 120.0,
+                                      height: 120.0,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Colors.white, width: 6),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Icon(Icons.error);
+                                }
+                              },
                             ),
+
                             const SizedBox(
                               height: 15,
                             ),

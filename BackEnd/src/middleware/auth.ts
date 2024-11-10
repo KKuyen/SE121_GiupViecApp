@@ -46,12 +46,18 @@ const userPaths: string[] = [
   "/api/v1/delete-my-location",
   "/api/v1/change-password",
   "/api/v1/get-my-default-location",
+  "/api/v1/push-notification",
+
   "/api/v1/edit-user-profile",
   "/api/v1/delete-my-voucher",
   "/api/v1/get-a-review",
   "/api/v1/get-user-setting",
+  "/api/v1/get-notification",
+  "/api/v1/delete-notification",
 ];
 const taskerPaths: string[] = [
+  "/api/v1/push-notification",
+  "/api/v1/get-notification",
   "/api/v1/get-tasker-profile",
   "/api/v1/edit-tasker-profile",
   "/api/v1/get-all-reviews",
@@ -68,6 +74,7 @@ const taskerPaths: string[] = [
   "/api/v1/cancel-task",
   "/api/v1/get-my-default-location",
   "/api/v1/get-apply-tasks",
+  "/api/v1/delete-notification",
 ];
 const commonPaths: string[] = [];
 

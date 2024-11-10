@@ -12,6 +12,7 @@ import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
+import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
 
 import '../../../../common/widgets/location/default_location.dart';
@@ -19,7 +20,8 @@ import '../../../bloc/TaskType/get_all_tasktype_state.dart';
 import '../account/location.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int accountId;
+  const HomePage({super.key, required this.accountId});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -65,7 +67,15 @@ class _HomePageState extends State<HomePage>
               color: AppColors.cam_main,
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NotificationScreen(
+                        userId: widget.accountId,
+                      )),
+            );
+          },
         ),
       ),
       body: SingleChildScrollView(

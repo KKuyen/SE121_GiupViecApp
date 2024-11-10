@@ -1,11 +1,8 @@
 import 'package:se121_giupviec_app/data/datasources/setting_remote_datasource.dart';
-import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/models/setting_model.dart';
 import 'package:se121_giupviec_app/data/models/simpleRes_model.dart';
 
-import 'package:se121_giupviec_app/domain/entities/task.dart';
 import 'package:se121_giupviec_app/domain/repository/setting_repository.dart';
-import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
 
 class SettingRepositoryImpl implements SettingRepository {
   final SettingRemoteDatasource remoteDataSource;

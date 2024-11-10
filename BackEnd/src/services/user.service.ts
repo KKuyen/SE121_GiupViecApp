@@ -26,6 +26,7 @@ import upload from "../middleware/multer"; // Ensure you have your multer setup 
 import * as dotenv from "dotenv";
 
 import twilio from "twilio";
+import { Notifications } from "../entity/Notification.entity";
 
 require("dotenv").config();
 const client = twilio(
@@ -1298,6 +1299,46 @@ export class UserService {
       userId: userId,
       voucherId: myVoucherId,
     });
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async pushNotification(
+    userId: number,
+    header: string,
+    content: string,
+    image: string
+  ) {
+    const notificationRepository = AppDataSource.getRepository(Notifications);
+    const notification = notificationRepository.create({
+      userId: userId,
+      header: header,
+      content: content,
+      image: image,
+    });
+    await notificationRepository.save(notification);
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async getNotification(userId: number) {
+    const notificationRepository = AppDataSource.getRepository(Notifications);
+    const notifications = await notificationRepository.find({
+      where: { userId: userId },
+    });
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      notificationList: notifications,
+    };
+  }
+  static async deleteNotification(notificationId: number) {
+    const notificationRepository = AppDataSource.getRepository(Notifications);
+    await notificationRepository.delete({ id: notificationId });
     return {
       errCode: 0,
       errMessage: "OK",
