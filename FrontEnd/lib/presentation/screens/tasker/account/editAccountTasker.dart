@@ -13,16 +13,29 @@ import 'package:se121_giupviec_app/presentation/screens/tasker/account/account.d
 
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../core/configs/assets/app_images.dart';
+import '../../../../domain/entities/taskType.dart';
+import '../../../../domain/entities/tasker_info.dart';
+import '../../../bloc/TaskType/get_all_tasktype_cubit.dart';
+import '../../../bloc/TaskType/get_all_tasktype_state.dart';
+import '../../../bloc/tasker/tasker_cubit.dart';
+import '../../../bloc/tasker/tasker_state.dart';
 
 class EditAccountTaskerPage extends StatefulWidget {
   final AccountTaskerPage parrent;
-  EditAccountTaskerPage({required this.parrent, super.key});
+  final TaskerInfo tasker;
+  final List<TaskType> taskTypeList;
+  EditAccountTaskerPage(
+      {required this.parrent,
+      required this.tasker,
+      required this.taskTypeList,
+      super.key});
 
   @override
   State<EditAccountTaskerPage> createState() => _EditAccountTaskerPageState();
 }
 
 class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
+  final List<TaskType> taskTypeList = [];
   final ImagePicker _picker = ImagePicker();
   SecureStorage secureStorage = SecureStorage();
   TextEditingController _nameController = TextEditingController();
@@ -32,21 +45,8 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
   TextEditingController _emailController = TextEditingController();
   String? _imagePath;
   int? userId;
-
-  Future<Map<String, String>> _fetchUserData() async {
-    String id = await secureStorage.readId();
-    String name = await secureStorage.readName();
-    String phoneNumber = await secureStorage.readPhoneNumber();
-    String email = await secureStorage.readEmail();
-    String avatar = await secureStorage.readAvatar();
-    return {
-      'id': id,
-      'name': name,
-      'phoneNumber': phoneNumber,
-      'email': email,
-      'avatar': avatar
-    };
-  }
+  String taskListString = '';
+  List<TaskType> tasksTypeOfTasker = [];
 
   Future<void> _openCamera() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -59,13 +59,28 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
 
   @override
   void initState() {
-    _fetchUserData().then((value) {
-      userId = int.parse(value['id']!);
-      _nameController.text = value['name']!;
-      _phoneNumberController.text = value['phoneNumber']!;
-      _emailController.text = value['email']!;
-    });
     super.initState();
+    BlocProvider.of<TaskTypeCubit>(context).getAllTypeTasks();
+    _nameController.text =
+        (widget.tasker.tasker as Map<String, dynamic>)['name'];
+    _phoneNumberController.text =
+        (widget.tasker.tasker as Map<String, dynamic>)['phoneNumber'];
+    _emailController.text =
+        (widget.tasker.tasker as Map<String, dynamic>)['email'];
+    _gioiThieuController.text =
+        (widget.tasker.taskerInfo as Map<String, dynamic>)['introduction'];
+    taskTypeList.addAll(widget.taskTypeList);
+
+    taskListString =
+        (widget.tasker.taskerInfo as Map<String, dynamic>)['taskList'];
+    List<String> taskIds = taskListString.trim().split('_');
+    for (var taskId in taskIds) {
+      TaskType? taskType = widget.taskTypeList
+          .firstWhere((task) => task.id.toString() == taskId);
+      if (taskType != null) {
+        tasksTypeOfTasker.add(taskType);
+      }
+    }
   }
 
   @override
@@ -246,69 +261,41 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text('Chọn công việc'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          CheckboxListTile(
-                                            title: const Text('Lau nhà'),
-                                            value: false,
-                                            onChanged: (bool? value) {
-                                              // Handle change
-                                            },
+                                    content: StatefulBuilder(
+                                      builder: (BuildContext context,
+                                          StateSetter setStatee) {
+                                        return SingleChildScrollView(
+                                          child: Column(
+                                            children: taskTypeList.map((task) {
+                                              String name = task.name;
+                                              bool isCheck = tasksTypeOfTasker
+                                                  .contains(task);
+                                              return CheckboxListTile(
+                                                title: Text(name),
+                                                activeColor: AppColors.cam_main,
+                                                value: isCheck,
+                                                onChanged: (bool? value) {
+                                                  setStatee(() {
+                                                    if (value == true) {
+                                                      tasksTypeOfTasker
+                                                          .add(task);
+                                                    } else {
+                                                      tasksTypeOfTasker
+                                                          .remove(task);
+                                                    }
+                                                  });
+                                                },
+                                              );
+                                            }).toList(),
                                           ),
-                                          CheckboxListTile(
-                                            title: const Text('Nấu ăn'),
-                                            value: false,
-                                            onChanged: (bool? value) {
-                                              // Handle change
-                                            },
-                                          ),
-                                          CheckboxListTile(
-                                            title: const Text('Lau nhà'),
-                                            value: false,
-                                            onChanged: (bool? value) {
-                                              // Handle change
-                                            },
-                                          ),
-                                          CheckboxListTile(
-                                            title: const Text('Nấu ăn'),
-                                            value: false,
-                                            onChanged: (bool? value) {
-                                              // Handle change
-                                            },
-                                          ),
-                                          CheckboxListTile(
-                                            title: const Text('Lau nhà'),
-                                            value: false,
-                                            onChanged: (bool? value) {
-                                              // Handle change
-                                            },
-                                          ),
-                                          CheckboxListTile(
-                                            title: const Text('Nấu ăn'),
-                                            value: false,
-                                            onChanged: (bool? value) {
-                                              // Handle change
-                                            },
-                                          ),
-                                          // Add more CheckboxListTile as needed
-                                        ],
-                                      ),
+                                        );
+                                      },
                                     ),
                                     actions: <Widget>[
                                       Sizedbutton(
                                         onPressFun: () {
                                           Navigator.of(context).pop();
-                                        },
-                                        text: "Hủy",
-                                        isStroke: true,
-                                        textColor: AppColors.cam_main,
-                                        StrokeColor: AppColors.cam_main,
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      Sizedbutton(
-                                        onPressFun: () {
-                                          Navigator.of(context).pop();
+                                          setState(() {});
                                         },
                                         text: "Xác nhận",
                                         backgroundColor: AppColors.cam_main,
@@ -331,14 +318,16 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    const _congViecList(),
+                    _congViecList(
+                      tasksTypeOfTasker: tasksTypeOfTasker,
+                    ),
                   ],
                 ),
               ),
             ),
             Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 BlocListener<AuthCubit, AuthState>(
@@ -372,13 +361,18 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        BlocProvider.of<AuthCubit>(context).editProfile(
-                          userId!,
-                          _nameController.text,
-                          _emailController.text,
-                          _phoneNumberController.text,
-                          'avatar',
-                        );
+                        BlocProvider.of<TaskerCubit>(context)
+                            .editATaskerProfile(
+                                (widget.tasker.tasker
+                                    as Map<String, dynamic>)['id'],
+                                _nameController.text,
+                                _emailController.text,
+                                _phoneNumberController.text,
+                                _imagePath ?? 'temp avt',
+                                _gioiThieuController.text,
+                                tasksTypeOfTasker
+                                    .map((e) => e.id.toString())
+                                    .join('_'));
                       },
                       child: const Text(
                         'Cập nhật',
@@ -400,24 +394,33 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
   }
 }
 
-class _congViecList extends StatelessWidget {
+class _congViecList extends StatefulWidget {
+  final List<TaskType> tasksTypeOfTasker;
+
   const _congViecList({
+    required this.tasksTypeOfTasker,
     super.key,
   });
 
   @override
+  State<_congViecList> createState() => _congViecListState();
+}
+
+class _congViecListState extends State<_congViecList> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Wrap(
+    return Wrap(
       children: [
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
-        _congViecCard(title: "Lau nhà"),
+        ...widget.tasksTypeOfTasker
+            .map((taskType) => _congViecCard(title: taskType.name))
+            .toList(),
       ],
     );
   }
@@ -435,14 +438,14 @@ class _congViecCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, top: 6, bottom: 8),
       child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.cam_main),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Text(title,
               style: const TextStyle(fontSize: 16, color: AppColors.cam_main)),
-        ),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.cam_main),
-          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

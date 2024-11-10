@@ -8,8 +8,8 @@ abstract class LocationRepository {
   Future<List<Location>> getMyLocation(int userId);
   Future<Location> getMyDefaultLocation(int userId);
   Future<Response> addNewLocation(
-      String ownerName,
-      String ownerPhoneNumber,
+      String? ownerName,
+      String? ownerPhoneNumber,
       String country,
       String province,
       String district,

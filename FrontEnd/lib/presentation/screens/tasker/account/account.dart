@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/account/editAccountTasker.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/aboutUs.dart';
@@ -10,7 +13,6 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dar
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
-import '../../user/account/location.dart';
 import '../../user/activities/allReview.dart';
 import 'locationTasker.dart';
 
@@ -29,6 +31,13 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
     String name = await secureStorage.readName();
     String phoneNumber = await secureStorage.readPhoneNumber();
     return {'name': name, 'phoneNumber': phoneNumber};
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<TaskerCubit>(context).getATasker(1, 2);
   }
 
   @override
@@ -233,19 +242,30 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                           },
                         ),
                         const SizedBox(height: 10),
-                        Sizedbutton(
-                          onPressFun: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditAccountTaskerPage(
-                                        parrent: widget)));
+                        BlocBuilder<TaskerCubit, TaskerState>(
+                          builder: (context, state) {
+                            if (state is TaskerSuccess) {
+                              return Sizedbutton(
+                                onPressFun: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditAccountTaskerPage(
+                                                  parrent: widget,
+                                                  tasker: state.tasker,
+                                                  taskTypeList:
+                                                      state.taskTypeList)));
+                                },
+                                text: 'Cập nhật hồ sơ',
+                                backgroundColor: AppColors.cam_main,
+                                textColor: Colors.white,
+                                width: double.infinity,
+                                height: 45,
+                              );
+                            }
+                            return const CircularProgressIndicator();
                           },
-                          text: 'Cập nhật hồ sơ',
-                          backgroundColor: AppColors.cam_main,
-                          textColor: Colors.white,
-                          width: double.infinity,
-                          height: 45,
                         )
                       ]),
                 ))

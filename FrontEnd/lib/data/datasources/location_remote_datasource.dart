@@ -10,8 +10,8 @@ abstract class LocationRemoteDatasource {
   Future<List<LocationModel>> getMyLocation(int userId);
   Future<LocationModel> getMyDefaultLocation(int userId);
   Future<ResponseModel> addNewLocation(
-      String ownerName,
-      String ownerPhoneNumber,
+      String? ownerName,
+      String? ownerPhoneNumber,
       String country,
       String province,
       String district,
@@ -126,8 +126,8 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
 
   @override
   Future<ResponseModel> addNewLocation(
-      String ownerName,
-      String ownerPhoneNumber,
+      String? ownerName,
+      String? ownerPhoneNumber,
       String country,
       String province,
       String district,

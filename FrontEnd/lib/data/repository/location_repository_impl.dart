@@ -21,8 +21,8 @@ class LocationRepositoryImpl implements LocationRepository {
 
   @override
   Future<Response> addNewLocation(
-      String ownerName,
-      String ownerPhoneNumber,
+      String? ownerName,
+      String? ownerPhoneNumber,
       String country,
       String province,
       String district,
@@ -30,7 +30,7 @@ class LocationRepositoryImpl implements LocationRepository {
       String map,
       int userId,
       bool isDefault) async {
-    return await remoteDataSource.addNewLocation(ownerName, ownerPhoneNumber,
+    return await remoteDataSource.addNewLocation(ownerName!, ownerPhoneNumber!,
         country, province, district, detailAddress, map, userId, isDefault);
   }
 

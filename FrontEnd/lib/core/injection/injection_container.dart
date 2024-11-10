@@ -82,6 +82,7 @@ import '../../domain/usecases/Voucher/claim_voucher_usecase.dart';
 import '../../domain/usecases/Voucher/delete_my_voucher_usecase.dart';
 import '../../domain/usecases/Voucher/get_all_vouchcer_usecase.dart';
 import '../../domain/usecases/Voucher/get_my_voucher_usecase.dart';
+import '../../domain/usecases/edit_a_tasker_profile_usecase.dart';
 import '../../domain/usecases/get_all_tasks_usecase.dart'; // Import GetAllTasksUseCase
 import '../../domain/usecases/Auth/verifyOTP.dart';
 import '../../presentation/bloc/Auth/auth_cubit.dart';
@@ -142,6 +143,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => TaskerCubit(
       getATaskerUsercase: sl(),
+      editATaskerProfileUsecase: sl(),
     ),
   );
   sl.registerFactory(
@@ -262,6 +264,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetMyMessageReviewUseCase(sl()));
 
   sl.registerLazySingleton(() => SettingUsecaces(sl()));
+  sl.registerLazySingleton(() => EditATaskerProfileUsecase(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

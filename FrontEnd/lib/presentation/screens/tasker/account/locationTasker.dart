@@ -7,7 +7,6 @@ import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/Location/location_cubit.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../domain/entities/location.dart';
@@ -249,7 +248,7 @@ class _listLocationState extends State<listLocation> {
 }
 
 class _addressCard extends StatelessWidget {
-  Location location;
+  final Location location;
   _addressCard({
     required this.location,
   });

@@ -5,6 +5,8 @@ import 'package:se121_giupviec_app/domain/entities/taskType.dart';
 
 import 'package:se121_giupviec_app/domain/entities/tasker_info.dart';
 
+import '../../../domain/entities/response.dart';
+
 abstract class TaskerState extends Equatable {
   const TaskerState();
 
@@ -24,6 +26,15 @@ class TaskerSuccess extends TaskerState {
 
   @override
   List<Object> get props => [tasker, taskTypeList];
+}
+
+class TaskerResponseSuccess extends TaskerState {
+  final Response response;
+
+  const TaskerResponseSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
 }
 
 class TaskerError extends TaskerState {

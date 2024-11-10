@@ -11,8 +11,8 @@ class AddLocationCubit extends Cubit<LocationState> {
   }) : super(LocationInitial());
 
   Future<void> addNewLocation(
-      String ownerName,
-      String ownerPhoneNumber,
+      String? ownerName,
+      String? ownerPhoneNumber,
       String country,
       String province,
       String district,
@@ -23,8 +23,8 @@ class AddLocationCubit extends Cubit<LocationState> {
     emit(LocationLoading());
     try {
       final response = await addNewLocationUseCase.execute(
-          ownerName,
-          ownerPhoneNumber,
+          ownerName!,
+          ownerPhoneNumber!,
           country,
           province,
           district,
