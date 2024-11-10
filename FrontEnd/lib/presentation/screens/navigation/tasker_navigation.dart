@@ -11,20 +11,35 @@ import 'package:se121_giupviec_app/presentation/screens/tasker/activities/activi
 import 'package:se121_giupviec_app/presentation/screens/tasker/home/home.dart';
 
 import '../../../common/helpers/SecureStorage.dart';
+import '../tasker/account/account.dart';
 
 class TaskerNavigation extends StatefulWidget {
   final int? tab;
-  const TaskerNavigation({super.key, this.tab});
+  final int? userId;
+
+  const TaskerNavigation({super.key, this.tab, this.userId});
 
   @override
   State<TaskerNavigation> createState() => _TaskerNavigationState();
 }
 
 class _TaskerNavigationState extends State<TaskerNavigation> {
+  int userId = 0;
+  Future<void> userID() async {
+    final id = await SecureStorage().readId();
+    print("id nef");
+    print(id);
+    setState(() {
+      userId = int.parse(id);
+    });
+  }
+
   int currentPageIndex = 0;
   @override
   void initState() {
     super.initState();
+    userId = widget.userId ?? 0;
+    userID();
     currentPageIndex = widget.tab ?? 0;
   }
 
@@ -47,7 +62,9 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
           const TaskerHomePage(),
           const TaskerActivityPage(),
           const MessagePage(),
-          // const AccountPage(),
+          AccountTaskerPage(
+            userId: userId,
+          ),
         ][currentPageIndex]);
   }
 

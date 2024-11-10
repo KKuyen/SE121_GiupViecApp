@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/configs/theme/app_colors.dart';
 import '../../../presentation/bloc/Location/default_location_cubit.dart';
 import '../../../presentation/bloc/Location/location_state.dart';
+import '../../helpers/SecureStorage.dart';
 
 class position extends StatefulWidget {
   const position({
@@ -15,11 +16,19 @@ class position extends StatefulWidget {
 }
 
 class positionState extends State<position> {
+  SecureStorage secureStorage = SecureStorage();
+  Future<String> _fetchUserId() async {
+    String id = await secureStorage.readId();
+    return id;
+  }
+
   @override
   void initState() {
     super.initState();
-    final locationCubit =
-        BlocProvider.of<DefaultLocationCubit>(context).getMyDefaultLocation(1);
+    _fetchUserId().then((value) {
+      BlocProvider.of<DefaultLocationCubit>(context)
+          .getMyDefaultLocation(int.parse(value));
+    });
   }
 
   @override

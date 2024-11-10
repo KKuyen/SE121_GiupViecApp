@@ -34,6 +34,7 @@ import 'presentation/bloc/Message/message_review_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
+import 'presentation/screens/navigation/tasker_navigation.dart';
 
 // Thêm dòng này
 
@@ -154,7 +155,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
 
-        home: SplashPage(),
+        home: TaskerNavigation(),
 
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),

@@ -13,15 +13,16 @@ import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../domain/entities/location.dart';
 import '../../../bloc/Location/delete_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
+import 'addLocationTasker.dart';
 
-class LocationPage extends StatefulWidget {
-  const LocationPage({super.key});
+class LocationTaskerPage extends StatefulWidget {
+  const LocationTaskerPage({super.key});
 
   @override
-  State<LocationPage> createState() => _LocationPageState();
+  State<LocationTaskerPage> createState() => _LocationTaskerPageState();
 }
 
-class _LocationPageState extends State<LocationPage> {
+class _LocationTaskerPageState extends State<LocationTaskerPage> {
   SecureStorage secureStorage = SecureStorage();
   Future<Map<String, String>> _fetchUserData() async {
     String name = await secureStorage.readName();
@@ -96,7 +97,7 @@ class _LocationPageState extends State<LocationPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const AddLocationPage()),
+                                          const AddLocationTaskerPage()),
                                 );
                               },
                               child: const Text(
@@ -306,7 +307,8 @@ class _addressCard extends StatelessWidget {
                 Future.delayed(const Duration(seconds: 2));
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LocationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const LocationTaskerPage()),
                 );
               },
               text: 'Xóa',
