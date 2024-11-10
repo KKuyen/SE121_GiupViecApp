@@ -16,6 +16,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart
 
 import '../../../../common/widgets/location/default_location.dart';
 import '../../../bloc/TaskType/get_all_tasktype_state.dart';
+import '../../../bloc/Voucher/voucher_cubit.dart';
 import '../account/location.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,8 +34,9 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    final taskTypeCubit =
-        BlocProvider.of<TaskTypeCubit>(context).getAllTypeTasks();
+
+    BlocProvider.of<TaskTypeCubit>(context).getAllTypeTasks();
+    BlocProvider.of<VoucherCubit>(context).getAllVoucher(0);
   }
 
   @override
@@ -81,13 +83,8 @@ class _HomePageState extends State<HomePage>
                         )
                       },
                   child: const position()),
-              const Padding(
-                padding: EdgeInsets.only(
-                  left: AppInfo.main_padding,
-                  right: AppInfo.main_padding,
-                  bottom: 17,
-                ),
-                child: Search(),
+              const SizedBox(
+                height: 16,
               ),
               const _banner(),
               const SizedBox(

@@ -28,8 +28,8 @@ class _DiscoveryPageState extends State<DiscoveryPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    final voucherCubit =
-        BlocProvider.of<VoucherCubit>(context).getAllVoucher(0);
+
+    BlocProvider.of<VoucherCubit>(context).getAllVoucher(0);
   }
 
   @override
@@ -119,10 +119,8 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                                         title:
                                             const Text('Tăng dần theo RPoints'),
                                         onTap: () {
-                                          final voucherCubit =
-                                              BlocProvider.of<VoucherCubit>(
-                                                      context)
-                                                  .getAllVoucher(1);
+                                          BlocProvider.of<VoucherCubit>(context)
+                                              .getAllVoucher(1);
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -135,10 +133,8 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                                         title:
                                             const Text('Giảm dần theo RPoints'),
                                         onTap: () {
-                                          final voucherCubit =
-                                              BlocProvider.of<VoucherCubit>(
-                                                      context)
-                                                  .getAllVoucher(2);
+                                          BlocProvider.of<VoucherCubit>(context)
+                                              .getAllVoucher(2);
                                           Navigator.pop(context);
                                         },
                                       ),
