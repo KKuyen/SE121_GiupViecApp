@@ -62,7 +62,7 @@ class positionState extends State<position> {
             ),
           );
         } else if (state is DefaultLocationError) {
-          return Center(child: Text('Error: ${state.message}'));
+          return const Center(child: Text('Không tìm thấy địa chỉ'));
         } else {
           print("chay vao else: $state");
           return const Center(child: Text('Không tìm thấy địa chỉ'));

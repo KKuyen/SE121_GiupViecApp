@@ -24,6 +24,7 @@ import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_tas
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
+import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 
 import 'core/injection/injection_container.dart' as di;
 import 'presentation/bloc/Auth/auth_cubit.dart';
@@ -162,7 +163,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
 
-        home: SplashPage(),
+        home: Navigation(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );

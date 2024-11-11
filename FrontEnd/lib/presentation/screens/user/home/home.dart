@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
-import 'package:se121_giupviec_app/common/widgets/search/search.dart';
 import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
@@ -15,10 +14,15 @@ import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_c
 import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
 
+import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../common/widgets/location/default_location.dart';
+import '../../../../domain/entities/location.dart';
+import '../../../bloc/Location/location_cubit.dart';
+import '../../../bloc/Location/location_state.dart';
 import '../../../bloc/TaskType/get_all_tasktype_state.dart';
 import '../../../bloc/Voucher/voucher_cubit.dart';
 import '../account/location.dart';
+import '../activities/newTaskStep1.dart';
 
 class HomePage extends StatefulWidget {
   final int accountId;
@@ -31,6 +35,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  SecureStorage secureStorage = SecureStorage();
+  Future<String> _fetchUserId() async {
+    String id = await secureStorage.readId();
+    return id;
+  }
+
+  List<Location>? locations;
 
   @override
   void initState() {
@@ -39,6 +50,9 @@ class _HomePageState extends State<HomePage>
 
     BlocProvider.of<TaskTypeCubit>(context).getAllTypeTasks();
     BlocProvider.of<VoucherCubit>(context).getAllVoucher(0);
+    _fetchUserId().then((value) {
+      BlocProvider.of<LocationCubit>(context).getMyLocation(int.parse(value));
+    });
   }
 
   @override
@@ -100,6 +114,22 @@ class _HomePageState extends State<HomePage>
               const SizedBox(
                 height: 16,
               ),
+              BlocBuilder<LocationCubit, LocationState>(
+                builder: (context, state) {
+                  if (state is LocationLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is LocationSuccess) {
+                    locations = state.locations;
+                    return const SizedBox();
+                  } else if (state is LocationError) {
+                    return Center(child: Text('Error: ${state.message}'));
+                  } else {
+                    return const Center(child: Text('Không tìm thấy địa chỉ'));
+                  }
+                },
+              ),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -113,12 +143,12 @@ class _HomePageState extends State<HomePage>
               const SizedBox(
                 height: 8,
               ),
-              const SizedBox(
+              SizedBox(
                   height: 95,
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: AppInfo.main_padding),
-                    child: _services(),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppInfo.main_padding),
+                    child: _services(locations: locations ?? []),
                   )),
               const SizedBox(
                 height: 19,
@@ -173,8 +203,32 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-class _services extends StatelessWidget {
-  const _services();
+class _services extends StatefulWidget {
+  final List<Location> locations;
+
+  const _services({Key? key, required this.locations}) : super(key: key);
+
+  @override
+  State<_services> createState() => _servicesState();
+}
+
+class _servicesState extends State<_services> {
+  SecureStorage secureStorage = SecureStorage();
+  Future<String> _fetchUserId() async {
+    String id = await secureStorage.readId();
+    return id;
+  }
+
+  int? userId;
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserId().then((value) {
+      setState(() {
+        userId = int.parse(value);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,10 +251,43 @@ class _services extends StatelessWidget {
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
-              return _serviceItem(
-                  icon: getIcon(task.avatar ?? ''),
-                  title: task.name,
-                  color: colors[index % colors.length]);
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Newtaskstep1(
+                              taskTypeId: task.id,
+                              userId: userId!,
+                            )),
+                  );
+                  // if (widget.locations.length > 0) {
+
+                  // } else {
+                  //   showDialog(
+                  //       context: context,
+                  //       builder: (BuildContext context) {
+                  //         return AlertDialog(
+                  //           title: Text('Thông báo'),
+                  //           content: Text(
+                  //               'Vui lòng thêm địa chỉ trước khi chọn dịch vụ'),
+                  //           actions: <Widget>[
+                  //             TextButton(
+                  //               onPressed: () {
+                  //                 Navigator.of(context).pop();
+                  //               },
+                  //               child: Text('OK'),
+                  //             ),
+                  //           ],
+                  //         );
+                  //       });
+                  // }
+                },
+                child: _serviceItem(
+                    icon: getIcon(task.avatar ?? ''),
+                    title: task.name,
+                    color: colors[index % colors.length]),
+              );
             },
           );
         } else if (state is TaskError) {
