@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/data/datasources/allNotification_remote-datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/allReview_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/blockTaskers_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/loveTaskers_remote_datasource.dart';
@@ -7,6 +8,7 @@ import 'package:se121_giupviec_app/data/datasources/newTask1_remote_datasource.d
 import 'package:se121_giupviec_app/data/datasources/setting_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/task_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/tasker_remote_datasource.dart';
+import 'package:se121_giupviec_app/data/repository/allNotification_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/allReview_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/blockTaskers_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/get_task_impl.dart';
@@ -18,12 +20,14 @@ import 'package:se121_giupviec_app/data/repository/tasker_repository_impl.dart';
 import 'package:se121_giupviec_app/domain/repository/BlockTaskers_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/allReview_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/all_notificaiton_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/loveTaskers_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/newTask1_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/setting_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/task_repository.dart';
 
 import 'package:se121_giupviec_app/domain/repository/tasker_repository.dart';
+import 'package:se121_giupviec_app/domain/usecases/Notification/get_all_notification_usecase.dart';
 import 'package:se121_giupviec_app/domain/usecases/Setting_usecaces.dart';
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasker_usercase.dart';
 
@@ -42,6 +46,7 @@ import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cu
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/aReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
@@ -234,6 +239,11 @@ Future<void> init() async {
       getATaskerUsercase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => allNotificationCubit(
+      getAllNotificationsUsercase: sl(),
+    ),
+  );
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -265,6 +275,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => SettingUsecaces(sl()));
   sl.registerLazySingleton(() => EditATaskerProfileUsecase(sl()));
+
+  sl.registerLazySingleton(() => GetAllNotificationUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -309,6 +321,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton<SettingRepository>(
     () => SettingRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<AllNotificaitonRepository>(
+    () => AllNotificationRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -397,6 +412,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<SettingRemoteDatasource>(
     () => SettingRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+  sl.registerLazySingleton<AllNotificationRemoteDatasource>(
+    () => AllNotificationRemoteDatasourceImpl(
       client: sl(),
       baseUrl: ApiConstants.baseUrl,
       apiVersion: ApiConstants.apiVersion,

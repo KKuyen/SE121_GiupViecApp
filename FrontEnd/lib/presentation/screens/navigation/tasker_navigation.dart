@@ -21,6 +21,7 @@ class TaskerNavigation extends StatefulWidget {
 }
 
 class _TaskerNavigationState extends State<TaskerNavigation> {
+  int currentPageIndex = 0;
   int userId = 0;
   Future<void> userID() async {
     final id = await SecureStorage().readId();
@@ -31,11 +32,10 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
     });
   }
 
-  int currentPageIndex = 0;
   @override
   void initState() {
     super.initState();
-    userId = widget.userId ?? 0;
+
     userID();
     currentPageIndex = widget.tab ?? 0;
   }
@@ -56,8 +56,10 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [
-          const TaskerHomePage(),
-          const TaskerActivityPage(),
+          TaskerHomePage(accountId: userId),
+          TaskerActivityPage(
+            userId: userId,
+          ),
           const MessagePage(),
           AccountTaskerPage(
             userId: userId,

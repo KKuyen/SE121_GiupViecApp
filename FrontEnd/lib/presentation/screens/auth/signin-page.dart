@@ -10,6 +10,8 @@ import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signup_page.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
+
+import 'package:se121_giupviec_app/presentation/screens/navigation/tasker_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/helpers/SecureStorage.dart';
@@ -40,7 +42,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthLoading) {
           // Show loading dialog
           showDialog(
@@ -55,7 +57,8 @@ class _SignInPageState extends State<SignInPage> {
           Navigator.of(context).pop();
 
           if (state is AuthSuccess) {
-            secureStorage.writeUserInfo(state.user, state.user.access_token);
+            await secureStorage.writeUserInfo(
+                state.user, state.user.access_token);
             // Navigate to home
             Navigator.pushReplacement(
               context,

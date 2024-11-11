@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se121_giupviec_app/common/widgets/task_card/approved_activity_widget.dart';
-import 'package:se121_giupviec_app/common/widgets/task_card/cancel_activity_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/tasker_approve_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/tasker_finish_widget.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/tasker_waiting_activity_widget.dart';
 
-import 'package:se121_giupviec_app/common/widgets/task_card/waiting_activity_widget.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_state.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_state.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 
 class TaskerActivityPage extends StatefulWidget {
-  const TaskerActivityPage({super.key});
+  final int userId;
+
+  const TaskerActivityPage({super.key, required this.userId});
 
   @override
   State<TaskerActivityPage> createState() => _TaskerActivityPageState();
@@ -55,14 +50,14 @@ class _TaskerActivityPageState extends State<TaskerActivityPage> {
   }
 
   void _refreshScreen() async {
-    await BlocProvider.of<TaskerTaskCubit>(context).begin(3);
+    await BlocProvider.of<TaskerTaskCubit>(context).begin(widget.userId);
   }
 
   Future<void> _reload() async {
     print("bố mày đây");
     setState(() {
-      BlocProvider.of<TaskerTaskCubit>(context).getTS1Tasks(3);
-      BlocProvider.of<TaskerTaskCubit>(context).getTS2Tasks(3);
+      BlocProvider.of<TaskerTaskCubit>(context).getTS1Tasks(widget.userId);
+      BlocProvider.of<TaskerTaskCubit>(context).getTS2Tasks(widget.userId);
     });
   }
 
@@ -78,7 +73,10 @@ class _TaskerActivityPageState extends State<TaskerActivityPage> {
       children: [
         DefaultTabController(
           length: 3,
-          child: JobCardScreen(showLabel: _showLabel, hideLabel: _hideLabel),
+          child: JobCardScreen(
+              showLabel: _showLabel,
+              hideLabel: _hideLabel,
+              userId: widget.userId),
         ),
         if (_isLabelVisible)
           Container(
@@ -91,11 +89,15 @@ class _TaskerActivityPageState extends State<TaskerActivityPage> {
 }
 
 class JobCardScreen extends StatefulWidget {
+  final int userId;
   final void Function(int, int, String, Task, int, String, String) showLabel;
   final VoidCallback hideLabel;
 
   const JobCardScreen(
-      {super.key, required this.showLabel, required this.hideLabel});
+      {super.key,
+      required this.showLabel,
+      required this.hideLabel,
+      required this.userId});
 
   @override
   State<JobCardScreen> createState() => _JobCardScreenState();
@@ -127,20 +129,20 @@ class _JobCardScreenState extends State<JobCardScreen>
     switch (index) {
       case 0:
         if (!_isTS1Loaded) {
-          BlocProvider.of<TaskerTaskCubit>(context).getTS1Tasks(3);
+          BlocProvider.of<TaskerTaskCubit>(context).getTS1Tasks(widget.userId);
           _isTS1Loaded = !_isTS1Loaded;
         } else {
           break;
         }
       case 1:
         if (!_isTS2Loaded) {
-          BlocProvider.of<TaskerTaskCubit>(context).getTS2Tasks(3);
+          BlocProvider.of<TaskerTaskCubit>(context).getTS2Tasks(widget.userId);
           _isTS2Loaded = !_isTS2Loaded;
         }
         break;
       case 2:
         if (!_isTS3Loaded) {
-          BlocProvider.of<TaskerTaskCubit>(context).getTS3Tasks(3);
+          BlocProvider.of<TaskerTaskCubit>(context).getTS3Tasks(widget.userId);
           _isTS3Loaded = !_isTS3Loaded;
         }
         break;
@@ -178,9 +180,12 @@ class _JobCardScreenState extends State<JobCardScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          WaitingList(showLabel: widget.showLabel),
-          ApprovedList(showLabel: widget.showLabel),
-          FinishedList(showLabel: widget.showLabel),
+          WaitingList(
+            showLabel: widget.showLabel,
+            userId: widget.userId,
+          ),
+          ApprovedList(showLabel: widget.showLabel, userId: widget.userId),
+          FinishedList(showLabel: widget.showLabel, userId: widget.userId),
         ],
       ),
     );
@@ -188,9 +193,10 @@ class _JobCardScreenState extends State<JobCardScreen>
 }
 
 class WaitingList extends StatelessWidget {
+  final int userId;
   final void Function(int, int, String, Task, int, String, String) showLabel;
 
-  const WaitingList({super.key, required this.showLabel});
+  const WaitingList({super.key, required this.showLabel, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +221,8 @@ class WaitingList extends StatelessWidget {
                       var task = state.TS1tasks![index];
 
                       return TaskerWatingActivityWidget(
+                        customerId: task.userId,
+                        accountId: userId,
                         avatar:
                             (task.taskType as Map<String, dynamic>)['avatar'] ??
                                 '',
@@ -227,7 +235,7 @@ class WaitingList extends StatelessWidget {
                             0,
                         loading: () async {
                           await BlocProvider.of<TaskerTaskCubit>(context)
-                              .getTS1Tasks(3);
+                              .getTS1Tasks(userId);
                         },
                         daNhan: task.taskerLists
                                 ?.where((tasker) =>
@@ -279,21 +287,21 @@ class WaitingList extends StatelessWidget {
 }
 
 class ApprovedList extends StatelessWidget {
+  final int userId;
   final void Function(int, int, String, Task, int, String, String) showLabel;
 
-  const ApprovedList({super.key, required this.showLabel});
+  const ApprovedList(
+      {super.key, required this.showLabel, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskerTaskCubit, TaskerTaskState>(
       builder: (context, state) {
         if (state is TaskerTaskLoading) {
-          return Center(
+          return const Center(
             child: Center(
                 child: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: const CircularProgressIndicator())),
+                    height: 40, width: 40, child: CircularProgressIndicator())),
           );
         } else if (state is TaskerTaskSuccess) {
           if (state.TS2tasks!.isEmpty) {
@@ -305,6 +313,8 @@ class ApprovedList extends StatelessWidget {
                 var task = state.TS2tasks![index];
 
                 return TaskerApproveWidget(
+                  customerId: task.userId,
+                  accountId: userId,
                   avatar:
                       (task.taskType as Map<String, dynamic>)['avatar'] ?? '',
                   ungCuVien: task.taskerLists
@@ -316,7 +326,7 @@ class ApprovedList extends StatelessWidget {
                   loading: () async {
                     print("vo roi");
                     await BlocProvider.of<TaskerTaskCubit>(context)
-                        .getTS2Tasks(3);
+                        .getTS2Tasks(userId);
                   },
                   daNhan: task.taskerLists
                           ?.where((tasker) =>
@@ -363,21 +373,21 @@ class ApprovedList extends StatelessWidget {
 }
 
 class FinishedList extends StatelessWidget {
+  final int userId;
   final void Function(int, int, String, Task, int, String, String) showLabel;
 
-  const FinishedList({super.key, required this.showLabel});
+  const FinishedList(
+      {super.key, required this.showLabel, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskerTaskCubit, TaskerTaskState>(
       builder: (context, state) {
         if (state is TaskerTaskLoading) {
-          return Center(
+          return const Center(
             child: Center(
                 child: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: const CircularProgressIndicator())),
+                    height: 40, width: 40, child: CircularProgressIndicator())),
           );
         } else if (state is TaskerTaskSuccess) {
           if (state.TS3tasks!.isEmpty) {
@@ -390,6 +400,8 @@ class FinishedList extends StatelessWidget {
                 var task = state.TS3tasks![index];
 
                 return TaskerFinishWidget(
+                  accountId: userId,
+                  customerId: task.userId ?? 0,
                   avatar:
                       (task.taskType as Map<String, dynamic>)['avatar'] ?? '',
                   ungCuVien: task.taskerLists
@@ -403,8 +415,10 @@ class FinishedList extends StatelessWidget {
 
                     // Add a short delay to allow tab animation to complete
 
-                    BlocProvider.of<TaskerTaskCubit>(context).getTS3Tasks(1);
-                    BlocProvider.of<TaskerTaskCubit>(context).getTS1Tasks(1);
+                    BlocProvider.of<TaskerTaskCubit>(context)
+                        .getTS3Tasks(userId);
+                    BlocProvider.of<TaskerTaskCubit>(context)
+                        .getTS1Tasks(userId);
                   },
                   daNhan: task.taskerLists
                           ?.where((tasker) =>

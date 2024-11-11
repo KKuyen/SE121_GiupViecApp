@@ -13,6 +13,7 @@ import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/core/firebase/firebase_image.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 
@@ -59,7 +60,7 @@ class _NewreviewState extends State<Newreview> {
 
   // Hàm chọn ảnh từ thư viện
   Future<void> _pickImage() async {
-    if (images.length < 5) {
+    if (images.length < 4) {
       final XFile? pickedFile =
           await _picker.pickImage(source: ImageSource.gallery);
 
@@ -71,7 +72,7 @@ class _NewreviewState extends State<Newreview> {
     } else {
       // Hiển thị cảnh báo nếu số lượng ảnh vượt quá 5
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bạn chỉ có thể thêm tối đa 5 ảnh')),
+        const SnackBar(content: Text('Bạn chỉ có thể thêm tối đa 4 ảnh')),
       );
     }
   }
@@ -160,28 +161,28 @@ class _NewreviewState extends State<Newreview> {
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
-                                    Text(
-                                      widget.task.id.toString(),
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                        color: Color(0xFF4AB7B6),
-                                        fontSize: 17,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
+                                    // Text(
+                                    //   widget.task.id.toString(),
+                                    //   textAlign: TextAlign.left,
+                                    //   style: const TextStyle(
+                                    //     color: Color(0xFF4AB7B6),
+                                    //     fontSize: 17,
+                                    //     fontFamily: 'Inter',
+                                    //     fontWeight: FontWeight.normal,
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
-                                Text(
-                                  widget.task.finishedAt.toString(),
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                    color: Color(0xFF727272),
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
+                                // Text(
+                                //   widget.task.finishedAt.toString(),
+                                //   textAlign: TextAlign.left,
+                                //   style: const TextStyle(
+                                //     color: Color(0xFF727272),
+                                //     fontSize: 12,
+                                //     fontFamily: 'Inter',
+                                //     fontWeight: FontWeight.normal,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -189,10 +190,10 @@ class _NewreviewState extends State<Newreview> {
                         const SizedBox(
                           height: 5,
                         ),
-                        row(
-                          tieude: 'Giá:',
-                          noidung: widget.task.price.toString(),
-                        ),
+                        // row(
+                        //   tieude: 'Giá:',
+                        //   noidung: widget.task.price.toString(),
+                        // ),
                         const SizedBox(
                           height: 5,
                         ),
@@ -365,6 +366,17 @@ class _NewreviewState extends State<Newreview> {
               ),
               Sizedbutton(
                   onPressFun: () async {
+                    for (int i = 0; i < images.length; i++) {
+                      final imageUrl =
+                          await FirebaseImageService().uploadImage(images[i]);
+                      if (imageUrl != null) {
+                        pushImages.add(imageUrl); // Upload ảnh lên Firebase
+                      }
+                    }
+                    for (int i = 0; i < pushImages.length; i++) {
+                      print(pushImages[i]);
+                    }
+
                     await context.read<ATaskCubit>().review(
                         widget.task.id,
                         widget.taskerId,
@@ -372,12 +384,10 @@ class _NewreviewState extends State<Newreview> {
                         widget.taskTypeId,
                         widget.taskTypeId,
                         _reviewController.text,
-                        images.isNotEmpty ? images[0].path : null,
-                        images.length > 1 ? images[1].path : null,
-                        images.length > 2 ? images[2].path : null,
-                        images.length > 3 ? images[3].path : null);
-                    String result =
-                        await context.read<ATaskCubit>().pushImage(images[0]);
+                        pushImages.isNotEmpty ? pushImages[0] : null,
+                        pushImages.length > 1 ? pushImages[1] : null,
+                        pushImages.length > 2 ? pushImages[2] : null,
+                        pushImages.length > 3 ? pushImages[3] : null);
 
                     Navigator.pop(context, Star);
                   },

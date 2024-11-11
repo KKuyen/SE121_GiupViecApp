@@ -16,8 +16,9 @@ export class NotificationsMigration1698324600529 implements MigrationInterface {
           {
             name: "userId",
             type: "int",
-            isNullable: false, // 0 to send to all users
+            isNullable: true, // 0 to send to all users
           },
+
           {
             name: "header",
             type: "varchar",
@@ -26,13 +27,14 @@ export class NotificationsMigration1698324600529 implements MigrationInterface {
           {
             name: "content",
             type: "varchar",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "image",
             type: "varchar",
             isNullable: true,
-          },{
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,

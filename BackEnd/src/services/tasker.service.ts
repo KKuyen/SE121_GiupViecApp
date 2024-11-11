@@ -6,6 +6,9 @@ import { Reviews } from "../entity/Review.entity";
 import { Location } from "../entity/Location.entity";
 import { Tasks } from "../entity/Task.entity";
 import { TaskerList } from "../entity/TaskerList.entity";
+import { BlockList } from "net";
+import { BlockTaskers } from "../entity/BlockTasket.entity";
+import { LoveTaskers } from "../entity/LoveTasker.entity";
 
 export class TaskerService {
   static getTaskerProfile = async (taskerId: number) => {
@@ -537,7 +540,15 @@ export class TaskerService {
           });
         }
 
-        const tasks = await tasksQuery.getMany();
+        let tasks = await tasksQuery.getMany();
+        const blockListRepository = AppDataSource.getRepository(BlockTaskers);
+        const blockList = await blockListRepository.find({
+          where: { taskerId: taskerId },
+        });
+
+        const blockedUserIds = blockList.map((block) => block.userId);
+
+        tasks = tasks.filter((task) => !blockedUserIds.includes(task.userId));
         const taskerListRepository = AppDataSource.getRepository(TaskerList);
         const taskerLists = await taskerListRepository.find({
           where: { taskerId: taskerId },
@@ -577,6 +588,20 @@ export class TaskerService {
         taskerListNew.taskerId = taskerId;
         taskerListNew.taskId = taskId;
         taskerListNew.status = "S1";
+        const taskRepository = AppDataSource.getRepository(Tasks);
+        const task = await taskRepository.findOne({
+          where: { id: taskId },
+        });
+        if (!task) {
+          return resolve({ errCode: 1, message: "Task not found" });
+        }
+        const loveTaskersRepository = AppDataSource.getRepository(LoveTaskers);
+        const loveTasker = await loveTaskersRepository.findOne({
+          where: { userId: task.userId, taskerId: taskerId },
+        });
+        if (loveTasker) {
+          taskerListNew.status = "S2";
+        }
         await taskerListRepository.save(taskerListNew);
         resolve({ errCode: 0, message: "Ok" });
       } catch (e) {

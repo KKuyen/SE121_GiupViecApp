@@ -101,6 +101,7 @@ class _LovetaskersState extends State<Lovetaskers> {
                             taskerName: (state.loveTaskers[index].tasker
                                 as Map<String, dynamic>)['name'],
                             iconButton: TwoSttButton(
+                              userId: widget.userId,
                               isLove: true,
                               TaskerId: (state.loveTaskers[index].tasker
                                   as Map<String, dynamic>)['id'],

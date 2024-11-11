@@ -47,7 +47,7 @@ class _CanceltabState extends State<Canceltab> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, widget.userId);
+    BlocProvider.of<ATaskCubit>(context).getATasks2(widget.id, widget.userId);
   }
 
   @override

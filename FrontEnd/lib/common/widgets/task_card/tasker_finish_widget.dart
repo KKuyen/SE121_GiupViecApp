@@ -24,12 +24,16 @@ class TaskerFinishWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final int customerId;
+  final int accountId;
 
   const TaskerFinishWidget(
       {required this.id,
+      required this.accountId,
       required this.createAt,
       this.ungCuVien = 0,
       this.daNhan = 0,
+      required this.customerId,
       required this.numberOfTasker,
       required this.serviceName,
       required this.startDay,
@@ -58,6 +62,8 @@ class TaskerWatingActivityWidgetState extends State<TaskerFinishWidget> {
           context,
           MaterialPageRoute(
               builder: (context) => Finishtasktab(
+                    accountId: widget.accountId,
+                    customerId: widget.customerId,
                     numberOfTasker: widget.numberOfTasker,
                     id: widget.id,
                   )),

@@ -24,11 +24,15 @@ class TaskerApproveWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final int customerId;
+  final int accountId;
 
   const TaskerApproveWidget(
       {required this.id,
       required this.createAt,
       this.ungCuVien = 0,
+      required this.customerId,
+      required this.accountId,
       this.daNhan = 0,
       required this.numberOfTasker,
       required this.serviceName,
@@ -58,6 +62,8 @@ class TaskerWatingActivityWidgetState extends State<TaskerApproveWidget> {
           context,
           MaterialPageRoute(
               builder: (context) => Mytasktab(
+                    customerId: widget.customerId,
+                    accountId: widget.accountId,
                     id: widget.id,
                     numberOfTasker: widget.numberOfTasker,
                     loading: widget.loading,

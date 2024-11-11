@@ -25,12 +25,16 @@ class TaskerWatingActivityWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final int customerId;
+  final int accountId;
 
   const TaskerWatingActivityWidget(
       {required this.id,
       required this.createAt,
       this.ungCuVien = 0,
       this.daNhan = 0,
+      required this.customerId,
+      required this.accountId,
       required this.numberOfTasker,
       required this.serviceName,
       required this.startDay,
@@ -61,6 +65,8 @@ class TaskerWatingActivityWidgetState
           context,
           MaterialPageRoute(
               builder: (context) => ApplyTaskTab(
+                    customerId: widget.customerId,
+                    accountId: widget.accountId,
                     loading: widget.loading,
                     numberOfTasker: widget.numberOfTasker,
                     id: widget.id,

@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:se121_giupviec_app/core/firebase/firebase_image.dart';
 
 class ReviewCardWidget extends StatefulWidget {
   final String? userName;
@@ -37,6 +38,7 @@ class ReviewCardWidget extends StatefulWidget {
 }
 
 class _ReviewCardWidgetState extends State<ReviewCardWidget> {
+  final FirebaseImageService _firebaseImageService = FirebaseImageService();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,22 +52,37 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
           children: [
             Row(
               children: [
-                CachedNetworkImage(
-                  imageUrl: widget.userAvatar ?? '',
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: 40.0,
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                FutureBuilder<String>(
+                  future:
+                      _firebaseImageService.loadImage(widget.userAvatar ?? ''),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Icon(Icons.error);
+                    } else if (snapshot.hasData) {
+                      return CachedNetworkImage(
+                        imageUrl: snapshot.data!,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 40.0,
+                          height: 40.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.grey),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Icon(Icons.error);
+                    }
+                  },
                 ),
                 const SizedBox(
                   width: 10,
@@ -132,117 +149,177 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
             Align(
               alignment: Alignment.centerLeft,
               child: Wrap(spacing: 5, runSpacing: 10, children: [
-                if (widget.image1 != null)
-                  CachedNetworkImage(
-                    imageUrl: widget.image1 ?? '',
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Container(
-                      width: 100,
-                      height: 80,
-                      child: Icon(Icons.image, color: Colors.white),
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.xam72,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 100.0,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                if (widget.image1 != null && widget.image1 != '')
+                  FutureBuilder<String>(
+                    future:
+                        _firebaseImageService.loadImage(widget.image1 ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Icon(Icons.error);
+                      } else if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: snapshot.data!,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Container(
+                            width: 100,
+                            height: 80,
+                            child: Icon(Icons.image, color: Colors.white),
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.xam72,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 100.0,
+                            height: 80.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.grey),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Icon(Icons.error);
+                      }
+                    },
                   ),
-                if (widget.image2 != null)
-                  CachedNetworkImage(
-                    imageUrl: widget.image2 ?? '',
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Container(
-                      width: 100,
-                      height: 80,
-                      child: Icon(Icons.image, color: Colors.white),
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.xam72,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 100.0,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                if (widget.image2 != null && widget.image2 != '')
+                  FutureBuilder<String>(
+                    future:
+                        _firebaseImageService.loadImage(widget.image2 ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Icon(Icons.error);
+                      } else if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: widget.image1 ?? '',
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Container(
+                            width: 100,
+                            height: 80,
+                            child: Icon(Icons.image, color: Colors.white),
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.xam72,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 100.0,
+                            height: 80.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.grey),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Icon(Icons.error);
+                      }
+                    },
                   ),
-                if (widget.image3 != null)
-                  CachedNetworkImage(
-                    imageUrl: widget.image3 ?? '',
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Container(
-                      width: 100,
-                      height: 80,
-                      child: Icon(Icons.image, color: Colors.white),
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.xam72,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 100.0,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                if (widget.image3 != null && widget.image3 != '')
+                  FutureBuilder<String>(
+                    future:
+                        _firebaseImageService.loadImage(widget.image3 ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Icon(Icons.error);
+                      } else if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: widget.image1 ?? '',
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Container(
+                            width: 100,
+                            height: 80,
+                            child: Icon(Icons.image, color: Colors.white),
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.xam72,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 100.0,
+                            height: 80.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.grey),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Icon(Icons.error);
+                      }
+                    },
                   ),
-                if (widget.image4 != null)
-                  CachedNetworkImage(
-                    imageUrl: widget.image4 ?? '',
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Container(
-                      width: 100,
-                      height: 80,
-                      child: Icon(Icons.image, color: Colors.white),
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.xam72,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 100.0,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                if (widget.image4 != null && widget.image4 != '')
+                  FutureBuilder<String>(
+                    future:
+                        _firebaseImageService.loadImage(widget.image4 ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Icon(Icons.error);
+                      } else if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: widget.image1 ?? '',
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Container(
+                            width: 100,
+                            height: 80,
+                            child: Icon(Icons.image, color: Colors.white),
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.xam72,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 100.0,
+                            height: 80.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.grey),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Icon(Icons.error);
+                      }
+                    },
                   ),
               ]),
             ),

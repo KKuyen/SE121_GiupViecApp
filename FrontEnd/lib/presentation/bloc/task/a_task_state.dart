@@ -18,8 +18,8 @@ class ATaskLoading extends ATaskState {}
 class ATaskSuccess extends ATaskState {
   final Task task;
   final List<TaskerList> taskerList;
-  final Location dfLocation;
-  final List<Location> Mylocations;
+  final Location? dfLocation;
+  final List<Location>? Mylocations;
 
   const ATaskSuccess(
       this.task, this.taskerList, this.dfLocation, this.Mylocations);

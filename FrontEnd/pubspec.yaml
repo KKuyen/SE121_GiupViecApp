@@ -16,6 +16,7 @@ dependencies:
   firebase_messaging:
   firebase_storage:
   flutter_widget_from_html:
+  firebase_auth:
 
   flutter_dash: ^1.0.0
   cupertino_icons: ^1.0.6

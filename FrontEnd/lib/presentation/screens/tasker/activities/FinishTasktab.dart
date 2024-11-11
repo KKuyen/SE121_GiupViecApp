@@ -9,23 +9,24 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/isuTaskerRow.dart';
 
-import 'package:se121_giupviec_app/common/widgets/tasker_row/taskerRowReview.dart';
 import 'package:se121_giupviec_app/common/widgets/userRow/userRow.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Finishtasktab extends StatefulWidget {
   final int id;
+  final int customerId;
+  final int accountId;
   final int numberOfTasker;
 
   const Finishtasktab({
     super.key,
+    required this.accountId,
+    required this.customerId,
     required this.id,
     required this.numberOfTasker,
   });
@@ -50,7 +51,8 @@ class _FinishtasktabState extends State<Finishtasktab> {
   void initState() {
     super.initState();
 
-    BlocProvider.of<ATaskCubit>(context).getATasks(widget.id, 1);
+    BlocProvider.of<ATaskCubit>(context)
+        .getATasks2(widget.id, widget.customerId);
   }
 
   int star = 0;
@@ -175,15 +177,21 @@ class _FinishtasktabState extends State<Finishtasktab> {
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: Column(children: [
                                 Userrow(
+                                    taskerImageLink: (task.user as Map<String,
+                                            dynamic>)?['avatar'] ??
+                                        '',
                                     isContact: true,
                                     isCall: true,
                                     userId: task.userId,
                                     userName: (task.user
-                                        as Map<String, dynamic>)['name'],
-                                    userPhone: (task.user
-                                        as Map<String, dynamic>)['phoneNumber'],
+                                            as Map<String, dynamic>)['name'] ??
+                                        '',
+                                    userPhone: (task.user as Map<String,
+                                            dynamic>)['phoneNumber'] ??
+                                        '',
                                     userImageLink: (task.user
-                                        as Map<String, dynamic>)['avatar'])
+                                            as Map<String, dynamic>)['avatar'] ??
+                                        "")
                               ]),
                             ),
                             const SizedBox(
@@ -378,8 +386,9 @@ class _FinishtasktabState extends State<Finishtasktab> {
                                           children: [
                                             Text(
                                               (task.location as Map<String,
-                                                      dynamic>)['ownerName']
-                                                  .toString(),
+                                                          dynamic>)['ownerName']
+                                                      .toString() ??
+                                                  '',
                                               style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 color: Colors.black,
@@ -406,9 +415,10 @@ class _FinishtasktabState extends State<Finishtasktab> {
                                             const SizedBox(height: 5),
                                             Text(
                                               (task.location as Map<String,
-                                                          dynamic>)[
-                                                      'ownerPhoneNumber']
-                                                  .toString(),
+                                                              dynamic>)[
+                                                          'ownerPhoneNumber']
+                                                      .toString() ??
+                                                  '',
                                               style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 color: Colors.black,
@@ -511,9 +521,9 @@ class _FinishtasktabState extends State<Finishtasktab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S5") {
                                     return Isutaskerrow(
+                                      accountId: widget.accountId,
                                       taskerId: (atasker.tasker
-                                              as Map<String, dynamic>)['id'] ??
-                                          1,
+                                          as Map<String, dynamic>)['id'],
                                       taskerName: (atasker.tasker as Map<String,
                                               dynamic>)['name'] ??
                                           '',
@@ -521,7 +531,9 @@ class _FinishtasktabState extends State<Finishtasktab> {
                                               String, dynamic>)['avatar'] ??
                                           '',
                                       taskerPhone: (atasker.tasker as Map<
-                                          String, dynamic>)['phoneNumber'],
+                                              String,
+                                              dynamic>)['phoneNumber'] ??
+                                          '',
                                     );
                                   } else {
                                     return Container(); // Return an empty container if the status is not "S1"

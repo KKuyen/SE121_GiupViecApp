@@ -26,6 +26,7 @@ import upload from "../middleware/multer"; // Ensure you have your multer setup 
 import * as dotenv from "dotenv";
 
 import twilio from "twilio";
+import { Notifications } from "../entity/Notification.entity";
 
 require("dotenv").config();
 const client = twilio(
@@ -1053,51 +1054,51 @@ export class UserService {
     };
   }
   static async claimVoucher(userId: number, voucherId: number) {
-  const voucherRepository = AppDataSource.getRepository(Vouchers);
-  const voucher = await voucherRepository.findOne({
-    where: { id: voucherId },
-  });
-  if (!voucher) {
+    const voucherRepository = AppDataSource.getRepository(Vouchers);
+    const voucher = await voucherRepository.findOne({
+      where: { id: voucherId },
+    });
+    if (!voucher) {
+      return {
+        errCode: 1,
+        errMessage: "Voucher not found",
+      };
+    }
+
+    const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
+    const existingMyVoucher = await myVoucherRepository.findOne({
+      where: { userId: userId, voucherId: voucherId },
+    });
+
+    if (existingMyVoucher) {
+      return {
+        errCode: 2,
+        errMessage: "Voucher already claimed",
+      };
+    }
+
+    const myVoucher = myVoucherRepository.create({
+      userId: userId,
+      voucherId: voucherId,
+      isUsed: false,
+    });
+
+    await myVoucherRepository.save(myVoucher);
+
+    voucher.quantity = voucher.quantity - 1;
+    await voucherRepository.save(voucher);
+
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: userId } });
+    if (user) {
+      user.Rpoints -= voucher.RpointCost;
+      await userRepository.save(user);
+    }
     return {
-      errCode: 1,
-      errMessage: "Voucher not found",
+      errCode: 0,
+      errMessage: "OK",
     };
   }
-
-  const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
-  const existingMyVoucher = await myVoucherRepository.findOne({
-    where: { userId: userId, voucherId: voucherId },
-  });
-
-  if (existingMyVoucher) {
-    return {
-      errCode: 2,
-      errMessage: "Voucher already claimed",
-    };
-  }
-
-  const myVoucher = myVoucherRepository.create({
-    userId: userId,
-    voucherId: voucherId,
-    isUsed: false,
-  });
-
-  await myVoucherRepository.save(myVoucher);
-
-  voucher.quantity = voucher.quantity - 1;
-  await voucherRepository.save(voucher);
-
-  const userRepository = AppDataSource.getRepository(User);
-  const user = await userRepository.findOne({ where: { id: userId } });
-  if (user) {
-    user.Rpoints -= voucher.RpointCost;
-    await userRepository.save(user);
-  }
-  return {
-    errCode: 0,
-    errMessage: "OK",
-  };
-}
   static async getAvailableVoucher(userId: number, taskTypeId: number) {
     const voucherRepository = AppDataSource.getRepository(Vouchers);
     const currentDate = new Date();
@@ -1270,7 +1271,13 @@ export class UserService {
       errMessage: "OK",
     };
   }
-  static async editUserProfile(userId: any, name: any, email: any, phoneNumber: any, avatar: any) {
+  static async editUserProfile(
+    userId: any,
+    name: any,
+    email: any,
+    phoneNumber: any,
+    avatar: any
+  ) {
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { id: userId } });
     if (user) {
@@ -1288,7 +1295,50 @@ export class UserService {
   }
   static async deleteMyVoucher(userId: number, myVoucherId: number) {
     const myVoucherRepository = AppDataSource.getRepository(MyVouchers);
-    await myVoucherRepository.delete({ userId: userId, voucherId: myVoucherId });
+    await myVoucherRepository.delete({
+      userId: userId,
+      voucherId: myVoucherId,
+    });
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async pushNotification(
+    userId: number,
+    header: string,
+    content: string,
+    image: string
+  ) {
+    const notificationRepository = AppDataSource.getRepository(Notifications);
+    const notification = notificationRepository.create({
+      userId: userId,
+      header: header,
+      content: content,
+      image: image,
+    });
+    await notificationRepository.save(notification);
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+  static async getNotification(userId: number) {
+    const notificationRepository = AppDataSource.getRepository(Notifications);
+    const notifications = await notificationRepository.find({
+      where: { userId: userId },
+    });
+
+    return {
+      errCode: 0,
+      errMessage: "OK",
+      notificationList: notifications,
+    };
+  }
+  static async deleteNotification(notificationId: number) {
+    const notificationRepository = AppDataSource.getRepository(Notifications);
+    await notificationRepository.delete({ id: notificationId });
     return {
       errCode: 0,
       errMessage: "OK",

@@ -79,4 +79,9 @@ class ATaskRepositoryImpl implements ATaskRepository {
   Future<String> pushImage(File file) async {
     return await remoteDataSource.pushImage(file);
   }
+
+  @override
+  Future<Location> getLocation(int taskId) async {
+    return await remoteDataSource.getLocation(taskId);
+  }
 }

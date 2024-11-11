@@ -11,13 +11,13 @@ export class Notifications {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "int", nullable: true })
   userId!: number; // 0 to send to all users
 
   @Column({ type: "varchar", nullable: false })
   header!: string;
 
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: true })
   content!: string;
 
   @Column({ type: "varchar", nullable: true })

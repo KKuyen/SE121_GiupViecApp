@@ -31,6 +31,20 @@ class ATaskCubit extends Cubit<ATaskState> {
     }
   }
 
+  Future<void> getATasks2(int taskId, int userId) async {
+    emit(ATaskLoading());
+    try {
+      print("chay vao Acubit");
+      final task = await getATasksUsercase.execute(taskId);
+      final List<TaskerList> taskerList =
+          await getATasksUsercase.execute2(taskId);
+
+      emit(ATaskSuccess(task, taskerList, null, null));
+    } catch (e) {
+      emit(ATaskError(e.toString()));
+    }
+  }
+
   Future<void> deleteTask(int taskId, int cancelCode) async {
     emit(ATaskLoading());
     try {

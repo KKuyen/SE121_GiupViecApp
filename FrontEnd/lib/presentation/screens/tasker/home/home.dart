@@ -7,26 +7,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
-import 'package:se121_giupviec_app/common/widgets/search/search.dart';
 import 'package:se121_giupviec_app/common/widgets/task_card/tasker_find_activity_widget.dart';
-import 'package:se121_giupviec_app/common/widgets/task_card/tasker_waiting_activity_widget.dart';
-import 'package:se121_giupviec_app/common/widgets/voucher/voucherList.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
-import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
-import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_state.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_state.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/account/location.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
-
-import '../../../../common/widgets/location/default_location.dart';
+import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
 
 class TaskerHomePage extends StatefulWidget {
-  const TaskerHomePage({super.key});
+  final int accountId;
+  const TaskerHomePage({super.key, required this.accountId});
 
   @override
   State<TaskerHomePage> createState() => _TaskerHomePagState();
@@ -39,13 +30,14 @@ class _TaskerHomePagState extends State<TaskerHomePage>
   DateTime? endDate;
   String? taskType;
   List<String> selectedTasks = [];
-
+  List<int> selectedTaskIds = [];
+  bool _isFilterEnabled = false;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    final taskTypeCubit =
-        BlocProvider.of<TaskerFindTaskCubit>(context).getFindTasks(3);
+    final taskTypeCubit = BlocProvider.of<TaskerFindTaskCubit>(context)
+        .getFindTasks(widget.accountId, null, null, null);
   }
 
   @override
@@ -54,7 +46,6 @@ class _TaskerHomePagState extends State<TaskerHomePage>
     super.dispose();
   }
 
-  bool _isFilterEnabled = false;
   void setFilterEnabled(bool isEnabled) {
     setState(() {
       _isFilterEnabled = isEnabled;
@@ -80,6 +71,9 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                         child: CircularProgressIndicator()))),
           );
         } else if (state is TaskerFindTaskSuccess) {
+          for (var taskType in state.taskTypeList!) {
+            selectedTaskIds.add(taskType.id);
+          }
           print(state.findTasks?.length.toString());
           return Scaffold(
             backgroundColor: Colors.white,
@@ -102,7 +96,15 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                     color: AppColors.cam_main,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationScreen(
+                              userId: widget.accountId,
+                            )),
+                  );
+                },
               ),
             ),
             body: Column(
@@ -260,7 +262,18 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                       .showSnackBar(
                                                                     const SnackBar(
                                                                       content: Text(
-                                                                          'Chọn ngày lớn hơn ngày hiện tại'),
+                                                                          'Chọn ngày lớn hơn hoặc bằng ngày hiện tại'),
+                                                                    ),
+                                                                  );
+                                                                } else if (pickedDate!
+                                                                    .isAfter(
+                                                                        endDate!)) {
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    const SnackBar(
+                                                                      content: Text(
+                                                                          'Chọn ngày nhỏ hơn ngày kết thúc'),
                                                                     ),
                                                                   );
                                                                 } else {
@@ -440,6 +453,10 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                 .taskTypeList![
                                                                     index]
                                                                 .name;
+                                                            int id = state
+                                                                .taskTypeList![
+                                                                    index]
+                                                                .id;
                                                             bool isSelected =
                                                                 !selectedTasks
                                                                     .contains(
@@ -457,10 +474,16 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                     selectedTasks
                                                                         .add(
                                                                             str);
+                                                                    selectedTaskIds
+                                                                        .remove(
+                                                                            id);
                                                                   } else {
                                                                     selectedTasks
                                                                         .remove(
                                                                             str);
+                                                                    selectedTaskIds
+                                                                        .add(
+                                                                            id);
                                                                   }
                                                                 });
                                                               },
@@ -488,7 +511,34 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                           width:
                                                               double.infinity,
                                                           child: Sizedbutton(
-                                                            onPressFun: () {},
+                                                            onPressFun:
+                                                                () async {
+                                                              if (_isFilterEnabled ==
+                                                                  false) {
+                                                                await BlocProvider.of<
+                                                                            TaskerFindTaskCubit>(
+                                                                        context)
+                                                                    .getFindTasks(
+                                                                        widget
+                                                                            .accountId,
+                                                                        null,
+                                                                        null,
+                                                                        null);
+                                                              } else {
+                                                                await BlocProvider.of<
+                                                                            TaskerFindTaskCubit>(
+                                                                        context)
+                                                                    .getFindTasks(
+                                                                        widget
+                                                                            .accountId,
+                                                                        selectedTaskIds,
+                                                                        startDate,
+                                                                        endDate);
+                                                              }
+
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
                                                             backgroundColor:
                                                                 AppColors
                                                                     .xanh_main,
@@ -548,7 +598,8 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                   loading: () async {
                                     BlocProvider.of<TaskerFindTaskCubit>(
                                             context)
-                                        .getFindTasks(3);
+                                        .getFindTasks(
+                                            widget.accountId, null, null, null);
                                   },
                                   daNhan: task.taskerLists
                                           ?.where((tasker) =>

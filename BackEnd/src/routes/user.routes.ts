@@ -58,5 +58,11 @@ userRouter.post("/api/v1/get-all-reviews", UserController.getAllReviews);
 userRouter.post("/api/v1/get-a-task-type", UserController.getATaskType);
 userRouter.post("/api/v1/get-a-review", UserController.getAReviews);
 userRouter.post("/api/v1/get-user-setting", UserController.getSetting);
+userRouter.post("/api/v1/push-notification", UserController.pushNotification);
+userRouter.post("/api/v1/get-notification", UserController.getNotification);
+userRouter.post(
+  "/api/v1/delete-notification",
+  UserController.deleteNotification
+);
 
 export default userRouter;

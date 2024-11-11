@@ -761,11 +761,11 @@ class _WaitingtabState extends State<Waitingtab> {
                                                         child: ListView.builder(
                                                           itemCount: state
                                                               .Mylocations
-                                                              .length,
+                                                              ?.length,
                                                           itemBuilder:
                                                               (context, index) {
                                                             final location =
-                                                                state.Mylocations[
+                                                                state.Mylocations![
                                                                     index];
                                                             return Padding(
                                                               padding:

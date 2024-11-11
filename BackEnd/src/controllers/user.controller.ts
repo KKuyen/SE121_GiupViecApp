@@ -583,13 +583,7 @@ export class UserController {
     });
   }
   static async editUserProfile(req: Request, res: Response) {
-    const {
-      userId,
-      name,
-      email,
-      phoneNumber,
-      avatar
-    } = req.body;
+    const { userId, name, email, phoneNumber, avatar } = req.body;
     if (userId === undefined) {
       res.status(500).json({
         errCode: 1,
@@ -617,6 +611,54 @@ export class UserController {
       });
     }
     let message = await UserService.deleteMyVoucher(userId, voucherId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+    });
+  }
+  static async pushNotification(req: Request, res: Response) {
+    const { userId, header, content, image } = req.body;
+    if (userId === undefined || header === undefined || content === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.pushNotification(
+      userId,
+      header,
+      content,
+      image
+    );
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+    });
+  }
+  static async getNotification(req: Request, res: Response) {
+    const { userId } = req.body;
+    if (userId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.getNotification(userId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+      notificationList: message.notificationList,
+    });
+  }
+  static async deleteNotification(req: Request, res: Response) {
+    const { notificationId } = req.body;
+    if (notificationId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.deleteNotification(notificationId);
     res.status(200).json({
       errCode: message.errCode,
       message: message.errMessage,
