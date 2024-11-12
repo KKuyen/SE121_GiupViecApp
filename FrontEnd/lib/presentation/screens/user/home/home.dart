@@ -124,9 +124,9 @@ class _HomePageState extends State<HomePage>
                     locations = state.locations;
                     return const SizedBox();
                   } else if (state is LocationError) {
-                    return Center(child: Text('Error: ${state.message}'));
+                    return const Center(child: SizedBox());
                   } else {
-                    return const Center(child: Text('Không tìm thấy địa chỉ'));
+                    return const Center(child: SizedBox());
                   }
                 },
               ),

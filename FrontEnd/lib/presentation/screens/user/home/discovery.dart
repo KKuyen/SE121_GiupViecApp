@@ -109,36 +109,40 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                                 child: Padding(
                                   padding: const EdgeInsets.all(
                                       AppInfo.main_padding),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        leading: const Icon(
-                                          Icons.arrow_circle_up,
-                                          color: AppColors.xanh_main,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.arrow_circle_up,
+                                            color: AppColors.xanh_main,
+                                          ),
+                                          title: const Text(
+                                              'Tăng dần theo RPoints'),
+                                          onTap: () {
+                                            BlocProvider.of<VoucherCubit>(
+                                                    context)
+                                                .getAllVoucher(1);
+                                            Navigator.pop(context);
+                                          },
                                         ),
-                                        title:
-                                            const Text('Tăng dần theo RPoints'),
-                                        onTap: () {
-                                          BlocProvider.of<VoucherCubit>(context)
-                                              .getAllVoucher(1);
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      const Divider(),
-                                      ListTile(
-                                        leading: const Icon(
-                                          Icons.arrow_circle_down,
-                                          color: AppColors.xanh_main,
+                                        const Divider(),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.arrow_circle_down,
+                                            color: AppColors.xanh_main,
+                                          ),
+                                          title: const Text(
+                                              'Giảm dần theo RPoints'),
+                                          onTap: () {
+                                            BlocProvider.of<VoucherCubit>(
+                                                    context)
+                                                .getAllVoucher(2);
+                                            Navigator.pop(context);
+                                          },
                                         ),
-                                        title:
-                                            const Text('Giảm dần theo RPoints'),
-                                        onTap: () {
-                                          BlocProvider.of<VoucherCubit>(context)
-                                              .getAllVoucher(2);
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

@@ -7,8 +7,11 @@ import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/Location/location_cubit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/firebase/firebase_image.dart';
+
 import '../../../../domain/entities/location.dart';
 import '../../../bloc/Location/delete_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
@@ -26,7 +29,20 @@ class _LocationTaskerPageState extends State<LocationTaskerPage> {
   Future<Map<String, String>> _fetchUserData() async {
     String name = await secureStorage.readName();
     String phoneNumber = await secureStorage.readPhoneNumber();
-    return {'name': name, 'phoneNumber': phoneNumber};
+    String avatar = await secureStorage.readAvatar();
+    return {'name': name, 'phoneNumber': phoneNumber, 'avatar': avatar};
+  }
+
+  String avatar = '';
+
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchUserData().then((value) {
+      avatar = value['avatar']!;
+    });
   }
 
   @override
@@ -136,9 +152,35 @@ class _LocationTaskerPageState extends State<LocationTaskerPage> {
                               width: 6.0, // Độ dày của viền
                             ),
                           ),
-                          child: const CircleAvatar(
-                            radius: 50,
-                            backgroundImage: AssetImage(AppImages.voucher1),
+                          child: FutureBuilder<String>(
+                            future: _firebaseImageService.loadImage(avatar),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Icon(Icons.error);
+                              } else {
+                                return CachedNetworkImage(
+                                  imageUrl: snapshot.data!,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.grey),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ),
                         const SizedBox(height: 7),

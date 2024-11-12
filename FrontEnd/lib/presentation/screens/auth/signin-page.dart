@@ -60,10 +60,19 @@ class _SignInPageState extends State<SignInPage> {
             await secureStorage.writeUserInfo(
                 state.user, state.user.access_token);
             // Navigate to home
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const Navigation()),
-            );
+            if ((state.user.user as Map<String, dynamic>)['role'].toString() ==
+                "R2") {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TaskerNavigation()),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Navigation()),
+              );
+            }
           } else if (state is AuthError) {
             // Show error message
             ScaffoldMessenger.of(context).showSnackBar(

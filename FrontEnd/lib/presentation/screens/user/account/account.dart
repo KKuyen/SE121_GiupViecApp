@@ -12,12 +12,14 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/blockTasker
 import 'package:se121_giupviec_app/presentation/screens/user/account/loveTaskers.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/firebase/firebase_image.dart';
 
 class AccountPage extends StatefulWidget {
   final int userId;
-  
+
   const AccountPage({super.key, required this.userId});
 
   @override
@@ -29,7 +31,20 @@ class _AccountPageState extends State<AccountPage> {
   Future<Map<String, String>> _fetchUserData() async {
     String name = await secureStorage.readName();
     String phoneNumber = await secureStorage.readPhoneNumber();
-    return {'name': name, 'phoneNumber': phoneNumber};
+    String avatar = await secureStorage.readAvatar();
+    return {'name': name, 'phoneNumber': phoneNumber, 'avatar': avatar};
+  }
+
+  String avatar = '';
+
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchUserData().then((value) {
+      avatar = value['avatar']!;
+    });
   }
 
   @override
@@ -106,8 +121,7 @@ class _AccountPageState extends State<AccountPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                           Lovetaskers(
-                                          userId: widget.userId)));
+                                          Lovetaskers(userId: widget.userId)));
                             },
                           ),
                           const Divider(
@@ -122,8 +136,9 @@ class _AccountPageState extends State<AccountPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                           Blocktaskers(userId: widget.userId,)));
+                                      builder: (context) => Blocktaskers(
+                                            userId: widget.userId,
+                                          )));
                             },
                           ),
                           const Divider(
@@ -227,9 +242,35 @@ class _AccountPageState extends State<AccountPage> {
                               width: 6.0, // Độ dày của viền
                             ),
                           ),
-                          child: const CircleAvatar(
-                            radius: 50,
-                            backgroundImage: AssetImage(AppImages.voucher1),
+                          child: FutureBuilder<String>(
+                            future: _firebaseImageService.loadImage(avatar),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Icon(Icons.error);
+                              } else {
+                                return CachedNetworkImage(
+                                  imageUrl: snapshot.data!,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.grey),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ),
                         const SizedBox(height: 7),

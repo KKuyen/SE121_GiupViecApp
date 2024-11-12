@@ -36,7 +36,6 @@ class EditAccountTaskerPage extends StatefulWidget {
 
 class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
   final List<TaskType> taskTypeList = [];
-  final ImagePicker _picker = ImagePicker();
   SecureStorage secureStorage = SecureStorage();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
@@ -47,12 +46,19 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
   int? userId;
   String taskListString = '';
   List<TaskType> tasksTypeOfTasker = [];
+  File? image;
+  //"assets/images/avatar.png"
+  String pushImages = "";
+  final ImagePicker _picker = ImagePicker(); // Khởi tạo ImagePicker
 
-  Future<void> _openCamera() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+// Hàm chọn ảnh từ thư viện
+  Future<void> _pickImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
       setState(() {
-        _imagePath = image.path;
+        image = (File(pickedFile.path)); // Thêm ảnh vào danh sách
       });
     }
   }
@@ -123,17 +129,23 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
                                   width: 3.0, // Độ dày của viền
                                 ),
                               ),
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage: _imagePath != null
-                                    ? FileImage(File(_imagePath!))
-                                    : const AssetImage(AppImages.voucher1)
-                                        as ImageProvider,
-                                onBackgroundImageError: (_, __) {
-                                  // setState(() {
-                                  //   _imagePath = null;
-                                  // });
-                                },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    500), // Bo góc cho ảnh
+                                child: image != null
+                                    ? Image.file(
+                                        image!,
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit
+                                            .cover, // Đảm bảo ảnh bao phủ toàn bộ container
+                                      )
+                                    : Image.asset(
+                                        AppImages.avatar, // Placeholder image
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                             ),
                           ),
@@ -141,9 +153,7 @@ class _EditAccountTaskerPageState extends State<EditAccountTaskerPage> {
                               child: Container(
                             margin: const EdgeInsets.only(top: 90, left: 90),
                             child: GestureDetector(
-                              onTap: () {
-                                _openCamera();
-                              },
+                              onTap: () {},
                               child: Container(
                                 width: 35,
                                 height: 35,

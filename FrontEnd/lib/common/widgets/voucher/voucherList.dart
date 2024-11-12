@@ -56,10 +56,18 @@ class _VouchersState extends State<Vouchers> {
                 if (widget.isNearToExpire == true && difference > 5) {
                   return Container();
                 }
+                String imageUrl = "";
+                if (voucher.image == "voucher1") {
+                  imageUrl = AppImages.voucher1;
+                } else if (voucher.image == "voucher2") {
+                  imageUrl = AppImages.voucher2;
+                } else if (voucher.image == "voucher3") {
+                  imageUrl = AppImages.voucher3;
+                }
 
                 return VoucherCard(
                   isBorder: false,
-                  imageUrl: AppImages.voucher1,
+                  imageUrl: imageUrl,
                   title: voucher.header,
                   description: voucher.content,
                   onPressed: () async {

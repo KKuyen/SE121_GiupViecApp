@@ -42,7 +42,7 @@ export class TaskerService {
         if (tasker) {
           resolve({ errCode: 0, tasker: tasker });
         } else {
-          resolve({ errCode: 1, message: "Tasker not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy người giúp việc" });
         }
       } catch (e) {
         reject(e);
@@ -73,7 +73,7 @@ export class TaskerService {
           await taskerRepository.save(tasker); // Lưu đối tượng tasker
           resolve({ errCode: 0, message: "Ok" });
         } else {
-          resolve({ errCode: 1, message: "Tasker not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy người giúp việc" });
         }
       } catch (e) {
         reject(e);
@@ -184,7 +184,7 @@ export class TaskerService {
           await locationRepository.save(locationInDb);
           resolve({ errCode: 0, message: "Ok" });
         } else {
-          resolve({ errCode: 1, message: "Location not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy địa chỉ" });
         }
       } catch (e) {
         reject(e);
@@ -202,7 +202,7 @@ export class TaskerService {
           await locationRepository.remove(location);
           resolve({ errCode: 0, message: "Ok" });
         } else {
-          resolve({ errCode: 1, message: "Location not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy địa chỉ" });
         }
       } catch (e) {
         reject(e);
@@ -582,7 +582,7 @@ export class TaskerService {
           where: { taskerId: taskerId, taskId: taskId },
         });
         if (taskerList) {
-          resolve({ errCode: 1, message: "Tasker already applied" });
+          resolve({ errCode: 1, message: "Bạn đã ứng cử công việc này!" });
         }
         const taskerListNew = new TaskerList();
         taskerListNew.taskerId = taskerId;
@@ -593,7 +593,7 @@ export class TaskerService {
           where: { id: taskId },
         });
         if (!task) {
-          return resolve({ errCode: 1, message: "Task not found" });
+          return resolve({ errCode: 1, message: "Không tìm thấy công việc" });
         }
         const loveTaskersRepository = AppDataSource.getRepository(LoveTaskers);
         const loveTasker = await loveTaskersRepository.findOne({
@@ -642,7 +642,7 @@ export class TaskerService {
         if (location) {
           resolve({ errCode: 0, location: location });
         } else {
-          resolve({ errCode: 1, message: "Location not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy địa chỉ" });
         }
       } catch (e) {
         reject(e);

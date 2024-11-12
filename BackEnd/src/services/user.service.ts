@@ -65,7 +65,7 @@ export class UserService {
         let userData: any = {};
         if (await UserService.checkUserPhone(user.phoneNumber)) {
           userData.errCode = 1;
-          userData.errMessage = "Phone number already exists";
+          userData.errMessage = "Số điện thoại đã tồn tại!";
           userData.access_token = "";
           userData.user = {};
           resolve(userData);
@@ -139,17 +139,17 @@ export class UserService {
             } else {
               userData.errCode = 3;
               userData.errMessage =
-                "Your password is incorrect. Please try again!";
+                "Mật khẩu không chính xác. Vui lòng thử lại!";
             }
           } else {
             userData.errCode = 2;
             userData.errMessage =
-              "Your phone number isn`t exist in system. Please try again!";
+              "Số điện thoại không tồn tại trong hệ thống. Vui lòng thử lại!";
           }
         } else {
           userData.errCode = 2;
           userData.errMessage =
-            "Your phone number isn`t exist in system. Please try again!";
+            "Số điện thoại không tồn tại trong hệ thống. Vui lòng thử lại!";
         }
         resolve(userData);
       } catch (error) {
@@ -178,7 +178,7 @@ export class UserService {
         let checkUserPhone = await UserService.checkUserPhone(shortPhoneNumber);
         if (checkUserPhone) {
           await client.messages.create({
-            body: `Your OTP is: ${otp}`,
+            body: `OTP của bạn là: ${otp}`,
             from: process.env.TWILIO_PHONE_NUMBER!,
             to: this.convertToFullPhoneNumber(phoneNumber),
           });
@@ -186,7 +186,7 @@ export class UserService {
         }
         resolve({
           errCode: 1,
-          message: "Your phone number isn`t exist in system. Please try again!",
+          message: "Số điện thoại không tồn tại trong hệ thống",
         });
       } catch (error) {
         reject(error);
@@ -199,7 +199,7 @@ export class UserService {
         if (userOtp === actualOtp) {
           resolve({ errCode: 0, message: "Ok" });
         } else {
-          resolve({ errCode: 1, message: "Invalid OTP" });
+          resolve({ errCode: 1, message: "OTP không hợp lệ!" });
         }
       } catch (error) {
         reject(error);
@@ -218,7 +218,7 @@ export class UserService {
           await userRepository.save(user);
           resolve({ errCode: 0, message: "Ok" });
         } else {
-          resolve({ errCode: 1, message: "User not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy người dùng" });
         }
       } catch (error) {
         reject(error);
@@ -242,10 +242,10 @@ export class UserService {
             await userRepository.save(user);
             resolve({ errCode: 0, message: "Ok" });
           } else {
-            resolve({ errCode: 1, message: "Your old password is incorrect" });
+            resolve({ errCode: 1, message: "Mật khẩu cũ không chính xác!" });
           }
         } else {
-          resolve({ errCode: 1, message: "User not found" });
+          resolve({ errCode: 1, message: "Không tìm thấy người dùng" });
         }
       } catch (error) {
         reject(error);
@@ -269,7 +269,7 @@ export class UserService {
     });
 
     if (!taskType) {
-      return { errCode: 1, message: "Task type not found" };
+      return { errCode: 1, message: "Không tìm thấy dịch vụ" };
     }
 
     let sum = taskType.value;
@@ -1061,7 +1061,7 @@ export class UserService {
     if (!voucher) {
       return {
         errCode: 1,
-        errMessage: "Voucher not found",
+        errMessage: "Không tìm thấy voucher!",
       };
     }
 
@@ -1073,7 +1073,7 @@ export class UserService {
     if (existingMyVoucher) {
       return {
         errCode: 2,
-        errMessage: "Voucher already claimed",
+        errMessage: "Bạn đã lưu voucher này rồi!",
       };
     }
 
@@ -1225,7 +1225,7 @@ export class UserService {
     if (task) {
       task.taskStatus = "TS4";
       if (cancelCode === 0) {
-        task.cancelReason = "Khách hàng không có nhu cầu  nữa";
+        task.cancelReason = "Khách hàng không có nhu cầu nữa";
       }
       if (cancelCode === 1) {
         task.cancelReason = "Khách hàng có công việc đột xuất";

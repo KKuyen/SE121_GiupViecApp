@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/Auth/auth_cubit.dart';
@@ -12,7 +13,7 @@ import 'package:se121_giupviec_app/presentation/bloc/Auth/auth_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/account.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
-import '../../../../core/configs/assets/app_images.dart';
+import '../../../../core/firebase/firebase_image.dart';
 import '../../auth/signin-page.dart';
 
 class EditAccountPage extends StatefulWidget {
@@ -24,13 +25,15 @@ class EditAccountPage extends StatefulWidget {
 }
 
 class _EditAccountPageState extends State<EditAccountPage> {
-  final ImagePicker _picker = ImagePicker();
   SecureStorage secureStorage = SecureStorage();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-  String? _imagePath;
   int? userId;
+  File? image;
+  //"assets/images/avatar.png"
+  String pushImages = "";
+  final ImagePicker _picker = ImagePicker(); // Khởi tạo ImagePicker
 
   Future<Map<String, String>> _fetchUserData() async {
     String id = await secureStorage.readId();
@@ -48,11 +51,14 @@ class _EditAccountPageState extends State<EditAccountPage> {
     };
   }
 
-  Future<void> _openCamera() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+// Hàm chọn ảnh từ thư viện
+  Future<void> _pickImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
       setState(() {
-        _imagePath = image.path;
+        image = (File(pickedFile.path)); // Thêm ảnh vào danh sách
       });
     }
   }
@@ -108,17 +114,23 @@ class _EditAccountPageState extends State<EditAccountPage> {
                                   width: 3.0, // Độ dày của viền
                                 ),
                               ),
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage: _imagePath != null
-                                    ? FileImage(File(_imagePath!))
-                                    : const AssetImage(AppImages.voucher1)
-                                        as ImageProvider,
-                                onBackgroundImageError: (_, __) {
-                                  // setState(() {
-                                  //   _imagePath = null;
-                                  // });
-                                },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    500), // Bo góc cho ảnh
+                                child: image != null
+                                    ? Image.file(
+                                        image!,
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit
+                                            .cover, // Đảm bảo ảnh bao phủ toàn bộ container
+                                      )
+                                    : Image.asset(
+                                        AppImages.avatar, // Placeholder image
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                             ),
                           ),
@@ -127,7 +139,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                             margin: const EdgeInsets.only(top: 90, left: 90),
                             child: GestureDetector(
                               onTap: () {
-                                _openCamera();
+                                _pickImage();
                               },
                               child: Container(
                                 width: 35,
@@ -319,7 +331,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         BlocProvider.of<AuthCubit>(context).editProfile(
                           userId!,
                           _nameController.text,
@@ -327,6 +339,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                           _phoneNumberController.text,
                           'avatar',
                         );
+                        await FirebaseImageService().uploadImage(image!);
                       },
                       child: const Text(
                         'Cập nhật',

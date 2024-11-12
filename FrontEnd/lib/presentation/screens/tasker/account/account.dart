@@ -15,6 +15,8 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../user/activities/allReview.dart';
 import 'locationTasker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../core/firebase/firebase_image.dart';
 
 class AccountTaskerPage extends StatefulWidget {
   final int userId;
@@ -30,8 +32,13 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
   Future<Map<String, String>> _fetchUserData() async {
     String name = await secureStorage.readName();
     String phoneNumber = await secureStorage.readPhoneNumber();
-    return {'name': name, 'phoneNumber': phoneNumber};
+    String avatar = await secureStorage.readAvatar();
+    return {'name': name, 'phoneNumber': phoneNumber, 'avatar': avatar};
   }
+
+  String avatar = '';
+
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
 
   Future<String> _fetchUserId() async {
     String id = await secureStorage.readId();
@@ -47,6 +54,9 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
     BlocProvider.of<TaskerCubit>(context).getATasker(1, 2);
     _fetchUserId().then((value) {
       userId = (int.parse(value));
+    });
+    _fetchUserData().then((value) {
+      avatar = value['avatar']!;
     });
   }
 
@@ -212,9 +222,35 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                               width: 6.0, // Độ dày của viền
                             ),
                           ),
-                          child: const CircleAvatar(
-                            radius: 50,
-                            backgroundImage: AssetImage(AppImages.voucher1),
+                          child: FutureBuilder<String>(
+                            future: _firebaseImageService.loadImage(avatar),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Icon(Icons.error);
+                              } else {
+                                return CachedNetworkImage(
+                                  imageUrl: snapshot.data!,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.grey),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ),
                         const SizedBox(height: 7),
