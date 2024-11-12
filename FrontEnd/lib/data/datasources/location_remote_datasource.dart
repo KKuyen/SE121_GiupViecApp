@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
+
 import '../models/location_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,6 +24,10 @@ abstract class LocationRemoteDatasource {
   Future<ResponseModel> deleteLocation(int id);
 }
 
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
+}
+
 class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
   final http.Client client;
   final String baseUrl;
@@ -35,6 +41,8 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
 
   @override
   Future<List<LocationModel>> getMyLocation(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/get-my-location').replace(
@@ -46,8 +54,7 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
         uri,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
       print("response: ${response.body}");
@@ -82,6 +89,8 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
 
   @override
   Future<LocationModel> getMyDefaultLocation(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri =
@@ -94,8 +103,7 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
         uri,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -136,6 +144,8 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
       String map,
       int userId,
       bool isDefault) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
 
     try {
@@ -154,8 +164,7 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -185,6 +194,8 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
 
   @override
   Future<ResponseModel> deleteLocation(int id) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final uri = Uri.parse('$baseUrl/$apiVersion/delete-my-location').replace(
       queryParameters: {
         'id': id.toString(),
@@ -195,8 +206,7 @@ class LocationRemoteDatasourceImpl implements LocationRemoteDatasource {
         uri,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
 

@@ -15,7 +15,8 @@ import '../../../bloc/Location/location_state.dart';
 import 'location.dart';
 
 class AddLocationPage extends StatefulWidget {
-  const AddLocationPage({super.key});
+  final int? type;
+  const AddLocationPage({super.key, this.type});
 
   @override
   State<AddLocationPage> createState() => _AddLocationPageState();
@@ -197,14 +198,18 @@ class _AddLocationPageState extends State<AddLocationPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Thành công")),
               );
+              if (widget.type == 2) {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
+              } else {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
 
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LocationPage()),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LocationPage()),
+                );
+              }
             } else if (state is LocationError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),

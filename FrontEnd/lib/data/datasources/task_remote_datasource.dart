@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/location_model.dart';
 import 'package:se121_giupviec_app/data/models/task_model.dart';
@@ -45,6 +46,10 @@ abstract class TaskRemoteDatasource {
   Future<LocationModel> getLocation(int taskId);
 }
 
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
+}
+
 class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
   final http.Client client;
   final String baseUrl;
@@ -57,11 +62,13 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
   });
   @override
   Future<String> pushImage(File file) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/upload-image');
       final request = http.MultipartRequest('POST', uri)
-        ..headers['Authorization'] = AppInfor1.user_token
+        ..headers['Authorization'] = token
         ..files.add(await http.MultipartFile.fromPath('image', file.path));
 
       final streamedResponse = await request.send();
@@ -96,6 +103,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<void> applyTask(int taskerId, int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/apply-task').replace(
@@ -106,10 +115,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.post(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -140,6 +146,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<void> taskercancel(int taskerId, int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/cancel-task').replace(
@@ -150,10 +158,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.put(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -185,6 +190,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
   @override
   Future<List<TaskModel>> taskerFindTask(int taskerId, List<int>? taskTypes,
       DateTime? fromDate, DateTime? toDate) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final Map<String, dynamic> body = {"taskerId": taskerId};
@@ -200,10 +207,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-find-tasks'),
         body: json.encode(body),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -247,6 +251,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       String? image2,
       String? image3,
       String? image4) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       List<String?> imageArray = [image1, image2, image3, image4];
@@ -261,10 +267,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
           'content': content,
           'imageArray': imageArray
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -294,6 +297,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<LocationModel> getdflocation(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri =
@@ -304,11 +309,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -341,6 +342,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<LocationModel>> getalllocation(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     print("get được rôi");
     try {
@@ -351,11 +354,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -390,6 +389,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> getTS1Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -397,10 +398,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -436,6 +434,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> TaskergetTS1Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/get-apply-tasks').replace(
@@ -445,10 +445,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -481,6 +478,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> getTS2Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -488,10 +487,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -527,6 +523,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> TaskergetTS2Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/get-my-task').replace(
@@ -536,10 +534,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -572,6 +567,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> getTS4Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -579,10 +576,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -624,6 +618,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> TaskergetTS4Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -631,10 +627,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -676,6 +669,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<TaskModel> getATask(int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -683,10 +678,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'taskId': taskId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -721,6 +713,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskerListModel>> getTaskerList(int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -728,10 +722,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'taskId': taskId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -766,6 +757,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> getTS3Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -773,10 +766,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -812,6 +802,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<List<TaskModel>> TaskergetTS3Tasks(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/get-my-task-history').replace(
@@ -821,10 +813,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
       );
       response = await client.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -857,15 +846,14 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<void> deleteTask(int taskId, cancelCode) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.put(
         Uri.parse('$baseUrl/$apiVersion/cancel-a-task'),
         body: json.encode({'taskId': taskId, 'cancelCode': cancelCode}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -895,15 +883,14 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<void> finishTask(int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.put(
         Uri.parse('$baseUrl/$apiVersion/finish-a-task'),
         body: json.encode({'taskId': taskId}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -933,15 +920,14 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<void> updateTaskerStatus(int taskerListId, String status) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.put(
         Uri.parse('$baseUrl/$apiVersion/edit-tasker-list-status'),
         body: json.encode({'taskerListId': taskerListId, 'status': status}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -972,6 +958,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
   @override
   Future<void> editTask(
       int TaskId, DateTime? time, int? locationId, String? note) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     if (time != null) {
       final http.Response response;
       try {
@@ -981,10 +969,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
             'taskId': TaskId,
             'time': time.toIso8601String(),
           }),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': AppInfor1.user_token
-          },
+          headers: {'Content-Type': 'application/json', 'Authorization': token},
         );
       } on SocketException {
         // Handle network errors
@@ -1020,10 +1005,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
             'taskId': TaskId,
             'locationId': locationId,
           }),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': AppInfor1.user_token
-          },
+          headers: {'Content-Type': 'application/json', 'Authorization': token},
         );
       } on SocketException {
         // Handle network errors
@@ -1059,10 +1041,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
             'taskId': TaskId,
             'note': note,
           }),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': AppInfor1.user_token
-          },
+          headers: {'Content-Type': 'application/json', 'Authorization': token},
         );
       } on SocketException {
         // Handle network errors
@@ -1093,6 +1072,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
   @override
   Future<LocationModel> getLocation(int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/get-task-location').replace(

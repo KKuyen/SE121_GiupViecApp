@@ -1,11 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
+
 import '../models/task_type_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class TaskTypeRemoteDatasource {
   Future<List<TaskTypeModel>> getAllTasksType();
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class TaskTypeRemoteDatasourceImpl implements TaskTypeRemoteDatasource {
@@ -21,14 +27,15 @@ class TaskTypeRemoteDatasourceImpl implements TaskTypeRemoteDatasource {
 
   @override
   Future<List<TaskTypeModel>> getAllTasksType() async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-all-task-type'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
     } on SocketException {

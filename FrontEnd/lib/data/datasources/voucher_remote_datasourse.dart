@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 
 import '../models/response_model.dart';
 import '../models/voucher_model.dart';
@@ -11,6 +12,10 @@ abstract class VoucherRemoteDatasource {
   Future<ResponseModel> claimVoucher(int userId, int voucherId);
   Future<List<VoucherModel>> getMyVoucher(int userId);
   Future<ResponseModel> deleteMyVoucher(int userId, int voucherId);
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
@@ -26,15 +31,13 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
 
   @override
   Future<List<VoucherModel>> getAllVoucher() async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-all-voucher'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -68,6 +71,8 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
 
   @override
   Future<ResponseModel> claimVoucher(int userId, int voucherId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       print("userId: $userId, voucherId: $voucherId");
@@ -77,11 +82,7 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
           'userId': userId.toString(),
           'voucherId': voucherId.toString(),
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -110,6 +111,8 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
 
   @override
   Future<List<VoucherModel>> getMyVoucher(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       print("userId: $userId");
@@ -118,11 +121,7 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
         body: json.encode({
           'userId': userId.toString(),
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -156,6 +155,8 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
 
   @override
   Future<ResponseModel> deleteMyVoucher(int userId, int voucherId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -164,11 +165,7 @@ class VoucherRemoteDatasourceImpl implements VoucherRemoteDatasource {
           'userId': userId.toString(),
           'voucherId': voucherId.toString(),
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors

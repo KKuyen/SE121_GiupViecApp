@@ -56,6 +56,7 @@ const userPaths: string[] = [
   "/api/v1/delete-notification",
 ];
 const taskerPaths: string[] = [
+  "/api/v1/get-all-task-type",
   "/api/v1/push-notification",
   "/api/v1/get-notification",
   "/api/v1/get-tasker-profile",

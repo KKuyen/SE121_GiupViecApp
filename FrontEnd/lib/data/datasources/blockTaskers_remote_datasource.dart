@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/BlockTasker_model.dart';
 
 abstract class BlockTaskersRemoteDatasource {
   Future<List<BlockTaskerModel>> getAllBlockTaskers(int userId);
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class BlockTaskersRemoteDatasourceImpl implements BlockTaskersRemoteDatasource {
@@ -21,6 +26,8 @@ class BlockTaskersRemoteDatasourceImpl implements BlockTaskersRemoteDatasource {
 
   @override
   Future<List<BlockTaskerModel>> getAllBlockTaskers(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -28,10 +35,7 @@ class BlockTaskersRemoteDatasourceImpl implements BlockTaskersRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors

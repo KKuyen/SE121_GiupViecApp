@@ -15,7 +15,8 @@ import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskS
 class Newtaskstep1 extends StatefulWidget {
   final int taskTypeId;
   final int userId;
-  const Newtaskstep1({super.key, this.taskTypeId = 1, required this.userId});
+  const Newtaskstep1(
+      {super.key, required this.taskTypeId, required this.userId});
 
   @override
   State<Newtaskstep1> createState() => _Newtaskstep1State();

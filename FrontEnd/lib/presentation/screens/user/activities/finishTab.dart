@@ -179,6 +179,9 @@ class _FinishTabState extends State<Finishtab> {
                                 children: taskerList.map<Widget>((atasker) {
                                   if (atasker.status == "S5") {
                                     return Taskerrowreview(
+                                      userName: (state.task.user as Map<String,
+                                              dynamic>)['name'] ??
+                                          '',
                                       userId: widget.userId,
                                       reload: () {
                                         print('reload');
@@ -576,20 +579,6 @@ class _FinishTabState extends State<Finishtab> {
           }
         },
       ),
-      if (_isLabelVisible)
-        Container(
-          color: Colors.black.withOpacity(0.5),
-        ),
-      if (_isLabelVisible)
-        Center(
-          child: Taskerlist(
-            userId: widget.userId,
-            id: widget.id,
-            cancel: _hideLabel,
-            numberOfTasker: widget.numberOfTasker,
-            taskStatus: 'TS3',
-          ),
-        ),
     ]);
   }
 }

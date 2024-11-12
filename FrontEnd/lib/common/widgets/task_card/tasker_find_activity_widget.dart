@@ -5,11 +5,13 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 
 import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
 
 class TaskerFindActivityWidget extends StatefulWidget {
   final VoidCallback loading;
   final int numberOfTasker;
+  final int accountId;
   final int id;
   final String serviceName;
   final DateTime startDay;
@@ -25,11 +27,16 @@ class TaskerFindActivityWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final int customerId;
+  final String taskerName;
 
   const TaskerFindActivityWidget(
       {required this.id,
       required this.createAt,
       this.ungCuVien = 0,
+      required this.customerId,
+      required this.taskerName,
+      required this.accountId,
       this.daNhan = 0,
       required this.numberOfTasker,
       required this.serviceName,
@@ -286,7 +293,13 @@ class TaskerFindActivityWidgetState extends State<TaskerFindActivityWidget> {
                           onPressFun: () async {
                             await context
                                 .read<TaskerFindTaskCubit>()
-                                .applyTask(3, widget.id);
+                                .applyTask(widget.accountId, widget.id);
+                            await BlocProvider.of<allNotificationCubit>(context)
+                                .addANotificaiton(
+                                    widget.customerId,
+                                    "Có 1 ứng cử viên cho công việc của bạn",
+                                    "Người giúp việc ${widget.taskerName} vừa mới ứng cử công việc #DV${widget.id} của bạn.",
+                                    "review.jpg");
                             widget.loading();
                           },
                           text: 'Ứng cử',

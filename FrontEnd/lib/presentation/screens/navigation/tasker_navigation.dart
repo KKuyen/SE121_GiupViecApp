@@ -23,12 +23,15 @@ class TaskerNavigation extends StatefulWidget {
 class _TaskerNavigationState extends State<TaskerNavigation> {
   int currentPageIndex = 0;
   int userId = 0;
+  String userName = '';
   Future<void> userID() async {
     final id = await SecureStorage().readId();
+    final name = await SecureStorage().readName();
     print("id nef");
     print(id);
     setState(() {
       userId = int.parse(id);
+      userName = name;
     });
   }
 
@@ -56,7 +59,10 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [
-          TaskerHomePage(accountId: userId),
+          TaskerHomePage(
+            accountId: userId,
+            accountName: userName,
+          ),
           TaskerActivityPage(
             userId: userId,
           ),

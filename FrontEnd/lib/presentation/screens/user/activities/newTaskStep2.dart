@@ -8,10 +8,12 @@ import 'package:se121_giupviec_app/common/widgets/voucher/voucherCard.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/domain/entities/location.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
 
 class Newtaskstep2 extends StatefulWidget {
   final int taskTypeId;
@@ -47,7 +49,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
   final TextEditingController _timeController = TextEditingController();
   String note = '';
   final TextEditingController _noteController = TextEditingController();
-  var selectLocaion;
+  Location? selectLocaion;
 
   @override
   void initState() {
@@ -130,12 +132,16 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
             ),
           );
         } else if (state is NewTask2Success) {
-          if (widget.locationId != null) {
-            selectLocaion = state.Mylocations.firstWhere(
+          if (widget.locationId != null && state.Mylocations != null) {
+            selectLocaion = state.Mylocations?.firstWhere(
               (location) => location.id == widget.locationId,
             );
           } else {
-            selectLocaion = state.dfLocation;
+            if (state.dfLocation != null) {
+              selectLocaion = state.dfLocation;
+            } else {
+              selectLocaion = null;
+            }
           }
           return Scaffold(
             backgroundColor: AppColors.nen_the,
@@ -268,255 +274,357 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                             Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.xanh_main),
+                                border: state.Mylocations!.length != 0 &&
+                                        selectLocaion != null
+                                    ? Border.all(color: AppColors.xanh_main)
+                                    : Border.all(color: Colors.transparent),
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (selectLocaion.isDefault == true)
-                                      const Text(
-                                        'Địa chỉ mặc định',
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.xanh_main,
-                                        ),
-                                      ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      selectLocaion.ownerName,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
+                              child: Column(
+                                children: [
+                                  if (state.Mylocations!.length == 0 ||
+                                      state.Mylocations == null)
+                                    Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Chưa có địa chỉ nào ?',
+                                              style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Sizedbutton(
+                                              onPressFun: () async {
+                                                final result =
+                                                    await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddLocationPage(
+                                                      type: 2,
+                                                    ),
+                                                  ),
+                                                );
+
+                                                BlocProvider.of<NewTask2Cubit>(
+                                                        context)
+                                                    .getLocationAndVoucher(
+                                                        widget.userId,
+                                                        widget.taskTypeId);
+                                              },
+                                              text: 'Thêm địa chỉ',
+                                              width: 120,
+                                              height: 42,
+                                            )
+                                          ],
+                                        )),
+                                  if (state.Mylocations != null &&
+                                      state.Mylocations!.length > 0)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: Column(
+                                        children: [
+                                          if (selectLocaion != null)
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                if (selectLocaion?.isDefault ==
+                                                    true)
+                                                  const Text(
+                                                    'Địa chỉ mặc định',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          AppColors.xanh_main,
+                                                    ),
+                                                  ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  selectLocaion!.ownerName,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  '${selectLocaion?.detailAddress}, ${selectLocaion?.district}, ${selectLocaion?.province}, ${selectLocaion?.country}',
+                                                  style: const TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  selectLocaion!
+                                                      .ownerPhoneNumber,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      '${selectLocaion.detailAddress}, ${selectLocaion.district}, ${selectLocaion.province}, ${selectLocaion.country}',
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      selectLocaion.ownerPhoneNumber,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 5, 5),
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  const Text(
-                                    'Chọn địa chỉ khác',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Sizedbutton(
-                                    onPressFun: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Dialog(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Container(
-                                              constraints: const BoxConstraints(
-                                                minHeight: 300,
-                                                maxHeight: 500,
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      const Text(
-                                                        'Chọn địa chỉ',
-                                                        style: TextStyle(
-                                                          fontFamily: 'Inter',
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: AppColors
-                                                              .xanh_main,
-                                                        ),
-                                                      ),
-                                                      const Spacer(),
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                          Icons.close,
-                                                          color:
-                                                              AppColors.xam72,
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                      ),
-                                                    ],
+                                  if (state.Mylocations != null &&
+                                      state.Mylocations!.length > 0)
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Chọn địa chỉ khác',
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Sizedbutton(
+                                          onPressFun: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
                                                   ),
-                                                  const SizedBox(height: 10),
-                                                  Expanded(
-                                                    child: ListView.builder(
-                                                      itemCount: state
-                                                          .Mylocations.length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        final location = state
-                                                            .Mylocations[index];
-                                                        return Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .fromLTRB(
-                                                                  0, 0, 0, 5),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                selectLocaion =
-                                                                    location;
-                                                              });
-                                                              widget.locationId =
-                                                                  location.id;
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: location.id ==
-                                                                            selectLocaion
-                                                                                .id
-                                                                        ? AppColors
-                                                                            .xanh_main
-                                                                        : const Color
-                                                                            .fromARGB(
-                                                                            255,
-                                                                            202,
-                                                                            202,
-                                                                            202)),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                              ),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        10.0),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    if (location
-                                                                            .isDefault ==
-                                                                        true)
-                                                                      const Text(
-                                                                        'Địa chỉ mặc định',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'Inter',
-                                                                          fontSize:
-                                                                              15,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          color:
-                                                                              AppColors.xanh_main,
-                                                                        ),
-                                                                      ),
-                                                                    Text(
-                                                                      location
-                                                                          .ownerName,
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        fontFamily:
-                                                                            'Inter',
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            2),
-                                                                    Text(
-                                                                      '${location.detailAddress}, ${location.district}, ${location.province}, ${location.country}',
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        fontFamily:
-                                                                            'Inter',
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight.normal,
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            2),
-                                                                    Text(
-                                                                      location
-                                                                          .ownerPhoneNumber,
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        fontFamily:
-                                                                            'Inter',
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight.normal,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
+                                                  child: Container(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                      minHeight: 300,
+                                                      maxHeight: 500,
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            const Text(
+                                                              'Chọn địa chỉ',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: AppColors
+                                                                    .xanh_main,
                                                               ),
                                                             ),
+                                                            const Spacer(),
+                                                            IconButton(
+                                                              icon: const Icon(
+                                                                Icons.close,
+                                                                color: AppColors
+                                                                    .xam72,
+                                                              ),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 10),
+                                                        if (state.Mylocations ==
+                                                                null ||
+                                                            state.Mylocations
+                                                                    ?.length ==
+                                                                0)
+                                                          const Center(
+                                                              child: Text(
+                                                                  'Chưa có địa chỉ nào')),
+                                                        if (state.Mylocations !=
+                                                                null &&
+                                                            state.Mylocations!
+                                                                    .length >
+                                                                0)
+                                                          Expanded(
+                                                            child: ListView
+                                                                .builder(
+                                                              itemCount: state
+                                                                  .Mylocations
+                                                                  ?.length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                final location =
+                                                                    state.Mylocations![
+                                                                        index];
+                                                                return Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .fromLTRB(
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          5),
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        selectLocaion =
+                                                                            location;
+                                                                      });
+                                                                      widget.locationId =
+                                                                          location
+                                                                              .id;
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        border: Border.all(
+                                                                            color: location.id == selectLocaion?.id
+                                                                                ? AppColors.xanh_main
+                                                                                : const Color.fromARGB(255, 202, 202, 202)),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(5),
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            10.0),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            if (location.isDefault ==
+                                                                                true)
+                                                                              const Text(
+                                                                                'Địa chỉ mặc định',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Inter',
+                                                                                  fontSize: 15,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: AppColors.xanh_main,
+                                                                                ),
+                                                                              ),
+                                                                            Text(
+                                                                              location.ownerName,
+                                                                              style: const TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 15,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(height: 2),
+                                                                            Text(
+                                                                              '${location.detailAddress}, ${location.district}, ${location.province}, ${location.country}',
+                                                                              style: const TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 15,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(height: 2),
+                                                                            Text(
+                                                                              location.ownerPhoneNumber,
+                                                                              style: const TextStyle(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 15,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
                                                           ),
-                                                        );
-                                                      },
+                                                        const SizedBox(
+                                                            height: 10),
+                                                        Row(
+                                                          children: [
+                                                            const Spacer(),
+                                                            Sizedbutton(
+                                                              onPressFun:
+                                                                  () async {
+                                                                final result =
+                                                                    await Navigator
+                                                                        .push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            AddLocationPage(
+                                                                      type: 2,
+                                                                    ),
+                                                                  ),
+                                                                );
+
+                                                                BlocProvider.of<
+                                                                            NewTask2Cubit>(
+                                                                        context)
+                                                                    .getLocationAndVoucher(
+                                                                        widget
+                                                                            .userId,
+                                                                        widget
+                                                                            .taskTypeId);
+                                                              },
+                                                              text:
+                                                                  'Thêm địa chỉ',
+                                                              width: 120,
+                                                              height: 42,
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    text: 'Thay đổi',
-                                    width: 120,
-                                    height: 42,
-                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          text: 'Thay đổi',
+                                          width: 120,
+                                          height: 42,
+                                        ),
+                                      ],
+                                    ),
                                 ],
                               ),
                             ),
@@ -562,7 +670,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                               title: const Text('Mã giảm giá'),
                               content: SingleChildScrollView(
                                 child: Column(
-                                  children: state.vouchers.map((voucher) {
+                                  children: state.vouchers!.map((voucher) {
                                     return Container(
                                       child: VoucherCard(
                                         isBorder: (voucher.id == voucherId)
@@ -654,6 +762,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                     ),
                     const SizedBox(height: 20),
                     Sizedbutton(
+                      isEnabled: selectLocaion != null ? true : false,
                       onPressFun: () async {
                         int userId = int.parse(await SecureStorage().readId());
 
@@ -665,7 +774,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                           _selectedTime!.hour,
                           _selectedTime!.minute,
                         );
-                        int locationId = selectLocaion.id;
+                        // int locationId = selectLocaion.id;
                         String note = this.note;
                         int? myvoucherId = widget.myvoucherId ?? 0;
                         int selectedvoucher = voucherId ?? 0;
@@ -684,7 +793,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                               userId,
                               taskTypeId,
                               time,
-                              locationId,
+                              1,
                               note,
                               myvoucherId,
                               selectedvoucher,

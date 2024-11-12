@@ -17,7 +17,9 @@ import 'package:se121_giupviec_app/presentation/screens/notification/notificatio
 
 class TaskerHomePage extends StatefulWidget {
   final int accountId;
-  const TaskerHomePage({super.key, required this.accountId});
+  final String accountName;
+  const TaskerHomePage(
+      {super.key, required this.accountId, required this.accountName});
 
   @override
   State<TaskerHomePage> createState() => _TaskerHomePagState();
@@ -585,6 +587,9 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                 var task = state.findTasks![index];
 
                                 return TaskerFindActivityWidget(
+                                  customerId: task.userId,
+                                  taskerName: widget.accountName,
+                                  accountId: widget.accountId,
                                   avatar: (task.taskType
                                           as Map<String, dynamic>)['avatar'] ??
                                       '',

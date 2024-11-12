@@ -456,20 +456,6 @@ class _CanceltabState extends State<Canceltab> {
                       ),
                     ],
                   ))),
-              if (_isLabelVisible)
-                Container(
-                  color: Colors.black.withOpacity(0.5),
-                ),
-              if (_isLabelVisible)
-                Center(
-                  child: Taskerlist(
-                    userId: widget.userId,
-                    id: widget.id,
-                    numberOfTasker: task.numberOfTasker,
-                    cancel: _hideLabel,
-                    taskStatus: 'TS4',
-                  ),
-                ),
             ]);
           } else if (state is ATaskError) {
             return Center(child: Text('Error: ${state.message}'));

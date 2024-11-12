@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/BlockTasker_model.dart';
 import 'package:se121_giupviec_app/data/models/loveTasker_model.dart';
@@ -12,6 +13,10 @@ abstract class LoveTaskersRemoteDatasource {
   Future<void> unlove(int userId, int taskerId);
   Future<void> block(int userId, int taskerId);
   Future<void> unblock(int userId, int taskerId);
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
@@ -27,6 +32,9 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
 
   @override
   Future<List<LoveTaskerModel>> getAllLoveTaskers(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
+    print("token: $token");
     final http.Response response;
     try {
       response = await client.post(
@@ -34,10 +42,7 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -71,6 +76,8 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
 
   @override
   Future<List<BlockTaskerModel>> getAllBlockTaskers(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -78,10 +85,7 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -116,15 +120,14 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
 
   @override
   Future<void> love(int userId, int taskerId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/add-new-love-tasker'),
         body: json.encode({'userId': userId, 'taskerId': taskerId}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -153,16 +156,15 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
 
   @override
   Future<void> unlove(int userId, int taskerId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     print("$userId$taskerId");
     try {
       response = await client.delete(
         Uri.parse('$baseUrl/$apiVersion/delete-a-love-tasker'),
         body: json.encode({'userId': userId, 'taskerId': taskerId}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -191,15 +193,14 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
 
   @override
   Future<void> block(int userId, int taskerId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/add-new-block-tasker'),
         body: json.encode({'userId': userId, 'taskerId': taskerId}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -228,15 +229,14 @@ class LoveTaskersRemoteDatasourceImpl implements LoveTaskersRemoteDatasource {
 
   @override
   Future<void> unblock(int userId, int taskerId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.delete(
         Uri.parse('$baseUrl/$apiVersion/delete-a-block-tasker'),
         body: json.encode({'userId': userId, 'taskerId': taskerId}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
