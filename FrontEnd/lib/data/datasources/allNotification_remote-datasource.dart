@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/notification_model.dart';
 import 'package:se121_giupviec_app/data/models/review_model.dart';
 import 'package:se121_giupviec_app/domain/entities/notification.dart';
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
+}
 
 abstract class AllNotificationRemoteDatasource {
   Future<List<Notification>> getAllNotication(int userId);
@@ -24,11 +29,15 @@ class AllNotificationRemoteDatasourceImpl
     required this.baseUrl,
     required this.apiVersion,
   });
+
   @override
   Future<void> addANotification(
       int userId, String header, String content, String image) async {
     final http.Response response;
     try {
+      String token = await getToken();
+      token = 'Bearer $token';
+      print(token);
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/push-notification'),
         body: json.encode({
@@ -39,23 +48,19 @@ class AllNotificationRemoteDatasourceImpl
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
+          'Authorization': token,
         },
       );
     } on SocketException {
-      // Handle network errors
       print("No Internet connection");
       throw Exception('No Internet connection');
     } on HttpException {
-      // Handle HTTP errors
       print("HTTP error occurred");
       throw Exception('HTTP error occurred');
     } on FormatException {
-      // Handle JSON format errors
       print("Bad response format");
       throw Exception('Bad response format');
     } catch (e) {
-      // Handle any other exceptions
       print("Unexpected error: $e");
       throw Exception('Unexpected error: $e');
     }
@@ -72,6 +77,9 @@ class AllNotificationRemoteDatasourceImpl
   Future<List<Notification>> getAllNotication(int userId) async {
     final http.Response response;
     try {
+      String token = await getToken();
+      token = 'Bearer $token';
+      print(token);
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-notification'),
         body: json.encode({
@@ -79,23 +87,19 @@ class AllNotificationRemoteDatasourceImpl
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
+          'Authorization': token,
         },
       );
     } on SocketException {
-      // Handle network errors
       print("No Internet connection");
       throw Exception('No Internet connection');
     } on HttpException {
-      // Handle HTTP errors
       print("HTTP error occurred");
       throw Exception('HTTP error occurred');
     } on FormatException {
-      // Handle JSON format errors
       print("Bad response format");
       throw Exception('Bad response format');
     } catch (e) {
-      // Handle any other exceptions
       print("Unexpected error: $e");
       throw Exception('Unexpected error: $e');
     }
@@ -117,6 +121,10 @@ class AllNotificationRemoteDatasourceImpl
   Future<void> deleteANotification(int notificationId) async {
     final http.Response response;
     try {
+      String token = await getToken();
+      token = 'Bearer $token';
+
+      print(token);
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/delete-notification'),
         body: json.encode({
@@ -124,23 +132,19 @@ class AllNotificationRemoteDatasourceImpl
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.tasker_token
+          'Authorization': token,
         },
       );
     } on SocketException {
-      // Handle network errors
       print("No Internet connection");
       throw Exception('No Internet connection');
     } on HttpException {
-      // Handle HTTP errors
       print("HTTP error occurred");
       throw Exception('HTTP error occurred');
     } on FormatException {
-      // Handle JSON format errors
       print("Bad response format");
       throw Exception('Bad response format');
     } catch (e) {
-      // Handle any other exceptions
       print("Unexpected error: $e");
       throw Exception('Unexpected error: $e');
     }

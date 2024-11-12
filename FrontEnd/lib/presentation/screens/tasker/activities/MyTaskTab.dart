@@ -13,6 +13,7 @@ import 'package:se121_giupviec_app/common/widgets/userRow/userRow.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
 // import statements here
@@ -134,6 +135,7 @@ class _MytasktabState extends State<Mytasktab> {
                                                 context)
                                             .taskercanccel(
                                                 widget.accountId, widget.id);
+
                                         Navigator.of(context).pop();
                                         Navigator.of(context).pop();
                                         // Close the dialog
@@ -219,11 +221,14 @@ class _MytasktabState extends State<Mytasktab> {
                                     isCall: true,
                                     userId: task.userId,
                                     userName: (task.user
-                                        as Map<String, dynamic>)['name'],
-                                    userPhone: (task.user
-                                        as Map<String, dynamic>)['phoneNumber'],
+                                            as Map<String, dynamic>)['name'] ??
+                                        '',
+                                    userPhone: (task.user as Map<String,
+                                            dynamic>)['phoneNumber'] ??
+                                        '',
                                     userImageLink: (task.user
-                                        as Map<String, dynamic>)['avatar'])
+                                            as Map<String, dynamic>)['avatar'] ??
+                                        '')
                               ]),
                             ),
                             const SizedBox(
@@ -359,8 +364,9 @@ class _MytasktabState extends State<Mytasktab> {
                                           children: [
                                             Text(
                                               (task.location as Map<String,
-                                                      dynamic>)['ownerName']
-                                                  .toString(),
+                                                          dynamic>)['ownerName']
+                                                      .toString() ??
+                                                  '',
                                               style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 color: Colors.black,
@@ -387,9 +393,10 @@ class _MytasktabState extends State<Mytasktab> {
                                             const SizedBox(height: 5),
                                             Text(
                                               (task.location as Map<String,
-                                                          dynamic>)[
-                                                      'ownerPhoneNumber']
-                                                  .toString(),
+                                                              dynamic>)[
+                                                          'ownerPhoneNumber']
+                                                      .toString() ??
+                                                  '',
                                               style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 color: Colors.black,

@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/review_model.dart';
 
 abstract class AllReviewRemoteDatasource {
   Future<List<ReviewModel>> getAllReviews(int taskerId);
   Future<ReviewModel> getAReviews(int taskerId, int taskId);
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class AllReviewRemoteDatasourceImpl implements AllReviewRemoteDatasource {
@@ -22,6 +27,8 @@ class AllReviewRemoteDatasourceImpl implements AllReviewRemoteDatasource {
 
   @override
   Future<List<ReviewModel>> getAllReviews(int taskerId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -31,7 +38,7 @@ class AllReviewRemoteDatasourceImpl implements AllReviewRemoteDatasource {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -65,6 +72,9 @@ class AllReviewRemoteDatasourceImpl implements AllReviewRemoteDatasource {
 
   @override
   Future<ReviewModel> getAReviews(int taskerId, int taskId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
+
     final http.Response response;
     try {
       response = await client.post(
@@ -72,7 +82,7 @@ class AllReviewRemoteDatasourceImpl implements AllReviewRemoteDatasource {
         body: json.encode({'taskerId': taskerId, 'taskId': taskId}),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
+          'Authorization': token,
         },
       );
     } on SocketException {

@@ -11,6 +11,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
 
 import 'package:se121_giupviec_app/domain/entities/taskerList.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_state.dart';
@@ -27,6 +28,7 @@ class Taskerlist extends StatefulWidget {
 
   final int id;
   final int userId;
+  final String customerName;
   final numberOfTasker;
   final String taskStatus;
   final Task? task;
@@ -39,6 +41,7 @@ class Taskerlist extends StatefulWidget {
       required this.userId,
       this.approveAll,
       required this.taskStatus,
+      required this.customerName,
       this.task,
       this.taskTypeAvatar,
       this.taskTypeName,
@@ -277,6 +280,9 @@ class _TaskerListState extends State<Taskerlist> {
                                   child: Column(
                                     children: [
                                       Taskerrowreview(
+                                        userName: (widget.task!.user as Map<
+                                                String, dynamic>)['name'] ??
+                                            '',
                                         userId: widget.userId,
                                         Star: approvedTaskers[index]
                                             .reviewStar
@@ -514,6 +520,17 @@ class _TaskerListState extends State<Taskerlist> {
                                     }
                                     print(approvedTaskersNotifier.value.length);
                                     print(widget.numberOfTasker);
+                                    for (var tasker
+                                        in approvedTaskersNotifier.value) {
+                                      await BlocProvider.of<
+                                              allNotificationCubit>(context)
+                                          .addANotificaiton(
+                                              tasker.taskerId,
+                                              "Bạn đã được nhận 1 công việc mới",
+                                              "Khách hàng ${widget.customerName} vừa mới duyệt đơn ứng cử của bản cho công việc ${widget.id} sao.",
+                                              "review.jpg");
+                                    }
+
                                     if (approvedTaskersNotifier.value.length ==
                                         widget.numberOfTasker) {
                                       Navigator.push(

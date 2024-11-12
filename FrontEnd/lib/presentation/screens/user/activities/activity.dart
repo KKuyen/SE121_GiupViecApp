@@ -9,6 +9,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/get_all_task_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 
@@ -44,9 +45,17 @@ class _ActivityPageState extends State<ActivityPage> {
   late int taskTypeId;
   late String TaskTypeName;
   late String TaskTypeAvatar;
+  late String customName;
 
-  void _showLabel(int id, int numberOfTasker, String status, Task task,
-      int taskTypeId, String TaskTypeName, String TaskTypeAvatar) {
+  void _showLabel(
+      int id,
+      int numberOfTasker,
+      String status,
+      Task task,
+      int taskTypeId,
+      String TaskTypeName,
+      String TaskTypeAvatar,
+      String customName) {
     setState(() {
       _isLabelVisible = true;
       this.numberOfTasker = numberOfTasker;
@@ -102,6 +111,7 @@ class _ActivityPageState extends State<ActivityPage> {
         if (_isLabelVisible)
           Center(
             child: Taskerlist(
+              customerName: customName,
               userId: widget.allUserId,
               task: currentTask,
               taskTypeId: taskTypeId,
@@ -121,7 +131,8 @@ class _ActivityPageState extends State<ActivityPage> {
 
 class JobCardScreen extends StatefulWidget {
   final int allUserId;
-  final void Function(int, int, String, Task, int, String, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String, String)
+      showLabel;
   final VoidCallback hideLabel;
 
   const JobCardScreen(
@@ -229,12 +240,11 @@ class _JobCardScreenState extends State<JobCardScreen>
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Newtaskstep1(
-                      userId: widget.allUserId,
-                    )),
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Navigation(
+                        userId: widget.allUserId,
+                      )));
           if (result == true) {
             BlocProvider.of<TaskCubit>(context).getTS1Tasks(widget.allUserId);
           }
@@ -250,7 +260,8 @@ class _JobCardScreenState extends State<JobCardScreen>
 
 class WaitingList extends StatefulWidget {
   final int allUserId;
-  final void Function(int, int, String, Task, int, String, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String, String)
+      showLabel;
 
   const WaitingList(
       {super.key, required this.showLabel, required this.allUserId});
@@ -334,7 +345,8 @@ class _WaitingListState extends State<WaitingList> {
                             task,
                             task.taskTypeId,
                             (task.taskType as Map<String, dynamic>)['name'],
-                            (task.taskType as Map<String, dynamic>)['avatar']),
+                            (task.taskType as Map<String, dynamic>)['avatar'],
+                            (task.user as Map<String, dynamic>)['name']),
                         id: task.id,
                         startDay: task.time,
                         price: task.price ?? '',
@@ -377,7 +389,8 @@ class _WaitingListState extends State<WaitingList> {
 
 class ApprovedList extends StatefulWidget {
   final int allUserId;
-  final void Function(int, int, String, Task, int, String, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String, String)
+      showLabel;
 
   const ApprovedList(
       {super.key, required this.showLabel, required this.allUserId});
@@ -446,7 +459,8 @@ class _ApprovedListState extends State<ApprovedList> {
                       task,
                       task.taskTypeId,
                       (task.taskType as Map<String, dynamic>)['name'],
-                      (task.taskType as Map<String, dynamic>)['avatar']),
+                      (task.taskType as Map<String, dynamic>)['avatar'],
+                      (task.user as Map<String, dynamic>)['name']),
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   id: task.id,
@@ -477,7 +491,8 @@ class _ApprovedListState extends State<ApprovedList> {
 
 class FinishedList extends StatefulWidget {
   final int allUserId;
-  final void Function(int, int, String, Task, int, String, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String, String)
+      showLabel;
 
   const FinishedList(
       {super.key, required this.showLabel, required this.allUserId});
@@ -551,7 +566,8 @@ class _FinishedListState extends State<FinishedList> {
                       task,
                       task.taskTypeId,
                       (task.taskType as Map<String, dynamic>)['name'],
-                      (task.taskType as Map<String, dynamic>)['avatar']),
+                      (task.taskType as Map<String, dynamic>)['avatar'],
+                      (task.user as Map<String, dynamic>)['name']),
                   createAt: task.createdAt,
                   numberOfTasker: task.numberOfTasker ?? 0,
                   id: task.id,
@@ -582,7 +598,8 @@ class _FinishedListState extends State<FinishedList> {
 
 class CancelList extends StatelessWidget {
   final int allUserId;
-  final void Function(int, int, String, Task, int, String, String) showLabel;
+  final void Function(int, int, String, Task, int, String, String, String)
+      showLabel;
 
   const CancelList(
       {super.key, required this.showLabel, required this.allUserId});

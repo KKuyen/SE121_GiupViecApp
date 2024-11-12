@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
 
@@ -21,9 +22,14 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
     required this.baseUrl,
     required this.apiVersion,
   });
+  Future<String> getToken() async {
+    return await SecureStorage().readAccess_token();
+  }
 
   @override
   Future<TaskerInfoModel> getATasker(int userId, int taskerId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -32,10 +38,7 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
           "userId": userId,
           'taskerId': taskerId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -68,15 +71,14 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
 
   @override
   Future<List<TasktypeModel>> getTaskTypeList() async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-all-task-type'),
         body: json.encode({}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors

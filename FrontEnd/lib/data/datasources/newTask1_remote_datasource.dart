@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/location_model.dart';
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
@@ -18,9 +19,13 @@ abstract class NewTask1RemoteDatasource {
       int voucherId,
       List<Map<String, dynamic>> addPriceDetail);
   Future<List<LocationModel>> getMyLocation(int userId);
-  Future<LocationModel> getMyDefaultLocation(int userId);
+  Future<LocationModel?> getMyDefaultLocation(int userId);
   Future<List<VoucherModel>> getAvailableVoucherList(
       int userId, int taskTypeId);
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
@@ -34,7 +39,9 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
     required this.apiVersion,
   });
   @override
-  Future<LocationModel> getMyDefaultLocation(int userId) async {
+  Future<LocationModel?> getMyDefaultLocation(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri =
@@ -47,8 +54,7 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
         uri,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -74,13 +80,14 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
       print(responseBody);
       return LocationModel.fromJson(responseBody['location']);
     } else {
-      print("response.body failed: ${response.body}");
-      throw Exception('Failed ');
+      return null;
     }
   }
 
   @override
   Future<List<LocationModel>> getMyLocation(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       final uri = Uri.parse('$baseUrl/$apiVersion/get-my-location').replace(
@@ -92,8 +99,7 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
         uri,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -128,6 +134,8 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
 
   @override
   Future<TasktypeModel> getAtTaskType(int taskTypeId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -137,7 +145,7 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -180,6 +188,8 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
     int voucherId,
     List<Map<String, dynamic>> addPriceDetail,
   ) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     print('bo may day');
     final response = await client.post(
       Uri.parse('$baseUrl/$apiVersion/create-new-task'),
@@ -195,7 +205,7 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': AppInfor1.user_token,
+        'Authorization': token,
       },
     );
 
@@ -210,6 +220,8 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
   @override
   Future<List<VoucherModel>> getAvailableVoucherList(
       int userId, int taskTypeId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final response = await client.post(
       Uri.parse('$baseUrl/$apiVersion/get-avaiable-voucher'),
       body: json.encode({
@@ -218,7 +230,7 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': AppInfor1.user_token,
+        'Authorization': token,
       },
     );
 

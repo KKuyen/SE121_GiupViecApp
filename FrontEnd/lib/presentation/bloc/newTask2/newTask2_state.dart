@@ -15,14 +15,14 @@ class NewTask2Initial extends NewTask2State {}
 class NewTask2Loading extends NewTask2State {}
 
 class NewTask2Success extends NewTask2State {
-  final Location dfLocation;
-  final List<Location> Mylocations;
-  final List<Voucher> vouchers;
+  final Location? dfLocation;
+  final List<Location>? Mylocations;
+  final List<Voucher>? vouchers;
 
   const NewTask2Success(this.dfLocation, this.Mylocations, this.vouchers);
 
   @override
-  List<Object> get props => [dfLocation, Mylocations];
+  List<Object> get props => [];
 }
 
 class NewTask2Error extends NewTask2State {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/setting_model.dart';
 import 'package:se121_giupviec_app/data/models/simpleRes_model.dart';
@@ -11,6 +12,10 @@ abstract class SettingRemoteDatasource {
   Future<SettingModel> getSetting(int userId);
   Future<void> setting(
       int userId, bool autoAcceptStatus, bool loveTaskerOnly, int upperStar);
+}
+
+Future<String> getToken() async {
+  return await SecureStorage().readAccess_token();
 }
 
 class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
@@ -26,6 +31,8 @@ class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
   @override
   Future<void> setting(int userId, bool autoAcceptStatus, bool loveTaskerOnly,
       int upperStar) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -38,7 +45,7 @@ class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
+          'Authorization': token,
         },
       );
     } on SocketException {
@@ -69,6 +76,8 @@ class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
 
   @override
   Future<SettingModel> getSetting(int userId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.post(
@@ -76,10 +85,7 @@ class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
         body: json.encode({
           'userId': userId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors
@@ -113,6 +119,8 @@ class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
   @override
   Future<SimpleResModel> changePassword(
       int userId, String oldPassword, String newPassword) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       response = await client.put(
@@ -122,10 +130,7 @@ class SettingRemoteDataSourceImpl implements SettingRemoteDatasource {
           'oldPassword': oldPassword,
           'newPassword': newPassword,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': AppInfor1.user_token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
     } on SocketException {
       // Handle network errors

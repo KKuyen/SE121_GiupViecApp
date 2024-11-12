@@ -18,9 +18,18 @@ class NewTask2Cubit extends Cubit<NewTask2State> {
     try {
       print("vao location roi");
 
-      final Location dfLocation = (await NewTask2Usecase.execute3(userId));
       final List<Location> Mylocations =
           (await NewTask2Usecase.execute4(userId));
+      Location? dfLocation;
+      if (Mylocations.length >= 0) {
+        for (var location in Mylocations) {
+          if (location.isDefault) {
+            dfLocation = location;
+            break;
+          }
+        }
+      }
+
       final List<Voucher> vouchers =
           (await NewTask2Usecase.execute5(userId, taskTypeId));
       emit(NewTask2Success(dfLocation, Mylocations, vouchers));

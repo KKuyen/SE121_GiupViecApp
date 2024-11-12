@@ -11,6 +11,7 @@ import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/domain/entities/location.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
@@ -317,6 +318,21 @@ class _WaitingtabState extends State<Waitingtab> {
                               if (cancelCode != null) {
                                 await BlocProvider.of<ATaskCubit>(context)
                                     .deleteTask(widget.id, cancelCode);
+
+                                for (var tasker in state.taskerList) {
+                                  if (tasker.status == 'S2' ||
+                                      tasker.status == 'S1') {
+                                    await BlocProvider.of<allNotificationCubit>(
+                                            context)
+                                        .addANotificaiton(
+                                      tasker.taskerId,
+                                      'Công việc đã bị hủy',
+                                      'Công việc #DV${state.task.id} của bạn đã bị hủy bởi khách hàng.',
+                                      'cancel.jpg',
+                                    );
+                                  }
+                                }
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Đã hủy công việc '),
@@ -1039,6 +1055,8 @@ class _WaitingtabState extends State<Waitingtab> {
             if (_isLabelVisible)
               Center(
                 child: Taskerlist(
+                  customerName:
+                      (state.task.user as Map<String, dynamic>)['name'] ?? '',
                   userId: widget.userId,
                   callBackFunforTab: () => _reload(),
                   id: widget.id,

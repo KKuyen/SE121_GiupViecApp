@@ -35,7 +35,7 @@ class Newtask1RepositoryImpl implements Newtask1Repository {
   }
 
   @override
-  Future<Location> getMyDefaultLocation(int userId) async {
+  Future<Location?> getMyDefaultLocation(int userId) async {
     return await remoteDataSource.getMyDefaultLocation(userId);
   }
 

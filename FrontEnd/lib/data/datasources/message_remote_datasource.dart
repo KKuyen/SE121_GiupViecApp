@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 
 import '../models/message_model.dart';
 
@@ -19,9 +20,14 @@ class MessageRemoteDatasourceImpl implements MessageRemoteDatasource {
     required this.baseUrl,
     required this.apiVersion,
   });
+  Future<String> getToken() async {
+    return await SecureStorage().readAccess_token();
+  }
 
   @override
   Future<List<MessageModel>> getMessages(int sourceId, int targetId) async {
+    String token = await getToken();
+    token = 'Bearer $token';
     final http.Response response;
     try {
       print("sourceId: $sourceId, targetId: $targetId");
@@ -36,8 +42,7 @@ class MessageRemoteDatasourceImpl implements MessageRemoteDatasource {
         uri,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInBob25lTnVtYmVyIjoiMDM0NTY2NDAyNSIsInJvbGUiOiJSMSIsImV4cGlyZXNJbiI6IjMwZCIsImlhdCI6MTcyODIyMzI3N30.HPD25AZolhKCteXhFbF34zMyh2oewByvVHKBrFfET88'
+          'Authorization': token,
         },
       );
     } on SocketException {

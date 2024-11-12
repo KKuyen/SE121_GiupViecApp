@@ -28,8 +28,8 @@ class NewTask1Usecase {
         note, myvoucherId, voucherId, addPriceDetail);
   }
 
-  Future<Location> execute3(int userId) async {
-    return await repository.getMyDefaultLocation(userId);
+  Future<Location?> execute3(int userId) async {
+    return null;
   }
 
   Future<List<Location>> execute4(int userId) async {

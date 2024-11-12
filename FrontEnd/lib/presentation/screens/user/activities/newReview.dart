@@ -15,14 +15,17 @@ import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/core/firebase/firebase_image.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
+import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 
 class Newreview extends StatefulWidget {
   final Task task;
   final int userId;
+
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
+  final String userName;
 
   final String taskTypeAvatar;
   final String taskTypeName;
@@ -34,6 +37,7 @@ class Newreview extends StatefulWidget {
       {super.key,
       required this.userId,
       required this.taskerId,
+      required this.userName,
       required this.task,
       required this.taskTypeAvatar,
       required this.taskTypeName,
@@ -161,28 +165,28 @@ class _NewreviewState extends State<Newreview> {
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
-                                    // Text(
-                                    //   widget.task.id.toString(),
-                                    //   textAlign: TextAlign.left,
-                                    //   style: const TextStyle(
-                                    //     color: Color(0xFF4AB7B6),
-                                    //     fontSize: 17,
-                                    //     fontFamily: 'Inter',
-                                    //     fontWeight: FontWeight.normal,
-                                    //   ),
-                                    // ),
+                                    Text(
+                                      widget.task.id.toString(),
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        color: Color(0xFF4AB7B6),
+                                        fontSize: 17,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                // Text(
-                                //   widget.task.finishedAt.toString(),
-                                //   textAlign: TextAlign.left,
-                                //   style: const TextStyle(
-                                //     color: Color(0xFF727272),
-                                //     fontSize: 12,
-                                //     fontFamily: 'Inter',
-                                //     fontWeight: FontWeight.normal,
-                                //   ),
-                                // ),
+                                Text(
+                                  widget.task.finishedAt.toString(),
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                    color: Color(0xFF727272),
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -190,10 +194,10 @@ class _NewreviewState extends State<Newreview> {
                         const SizedBox(
                           height: 5,
                         ),
-                        // row(
-                        //   tieude: 'Giá:',
-                        //   noidung: widget.task.price.toString(),
-                        // ),
+                        row(
+                          tieude: 'Giá:',
+                          noidung: widget.task.price.toString(),
+                        ),
                         const SizedBox(
                           height: 5,
                         ),
@@ -388,6 +392,12 @@ class _NewreviewState extends State<Newreview> {
                         pushImages.length > 1 ? pushImages[1] : null,
                         pushImages.length > 2 ? pushImages[2] : null,
                         pushImages.length > 3 ? pushImages[3] : null);
+                    await BlocProvider.of<allNotificationCubit>(context)
+                        .addANotificaiton(
+                            widget.taskerId,
+                            "Bạn đã được một khách hàng đánh giá",
+                            "Khách hàng ${widget.userName} vừa mới đánh giá bạn ${Star} sao.",
+                            "review.jpg");
 
                     Navigator.pop(context, Star);
                   },
