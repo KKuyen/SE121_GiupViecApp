@@ -17,7 +17,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/firebase/firebase_image.dart';
 
 class LocationPage extends StatefulWidget {
-  const LocationPage({super.key});
+  final String userAvatar;
+  const LocationPage({super.key, required this.userAvatar});
 
   @override
   State<LocationPage> createState() => _LocationPageState();
@@ -127,7 +128,9 @@ class _LocationPageState extends State<LocationPage> {
                       ],
                     ),
                   ),
-                  const listLocation(),
+                  listLocation(
+                    userAvatar: widget.userAvatar,
+                  ),
                 ],
               ),
             ),
@@ -152,7 +155,8 @@ class _LocationPageState extends State<LocationPage> {
                             ),
                           ),
                           child: FutureBuilder<String>(
-                            future: _firebaseImageService.loadImage(avatar),
+                            future: _firebaseImageService
+                                .loadImage(widget.userAvatar),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -226,7 +230,9 @@ class _LocationPageState extends State<LocationPage> {
 }
 
 class listLocation extends StatefulWidget {
+  final String userAvatar;
   const listLocation({
+    required this.userAvatar,
     super.key,
   });
 
@@ -270,7 +276,9 @@ class _listLocationState extends State<listLocation> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        _addressCard(location: locations[index]),
+                        _addressCard(
+                            location: locations[index],
+                            userAvatar: widget.userAvatar),
                         const Divider(
                           height: 1,
                           thickness: 1,
@@ -288,25 +296,33 @@ class _listLocationState extends State<listLocation> {
   }
 }
 
-class _addressCard extends StatelessWidget {
+class _addressCard extends StatefulWidget {
+  final String userAvatar;
+
   Location location;
   _addressCard({
     required this.location,
+    required this.userAvatar,
   });
 
+  @override
+  State<_addressCard> createState() => _addressCardState();
+}
+
+class _addressCardState extends State<_addressCard> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        location.ownerName,
+        widget.location.ownerName,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              "${location.map}, ${location.detailAddress}, ${location.district}, ${location.province}, ${location.country}"),
-          Text(location.ownerPhoneNumber),
+              "${widget.location.map}, ${widget.location.detailAddress}, ${widget.location.district}, ${widget.location.province}, ${widget.location.country}"),
+          Text(widget.location.ownerPhoneNumber),
         ],
       ),
       trailing: const Icon(
@@ -314,7 +330,7 @@ class _addressCard extends StatelessWidget {
         color: AppColors.do_main,
       ),
       onTap: () {
-        _showDialog(context, location.id);
+        _showDialog(context, widget.location.id);
       },
     );
   }
@@ -347,7 +363,10 @@ class _addressCard extends StatelessWidget {
                 Future.delayed(const Duration(seconds: 2));
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LocationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => LocationPage(
+                            userAvatar: widget.userAvatar,
+                          )),
                 );
               },
               text: 'Xóa',

@@ -21,12 +21,15 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int userId = 0;
+  String Useravatar = "";
   Future<void> userID() async {
     final id = await SecureStorage().readId();
+    final avatar = await SecureStorage().readAvatar();
     print("id nef");
     print(id);
     setState(() {
       userId = int.parse(id);
+      Useravatar = avatar;
     });
   }
 
@@ -64,6 +67,7 @@ class _NavigationState extends State<Navigation> {
         body: [
           HomePage(
             accountId: userId,
+            userAvatar: Useravatar,
           ),
           ActivityPage(
             allUserId: userId,
@@ -71,6 +75,7 @@ class _NavigationState extends State<Navigation> {
           const MessagePage(),
           AccountPage(
             userId: userId,
+            Useravatar: Useravatar,
           ),
         ][currentPageIndex]);
   }

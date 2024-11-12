@@ -26,7 +26,9 @@ import '../activities/newTaskStep1.dart';
 
 class HomePage extends StatefulWidget {
   final int accountId;
-  const HomePage({super.key, required this.accountId});
+  final String userAvatar;
+  const HomePage(
+      {super.key, required this.accountId, required this.userAvatar});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -103,7 +105,9 @@ class _HomePageState extends State<HomePage>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const LocationPage()),
+                              builder: (context) => LocationPage(
+                                    userAvatar: widget.userAvatar,
+                                  )),
                         )
                       },
                   child: const position()),

@@ -19,8 +19,10 @@ import '../../../../core/firebase/firebase_image.dart';
 
 class AccountPage extends StatefulWidget {
   final int userId;
+  final String Useravatar;
 
-  const AccountPage({super.key, required this.userId});
+  const AccountPage(
+      {super.key, required this.userId, required this.Useravatar});
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -104,8 +106,9 @@ class _AccountPageState extends State<AccountPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LocationPage()));
+                                      builder: (context) => LocationPage(
+                                            userAvatar: widget.Useravatar,
+                                          )));
                             },
                           ),
                           const Divider(
@@ -243,25 +246,53 @@ class _AccountPageState extends State<AccountPage> {
                             ),
                           ),
                           child: FutureBuilder<String>(
-                            future: _firebaseImageService.loadImage(avatar),
+                            future: _firebaseImageService
+                                .loadImage(widget.Useravatar),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               } else if (snapshot.hasError) {
-                                return Icon(Icons.error);
-                              } else {
+                                return Container(
+                                  width: 120.0,
+                                  height: 120.0,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey,
+                                  ),
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              } else if (snapshot.hasData) {
                                 return CachedNetworkImage(
                                   imageUrl: snapshot.data!,
                                   placeholder: (context, url) =>
                                       CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                      Container(
+                                    width: 120.0,
+                                    height: 120.0,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey,
+                                    ),
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
+                                    width: 120.0,
+                                    height: 120.0,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.grey),
+                                      border: Border.all(
+                                          color: Colors.white, width: 6),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.cover,
@@ -269,6 +300,8 @@ class _AccountPageState extends State<AccountPage> {
                                     ),
                                   ),
                                 );
+                              } else {
+                                return Icon(Icons.error);
                               }
                             },
                           ),

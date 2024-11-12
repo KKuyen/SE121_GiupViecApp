@@ -40,6 +40,14 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
     return id;
   }
 
+  Future<Map<String, String>> _fetchUserData() async {
+    String name = await secureStorage.readName();
+    String phoneNumber = await secureStorage.readPhoneNumber();
+    String avatar = await secureStorage.readAvatar();
+    return {'name': name, 'phoneNumber': phoneNumber, 'avatar': avatar};
+  }
+
+  String avatar = '';
   int userId = 0;
   @override
   void initState() {
@@ -47,6 +55,9 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
     fetchProvinces();
     _fetchUserId().then((value) {
       userId = (int.parse(value));
+    });
+    _fetchUserData().then((value) {
+      avatar = value['avatar']!;
     });
   }
 
@@ -153,7 +164,9 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
                 selectedDistrictName == null ||
                 selectedWardName == null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin")),
+                const SnackBar(
+                    content: Text("Vui lòng điền đầy đủ thông tin"),
+                    backgroundColor: AppColors.cam_main),
               );
               return;
             }
@@ -191,7 +204,9 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
             Navigator.of(context).pop();
             if (state is LocationResponseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Thành công")),
+                const SnackBar(
+                    content: Text("Thành công"),
+                    backgroundColor: AppColors.xanh_main),
               );
 
               Navigator.of(context).pop();
@@ -200,11 +215,15 @@ class _AddLocationTaskerPageState extends State<AddLocationTaskerPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const LocationTaskerPage()),
+                    builder: (context) => LocationTaskerPage(
+                          userAvatar: avatar,
+                        )),
               );
             } else if (state is LocationError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
+                SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: AppColors.do_main),
               );
             }
           }

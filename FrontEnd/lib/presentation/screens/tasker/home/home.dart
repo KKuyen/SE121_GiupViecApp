@@ -263,8 +263,13 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                           context)
                                                                       .showSnackBar(
                                                                     const SnackBar(
-                                                                      content: Text(
-                                                                          'Chọn ngày lớn hơn hoặc bằng ngày hiện tại'),
+                                                                      content:
+                                                                          Text(
+                                                                        'Chọn ngày lớn hơn hoặc bằng ngày hiện tại',
+                                                                      ),
+                                                                      backgroundColor:
+                                                                          AppColors
+                                                                              .cam_main,
                                                                     ),
                                                                   );
                                                                 } else if (pickedDate!
@@ -274,9 +279,11 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                           context)
                                                                       .showSnackBar(
                                                                     const SnackBar(
-                                                                      content: Text(
-                                                                          'Chọn ngày nhỏ hơn ngày kết thúc'),
-                                                                    ),
+                                                                        content:
+                                                                            Text(
+                                                                                'Chọn ngày nhỏ hơn ngày kết thúc'),
+                                                                        backgroundColor:
+                                                                            AppColors.cam_main),
                                                                   );
                                                                 } else {
                                                                   if (pickedDate !=
@@ -389,9 +396,11 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                           context)
                                                                       .showSnackBar(
                                                                     const SnackBar(
-                                                                      content: Text(
-                                                                          'Chọn ngày lớn hơn ngày bắt đầu'),
-                                                                    ),
+                                                                        content:
+                                                                            Text(
+                                                                                'Chọn ngày lớn hơn ngày bắt đầu'),
+                                                                        backgroundColor:
+                                                                            AppColors.cam_main),
                                                                   );
                                                                 } else if (pickedDate !=
                                                                     null) {

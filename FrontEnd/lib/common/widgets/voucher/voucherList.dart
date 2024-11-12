@@ -77,7 +77,8 @@ class _VouchersState extends State<Vouchers> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text("User ID is not available")),
+                            content: Text("Người dùng không tồn tại"),
+                            backgroundColor: AppColors.do_main),
                       );
                     }
                   },
@@ -109,14 +110,18 @@ class _VouchersState extends State<Vouchers> {
 
                 // Show success message
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Đã lưu voucher")),
+                  const SnackBar(
+                      content: Text("Đã lưu voucher"),
+                      backgroundColor: AppColors.xanh_main),
                 );
               } else if (state is VoucherError) {
                 Navigator.of(context).pop(); // Đóng dialog
 
                 // Show error message
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
+                  SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.do_main),
                 );
               }
             }

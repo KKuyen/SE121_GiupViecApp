@@ -43,11 +43,25 @@ class _AddLocationPageState extends State<AddLocationPage> {
     return id;
   }
 
+  Future<Map<String, String>> _fetchUserData() async {
+    String name = await secureStorage.readName();
+    String phoneNumber = await secureStorage.readPhoneNumber();
+    String avatar = await secureStorage.readAvatar();
+    return {'name': name, 'phoneNumber': phoneNumber, 'avatar': avatar};
+  }
+
+  String avatar = '';
+
   int userId = 0;
   @override
   void initState() {
     super.initState();
     fetchProvinces();
+    _fetchUserData().then((value) {
+      setState(() {
+        avatar = value['avatar']!;
+      });
+    });
     _fetchUserId().then((value) {
       userId = (int.parse(value));
     });
@@ -158,7 +172,9 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 selectedDistrictName == null ||
                 selectedWardName == null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin")),
+                const SnackBar(
+                    content: Text("Vui lòng điền đầy đủ thông tin"),
+                    backgroundColor: AppColors.cam_main),
               );
               return;
             }
@@ -196,7 +212,9 @@ class _AddLocationPageState extends State<AddLocationPage> {
             Navigator.of(context).pop();
             if (state is LocationResponseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Thành công")),
+                const SnackBar(
+                    content: Text("Thành công"),
+                    backgroundColor: AppColors.xanh_main),
               );
               if (widget.type == 2) {
                 Navigator.of(context).pop();
@@ -207,12 +225,17 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LocationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => LocationPage(
+                            userAvatar: avatar,
+                          )),
                 );
               }
             } else if (state is LocationError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
+                SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: AppColors.do_main),
               );
             }
           }

@@ -287,7 +287,7 @@ class _SettingState extends State<Setting> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
-                                          backgroundColor: AppColors.do_main,
+                                          backgroundColor: AppColors.cam_main,
                                           content: Text(
                                               'Vui lòng nhập đầy đủ thông tin'),
                                           duration: Duration(seconds: 2),
@@ -301,7 +301,7 @@ class _SettingState extends State<Setting> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
-                                          backgroundColor: AppColors.do_main,
+                                          backgroundColor: AppColors.cam_main,
                                           content: Text(
                                               'Mật khẩu phải có độ dài lớn hơn hoặc bằng 6 ký tự'),
                                           duration: Duration(seconds: 2),

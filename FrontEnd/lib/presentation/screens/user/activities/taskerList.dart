@@ -16,7 +16,6 @@ import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/activity.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerProfile.dart';
 
 class Taskerlist extends StatefulWidget {

@@ -101,7 +101,7 @@ class _WaitingtabState extends State<Waitingtab> {
         SnackBar(
           content: Text(
               'Chỉ có thể thay đổi so với thời gian gốc trong vòng 7 ngày tiếp theo'),
-          backgroundColor: AppColors.do_main,
+          backgroundColor: AppColors.cam_main,
         ),
       );
       return;
@@ -336,7 +336,7 @@ class _WaitingtabState extends State<Waitingtab> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Đã hủy công việc '),
-                                    backgroundColor: AppColors.do_main,
+                                    backgroundColor: AppColors.xanh_main,
                                   ),
                                 );
                                 Navigator.pop(context, true);

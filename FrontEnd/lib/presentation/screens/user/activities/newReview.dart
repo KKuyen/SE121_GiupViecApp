@@ -76,7 +76,9 @@ class _NewreviewState extends State<Newreview> {
     } else {
       // Hiển thị cảnh báo nếu số lượng ảnh vượt quá 5
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bạn chỉ có thể thêm tối đa 4 ảnh')),
+        const SnackBar(
+            content: Text('Bạn chỉ có thể thêm tối đa 4 ảnh'),
+            backgroundColor: AppColors.cam_main),
       );
     }
   }

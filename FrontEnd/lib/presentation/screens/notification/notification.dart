@@ -73,8 +73,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text(
-                              'Đã xóa thông báo',
-                            )),
+                                  'Đã xóa thông báo',
+                                ),
+                                backgroundColor: AppColors.xanh_main),
                           );
                         },
                         background: Container(color: Colors.transparent),

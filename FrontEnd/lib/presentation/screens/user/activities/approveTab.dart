@@ -232,7 +232,7 @@ class _ApprovetabState extends State<Approvetab> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text('Đã hủy công việc '),
-                                      backgroundColor: AppColors.do_main,
+                                      backgroundColor: AppColors.xanh_main,
                                     ),
                                   );
                                   Navigator.pop(context, true);

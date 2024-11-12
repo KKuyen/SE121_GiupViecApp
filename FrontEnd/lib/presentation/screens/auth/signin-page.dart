@@ -76,7 +76,9 @@ class _SignInPageState extends State<SignInPage> {
           } else if (state is AuthError) {
             // Show error message
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.do_main),
             );
           }
         }
@@ -366,7 +368,9 @@ class _SignInPageState extends State<SignInPage> {
               } else if (state is AuthError) {
                 // Show error message
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
+                  SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.do_main),
                 );
               }
             }
@@ -473,7 +477,9 @@ class _SignInPageState extends State<SignInPage> {
                     // Show Thành công message after dialog is dismissed
                     await Future.delayed(Duration.zero);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Thành công")),
+                      const SnackBar(
+                          content: Text("Thành công"),
+                          backgroundColor: AppColors.xanh_main),
                     );
                     // Navigation to OTP
                     Navigator.pop(context); // Đóng BottomSheet hiện tại
@@ -612,13 +618,16 @@ class _SignInPageState extends State<SignInPage> {
                     const SnackBar(
                       content: Text("Thành công"),
                       duration: Duration(seconds: 3),
+                      backgroundColor: AppColors.xanh_main,
                     ),
                   );
                   // Navigator.pop(context); // Đóng BottomSheet hiện tại
                 } else if (state is AuthError) {
                   // Show error message
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: AppColors.do_main),
                   );
                   Navigator.pop(context); // Đóng BottomSheet hiện tại
                 }

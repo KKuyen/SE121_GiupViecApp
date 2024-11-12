@@ -20,8 +20,10 @@ import '../../../../core/firebase/firebase_image.dart';
 
 class AccountTaskerPage extends StatefulWidget {
   final int userId;
+  final String userAvatar;
 
-  const AccountTaskerPage({super.key, required this.userId});
+  const AccountTaskerPage(
+      {super.key, required this.userId, required this.userAvatar});
 
   @override
   State<AccountTaskerPage> createState() => _AccountTaskerPageState();
@@ -51,7 +53,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<TaskerCubit>(context).getATasker(1, 2);
+    BlocProvider.of<TaskerCubit>(context).getATasker(1, widget.userId);
     _fetchUserId().then((value) {
       userId = (int.parse(value));
     });
@@ -117,8 +119,8 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LocationTaskerPage()));
+                                      builder: (context) => LocationTaskerPage(
+                                          userAvatar: widget.userAvatar)));
                             },
                           ),
                           const Divider(
@@ -223,7 +225,8 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                             ),
                           ),
                           child: FutureBuilder<String>(
-                            future: _firebaseImageService.loadImage(avatar),
+                            future: _firebaseImageService
+                                .loadImage(widget.userAvatar),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

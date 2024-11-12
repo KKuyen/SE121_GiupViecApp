@@ -60,7 +60,9 @@ class _SignUpPageState extends State<SignUpPage> {
           } else if (state is AuthError) {
             // Show error message
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.do_main),
             );
           }
         }

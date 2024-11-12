@@ -23,15 +23,19 @@ class TaskerNavigation extends StatefulWidget {
 class _TaskerNavigationState extends State<TaskerNavigation> {
   int currentPageIndex = 0;
   int userId = 0;
+  String userAvatar = '';
   String userName = '';
   Future<void> userID() async {
     final id = await SecureStorage().readId();
     final name = await SecureStorage().readName();
+    final avatar = await SecureStorage().readAvatar();
+
     print("id nef");
     print(id);
     setState(() {
       userId = int.parse(id);
       userName = name;
+      userAvatar = avatar;
     });
   }
 
@@ -69,6 +73,7 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
           const MessagePage(),
           AccountTaskerPage(
             userId: userId,
+            userAvatar: userAvatar,
           ),
         ][currentPageIndex]);
   }

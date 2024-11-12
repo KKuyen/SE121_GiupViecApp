@@ -18,7 +18,8 @@ import '../../../bloc/Location/location_state.dart';
 import 'addLocationTasker.dart';
 
 class LocationTaskerPage extends StatefulWidget {
-  const LocationTaskerPage({super.key});
+  final String userAvatar;
+  const LocationTaskerPage({super.key, required this.userAvatar});
 
   @override
   State<LocationTaskerPage> createState() => _LocationTaskerPageState();
@@ -128,7 +129,9 @@ class _LocationTaskerPageState extends State<LocationTaskerPage> {
                       ],
                     ),
                   ),
-                  const listLocation(),
+                  listLocation(
+                    userAvatar: widget.userAvatar,
+                  ),
                 ],
               ),
             ),
@@ -153,7 +156,8 @@ class _LocationTaskerPageState extends State<LocationTaskerPage> {
                             ),
                           ),
                           child: FutureBuilder<String>(
-                            future: _firebaseImageService.loadImage(avatar),
+                            future: _firebaseImageService
+                                .loadImage(widget.userAvatar),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -227,8 +231,10 @@ class _LocationTaskerPageState extends State<LocationTaskerPage> {
 }
 
 class listLocation extends StatefulWidget {
+  final String userAvatar;
   const listLocation({
     super.key,
+    required this.userAvatar,
   });
 
   @override
@@ -272,7 +278,9 @@ class _listLocationState extends State<listLocation> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        _addressCard(location: locations[index]),
+                        _addressCard(
+                            location: locations[index],
+                            userAvatar: widget.userAvatar),
                         const Divider(
                           height: 1,
                           thickness: 1,
@@ -290,24 +298,31 @@ class _listLocationState extends State<listLocation> {
   }
 }
 
-class _addressCard extends StatelessWidget {
+class _addressCard extends StatefulWidget {
+  final String userAvatar;
   final Location location;
   _addressCard({
     required this.location,
+    required this.userAvatar,
   });
 
+  @override
+  State<_addressCard> createState() => _addressCardState();
+}
+
+class _addressCardState extends State<_addressCard> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        "${location.map}, ${location.detailAddress}",
+        "${widget.location.map}, ${widget.location.detailAddress}",
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              "${location.district}, ${location.province}, ${location.country}"),
+              "${widget.location.district}, ${widget.location.province}, ${widget.location.country}"),
         ],
       ),
       trailing: const Icon(
@@ -315,7 +330,7 @@ class _addressCard extends StatelessWidget {
         color: AppColors.do_main,
       ),
       onTap: () {
-        _showDialog(context, location.id);
+        _showDialog(context, widget.location.id);
       },
     );
   }
@@ -349,7 +364,9 @@ class _addressCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const LocationTaskerPage()),
+                      builder: (context) => LocationTaskerPage(
+                            userAvatar: widget.userAvatar,
+                          )),
                 );
               },
               text: 'Xóa',
