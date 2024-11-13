@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
@@ -13,6 +14,7 @@ import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dar
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/configs/assets/app_vectors.dart';
 import '../../user/activities/allReview.dart';
 import 'locationTasker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,7 +49,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
     return id;
   }
 
-  int userId = 0;
+  int userIdd = 0;
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
     super.initState();
     BlocProvider.of<TaskerCubit>(context).getATasker(1, widget.userId);
     _fetchUserId().then((value) {
-      userId = (int.parse(value));
+      userIdd = (int.parse(value));
     });
     _fetchUserData().then((value) {
       avatar = value['avatar']!;
@@ -136,7 +138,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          Allreview(taskerId: userId)));
+                                          Allreview(taskerId: userIdd)));
                             },
                           ),
                           const Divider(
@@ -232,14 +234,24 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               } else if (snapshot.hasError) {
-                                return Icon(Icons.error);
+                                return SvgPicture.asset(
+                                  // Nếu có lỗi thì hiển thị icon mặc định
+                                  AppVectors.avatar,
+                                  width: 150.0,
+                                  height: 150.0,
+                                );
                               } else {
                                 return CachedNetworkImage(
                                   imageUrl: snapshot.data!,
                                   placeholder: (context, url) =>
                                       CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                      SvgPicture.asset(
+                                    // Nếu có lỗi thì hiển thị icon mặc định
+                                    AppVectors.avatar,
+                                    width: 150.0,
+                                    height: 150.0,
+                                  ),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     decoration: BoxDecoration(

@@ -11,8 +11,11 @@ import 'package:se121_giupviec_app/presentation/screens/user/message/listTaskMes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/configs/assets/app_vectors.dart';
+import '../../../../core/firebase/firebase_image.dart';
 import '../../../../data/models/message_model.dart';
 import '../../../../domain/entities/message.dart';
 import '../../../bloc/Message/message_cubit.dart';
@@ -119,6 +122,8 @@ class _DetailmessageState extends State<Detailmessage> {
     await launchUrl(launchUri);
   }
 
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
+
   @override
   Widget build(BuildContext context) {
     TextEditingController messageController = TextEditingController();
@@ -162,10 +167,59 @@ class _DetailmessageState extends State<Detailmessage> {
             isHavePadding: false,
             title: Row(
               children: [
-                SvgPicture.asset(
-                  widget.targetUser.avatar,
-                  width: 35,
-                  height: 35,
+                Container(
+                  width: 41, // Kích thước của Container bao quanh CircleAvatar
+                  height: 41,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white, // Màu viền
+                      width: 1.0, // Độ dày của viền
+                    ),
+                  ),
+                  child: FutureBuilder<String>(
+                    future: _firebaseImageService
+                        .loadImage(widget.targetUser.avatar),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return SvgPicture.asset(
+                          // Nếu có lỗi thì hiển thị icon mặc định
+                          AppVectors.avatar,
+                          width: 41.0,
+                          height: 41.0,
+                        );
+                      } else if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: snapshot.data!,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              SvgPicture.asset(
+                            // Nếu có lỗi thì hiển thị icon mặc định
+                            AppVectors.avatar,
+                            width: 41.0,
+                            height: 41.0,
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 41.0,
+                            height: 41.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 1),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Icon(Icons.error);
+                      }
+                    },
+                  ),
                 ),
                 const SizedBox(
                   width: 10,
@@ -339,6 +393,7 @@ class _messageCard extends StatefulWidget {
 
 class _messageCardState extends State<_messageCard> {
   bool showTime = false;
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
 
   @override
   Widget build(BuildContext context) {
@@ -363,10 +418,46 @@ class _messageCardState extends State<_messageCard> {
                   widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
                 if (!widget.isMe)
-                  SvgPicture.asset(
-                    widget.avatar,
-                    width: 32,
-                    height: 32,
+                  FutureBuilder<String>(
+                    future: _firebaseImageService.loadImage(widget.avatar),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return SvgPicture.asset(
+                          // Nếu có lỗi thì hiển thị icon mặc định
+                          AppVectors.avatar,
+                          width: 32.0,
+                          height: 32.0,
+                        );
+                      } else if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: snapshot.data!,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              SvgPicture.asset(
+                            // Nếu có lỗi thì hiển thị icon mặc định
+                            AppVectors.avatar,
+                            width: 32.0,
+                            height: 32.0,
+                          ),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 32.0,
+                            height: 32.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Icon(Icons.error);
+                      }
+                    },
                   ),
                 const SizedBox(
                   width: 10,

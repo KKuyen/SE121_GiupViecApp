@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
@@ -10,6 +11,7 @@ import 'package:se121_giupviec_app/presentation/bloc/Location/location_cubit.dar
 import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/configs/assets/app_vectors.dart';
 import '../../../../domain/entities/location.dart';
 import '../../../bloc/Location/delete_location_cubit.dart';
 import '../../../bloc/Location/location_state.dart';
@@ -162,7 +164,12 @@ class _LocationPageState extends State<LocationPage> {
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               } else if (snapshot.hasError) {
-                                return Icon(Icons.error);
+                                return SvgPicture.asset(
+                                  // Nếu có lỗi thì hiển thị icon mặc định
+                                  AppVectors.avatar,
+                                  width: 150.0,
+                                  height: 150.0,
+                                );
                               } else {
                                 return CachedNetworkImage(
                                   imageUrl: snapshot.data!,

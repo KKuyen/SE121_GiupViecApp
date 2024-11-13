@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
@@ -15,6 +16,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/configs/assets/app_vectors.dart';
 import '../../../../core/firebase/firebase_image.dart';
 
 class AccountPage extends StatefulWidget {
@@ -253,18 +255,11 @@ class _AccountPageState extends State<AccountPage> {
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               } else if (snapshot.hasError) {
-                                return Container(
-                                  width: 120.0,
-                                  height: 120.0,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey,
-                                  ),
-                                  child: const Icon(
-                                    Icons.person,
-                                    size: 60,
-                                    color: Colors.white,
-                                  ),
+                                return SvgPicture.asset(
+                                  // Nếu có lỗi thì hiển thị icon mặc định
+                                  AppVectors.avatar,
+                                  width: 150.0,
+                                  height: 150.0,
                                 );
                               } else if (snapshot.hasData) {
                                 return CachedNetworkImage(
@@ -272,23 +267,16 @@ class _AccountPageState extends State<AccountPage> {
                                   placeholder: (context, url) =>
                                       CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 120.0,
-                                    height: 120.0,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey,
-                                    ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 60,
-                                      color: Colors.white,
-                                    ),
+                                      SvgPicture.asset(
+                                    // Nếu có lỗi thì hiển thị icon mặc định
+                                    AppVectors.avatar,
+                                    width: 150.0,
+                                    height: 150.0,
                                   ),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
-                                    width: 120.0,
-                                    height: 120.0,
+                                    width: 150.0,
+                                    height: 150.0,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
@@ -301,7 +289,12 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                 );
                               } else {
-                                return Icon(Icons.error);
+                                return SvgPicture.asset(
+                                  // Nếu có lỗi thì hiển thị icon mặc định
+                                  AppVectors.avatar,
+                                  width: 150.0,
+                                  height: 150.0,
+                                );
                               }
                             },
                           ),

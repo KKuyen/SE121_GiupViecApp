@@ -36,6 +36,8 @@ class TaskerRemoteDataSourceImpl implements TaskerRemoteDatasource {
     String token = await getToken();
     token = 'Bearer $token';
     final http.Response response;
+    print("userId: $userId");
+    print("taskerId: $taskerId");
     try {
       response = await client.post(
         Uri.parse('$baseUrl/$apiVersion/get-tasker-info'),

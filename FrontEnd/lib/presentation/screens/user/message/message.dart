@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/search/search.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_info.dart';
@@ -11,8 +12,10 @@ import 'package:se121_giupviec_app/data/models/User.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/message/detailMessage.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/firebase/firebase_image.dart';
 import '../../../bloc/Message/message_review_cubit.dart';
 import '../../../bloc/Message/message_state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});
@@ -124,9 +127,11 @@ class _listMessageState extends State<_listMessage> {
                   itemBuilder: (context, index) {
                     final name = (messages[index].target
                         as Map<String, dynamic>)['name'];
+                    final avatar = (messages[index].target
+                        as Map<String, dynamic>)['avatar'];
                     return _messageCard(
                       id: messages[index].targetId,
-                      avatar: AppVectors.avatar,
+                      avatar: avatar,
                       name: name,
                       message: messages[index].lastMessage,
                       time: messages[index].lastMessageTime,
@@ -144,7 +149,7 @@ class _listMessageState extends State<_listMessage> {
   }
 }
 
-class _messageCard extends StatelessWidget {
+class _messageCard extends StatefulWidget {
   final int id;
   final String avatar;
   final String name;
@@ -164,17 +169,25 @@ class _messageCard extends StatelessWidget {
   });
 
   @override
+  State<_messageCard> createState() => _messageCardState();
+}
+
+class _messageCardState extends State<_messageCard> {
+  FirebaseImageService _firebaseImageService = FirebaseImageService();
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
         try {
-          User user = User(id: id, name: name, avatar: avatar);
+          User user =
+              User(id: widget.id, name: widget.name, avatar: widget.avatar);
 
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Detailmessage(
-                      targetUser: user, sourseUser: sourseUser!)));
+                      targetUser: user, sourseUser: widget.sourseUser!)));
         } on Exception catch (e) {
           print("bbbbbbbbbbbb" + e.toString());
           // TODO
@@ -183,37 +196,85 @@ class _messageCard extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.zero, // Loại bỏ padding mặc định
 
-        leading: SvgPicture.asset(
-          avatar,
-          width: 41,
+        leading: Container(
+          width: 41, // Kích thước của Container bao quanh CircleAvatar
           height: 41,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white, // Màu viền
+              width: 1.0, // Độ dày của viền
+            ),
+          ),
+          child: FutureBuilder<String>(
+            future: _firebaseImageService.loadImage(widget.avatar),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return SvgPicture.asset(
+                  // Nếu có lỗi thì hiển thị icon mặc định
+                  AppVectors.avatar,
+                  width: 41.0,
+                  height: 41.0,
+                );
+              } else if (snapshot.hasData) {
+                return CachedNetworkImage(
+                  imageUrl: snapshot.data!,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => SvgPicture.asset(
+                    // Nếu có lỗi thì hiển thị icon mặc định
+                    AppVectors.avatar,
+                    width: 41.0,
+                    height: 41.0,
+                  ),
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 41.0,
+                    height: 41.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 1),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Icon(Icons.error);
+              }
+            },
+          ),
         ),
         title: Text(
-          name,
+          widget.name,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Row(
           children: [
             Text(
-              message,
+              widget.message,
               style: TextStyle(
-                  color: isSeen ? Colors.grey : Colors.black,
-                  fontWeight: isSeen ? FontWeight.normal : FontWeight.bold),
+                  color: widget.isSeen ? Colors.grey : Colors.black,
+                  fontWeight:
+                      widget.isSeen ? FontWeight.normal : FontWeight.bold),
             ),
             const SizedBox(
               width: 10,
             ),
-            Text(time,
+            Text(widget.time,
                 style: TextStyle(
-                    color: isSeen ? Colors.grey : Colors.black,
-                    fontWeight: isSeen ? FontWeight.normal : FontWeight.bold)),
+                    color: widget.isSeen ? Colors.grey : Colors.black,
+                    fontWeight:
+                        widget.isSeen ? FontWeight.normal : FontWeight.bold)),
           ],
         ),
         trailing: Container(
           width: 10,
           height: 10,
           decoration: BoxDecoration(
-            color: isSeen ? Colors.transparent : AppColors.cam_main,
+            color: widget.isSeen ? Colors.transparent : AppColors.cam_main,
             borderRadius: BorderRadius.circular(50),
           ),
         ),
