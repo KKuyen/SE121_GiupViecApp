@@ -126,7 +126,7 @@ class _listMessageState extends State<_listMessage> {
                         as Map<String, dynamic>)['name'];
                     return _messageCard(
                       id: messages[index].targetId,
-                      avatar: AppVectors.google,
+                      avatar: AppVectors.avatar,
                       name: name,
                       message: messages[index].lastMessage,
                       time: messages[index].lastMessageTime,
@@ -153,7 +153,7 @@ class _messageCard extends StatelessWidget {
   final bool isSeen;
   final User? sourseUser;
   const _messageCard({
-    this.avatar = AppVectors.facebook,
+    this.avatar = AppVectors.avatar,
     this.name = 'Nguyễn Văn A',
     this.message = 'Mình chia tay đi',
     this.time = '12:00',

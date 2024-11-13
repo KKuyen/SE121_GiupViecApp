@@ -34,7 +34,26 @@ export class MessageService {
       existingReview.lastMessage = payload.lastMessage;
       existingReview.lastMessageTime=payload.lastMessageTime;
     }
-      return await messageRepository.save(existingReview);
+    
+    await messageRepository.save(existingReview);
+    let existingReview2 = await messageRepository.findOne({
+      where: { sourceId: payload.targetId, targetId: payload.sourceId }
+    });
+
+    if (!existingReview2) {
+      existingReview2 = messageRepository.create({
+        lastMessage: payload.lastMessage,
+        lastMessageTime: payload.lastMessageTime,
+        sourceId: payload.targetId,
+        targetId: payload.sourceId,
+      });
+
+    }else{
+      existingReview2.lastMessage = payload.lastMessage;
+      existingReview2.lastMessageTime=payload.lastMessageTime;
+    }
+    
+     await messageRepository.save(existingReview2);
 
    }
 
@@ -70,7 +89,7 @@ export class MessageService {
             "target.phoneNumber",
               
             ])
-            .where(`message_review.sourceId = :sourceId`, { sourceId })
+            .where(`message_review.sourceId = :sourceId `, { sourceId }) 
           .getMany();
         if (!messages) {
           return {"messages": []};

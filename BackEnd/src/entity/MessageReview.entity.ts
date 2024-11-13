@@ -22,6 +22,10 @@ export class MessageReview {
   @JoinColumn({ name: "targetId" })
   target!: User;
 
+  @ManyToOne(() => User)
+  @JoinColumn({ name: "sourceId" })
+  source!: User;
+
   @CreateDateColumn()
   createdAt!: Date;
 
