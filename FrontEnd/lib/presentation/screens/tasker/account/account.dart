@@ -179,7 +179,9 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Setting()));
+                                      builder: (context) => Setting(
+                                            accountId: widget.userId,
+                                          )));
                             },
                           ),
                           const Divider(

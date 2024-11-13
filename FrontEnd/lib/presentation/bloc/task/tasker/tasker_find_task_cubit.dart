@@ -29,6 +29,16 @@ class TaskerFindTaskCubit extends Cubit<TaskerFindTaskState> {
     }
   }
 
+  Future<void> getNoTask() async {
+    emit(TaskerFindTaskLoading());
+    try {
+      final List<TaskType> taskTypeList = (await getATaskerUsercase.execute2());
+      emit(TaskerFindTaskSuccess(null, taskTypeList));
+    } catch (e) {
+      emit(TaskerFindTaskError(e.toString()));
+    }
+  }
+
   Future<void> applyTask(int taskerId, int taskId) async {
     try {
       print("chay vao cubit");

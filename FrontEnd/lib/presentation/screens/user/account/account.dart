@@ -200,7 +200,9 @@ class _AccountPageState extends State<AccountPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Setting()));
+                                      builder: (context) => Setting(
+                                            accountId: widget.userId,
+                                          )));
                             },
                           ),
                           const Divider(

@@ -33,7 +33,8 @@ class _TaskerHomePagState extends State<TaskerHomePage>
   String? taskType;
   List<String> selectedTasks = [];
   List<int> selectedTaskIds = [];
-  bool _isFilterEnabled = false;
+  bool _isFilterEnabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -73,10 +74,6 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                         child: CircularProgressIndicator()))),
           );
         } else if (state is TaskerFindTaskSuccess) {
-          for (var taskType in state.taskTypeList!) {
-            selectedTaskIds.add(taskType.id);
-          }
-          print(state.findTasks?.length.toString());
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: BasicAppbar(
@@ -536,19 +533,43 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                                                         null,
                                                                         null);
                                                               } else {
-                                                                await BlocProvider.of<
-                                                                            TaskerFindTaskCubit>(
-                                                                        context)
-                                                                    .getFindTasks(
-                                                                        widget
-                                                                            .accountId,
-                                                                        selectedTaskIds,
-                                                                        startDate,
-                                                                        endDate);
-                                                              }
+                                                                selectedTaskIds =
+                                                                    [];
+                                                                for (var taskType
+                                                                    in state
+                                                                        .taskTypeList!) {
+                                                                  if (selectedTasks
+                                                                      .contains(
+                                                                          taskType
+                                                                              .name)) {
+                                                                  } else {
+                                                                    selectedTaskIds.add(
+                                                                        taskType
+                                                                            .id);
+                                                                  }
+                                                                }
+                                                                print(
+                                                                    selectedTaskIds
+                                                                        .length);
 
-                                                              Navigator.pop(
-                                                                  context);
+                                                                if (selectedTaskIds
+                                                                        .length >
+                                                                    0) {
+                                                                  await BlocProvider.of<
+                                                                              TaskerFindTaskCubit>(
+                                                                          context)
+                                                                      .getFindTasks(
+                                                                          widget
+                                                                              .accountId,
+                                                                          selectedTaskIds,
+                                                                          startDate,
+                                                                          endDate);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                } else {}
+                                                              }
+                                                              selectedTaskIds =
+                                                                  [];
                                                             },
                                                             backgroundColor:
                                                                 AppColors
@@ -609,12 +630,7 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                                               'S1')
                                           .length ??
                                       0,
-                                  loading: () async {
-                                    BlocProvider.of<TaskerFindTaskCubit>(
-                                            context)
-                                        .getFindTasks(
-                                            widget.accountId, null, null, null);
-                                  },
+                                  loading: () async {},
                                   daNhan: task.taskerLists
                                           ?.where((tasker) =>
                                               (tasker as Map<String, dynamic>)[
