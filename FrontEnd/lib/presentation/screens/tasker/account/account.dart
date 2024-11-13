@@ -8,6 +8,7 @@ import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/account/editAccountTasker.dart';
+import 'package:se121_giupviec_app/presentation/screens/tasker/account/setting.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/aboutUs.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dart';
 import 'package:share_plus/share_plus.dart';
@@ -179,7 +180,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Setting(
+                                      builder: (context) => TaskerSetting(
                                             accountId: widget.userId,
                                           )));
                             },
