@@ -4,6 +4,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
+import 'package:se121_giupviec_app/presentation/screens/tasker/account/setting.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/editAccount.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/location.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/myVoucher.dart';
@@ -200,7 +201,7 @@ class _AccountPageState extends State<AccountPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Setting(
+                                      builder: (context) => TaskerSetting(
                                             accountId: widget.userId,
                                           )));
                             },
