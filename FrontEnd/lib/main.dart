@@ -163,7 +163,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
 
-        home: SplashPage(),
+        home: const SplashPage(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );
