@@ -12,9 +12,9 @@ import '../tasker/account/account.dart';
 
 class TaskerNavigation extends StatefulWidget {
   final int? tab;
-  final int? userId;
+  int? userId;
 
-  const TaskerNavigation({super.key, this.tab, this.userId});
+  TaskerNavigation({super.key, this.tab, this.userId});
 
   @override
   State<TaskerNavigation> createState() => _TaskerNavigationState();
@@ -22,7 +22,7 @@ class TaskerNavigation extends StatefulWidget {
 
 class _TaskerNavigationState extends State<TaskerNavigation> {
   int currentPageIndex = 0;
-  int userId = 0;
+  int userIdd = 0;
   String userAvatar = '';
   String userName = '';
   Future<void> userID() async {
@@ -30,12 +30,17 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
     final name = await SecureStorage().readName();
     final avatar = await SecureStorage().readAvatar();
 
-    print("id nef");
-    print(id);
-    setState(() {
-      userId = int.parse(id);
+    setState(() async {
+      userIdd = int.parse(id);
       userName = name;
       userAvatar = avatar;
+    });
+  }
+
+  Future<void> fetchUserId() async {
+    final id = await SecureStorage().readId();
+    setState(() {
+      userIdd = int.parse(id);
     });
   }
 
@@ -44,35 +49,32 @@ class _TaskerNavigationState extends State<TaskerNavigation> {
     super.initState();
 
     userID();
+    if (widget.userId == null) {
+      widget.userId = userIdd;
+    }
+
     currentPageIndex = widget.tab ?? 0;
   }
 
   SecureStorage secureStorage = SecureStorage();
-  void _printUser() async {
-    String? id = await secureStorage.readId();
-    String? email = await secureStorage.readEmail();
-
-    print("Data from local: $id");
-    print("Data from local: $email");
-  }
 
   @override
   Widget build(BuildContext context) {
-    print("aaaaaaaaaaaaaaaaaa");
-    _printUser();
+    print("trước khi vào");
+    print(userIdd);
     return Scaffold(
         bottomNavigationBar: _navigationBar(),
         body: [
           TaskerHomePage(
-            accountId: userId,
+            accountId: widget.userId!,
             accountName: userName,
           ),
           TaskerActivityPage(
-            userId: userId,
+            userId: widget.userId!,
           ),
           const MessagePage(),
           AccountTaskerPage(
-            userId: userId,
+            userId: widget.userId!,
             userAvatar: userAvatar,
           ),
         ][currentPageIndex]);

@@ -65,7 +65,10 @@ class _SignInPageState extends State<SignInPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const TaskerNavigation()),
+                    builder: (context) => TaskerNavigation(
+                          userId:
+                              (state.user.user as Map<String, dynamic>)['id'],
+                        )),
               );
             } else {
               Navigator.pushReplacement(

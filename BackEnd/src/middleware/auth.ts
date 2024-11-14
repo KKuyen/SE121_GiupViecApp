@@ -56,6 +56,8 @@ const userPaths: string[] = [
   "/api/v1/delete-notification",
 ];
 const taskerPaths: string[] = [
+  "/api/v1/get-a-task",
+  "/api/v1/get-tasker-list",
   "/api/v1/get-all-task-type",
   "/api/v1/push-notification",
   "/api/v1/get-notification",
@@ -75,8 +77,8 @@ const taskerPaths: string[] = [
   "/api/v1/cancel-task",
   "/api/v1/get-my-default-location",
   "/api/v1/get-apply-tasks",
-  "/api/v1/delete-notification",  "/api/v1/get-tasker-info",
-
+  "/api/v1/delete-notification",
+  "/api/v1/get-tasker-info",
 ];
 const commonPaths: string[] = [];
 

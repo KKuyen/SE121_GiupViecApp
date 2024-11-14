@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_images.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/account/editAccountTasker.dart';
+import 'package:se121_giupviec_app/presentation/screens/tasker/account/setting.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/aboutUs.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/setting.dart';
 import 'package:share_plus/share_plus.dart';
@@ -181,7 +185,9 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Setting()));
+                                      builder: (context) => TaskerSetting(
+                                            accountId: widget.userId,
+                                          )));
                             },
                           ),
                           const Divider(
@@ -247,7 +253,6 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                                       CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
                                       SvgPicture.asset(
-                                    // Nếu có lỗi thì hiển thị icon mặc định
                                     AppVectors.avatar,
                                     width: 150.0,
                                     height: 150.0,

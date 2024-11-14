@@ -24,7 +24,6 @@ import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_tas
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_get_all_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/tasker_list/taskerlist_cubit.dart';
-import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 
 import 'core/injection/injection_container.dart' as di;
 import 'presentation/bloc/Auth/auth_cubit.dart';
@@ -37,7 +36,6 @@ import 'presentation/bloc/Message/message_review_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
-import 'presentation/screens/navigation/tasker_navigation.dart';
 
 // Thêm dòng này
 

@@ -9,7 +9,7 @@ import 'package:se121_giupviec_app/presentation/bloc/notification/notification_c
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
 
 class TaskerFindActivityWidget extends StatefulWidget {
-  final VoidCallback loading;
+  final Function(int id) loading;
   final int numberOfTasker;
   final int accountId;
   final int id;
@@ -294,13 +294,14 @@ class TaskerFindActivityWidgetState extends State<TaskerFindActivityWidget> {
                             await context
                                 .read<TaskerFindTaskCubit>()
                                 .applyTask(widget.accountId, widget.id);
+                            widget.loading(widget.id);
+
                             await BlocProvider.of<allNotificationCubit>(context)
                                 .addANotificaiton(
                                     widget.customerId,
                                     "Có 1 ứng cử viên cho công việc của bạn",
                                     "Người giúp việc ${widget.taskerName} vừa mới ứng cử công việc #DV${widget.id} của bạn.",
                                     "review.jpg");
-                            widget.loading();
                           },
                           text: 'Ứng cử',
                           backgroundColor: AppColors.cam_main,

@@ -12,7 +12,8 @@ import 'package:se121_giupviec_app/presentation/bloc/tasker/tasker_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newReview.dart';
 
 class Setting extends StatefulWidget {
-  const Setting({super.key});
+  final int accountId;
+  const Setting({super.key, required this.accountId});
 
   @override
   State<Setting> createState() => _SettingState();
@@ -49,7 +50,8 @@ class _SettingState extends State<Setting> {
   }
 
   Future<void> _loadSettings() async {
-    SettingModel sm = await BlocProvider.of<SettingCubit>(context).Success(1);
+    SettingModel sm =
+        await BlocProvider.of<SettingCubit>(context).Success(widget.accountId);
     setState(() {
       autoAcceptStatus = sm.autoAcceptStatus;
       loveTaskerOnly = sm.loveTaskerOnly;
@@ -322,7 +324,7 @@ class _SettingState extends State<Setting> {
                                       SimpleResModel sr = await context
                                           .read<SettingCubit>()
                                           .changePassword(
-                                              1,
+                                              widget.accountId,
                                               _oldPasswordController.text,
                                               _newPasswordController.text);
                                       print(sr.message);
@@ -403,7 +405,7 @@ class _SettingState extends State<Setting> {
                                       autoAcceptStatus = value;
                                     });
                                     await context.read<SettingCubit>().setting(
-                                          1,
+                                          widget.accountId,
                                           autoAcceptStatus,
                                           (_selectedRadio == 1),
                                           upperStar,
@@ -431,7 +433,7 @@ class _SettingState extends State<Setting> {
                                         await context
                                             .read<SettingCubit>()
                                             .setting(
-                                              1,
+                                              widget.accountId,
                                               autoAcceptStatus,
                                               (_selectedRadio == 1),
                                               upperStar,
@@ -469,7 +471,7 @@ class _SettingState extends State<Setting> {
                                                       await context
                                                           .read<SettingCubit>()
                                                           .setting(
-                                                            1,
+                                                            widget.accountId,
                                                             autoAcceptStatus,
                                                             (_selectedRadio ==
                                                                 1),
@@ -491,7 +493,7 @@ class _SettingState extends State<Setting> {
                                                       await context
                                                           .read<SettingCubit>()
                                                           .setting(
-                                                            1,
+                                                            widget.accountId,
                                                             autoAcceptStatus,
                                                             (_selectedRadio ==
                                                                 1),
@@ -546,7 +548,7 @@ class _SettingState extends State<Setting> {
                                         await context
                                             .read<SettingCubit>()
                                             .setting(
-                                              1,
+                                              widget.accountId,
                                               autoAcceptStatus,
                                               (_selectedRadio == 1),
                                               upperStar,

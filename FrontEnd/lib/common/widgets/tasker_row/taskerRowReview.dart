@@ -1,8 +1,10 @@
 // import 'dart:ffi'; // This import is not needed
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/core/firebase/firebase_image.dart';
 import 'package:se121_giupviec_app/domain/entities/task.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -88,7 +90,11 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
                   return CachedNetworkImage(
                     imageUrl: snapshot.data!,
                     placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 40.0,
+                      height: 40.0,
+                    ),
                     imageBuilder: (context, imageProvider) => Container(
                       width: 40.0,
                       height: 40.0,

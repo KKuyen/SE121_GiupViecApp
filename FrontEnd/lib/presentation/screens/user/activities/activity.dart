@@ -65,6 +65,7 @@ class _ActivityPageState extends State<ActivityPage> {
       this.taskTypeId = taskTypeId;
       this.TaskTypeName = TaskTypeName;
       this.TaskTypeAvatar = TaskTypeAvatar;
+      this.customName = customName;
     });
   }
 

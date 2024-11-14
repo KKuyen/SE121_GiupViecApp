@@ -9,6 +9,7 @@ import { TaskerList } from "../entity/TaskerList.entity";
 import { BlockList } from "net";
 import { BlockTaskers } from "../entity/BlockTasket.entity";
 import { LoveTaskers } from "../entity/LoveTasker.entity";
+import { UserSettings } from "../entity/UserSetting.entity";
 
 export class TaskerService {
   static getTaskerProfile = async (taskerId: number) => {
@@ -595,12 +596,39 @@ export class TaskerService {
         if (!task) {
           return resolve({ errCode: 1, message: "Không tìm thấy công việc" });
         }
-        const loveTaskersRepository = AppDataSource.getRepository(LoveTaskers);
-        const loveTasker = await loveTaskersRepository.findOne({
-          where: { userId: task.userId, taskerId: taskerId },
+        const userSettingRepository = AppDataSource.getRepository(UserSettings);
+        const userSetting = await userSettingRepository.findOne({
+          where: { userId: task.userId },
         });
-        if (loveTasker) {
-          taskerListNew.status = "S2";
+        // tim so sao trb
+        const reviewsRepository = AppDataSource.getRepository(Reviews);
+        const reviews = await reviewsRepository.find({
+          where: { taskerId: taskerId },
+        });
+
+        const totalStars = reviews.reduce(
+          (sum, review) => sum + review.star,
+          0
+        );
+        const averageStars =
+          reviews.length > 0 ? totalStars / reviews.length : 0;
+        //autoaccept
+        if (userSetting?.autoAcceptStatus === true) {
+          const loveTaskersRepository =
+            AppDataSource.getRepository(LoveTaskers);
+          const loveTasker = await loveTaskersRepository.findOne({
+            where: { userId: task.userId, taskerId: taskerId },
+          });
+
+          if (loveTasker && userSetting.loveTaskerOnly === true) {
+            taskerListNew.status = "S2";
+          }
+          if (
+            userSetting.loveTaskerOnly === false &&
+            userSetting.upperStar >= averageStars
+          ) {
+            taskerListNew.status = "S2";
+          }
         }
         await taskerListRepository.save(taskerListNew);
         resolve({ errCode: 0, message: "Ok" });

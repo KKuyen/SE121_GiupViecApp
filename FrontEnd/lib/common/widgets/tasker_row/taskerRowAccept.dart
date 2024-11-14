@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -54,12 +56,20 @@ class _Taskerrowaccept extends State<Taskerrowaccept> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Icon(Icons.error);
+                  return SvgPicture.asset(
+                    AppVectors.avatar,
+                    width: 40.0,
+                    height: 40.0,
+                  );
                 } else {
                   return CachedNetworkImage(
                     imageUrl: snapshot.data!,
                     placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 40.0,
+                      height: 40.0,
+                    ),
                     imageBuilder: (context, imageProvider) => Container(
                       width: 40.0,
                       height: 40.0,
