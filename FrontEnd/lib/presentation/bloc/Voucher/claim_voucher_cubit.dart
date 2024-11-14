@@ -14,7 +14,9 @@ class ClaimVoucherCubit extends Cubit<VoucherState> {
     try {
       print("chay vao cubit");
       final res = await claimVoucherUseCase.execute(userId, voucherId);
+      print("success1");
       emit(ResponseVoucherSuccess(res));
+      print("success2");
     } catch (e) {
       emit(VoucherError(e.toString()));
     }

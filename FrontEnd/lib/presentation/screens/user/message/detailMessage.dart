@@ -182,7 +182,12 @@ class _DetailmessageState extends State<Detailmessage> {
                         .loadImage(widget.targetUser.avatar),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return SvgPicture.asset(
+                          // Nếu có lỗi thì hiển thị icon mặc định
+                          AppVectors.avatar,
+                          width: 41.0,
+                          height: 41.0,
+                        );
                       } else if (snapshot.hasError) {
                         return SvgPicture.asset(
                           // Nếu có lỗi thì hiển thị icon mặc định
@@ -193,8 +198,12 @@ class _DetailmessageState extends State<Detailmessage> {
                       } else if (snapshot.hasData) {
                         return CachedNetworkImage(
                           imageUrl: snapshot.data!,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
+                          placeholder: (context, url) => SvgPicture.asset(
+                            // Nếu có lỗi thì hiển thị icon mặc định
+                            AppVectors.avatar,
+                            width: 41.0,
+                            height: 41.0,
+                          ),
                           errorWidget: (context, url, error) =>
                               SvgPicture.asset(
                             // Nếu có lỗi thì hiển thị icon mặc định
@@ -216,7 +225,12 @@ class _DetailmessageState extends State<Detailmessage> {
                           ),
                         );
                       } else {
-                        return Icon(Icons.error);
+                        return SvgPicture.asset(
+                          // Nếu có lỗi thì hiển thị icon mặc định
+                          AppVectors.avatar,
+                          width: 41.0,
+                          height: 41.0,
+                        );
                       }
                     },
                   ),
@@ -422,7 +436,12 @@ class _messageCardState extends State<_messageCard> {
                     future: _firebaseImageService.loadImage(widget.avatar),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return SvgPicture.asset(
+                          // Nếu có lỗi thì hiển thị icon mặc định
+                          AppVectors.avatar,
+                          width: 32.0,
+                          height: 32.0,
+                        );
                       } else if (snapshot.hasError) {
                         return SvgPicture.asset(
                           // Nếu có lỗi thì hiển thị icon mặc định

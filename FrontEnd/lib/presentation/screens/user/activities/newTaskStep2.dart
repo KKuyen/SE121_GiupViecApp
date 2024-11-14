@@ -15,6 +15,8 @@ import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_state.dar
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/addLocation.dart';
 
+import '../../../../core/configs/assets/app_images.dart';
+
 class Newtaskstep2 extends StatefulWidget {
   final int taskTypeId;
   final int? myvoucherId;
@@ -671,12 +673,21 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                               content: SingleChildScrollView(
                                 child: Column(
                                   children: state.vouchers!.map((voucher) {
+                                    String imageUrl = "";
+                                    if (voucher.image == "voucher1") {
+                                      imageUrl = AppImages.voucher1;
+                                    } else if (voucher.image == "voucher2") {
+                                      imageUrl = AppImages.voucher2;
+                                    } else if (voucher.image == "voucher3") {
+                                      imageUrl = AppImages.voucher3;
+                                    }
+
                                     return Container(
                                       child: VoucherCard(
                                         isBorder: (voucher.id == voucherId)
                                             ? true
                                             : false,
-                                        imageUrl: voucher.image ?? '',
+                                        imageUrl: imageUrl ?? '',
                                         title: voucher.header ?? '',
                                         description: voucher.content ?? '',
                                         onPressed: () {

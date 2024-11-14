@@ -176,7 +176,12 @@ class _LocationPageState extends State<LocationPage> {
                                   placeholder: (context, url) =>
                                       CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                      SvgPicture.asset(
+                                    // Nếu có lỗi thì hiển thị icon mặc định
+                                    AppVectors.avatar,
+                                    width: 150.0,
+                                    height: 150.0,
+                                  ),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     decoration: BoxDecoration(

@@ -171,7 +171,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   const SizedBox(
                     height: 6,
                   ),
-                  SizedBox(
+                  const SizedBox(
                       height: 170,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -188,7 +188,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   const SizedBox(
                     height: 6,
                   ),
-                  SizedBox(
+                  const SizedBox(
                       height: 170,
                       child: Padding(
                         padding: EdgeInsets.symmetric(

@@ -225,6 +225,14 @@ class _CustomListItemExampleState extends State<CustomListItemExample> {
                 itemCount: vouchers.length,
                 itemExtent: 100.0,
                 itemBuilder: (context, index) {
+                  String imageUrl = "";
+                  if (vouchers[index].image == "voucher1") {
+                    imageUrl = AppImages.voucher1;
+                  } else if (vouchers[index].image == "voucher2") {
+                    imageUrl = AppImages.voucher2;
+                  } else if (vouchers[index].image == "voucher3") {
+                    imageUrl = AppImages.voucher3;
+                  }
                   return CustomListItem(
                     id: vouchers[index].id,
                     user: vouchers[index].content,
@@ -232,8 +240,8 @@ class _CustomListItemExampleState extends State<CustomListItemExample> {
                     thumbnail: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(13),
-                        image: const DecorationImage(
-                          image: const AssetImage(AppImages.voucher1),
+                        image: DecorationImage(
+                          image: AssetImage(imageUrl),
                           fit: BoxFit.fill,
                         ),
                       ),

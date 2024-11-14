@@ -100,30 +100,31 @@ class _VouchersState extends State<Vouchers> {
       builder: (BuildContext context) {
         return BlocListener<ClaimVoucherCubit, VoucherState>(
           listener: (context, state) {
-            if (state is VoucherLoading) {
-            } else {
-              // Hide loading dialog
-              Navigator.of(context).pop();
+            print(state);
 
-              if (state is ResponseVoucherSuccess) {
-                Navigator.of(context).pop(); // Đóng dialog
+            if (state is ResponseVoucherSuccess) {
+              print(state.response.errCode);
+              Navigator.of(context).pop(); // Đóng dialog
+              String message = state.response.errCode == 0
+                  ? "Đã lưu voucher"
+                  : state.response.message;
+              Color color = state.response.errCode == 0
+                  ? AppColors.xanh_main
+                  : AppColors.cam_main;
 
-                // Show success message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text("Đã lưu voucher"),
-                      backgroundColor: AppColors.xanh_main),
-                );
-              } else if (state is VoucherError) {
-                Navigator.of(context).pop(); // Đóng dialog
+              // Show success message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: color),
+              );
+            } else if (state is VoucherError) {
+              Navigator.of(context).pop(); // Đóng dialog
 
-                // Show error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(state.message),
-                      backgroundColor: AppColors.do_main),
-                );
-              }
+              // Show error message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: AppColors.do_main),
+              );
             }
           },
           child: AlertDialog(
@@ -142,7 +143,6 @@ class _VouchersState extends State<Vouchers> {
               ),
               Sizedbutton(
                 onPressFun: () {
-                  Navigator.of(context).pop(); // Đóng dialog
                   context
                       .read<ClaimVoucherCubit>()
                       .claimVoucher(userId, voucherId);

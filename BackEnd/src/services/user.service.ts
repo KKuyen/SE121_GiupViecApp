@@ -1077,6 +1077,16 @@ export class UserService {
       };
     }
 
+    const userRepositoryy = AppDataSource.getRepository(User);
+    const userr = await userRepositoryy.findOne({ where: { id: userId } });
+
+    if (userr && userr.Rpoints < voucher.RpointCost) {
+      return {
+        errCode: 2,
+        errMessage: "Bạn không đủ điểm Rpoint",
+      };
+    }
+
     const myVoucher = myVoucherRepository.create({
       userId: userId,
       voucherId: voucherId,
