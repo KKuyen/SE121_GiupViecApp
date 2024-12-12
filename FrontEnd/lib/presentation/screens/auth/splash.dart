@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
+import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -28,8 +30,53 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> redirect() async {
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const SignInPage()));
+    bool storageCheck = await _checkStorageWithTimeout();
+    if (storageCheck) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Navigation()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const SignInPage()));
+    }
+  }
+
+  Future<bool> _checkStorageWithTimeout() async {
+    final completer = Completer<bool>();
+
+    _checkStorage().then((result) {
+      if (!completer.isCompleted) {
+        completer.complete(result);
+      }
+    }).catchError((error) {
+      if (!completer.isCompleted) {
+        completer.complete(false);
+      }
+    });
+
+    Future.delayed(const Duration(seconds: 3)).then((_) {
+      if (!completer.isCompleted) {
+        completer.complete(false);
+      }
+    });
+
+    return completer.future;
+  }
+
+  SecureStorage secureStorage = SecureStorage();
+  Future<bool> _checkStorage() async {
+    String? id = await secureStorage.readId();
+    String? email = await secureStorage.readEmail();
+    String? Rpoints = await secureStorage.readRpoints();
+    String? name = await secureStorage.readName();
+    String? avatar = await secureStorage.readAvatar();
+    if (id != null &&
+        email != null &&
+        Rpoints != null &&
+        name != null &&
+        avatar != null) {
+      return true;
+    }
+    return false;
   }
 
   Center logo() {
