@@ -85,7 +85,11 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Icon(Icons.error);
+                  return SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 40.0,
+                      height: 40.0,
+                    );        
                 } else {
                   return CachedNetworkImage(
                     imageUrl: snapshot.data!,

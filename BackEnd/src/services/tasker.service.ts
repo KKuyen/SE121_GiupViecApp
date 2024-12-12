@@ -631,6 +631,16 @@ export class TaskerService {
           }
         }
         await taskerListRepository.save(taskerListNew);
+
+        const taskerListCount = await taskerListRepository.count({
+          where: { taskId: taskId, status: "S2" },
+        });
+        if (taskerListCount === task.numberOfTasker) {
+          task.taskStatus = "TS2";
+          await taskRepository.save(task);
+          task.approvedAt = new Date();
+        }
+
         resolve({ errCode: 0, message: "Ok" });
       } catch (e) {
         reject(e);
