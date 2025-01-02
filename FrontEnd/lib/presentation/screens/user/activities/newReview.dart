@@ -387,7 +387,7 @@ class _NewreviewState extends State<Newreview> {
                         widget.task.id,
                         widget.taskerId,
                         Star,
-                        widget.taskTypeId,
+                        widget.userId,
                         widget.taskTypeId,
                         _reviewController.text,
                         pushImages.isNotEmpty ? pushImages[0] : null,

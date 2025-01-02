@@ -40,4 +40,5 @@ export class TaskerList {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+  length: any;
 }

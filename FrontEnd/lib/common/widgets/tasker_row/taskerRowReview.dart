@@ -86,10 +86,10 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return SvgPicture.asset(
-                      AppVectors.avatar,
-                      width: 40.0,
-                      height: 40.0,
-                    );        
+                    AppVectors.avatar,
+                    width: 40.0,
+                    height: 40.0,
+                  );
                 } else {
                   return CachedNetworkImage(
                     imageUrl: snapshot.data!,

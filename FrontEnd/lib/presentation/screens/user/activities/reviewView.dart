@@ -46,11 +46,11 @@ class _ReviewviewState extends State<Reviewview> {
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.5),
                 ),
-                child: Center(
+                child: const Center(
                     child: SizedBox(
                         height: 40,
                         width: 40,
-                        child: const CircularProgressIndicator()))),
+                        child: CircularProgressIndicator()))),
           );
         } else if (state is AReviewSuccess) {
           return Scaffold(
@@ -66,6 +66,8 @@ class _ReviewviewState extends State<Reviewview> {
               isHideBackButton: false,
               isHavePadding: true,
               color: Colors.white,
+              result: false,
+              type: 'unnormal',
             ),
             body: Column(children: [
               Padding(
@@ -79,12 +81,12 @@ class _ReviewviewState extends State<Reviewview> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: ReviewCardWidget(
-                        userName: state.review.userName,
-                        taskTypeImage: widget.taskerImageLink,
-                        taskTypeName: widget.taskerName,
+                        userName: state.review.userName ?? '',
+                        taskTypeImage: widget.taskerImageLink ?? '',
+                        taskTypeName: widget.taskerName ?? '',
                         userAvatar: state.review.userAvatar ?? '',
-                        star: state.review.star,
-                        time: widget.time.toIso8601String(),
+                        star: state.review.star ?? 0,
+                        time: widget.time.toIso8601String() ?? '',
                         content: state.review.content ?? '',
                       ),
                     ),

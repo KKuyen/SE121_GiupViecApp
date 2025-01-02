@@ -10,6 +10,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isCenter;
   final bool otherBackButton;
   final bool result;
+  final String type;
 
   const BasicAppbar(
       {this.title,
@@ -20,6 +21,7 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.isHavePadding = false,
       this.isCenter = false,
       this.otherBackButton = false,
+      this.type = 'normal',
       super.key});
 
   @override
@@ -78,7 +80,10 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pop(context, result);
+                    if (type != 'unnormal') {
+                      Navigator.pop(context);
+                    } else
+                      Navigator.pop(context, result);
                   },
                 ),
     );
