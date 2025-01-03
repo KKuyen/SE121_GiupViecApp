@@ -5,6 +5,11 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/activities/MyTaskTab.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../data/models/User.dart';
+import '../../../presentation/screens/user/message/detailMessage.dart';
+import '../../helpers/SecureStorage.dart';
 
 class TaskerApproveWidget extends StatefulWidget {
   final VoidCallback loading;
@@ -26,6 +31,7 @@ class TaskerApproveWidget extends StatefulWidget {
   final String note;
   final int customerId;
   final int accountId;
+  final String customerName;
 
   const TaskerApproveWidget(
       {required this.id,
@@ -47,6 +53,7 @@ class TaskerApproveWidget extends StatefulWidget {
       required this.note,
       required this.avatar,
       required this.loading,
+      required this.customerName,
       super.key});
 
   @override
@@ -54,6 +61,24 @@ class TaskerApproveWidget extends StatefulWidget {
 }
 
 class TaskerWatingActivityWidgetState extends State<TaskerApproveWidget> {
+  SecureStorage secureStorage = SecureStorage();
+  Future<User> _fetchUserData() async {
+    String name = await secureStorage.readName();
+    String id = await secureStorage.readId();
+    String avatar = await secureStorage.readAvatar();
+    User user = User(id: int.parse(id), name: name, avatar: avatar);
+    print("user" + user.id.toString());
+    return user;
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -301,7 +326,19 @@ class TaskerWatingActivityWidgetState extends State<TaskerApproveWidget> {
                     child: Row(
                       children: [
                         Sizedbutton(
-                          onPressFun: () {},
+                          onPressFun: () async {
+                            User user = await _fetchUserData();
+                            User targetUser = User(
+                                id: widget.customerId,
+                                name: widget.customerName,
+                                avatar: widget.avatar);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Detailmessage(
+                                        targetUser: targetUser,
+                                        sourseUser: user)));
+                          },
                           text: 'Nhắn tin',
                           backgroundColor: Colors.white,
                           textColor: AppColors.cam_main,
@@ -312,7 +349,9 @@ class TaskerWatingActivityWidgetState extends State<TaskerApproveWidget> {
                         ),
                         const SizedBox(width: 10),
                         Sizedbutton(
-                          onPressFun: () {},
+                          onPressFun: () {
+                            _makePhoneCall(widget.phone);
+                          },
                           text: 'Gọi điện',
                           backgroundColor: AppColors.cam_main,
                           width: MediaQuery.of(context).size.width / 2 - 30,

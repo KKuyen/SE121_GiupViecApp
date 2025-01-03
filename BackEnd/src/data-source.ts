@@ -39,7 +39,6 @@ import { CreateMessageTable1634567890123 } from "./migration/message.migration";
 import { MessageReview } from "./entity/MessageReview.entity";
 import { CreateMessageReviewTable1634567890123 } from "./migration/messageReview.migration";
 
-
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,

@@ -311,6 +311,7 @@ class ApprovedList extends StatelessWidget {
               itemCount: state.TS2tasks!.length,
               itemBuilder: (context, index) {
                 var task = state.TS2tasks![index];
+                print("taskerLists: ${task.user}");
 
                 return TaskerApproveWidget(
                   customerId: task.userId,
@@ -360,6 +361,8 @@ class ApprovedList extends StatelessWidget {
                           '',
                   serviceName:
                       (task.taskType as Map<String, dynamic>?)?['name'] ?? '',
+                  customerName:
+                      (task.user as Map<String, dynamic>?)?['name'] ?? '',
                 );
               });
         } else if (state is TaskerTaskError) {
