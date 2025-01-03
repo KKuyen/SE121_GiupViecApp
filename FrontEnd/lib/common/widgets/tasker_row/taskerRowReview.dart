@@ -189,7 +189,6 @@ class _TaskerrowreviewState extends State<Taskerrowreview> {
                       MaterialPageRoute(
                         builder: (context) => Reviewview(
                             taskId: widget.task.id,
-                            time: widget.task.time,
                             taskerId: widget.taskerId,
                             taskerName: widget.taskTypeName,
                             taskerPhone: widget.taskerPhone,

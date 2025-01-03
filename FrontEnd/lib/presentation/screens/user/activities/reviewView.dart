@@ -12,14 +12,13 @@ class Reviewview extends StatefulWidget {
   final String taskerName;
   final String taskerPhone;
   final String taskerImageLink;
-  final DateTime time;
+
   const Reviewview(
       {super.key,
       required this.taskId,
       required this.taskerId,
       required this.taskerName,
       required this.taskerPhone,
-      required this.time,
       required this.taskerImageLink});
 
   @override
@@ -86,7 +85,7 @@ class _ReviewviewState extends State<Reviewview> {
                         taskTypeName: widget.taskerName ?? '',
                         userAvatar: state.review.userAvatar ?? '',
                         star: state.review.star ?? 0,
-                        time: widget.time.toIso8601String() ?? '',
+                        time: state.review.createdAt.toIso8601String(),
                         content: state.review.content ?? '',
                       ),
                     ),

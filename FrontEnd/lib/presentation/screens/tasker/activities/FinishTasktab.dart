@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/header.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
@@ -15,6 +16,7 @@ import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/reviewView.dart';
 // import statements here
 
 class Finishtasktab extends StatefulWidget {
@@ -225,22 +227,55 @@ class _FinishtasktabState extends State<Finishtasktab> {
                             if (star != 0)
                               Center(
                                 child: Row(
-                                  children: List.generate(5, (index) {
-                                    return Row(
-                                      children: [
-                                        Icon(
-                                          index < star
-                                              ? FontAwesomeIcons.solidStar
-                                              : FontAwesomeIcons.star,
-                                          color: Colors.amber,
-                                          size: 27,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                      ],
-                                    );
-                                  }),
+                                  children: [
+                                    Row(
+                                      children: List.generate(5, (index) {
+                                        return Row(
+                                          children: [
+                                            Icon(
+                                              index < star
+                                                  ? FontAwesomeIcons.solidStar
+                                                  : FontAwesomeIcons.star,
+                                              color: Colors.amber,
+                                              size: 27,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.remove_red_eye,
+                                        color: Colors.amber,
+                                        size: 27,
+                                      ),
+                                      onPressed: () async {
+                                        final avatar =
+                                            await SecureStorage().readAvatar();
+                                        final phone = await SecureStorage()
+                                            .readPhoneNumber();
+                                        final name =
+                                            await SecureStorage().readName();
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Reviewview(
+                                              taskId: widget.id,
+                                              taskerId: widget.accountId,
+                                              taskerName: name,
+                                              taskerImageLink: avatar,
+                                              taskerPhone: phone,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  ],
                                 ),
                               ),
                             if (star == 0)

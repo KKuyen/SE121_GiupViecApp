@@ -198,6 +198,7 @@ class _AccountTaskerPageState extends State<AccountTaskerPage> {
                             title: const Text('Đăng xuất'),
                             leading: const Icon(Icons.logout),
                             onTap: () {
+                              secureStorage.deleteAll();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

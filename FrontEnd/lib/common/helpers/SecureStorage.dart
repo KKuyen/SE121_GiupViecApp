@@ -91,4 +91,8 @@ class SecureStorage {
     String? Rpoints = await _secureStorage.read(key: 'Rpoints');
     return Rpoints!;
   }
+
+  Future<void> deleteAll() async {
+    await _secureStorage.deleteAll();
+  }
 }

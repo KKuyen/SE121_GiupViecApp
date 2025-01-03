@@ -5,6 +5,7 @@ import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_icon.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/activities/FinishTasktab.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/activities/reviewView.dart';
 
 class TaskerFinishWidget extends StatefulWidget {
   final VoidCallback loading;
@@ -294,24 +295,6 @@ class TaskerWatingActivityWidgetState extends State<TaskerFinishWidget> {
                       ),
                     ),
                   const SizedBox(height: 0),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Sizedbutton(
-                          onPressFun: () {},
-                          text: 'Xem đánh giá',
-                          backgroundColor: Colors.white,
-                          textColor: AppColors.cam_main,
-                          isStroke: true,
-                          StrokeColor: AppColors.cam_main,
-                          width: MediaQuery.of(context).size.width - 50,
-                          height: 45,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
