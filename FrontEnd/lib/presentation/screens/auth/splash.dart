@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/common/helpers/SecureStorage.dart';
 import 'package:se121_giupviec_app/core/configs/assets/app_vectors.dart';
 import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/navigation/navigation.dart';
+import 'package:se121_giupviec_app/presentation/screens/navigation/tasker_navigation.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -31,9 +32,16 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> redirect() async {
     await Future.delayed(const Duration(seconds: 3));
     bool storageCheck = await _checkStorageWithTimeout();
+
     if (storageCheck) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Navigation()));
+      String role = await secureStorage.readRole();
+      if (role == "R1") {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const Navigation()));
+      } else {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => TaskerNavigation()));
+      }
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const SignInPage()));

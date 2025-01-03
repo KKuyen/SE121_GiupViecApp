@@ -62,6 +62,7 @@ class _SignInPageState extends State<SignInPage> {
             // Navigate to home
             if ((state.user.user as Map<String, dynamic>)['role'].toString() ==
                 "R2") {
+              secureStorage.writeRole("R2");
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -71,6 +72,7 @@ class _SignInPageState extends State<SignInPage> {
                         )),
               );
             } else {
+              secureStorage.writeRole("R2");
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const Navigation()),

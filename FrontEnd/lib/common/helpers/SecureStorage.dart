@@ -9,6 +9,8 @@ class SecureStorage {
   Future<void> writeUserInfo(User user, String access_token) async {
     final userMap = user.user as Map<String, dynamic>;
     await _secureStorage.write(key: 'id', value: userMap['id'].toString());
+    await _secureStorage.write(key: 'id', value: userMap['role'].toString());
+
     await _secureStorage.write(key: 'email', value: userMap['email']);
     await _secureStorage.write(key: 'name', value: userMap['name']);
     await _secureStorage.write(
@@ -22,6 +24,10 @@ class SecureStorage {
 
   Future<void> writeId(String id) async {
     await _secureStorage.write(key: 'id', value: id);
+  }
+
+  Future<void> writeRole(String role) async {
+    await _secureStorage.write(key: 'role', value: role);
   }
 
   Future<void> writeEmail(String email) async {
@@ -55,6 +61,11 @@ class SecureStorage {
   Future<String> readId() async {
     String? id = await _secureStorage.read(key: 'id');
     return id!;
+  }
+
+  Future<String> readRole() async {
+    String? role = await _secureStorage.read(key: 'role');
+    return role!;
   }
 
   Future<String> readEmail() async {
