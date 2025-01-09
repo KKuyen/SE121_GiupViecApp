@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:se121_giupviec_app/common/widgets/button/2sttbutton.dart';
 import 'package:se121_giupviec_app/common/widgets/button/sizedbutton.dart';
@@ -15,6 +16,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/allReview.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
+import '../../../../core/configs/assets/app_images.dart';
+import '../../../../core/configs/assets/app_vectors.dart';
 import '../../../../data/models/User.dart';
 import '../message/detailMessage.dart';
 
@@ -98,7 +101,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                   children: [
                     Container(
                       height: 250,
-                      decoration: const BoxDecoration(color: Colors.blue),
+                      decoration: const BoxDecoration(
+                        image:
+                            DecorationImage(image: AssetImage(AppImages.cover)),
+                      ),
                     ),
                     Container(
                       constraints: BoxConstraints(
@@ -448,18 +454,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                     ConnectionState.waiting) {
                                   return CircularProgressIndicator();
                                 } else if (snapshot.hasError) {
-                                  return Container(
+                                  return SvgPicture.asset(
+                                    AppVectors.avatar,
                                     width: 120.0,
                                     height: 120.0,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey,
-                                    ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 60,
-                                      color: Colors.white,
-                                    ),
                                   );
                                 } else if (snapshot.hasData) {
                                   return CachedNetworkImage(
@@ -467,18 +465,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                                     placeholder: (context, url) =>
                                         CircularProgressIndicator(),
                                     errorWidget: (context, url, error) =>
-                                        Container(
+                                        SvgPicture.asset(
+                                      AppVectors.avatar,
                                       width: 120.0,
                                       height: 120.0,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey,
-                                      ),
-                                      child: const Icon(
-                                        Icons.person,
-                                        size: 60,
-                                        color: Colors.white,
-                                      ),
                                     ),
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
