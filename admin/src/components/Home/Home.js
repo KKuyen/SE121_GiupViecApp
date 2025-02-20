@@ -7,15 +7,21 @@ import {
   Menu,
   Radio,
   Row,
+  Segmented,
   Space,
   Table,
   Tag,
 } from "antd";
 import {
+  AppstoreOutlined,
+  BarsOutlined,
   DeleteOutlined,
   DownOutlined,
   EditOutlined,
   EyeOutlined,
+  UserOutlined,
+  TeamOutlined,
+  FilterOutlined,
 } from "@ant-design/icons";
 
 const columns = [
@@ -211,7 +217,7 @@ const Home = () => {
   return (
     <div>
       <Row justify="space-between">
-        <Col md={12}>
+        <Col md={11}>
           <Search
             placeholder="input search text"
             allowClear
@@ -219,25 +225,25 @@ const Home = () => {
             size="large"
           />
         </Col>
-        <Col md={5} style={{ margin: "5px" }}>
-          <Dropdown overlay={<Menu onClick={handleMenuClick} items={items} />}>
-            <div>
-              <Button>
-                <Space>
-                  {selectedItem}
-                  <DownOutlined />
-                </Space>
-              </Button>
-            </div>
-          </Dropdown>
+        <Col md={8} style={{ margin: "5px" }}>
+          <Segmented
+            options={[
+              { label: "Khách hàng", value: "List", icon: <UserOutlined /> },
+              {
+                label: "Người giúp việc",
+                value: "Kanban",
+                icon: <TeamOutlined />,
+              },
+            ]}
+          />
         </Col>
-        <Col md={6} style={{ margin: "5px" }}>
+        <Col md={2} style={{ margin: "5px" }}>
           <Dropdown
             overlay={<Menu onClick={handleFilterClick} items={filterItems} />}>
             <Button>
               <Space>
+                <FilterOutlined />
                 Filter
-                <DownOutlined />
               </Space>
             </Button>
           </Dropdown>

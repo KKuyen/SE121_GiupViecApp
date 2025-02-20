@@ -33,7 +33,7 @@ const items = [
   {
     key: 1,
     icon: React.createElement(UserOutlined),
-    label: "Khách hàng",
+    label: "Người dùng",
   },
   {
     key: 2,
@@ -99,7 +99,7 @@ const App = () => {
           {isShowLogo && (
             <Image
               src={require("./assets/images/TaskMate.png")}
-              width={130}
+              width={120}
               style={{ margin: 27 }}
             />
           )}
