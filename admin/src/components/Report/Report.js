@@ -80,14 +80,7 @@ const Report = () => {
         }}
       >
         <Search placeholder="Search" allowClear style={{ width: 300 }} />
-        <Select
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-          style={{ width: 150 }}
-        >
-          <Option value="Người giúp việc">Người giúp việc</Option>
-          <Option value="Khách hàng">Khách hàng</Option>
-        </Select>
+
         <Dropdown overlay={filterMenu} trigger={["click"]}>
           <Button icon={<FilterOutlined />}>Filter</Button>
         </Dropdown>
