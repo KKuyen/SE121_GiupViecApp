@@ -5,6 +5,7 @@ import {
   Dropdown,
   Input,
   Menu,
+  Modal,
   Radio,
   Row,
   Segmented,
@@ -187,6 +188,7 @@ const filterItems = [
 const Home = () => {
   const [selectedItem, setSelectedItem] = useState(items[0].label);
   const [filteredData, setFilteredData] = useState(data);
+  const [openResponsive, setOpenResponsive] = useState(false);
 
   const handleMenuClick = (e) => {
     const selected = items.find((item) => item.key === e.key);
@@ -238,15 +240,12 @@ const Home = () => {
           />
         </Col>
         <Col md={2} style={{ margin: "5px" }}>
-          <Dropdown
-            overlay={<Menu onClick={handleFilterClick} items={filterItems} />}>
-            <Button>
-              <Space>
-                <FilterOutlined />
-                Filter
-              </Space>
-            </Button>
-          </Dropdown>
+          <Button onClick={() => setOpenResponsive(true)}>
+            <Space>
+              <FilterOutlined />
+              Filter
+            </Space>
+          </Button>
         </Col>
       </Row>
       <Table
@@ -257,6 +256,17 @@ const Home = () => {
         }}
         dataSource={filteredData}
       />
+      <Modal
+        title="Lọc"
+        centered
+        open={openResponsive}
+        onOk={() => setOpenResponsive(false)}
+        onCancel={() => setOpenResponsive(false)}
+        width="400px">
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
     </div>
   );
 };
