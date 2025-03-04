@@ -6,6 +6,8 @@ import Finance from "./components/Finance/Finance";
 import Report from "./components/Report/Report";
 import Service from "./components/Services/Service";
 import Vouchers from "./components/Vouchers/Vouchers";
+import AddNewService from "./components/Services/AddNewService";
+import ReportDetail from "./components/Report/ReportDetail";
 const Layout = () => {
   return (
     <>
@@ -18,6 +20,9 @@ const Layout = () => {
           <Route path="report" element={<Report />} />
           <Route path="services" element={<Service />} />
           <Route path="vouchers" element={<Vouchers />} />
+          <Route path="add-new-service" element={<AddNewService />} />
+          <Route path="report-detail/*" element={<ReportDetail />} />
+          <Route path="report-detail" element={<ReportDetail />} />
         </Route>
       </Routes>
     </>
