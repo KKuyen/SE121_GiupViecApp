@@ -9,6 +9,18 @@ const nonSecurePaths = [
   "/api/v1/send-otp",
   "/api/v1/verify-otp",
   "/api/v1/forget-password",
+  //////////////////
+  "/api/v1/get-all-users",
+  "/api/v1/get-a-user",
+  "/api/v1/edit-user",
+  "/api/v1/delete-user",
+  "/api/v1/get-all-vouchers",
+  "/api/v1/add-voucher",
+  "/api/v1/edit-voucher",
+  "/api/v1/delete-voucher",
+  "/api/v1/get-all-activities",
+  
+
 ];
 const userPaths: string[] = [
   "/api/v1/hello",

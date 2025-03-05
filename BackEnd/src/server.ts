@@ -3,6 +3,7 @@ import { AppDataSource } from "./data-source";
 import bodyParser from "body-parser";
 import userRouter from "./routes/user.routes";
 import taskerRouter from "./routes/tasker.routes";
+import adminRouter from "./routes/admin2.routes";
 import http from "http";
 import { MessageService } from "./services/message.service";
 
@@ -238,6 +239,8 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use("/", userRouter);
 app.use("/", taskerRouter);
+app.use("/", adminRouter);  
+
 app.use(
   session({
     secret: "your_secret_key",
