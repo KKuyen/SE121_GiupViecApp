@@ -607,7 +607,10 @@ export class UserService {
   }
   static async getAllTaskType() {
     const taskTypeRepository = AppDataSource.getRepository(TaskTypes);
-    const taskTypes = await taskTypeRepository.find();
+    const taskTypes = await taskTypeRepository
+      .createQueryBuilder("taskType")
+      .leftJoinAndSelect("taskType.addPriceDetails", "addPriceDetails")
+      .getMany();
     return {
       errCode: 0,
       errMessage: "OK",

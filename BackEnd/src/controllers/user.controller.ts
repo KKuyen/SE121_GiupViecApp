@@ -1,13 +1,8 @@
 import { Request, Response } from "express";
-import { AppDataSource } from "../data-source";
+
 import { User } from "../entity/User.entity";
 import { UserService } from "../services/user.service";
-import { Tasks } from "../entity/Task.entity";
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import * as admin from "firebase-admin";
-import { TaskTypes } from "../entity/TaskTypes.entity";
-
+import { Admin1Service } from "../services/admin1.service";
 // import { encrypt } from "../helpers/encrypt";
 // import * as cache from "memory-cache";
 interface OtpDetails {

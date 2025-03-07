@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { AppDataSource } from "./data-source";
 import bodyParser from "body-parser";
 import userRouter from "./routes/user.routes";
+import admin1Router from "./routes/admin1.routes";
 import taskerRouter from "./routes/tasker.routes";
 import adminRouter from "./routes/admin2.routes";
 import http from "http";
@@ -144,37 +145,35 @@ async function uploadImage(
   }
 }
 app.get("/api/v1/messages", async (req, res) => {
-      try {
-        let sourceId: string = req.query.sourceId as string;
-        let targetId: string = req.query.targetId as string;
-        if (!targetId) {
-          res.status(400).json({ error: "targetId is required" });
-          return;
-        }
-        const messages = await MessageService.getChatHistory(
-          parseInt(sourceId),
-          parseInt(targetId)
-        );
-        res.json(messages);
-      } catch (error) {
-        res.status(500).json({ error: "Failed to fetch messages" });
-      }
+  try {
+    let sourceId: string = req.query.sourceId as string;
+    let targetId: string = req.query.targetId as string;
+    if (!targetId) {
+      res.status(400).json({ error: "targetId is required" });
+      return;
+    }
+    const messages = await MessageService.getChatHistory(
+      parseInt(sourceId),
+      parseInt(targetId)
+    );
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
 });
 app.get("/api/v1/messages-review", async (req, res) => {
-      try {
-        let sourceId: string = req.query.sourceId as string;
-        if (!sourceId) {
-          res.status(400).json({ error: "sourceId is required" });
-          return;
-        }
-        const messages = await MessageService.getChatReview(
-          parseInt(sourceId),
-        );
-        res.json(messages);
-      } catch (error) {
-        res.status(500).json({ error: "Failed to fetch messages" });
-      }
-    });
+  try {
+    let sourceId: string = req.query.sourceId as string;
+    if (!sourceId) {
+      res.status(400).json({ error: "sourceId is required" });
+      return;
+    }
+    const messages = await MessageService.getChatReview(parseInt(sourceId));
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+});
 app.post(
   "/upload-and-get-link",
   upload.single("image"),
@@ -239,7 +238,10 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use("/", userRouter);
 app.use("/", taskerRouter);
-app.use("/", adminRouter);  
+
+app.use("/", admin1Router);
+
+app.use("/", adminRouter);
 
 app.use(
   session({
