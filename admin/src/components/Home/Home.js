@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "../../untils/axiosCustomize";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Col,
@@ -9,6 +11,7 @@ import {
   Radio,
   Row,
   Segmented,
+  Image,
   Space,
   Table,
   Tag,
@@ -25,146 +28,7 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (tags) => (
-      <span>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </span>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <EyeOutlined size={30} />
-        <EditOutlined />
-        <DeleteOutlined />
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "4",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "5",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "6",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "7",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "8",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "9",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "10",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "11",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
-const items = [
-  {
-    label: "Người giúp việc",
-    key: "1",
-  },
-  {
-    label: "Khách hàng",
-    key: "2",
-  },
-];
 const { Search } = Input;
-const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const filterItems = [
   {
@@ -186,36 +50,97 @@ const filterItems = [
 ];
 
 const Home = () => {
-  const [selectedItem, setSelectedItem] = useState(items[0].label);
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
   const [openResponsive, setOpenResponsive] = useState(false);
-
-  const handleMenuClick = (e) => {
-    const selected = items.find((item) => item.key === e.key);
-    setSelectedItem(selected.label);
+  const [data, setData] = useState([]);
+  const [isUser, setIsUser] = useState(true);
+  const nav = useNavigate();
+  const columns = [
+    {
+      title: "Ảnh đại diện",
+      dataIndex: "avatar",
+      key: "avatar",
+      render: (avatar) => (
+        <Image src={require("../../assets/images/avatar.jpg")} width={35} />
+      ),
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        console.log("record", record),
+        (
+          <Space size="middle">
+            <EyeOutlined onClick={() => viewDetail(record)} />
+            <EditOutlined />
+            <DeleteOutlined />
+          </Space>
+        )
+      ),
+    },
+  ];
+  const viewDetail = (record) => {
+    console.log("view detail", record);
+    nav("/view-detail?userId=" + record.id);
   };
+  useEffect(() => {
+    // call api
+    axios.get("/api/v1/get-all-users").then((res) => {
+      console.log("res", res.users);
+      const usersWithKey = res.users.map((user) => ({
+        ...user,
+        key: user.id,
+      }));
+      const filteredUsers = usersWithKey.filter((user) => user.role === "R1");
 
-  const handleFilterClick = ({ key }) => {
-    let filtered = data;
-    switch (key) {
-      case "1":
-        filtered = data.filter((item) => item.age > 30);
-        break;
-      case "2":
-        filtered = data.filter((item) => item.age <= 30);
-        break;
-      case "3":
-        filtered = data.filter((item) => item.tags.includes("developer"));
-        break;
-      case "4":
-        filtered = data.filter((item) => item.tags.includes("teacher"));
-        break;
-      default:
-        break;
+      setData(usersWithKey);
+      setFilteredData(filteredUsers);
+    });
+  }, []);
+  useEffect(() => {
+    const filteredUsers = data.filter((user) =>
+      isUser ? user.role === "R1" : user.role === "R2"
+    );
+    setFilteredData(filteredUsers);
+  }, [isUser]);
+
+  const handleRoleChange = (e) => {
+    setIsUser(!isUser);
+  };
+  const onSearch = (value) => {
+    const filteredResults = filteredData.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    setFilteredData(filteredResults);
+  };
+  const onClear = () => {
+    console.log("clear");
+    let filteredData;
+    if (isUser) {
+      filteredData = data.filter((user) => user.role === "R1");
+    } else {
+      filteredData = data.filter((user) => user.role === "R2");
     }
-    setFilteredData(filtered);
+    setFilteredData(filteredData);
   };
-
   return (
     <div>
       <Row justify="space-between">
@@ -224,19 +149,22 @@ const Home = () => {
             placeholder="input search text"
             allowClear
             onSearch={onSearch}
+            onClear={onClear}
             size="large"
           />
         </Col>
         <Col md={8} style={{ margin: "5px" }}>
           <Segmented
+            onChange={(value) => handleRoleChange(value)}
             options={[
-              { label: "Khách hàng", value: "List", icon: <UserOutlined /> },
+              { label: "Khách hàng", value: "user", icon: <UserOutlined /> },
               {
                 label: "Người giúp việc",
-                value: "Kanban",
+                value: "tasker",
                 icon: <TeamOutlined />,
               },
             ]}
+            selected={isUser ? "user" : "tasker"}
           />
         </Col>
         <Col md={2} style={{ margin: "5px" }}>
