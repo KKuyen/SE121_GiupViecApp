@@ -5,6 +5,8 @@ import { AppDataSource } from "../data-source";
 import * as dotenv from "dotenv";
 import { Vouchers } from "../entity/Voucher.entity";
 import { Tasks } from "../entity/Task.entity";
+import { Location } from "../entity/Location.entity";
+import { Reviews } from "../entity/Review.entity";
 
 
 require("dotenv").config();
@@ -34,13 +36,37 @@ export class AdminService {
         const userRepository = AppDataSource.getRepository(User);
         const user = await userRepository.findOne({
           where: { id },
-          select: ["id", "name", "email", "role", "phoneNumber", "avatar", "birthday", "Rpoints", "taskerInfoId"], // Exclude password field
-        });
-        resolve({
-          errCode: 0,
-          errMessage: "OK",
-          user: user,
-        });
+          select: ["id", "name", "email", "role", "phoneNumber", "avatar", "birthday", "Rpoints", "taskerInfoId", "createdAt"], // Exclude password field
+         });
+
+        if (user) {
+          const locationRepository = AppDataSource.getRepository(Location);
+          const reviewRepository = AppDataSource.getRepository(Reviews);
+
+          const location = await locationRepository.find({ where: { userId: user.id } });
+          const reviews = await reviewRepository.find({ where: { userId: user.id } });
+          location.forEach((l) => {
+            const province = l.province;
+            const district = l.district;
+            const detailAddress = l.detailAddress;
+            l.map= `${detailAddress}, ${district}, ${province}`;
+          });
+
+          resolve({
+            errCode: 0,
+            errMessage: "OK",
+            user: {
+              ...user,
+              location: location,
+              reviews: reviews,
+            },
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: "User not found",
+          });
+        }
       } catch (e) {
         reject(e);
       }

@@ -88,7 +88,6 @@ const Home = () => {
         (
           <Space size="middle">
             <EyeOutlined onClick={() => viewDetail(record)} />
-            <EditOutlined />
             <DeleteOutlined />
           </Space>
         )

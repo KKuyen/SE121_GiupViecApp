@@ -4,134 +4,189 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  LogoutOutlined,
+  AppstoreOutlined,
+  SolutionOutlined,
+  DollarOutlined,
+  FileExclamationOutlined,
+  GiftOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Dropdown, Layout, Menu, Row, Space, theme } from "antd";
+import {
+  Avatar,
+  Breadcrumb,
+  Button,
+  Col,
+  Dropdown,
+  Image,
+  Layout,
+  Menu,
+  Row,
+  Space,
+  theme,
+  ConfigProvider,
+} from "antd";
 import { useNavigate } from "react-router";
 import { Outlet } from "react-router";
 const { Header, Content, Footer, Sider } = Layout;
-const menuProps = [
-  {
-    key: 2,
-    label: "Đăng xuất",
-  },
-];
+
 const items = [
   {
     key: 1,
-    icon: React.createElement(UploadOutlined),
-    label: "Khách hàng",
+    icon: React.createElement(UserOutlined),
+    label: "Người dùng",
   },
   {
     key: 2,
-    icon: React.createElement(UserOutlined),
+    icon: React.createElement(AppstoreOutlined),
     label: "Hoạt động",
   },
   {
     key: 3,
-    icon: React.createElement(VideoCameraOutlined),
+    icon: React.createElement(SolutionOutlined),
     label: "Dịch vụ",
   },
   {
     key: 4,
-    icon: React.createElement(UploadOutlined),
+    icon: React.createElement(DollarOutlined),
     label: "Tài chính",
   },
   {
     key: 5,
-    icon: React.createElement(UploadOutlined),
+    icon: React.createElement(FileExclamationOutlined),
     label: "Khiếu nại",
   },
   {
     key: 6,
-    icon: React.createElement(UploadOutlined),
+    icon: React.createElement(GiftOutlined),
+
     label: "Ưu đãi",
+  },
+];
+
+const menuProps = [
+  {
+    key: 2,
+    label: "Đăng xuất",
+    icon: React.createElement(LogoutOutlined),
   },
 ];
 
 const App = () => {
   const nav = useNavigate();
+  const [isShowLogo, setIsShowLogo] = React.useState(true);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}>
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="vertical "
-          defaultSelectedKeys={["1"]}
-          items={items}
-          onClick={(e) => {
-            switch (e.key) {
-              case "1":
-                nav("/");
-                break;
-              case "2":
-                nav("/activities");
-                break;
-              case "3":
-                nav("/services");
-                break;
-              case "4":
-                nav("/finance");
-                break;
-              case "5":
-                nav("/report");
-                break;
-              case "6":
-                nav("/vouchers");
-                break;
-              default:
-                break;
-            }
-          }}
-        />
-      </Sider>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: "#4AB7B6", // Green color
+        },
+      }}>
       <Layout>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
+        <Sider
+          theme="light"
+          breakpoint="lg"
+          collapsedWidth="50px"
+          onBreakpoint={(broken) => {
+            console.log(broken);
+          }}
+          onCollapse={(collapsed, type) => {
+            console.log(collapsed, type);
+            setIsShowLogo(!isShowLogo);
           }}>
-          <Row>
-            <Col md={18}></Col>
-            <Col md={6}>
-              <Dropdown menu={menuProps}>
-                <Button>
-                  <Space>
-                    Button
-                    <DownOutlined />
-                  </Space>
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-        </Header>
-        <Content
-          style={{
-            margin: "14px  10px 0",
-          }}>
-          <div
+          {isShowLogo && (
+            <Image
+              src={require("./assets/images/TaskMate.png")}
+              width={120}
+              style={{ margin: 27 }}
+            />
+          )}
+
+          <Menu
+            theme="light"
+            mode="vertical"
+            defaultSelectedKeys={["1"]}
+            items={items.map((item) => ({
+              ...item,
+              icon: React.cloneElement(item.icon, {
+                style: { fontSize: "18px" },
+              }),
+              label: <span style={{ fontSize: "16px" }}>{item.label}</span>,
+            }))}
+            onClick={(e) => {
+              switch (e.key) {
+                case "1":
+                  nav("/");
+                  break;
+                case "2":
+                  nav("/activities");
+                  break;
+                case "3":
+                  nav("/services");
+                  break;
+                case "4":
+                  nav("/finance");
+                  break;
+                case "5":
+                  nav("/report");
+                  break;
+                case "6":
+                  nav("/vouchers");
+                  break;
+                default:
+                  break;
+              }
+            }}
+          />
+        </Sider>
+        <Layout>
+          <Header
             style={{
-              padding: 24,
-              minHeight: "90vh",
+              padding: 0,
               background: colorBgContainer,
-              borderRadius: borderRadiusLG,
             }}>
-            <Outlet />
-          </div>
-        </Content>
+            <Row justify="space-between">
+              <span
+                style={{
+                  color: "black",
+                  fontSize: "1rem",
+                  marginLeft: "1rem",
+                  fontWeight: "bold",
+                }}>
+                Khách hàng
+              </span>
+              <Dropdown overlay={<Menu items={menuProps} />}>
+                <div>
+                  <Button>
+                    <Space>
+                      <Avatar size="small" icon={<UserOutlined />} />
+                      {isShowLogo && <span>Nguyễn Văn A</span>}
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </div>
+              </Dropdown>
+            </Row>
+          </Header>
+          <Content
+            style={{
+              margin: "10px  10px 0",
+            }}>
+            <div
+              style={{
+                padding: 24,
+                minHeight: "90vh",
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}>
+              <Outlet />
+            </div>
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </ConfigProvider>
   );
 };
 export default App;
