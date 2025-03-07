@@ -1,17 +1,7 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Upload,
-  Card,
-  Row,
-  Col,
-  Table,
-  Space,
-} from "antd";
+import { Form, Input, Button, Upload, Row, Col, Table, Space } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-
+import { addNewTaskType } from "../../services/admnService";
 const AddNewService = () => {
   const [priceList, setPriceList] = useState([]);
   const [form] = Form.useForm();
@@ -22,7 +12,6 @@ const AddNewService = () => {
         "priceName",
         "beginPrice",
         "stepPrice",
-        "priceDescription",
         "unit",
         "beginValue",
         "stepValue",
@@ -33,25 +22,67 @@ const AddNewService = () => {
           "priceName",
           "beginPrice",
           "stepPrice",
-          "priceDescription",
           "unit",
           "beginValue",
           "stepValue",
         ]);
+      })
+      .catch(() => {
+        alert("Vui lòng nhập đủ thông tin");
       });
   };
 
   const deletePrice = (key) => {
     setPriceList(priceList.filter((item) => item.key !== key));
   };
+  const handleSubmit = async () => {
+    try {
+      // Lấy dữ liệu từ form chính
+      const values = await form.validateFields([
+        "name",
+        "description",
+        "value",
+        "originalPrice",
+      ]);
+
+      // Chuẩn bị dữ liệu gửi API
+      const data = {
+        name: values.name,
+        avatar: null, // Hiện tại chưa có upload ảnh, để null
+        description: values.description,
+        image: "broom", // Giữ nguyên như yêu cầu
+        value: parseFloat(values.value),
+        originalPrice: parseFloat(values.originalPrice),
+        addPriceDetails: priceList.map((item) => ({
+          name: item.priceName,
+          value: parseFloat(item.beginValue),
+          stepPrice: parseFloat(item.stepPrice),
+          beginPrice: parseFloat(item.beginPrice),
+          stepValue: parseFloat(item.stepValue),
+          unit: item.unit,
+          beginValue: parseFloat(item.beginValue),
+        })),
+      };
+
+      console.log("Dữ liệu gửi API:", data);
+
+      // Gửi dữ liệu qua API
+      const response = await addNewTaskType(data);
+      console.log("Phản hồi API:", response.data);
+
+      alert("Thêm dịch vụ thành công!");
+
+      // Reset form sau khi gửi thành công
+      form.resetFields();
+      setPriceList([]);
+    } catch (error) {
+      console.error("Lỗi khi gửi dữ liệu:", error);
+      alert("Vui lòng nhập đủ thông tin!");
+    }
+  };
 
   const columns = [
     { title: "Name", dataIndex: "priceName", key: "priceName" },
-    {
-      title: "Description",
-      dataIndex: "priceDescription",
-      key: "priceDescription",
-    },
     { title: "Step Price", dataIndex: "stepPrice", key: "stepPrice" },
     { title: "Begin Price", dataIndex: "beginPrice", key: "beginPrice" },
     { title: "Unit", dataIndex: "unit", key: "unit" },
@@ -72,10 +103,27 @@ const AddNewService = () => {
     },
   ];
 
+  // Hàm chỉ cho phép nhập số
+  const handleNumberInput = (event) => {
+    const { value } = event.target;
+    const charCode = event.which ? event.which : event.keyCode;
+    const char = String.fromCharCode(charCode);
+
+    // Cho phép số (0-9) và dấu chấm `.`
+    if (!/[\d.]/.test(char)) {
+      event.preventDefault();
+    }
+
+    // Không cho phép nhập nhiều hơn một dấu `.`
+    if (char === "." && value.includes(".")) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <Form layout="vertical" form={form}>
       <Form.Item label="Upload" valuePropName="fileList">
-        <Upload listType="picture-card">
+        <Upload listType="picture-card" maxCount={1}>
           <div>
             <UploadOutlined />
           </div>
@@ -93,13 +141,29 @@ const AddNewService = () => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="Original Price" name="originalPrice">
-            <Input placeholder="Enter original price" />
+          <Form.Item
+            label="Original Price"
+            name="originalPrice"
+            rules={[{ required: true, message: "Enter original price" }]}
+          >
+            <Input
+              placeholder="Enter original price"
+              inputMode="numeric"
+              onKeyPress={handleNumberInput}
+            />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="Value" name="value">
-            <Input placeholder="Enter value" />
+          <Form.Item
+            label="Value"
+            name="value"
+            rules={[{ required: true, message: "Enter value" }]}
+          >
+            <Input
+              placeholder="Enter value"
+              inputMode="numeric"
+              onKeyPress={handleNumberInput}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -118,45 +182,73 @@ const AddNewService = () => {
           <Form.Item
             label="Name"
             name="priceName"
-            rules={[{ required: true, message: "Enter price name" }]}
+            rules={[{ required: true, message: "Enter name" }]}
           >
-            <Input placeholder="Enter price name" />
+            <Input placeholder="Enter name" />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="Begin Price" name="beginPrice">
-            <Input placeholder="Enter begin price" />
+          <Form.Item
+            label="Begin Price"
+            name="beginPrice"
+            rules={[{ required: true, message: "Enter begin price" }]}
+          >
+            <Input
+              placeholder="Enter begin price"
+              inputMode="numeric"
+              onKeyPress={handleNumberInput}
+            />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="Step Price" name="stepPrice">
-            <Input placeholder="Enter step price" />
+          <Form.Item
+            label="Step Price"
+            name="stepPrice"
+            rules={[{ required: true, message: "Enter step price" }]}
+          >
+            <Input
+              placeholder="Enter step price"
+              inputMode="numeric"
+              onKeyPress={handleNumberInput}
+            />
           </Form.Item>
         </Col>
       </Row>
 
       <Row gutter={16}>
         <Col span={8}>
-          <Form.Item label="Unit" name="unit">
+          <Form.Item
+            label="Unit"
+            name="unit"
+            rules={[{ required: true, message: "Enter unit" }]}
+          >
             <Input placeholder="Enter unit" />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="Begin Value" name="beginValue">
-            <Input placeholder="Enter begin value" />
+          <Form.Item
+            label="Begin Value"
+            name="beginValue"
+            rules={[{ required: true, message: "Enter begin value" }]}
+          >
+            <Input
+              placeholder="Enter begin value"
+              inputMode="numeric"
+              onKeyPress={handleNumberInput}
+            />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="Step Value" name="stepValue">
-            <Input placeholder="Enter step value" />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row gutter={16}>
-        <Col span={24}>
-          <Form.Item label="Description" name="priceDescription">
-            <Input.TextArea placeholder="Enter price description" />
+          <Form.Item
+            label="Step Value"
+            name="stepValue"
+            rules={[{ required: true, message: "Enter step value" }]}
+          >
+            <Input
+              placeholder="Enter step value"
+              inputMode="numeric"
+              onKeyPress={handleNumberInput}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -173,7 +265,9 @@ const AddNewService = () => {
 
       <Row justify="end" style={{ marginTop: 20 }}>
         <Button style={{ marginRight: 10 }}>Cancel</Button>
-        <Button type="primary">Finish</Button>
+        <Button type="primary" onClick={handleSubmit}>
+          Finish
+        </Button>
       </Row>
     </Form>
   );

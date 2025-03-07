@@ -1,82 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
 import { Table, Row, Button, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-export default function AddPrices() {
-  const [data, setData] = useState([
-    {
-      key: "1",
-      name: "Price 1",
-      description: "Description of price 1",
-      stepValue: 10,
-      stepPrice: 200,
-      unit: "kg",
-      beginValue: 100,
-      beginPrice: 5000,
-    },
-    {
-      key: "2",
-      name: "Price 2",
-      description: "Description of price 2",
-      stepValue: 5,
-      stepPrice: 150,
-      unit: "L",
-      beginValue: 50,
-      beginPrice: 3000,
-    },
-  ]);
-
-  const handleDelete = (key) => {
-    setData(data.filter((item) => item.key !== key));
-  };
-
+const AddPrices = ({ prices = [] }) => {
   const columns = [
     {
-      title: "Name",
+      title: "Tên giá",
       dataIndex: "name",
       key: "name",
     },
+
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Giá bắt đầu",
+      dataIndex: "beginPrice",
+      key: "beginPrice",
+      render: (price) => `${price.toLocaleString()} VND`,
     },
     {
-      title: "Begin Value",
-      dataIndex: "beginValue",
-      key: "beginValue",
+      title: "Giá mỗi bước",
+      dataIndex: "stepPrice",
+      key: "stepPrice",
+      render: (price) => `${price.toLocaleString()} VND`,
     },
     {
-      title: "Step Value",
+      title: "Đơn vị",
+      dataIndex: "unit",
+      key: "unit",
+    },
+    {
+      title: "Bước giá trị",
       dataIndex: "stepValue",
       key: "stepValue",
     },
     {
-      title: "Begin Price",
-      dataIndex: "beginPrice",
-      key: "beginPrice",
-    },
-    {
-      title: "Step Price",
-      dataIndex: "stepPrice",
-      key: "stepPrice",
-    },
-    {
-      title: "Unit",
-      dataIndex: "unit",
-      key: "unit",
-    },
-
-    {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined style={{ color: "blue" }} />
-          <DeleteOutlined
-            style={{ color: "red" }}
-            onClick={() => handleDelete(record.key)}
-          />
+          <EditOutlined />
+          <DeleteOutlined style={{ color: "red" }} />
         </Space>
       ),
     },
@@ -84,11 +46,29 @@ export default function AddPrices() {
 
   return (
     <>
-      <Row>
-        <h4>Add Prices</h4>
-        <Button type="primary">Add New Price</Button>
+      <Row justify="space-between" align="middle">
+        <h4 style={{ fontSize: "15px" }}>Giá tăng thêm</h4>
+
+        <Button type="primary">
+          <div
+            style={{
+              fontSize: "22px",
+              fontWeight: "bold",
+              transform: "translateY(-3px)",
+            }}
+          >
+            +
+          </div>
+        </Button>
       </Row>
-      <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
+
+      <Table
+        columns={columns}
+        dataSource={prices.map((p) => ({ ...p, key: p.id }))}
+        pagination={{ pageSize: 5 }}
+      />
     </>
   );
-}
+};
+
+export default AddPrices;

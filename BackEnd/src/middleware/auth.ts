@@ -26,6 +26,8 @@ const nonSecurePaths = [
   "/api/v1/edit-voucher",
   "/api/v1/delete-voucher",
   "/api/v1/get-all-activities",
+  "/api/v1/get-all-task-type",
+  "/api/v1/get-a-task-type",
 ];
 const userPaths: string[] = [
   "/api/v1/hello",
@@ -34,7 +36,7 @@ const userPaths: string[] = [
   "/api/v1/get-all-tasks",
   "/api/v1/get-all-voucher",
   "/api/v1/get-my-voucher",
-  "/api/v1/get-all-task-type",
+
   "/api/v1/get-tasker-list",
   "/api/v1/add-new-love-tasker",
   "/api/v1/add-new-block-tasker",
@@ -54,7 +56,7 @@ const userPaths: string[] = [
 
   "/api/v1/finish-a-task",
   "/api/v1/get-all-reviews",
-  "/api/v1/get-a-task-type",
+
   "/api/v1/get-my-location",
   "/api/v1/finish-a-task",
   "/api/v1/get-my-location",

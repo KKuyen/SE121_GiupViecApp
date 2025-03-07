@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage>
 class _services extends StatefulWidget {
   final List<Location> locations;
 
-  const _services({Key? key, required this.locations}) : super(key: key);
+  const _services({super.key, required this.locations});
 
   @override
   State<_services> createState() => _servicesState();

@@ -36,7 +36,7 @@ class _DetailmessageState extends State<Detailmessage> {
   final ImagePicker _picker = ImagePicker();
   List<Message> messages = [];
   IO.Socket? socket;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool sendButton = false;
   SecureStorage secureStorage = SecureStorage();
   Future<String> _fetchUserId() async {
@@ -58,8 +58,8 @@ class _DetailmessageState extends State<Detailmessage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("sourseId: " + widget.sourseUser.id.toString());
-    print("targetId: " + widget.targetUser.id.toString());
+    print("sourseId: ${widget.sourseUser.id}");
+    print("targetId: ${widget.targetUser.id}");
     BlocProvider.of<MessageCubit>(context)
         .getMyMessage(widget.sourseUser.id, widget.targetUser.id);
 
@@ -77,8 +77,9 @@ class _DetailmessageState extends State<Detailmessage> {
     socket!.onConnect((data) {
       print("Connected");
       socket!.on("message", (msg) {
-        if (!mounted)
+        if (!mounted) {
           return; // Kiểm tra thuộc tính mounted trước khi gọi setState
+        }
 
         print(msg);
         setMessages(msg["message"], false, msg["sourceId"], msg["targetId"]);
@@ -122,7 +123,7 @@ class _DetailmessageState extends State<Detailmessage> {
     await launchUrl(launchUri);
   }
 
-  FirebaseImageService _firebaseImageService = FirebaseImageService();
+  final FirebaseImageService _firebaseImageService = FirebaseImageService();
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +368,6 @@ class _time extends StatelessWidget {
   const _time({
     required this.time,
     required this.showTime,
-    super.key,
   });
 
   @override
@@ -398,8 +398,7 @@ class _messageCard extends StatefulWidget {
       {required this.avatar,
       required this.isMe,
       required this.message,
-      required this.time,
-      super.key});
+      required this.time});
 
   @override
   State<_messageCard> createState() => _messageCardState();
@@ -407,7 +406,7 @@ class _messageCard extends StatefulWidget {
 
 class _messageCardState extends State<_messageCard> {
   bool showTime = false;
-  FirebaseImageService _firebaseImageService = FirebaseImageService();
+  final FirebaseImageService _firebaseImageService = FirebaseImageService();
 
   @override
   Widget build(BuildContext context) {
@@ -425,8 +424,8 @@ class _messageCardState extends State<_messageCard> {
           },
           child: Container(
             margin: widget.isMe
-                ? EdgeInsets.only(top: 5, bottom: 5, left: 50)
-                : EdgeInsets.only(top: 5, bottom: 5, right: 50),
+                ? const EdgeInsets.only(top: 5, bottom: 5, left: 50)
+                : const EdgeInsets.only(top: 5, bottom: 5, right: 50),
             child: Row(
               mainAxisAlignment:
                   widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -453,7 +452,7 @@ class _messageCardState extends State<_messageCard> {
                         return CachedNetworkImage(
                           imageUrl: snapshot.data!,
                           placeholder: (context, url) =>
-                              CircularProgressIndicator(),
+                              const CircularProgressIndicator(),
                           errorWidget: (context, url, error) =>
                               SvgPicture.asset(
                             // Nếu có lỗi thì hiển thị icon mặc định
@@ -474,7 +473,7 @@ class _messageCardState extends State<_messageCard> {
                           ),
                         );
                       } else {
-                        return Icon(Icons.error);
+                        return const Icon(Icons.error);
                       }
                     },
                   ),

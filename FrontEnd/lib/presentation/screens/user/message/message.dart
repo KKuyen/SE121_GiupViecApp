@@ -31,7 +31,7 @@ class _MessagePageState extends State<MessagePage> {
     String id = await secureStorage.readId();
     String avatar = await secureStorage.readAvatar();
     User user = User(id: int.parse(id), name: name, avatar: avatar);
-    print("user" + user.id.toString());
+    print("user${user.id}");
     return {'id': id, 'name': name, 'avatar': avatar};
   }
 
@@ -90,7 +90,6 @@ class _MessagePageState extends State<MessagePage> {
 class _listMessage extends StatefulWidget {
   final User sourseUser;
   const _listMessage({
-    super.key,
     required this.sourseUser,
   });
 
@@ -165,7 +164,6 @@ class _messageCard extends StatefulWidget {
     this.isSeen = false,
     required this.id,
     this.sourseUser,
-    super.key,
   });
 
   @override
@@ -173,7 +171,7 @@ class _messageCard extends StatefulWidget {
 }
 
 class _messageCardState extends State<_messageCard> {
-  FirebaseImageService _firebaseImageService = FirebaseImageService();
+  final FirebaseImageService _firebaseImageService = FirebaseImageService();
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +187,7 @@ class _messageCardState extends State<_messageCard> {
                   builder: (context) => Detailmessage(
                       targetUser: user, sourseUser: widget.sourseUser!)));
         } on Exception catch (e) {
-          print("bbbbbbbbbbbb" + e.toString());
+          print("bbbbbbbbbbbb$e");
           // TODO
         }
       },
