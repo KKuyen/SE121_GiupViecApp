@@ -44,13 +44,41 @@ export class AdminService {
           const reviewRepository = AppDataSource.getRepository(Reviews);
 
           const location = await locationRepository.find({ where: { userId: user.id } });
-          const reviews = await reviewRepository.find({ where: { userId: user.id } });
+          const reviews = await reviewRepository
+          .createQueryBuilder("review")
+          .leftJoinAndSelect("review.task", "task")
+          .leftJoinAndSelect("review.taskType", "taskType")
+          .where("review.userId = :id", { id })
+          .select([
+            "review.id",
+            "review.taskId",
+            "review.taskerId",
+            "review.star",
+            "review.content",
+            "review.userId",
+            "review.userName",
+            "review.userAvatar",
+            "review.image1",
+            "review.image2",
+            "review.image3",
+            "review.image4",
+            "review.createdAt",
+            "review.updatedAt",
+            "task.id",
+            "task.time",
+            "task.note",
+            "taskType.id",
+            "taskType.name",
+            "taskType.avatar",
+          ])
+          .getMany();
           location.forEach((l) => {
             const province = l.province;
             const district = l.district;
             const detailAddress = l.detailAddress;
             l.map= `${detailAddress}, ${district}, ${province}`;
           });
+          
 
           resolve({
             errCode: 0,

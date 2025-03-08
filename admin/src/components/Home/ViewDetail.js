@@ -10,6 +10,10 @@ import {
   Table,
   Space,
   Popconfirm,
+  Modal,
+  Input,
+  InputNumber,
+  DatePicker,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
@@ -31,17 +35,22 @@ export default function ViewDetail({ record }) {
   const [activeTab, setActiveTab] = useState("1");
   const [user, setUser] = useState({});
   const [location, setLocation] = useState([]);
+  const [openResponsive, setOpenResponsive] = useState(false);
+  const { RangePicker } = DatePicker;
+  const [reviews, setReviews] = useState([]);
+
   const confirmDelete = () => {};
   const confirmDeleteLocation = () => {};
   useEffect(() => {
     // Call API
     axios.get(`/api/v1/get-a-user?id=${userId}`).then((res) => {
       console.log("res", res.user);
-      console.log("location", res.user.location);
+      console.log("review", res.user.reviews);
       setUser(res.user);
       setLocation(res.user.location);
+      setReviews(res.user.reviews);
     });
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     // Call API
@@ -88,30 +97,6 @@ export default function ViewDetail({ record }) {
       ),
     },
   ];
-  const reviews = [
-    {
-      username: "toitenlatao",
-      rating: 4,
-      comment: "Xinh đẹp tuyệt vời",
-      images: [
-        require("../../assets/images/capy.jpeg"),
-        require("../../assets/images/capy.jpeg"),
-      ],
-      task: "Giúp việc định kỳ",
-      date: "12/09/2024 9:00",
-    },
-    {
-      username: "toitenlatao",
-      rating: 4,
-      comment: "Xinh đẹp tuyệt vời",
-      images: [
-        require("../../assets/images/capy.jpeg"),
-        require("../../assets/images/capy.jpeg"),
-      ],
-      task: "Giúp việc định kỳ",
-      date: "12/09/2024 9:00",
-    },
-  ];
 
   return (
     <>
@@ -124,17 +109,20 @@ export default function ViewDetail({ record }) {
           />
         </Col>
         <Col xs={24} sm={12} md={17}>
-          <div className="name">{user.name || "N/A"}</div>
+          <div className="name">{user?.name || "N/A"}</div>
           <div className="phone">
-            <PhoneOutlined /> {user.phoneNumber || "N/A"}
+            <PhoneOutlined /> {user?.phoneNumber || "N/A"}
           </div>
           <div className="mail">
-            <MailOutlined /> {user.email || "N/A"}
+            <MailOutlined /> {user?.email || "N/A"}
           </div>
         </Col>
         <Col xs={24} sm={6} md={4}>
           <div className="btn">
-            <Button type="primary" icon={<EditOutlined />}>
+            <Button
+              type="primary"
+              onClick={() => setOpenResponsive(true)}
+              icon={<EditOutlined />}>
               Chỉnh sửa
             </Button>
             <Popconfirm
@@ -158,21 +146,21 @@ export default function ViewDetail({ record }) {
                 <div className="info-item">
                   <div className="info-label">Ngày sinh</div>
                   <div className="info-value">
-                    {user.birthday ? user.birthday.substring(0, 10) : "N/A"}
+                    {user?.birthday ? user.birthday.substring(0, 10) : "N/A"}
                   </div>
                 </div>
               </Col>
               <Col xs={24} sm={12}>
                 <div className="info-item">
                   <div className="info-label">RPoints</div>
-                  <div className="info-value">{user.Rpoints || 0}</div>
+                  <div className="info-value">{user?.Rpoints || 0}</div>
                 </div>
               </Col>
               <Col xs={24} sm={12}>
                 <div className="info-item">
                   <div className="info-label">Ngày tham gia</div>
                   <div className="info-value">
-                    {user.createdAt ? user.createdAt.substring(0, 10) : "N/A"}
+                    {user?.createdAt ? user.createdAt.substring(0, 10) : "N/A"}
                   </div>
                 </div>
               </Col>
@@ -203,27 +191,66 @@ export default function ViewDetail({ record }) {
                     }
                     title={
                       <span>
-                        {review.username} <br />
+                        {review?.userName ? review.userName : "N/A"} <br />
                         <Rate
                           className="rate"
                           disabled
-                          defaultValue={review.rating}
+                          defaultValue={review?.star ? review.star : 0}
                         />
                       </span>
                     }
-                    description={review.comment}
+                    description={review?.content ? review.content : "N/A"}
                   />
                   <Row gutter={[16, 16]}>
-                    {review.images.map((image, index) => (
-                      <Col key={index}>
-                        <Image src={image} width={100} />
-                      </Col>
-                    ))}
+                    <Col key={1}>
+                      <Image
+                        src={
+                          review?.image1
+                            ? review.image1
+                            : require("../../assets/images/capy.jpeg")
+                        }
+                        width={100}
+                      />
+                    </Col>
+                    <Col key={2}>
+                      <Image
+                        src={
+                          review?.image2
+                            ? review.image2
+                            : require("../../assets/images/capy.jpeg")
+                        }
+                        width={100}
+                      />
+                    </Col>
+                    <Col key={3}>
+                      <Image
+                        src={
+                          review?.image3
+                            ? review.image3
+                            : require("../../assets/images/capy.jpeg")
+                        }
+                        width={100}
+                      />
+                    </Col>
+                    <Col key={4}>
+                      <Image
+                        src={
+                          review?.image4
+                            ? review.image4
+                            : require("../../assets/images/capy.jpeg")
+                        }
+                        width={100}
+                      />
+                    </Col>
                   </Row>
                   <div className="task-info">
                     <CalendarOutlined style={{ marginRight: 8 }} />
-                    {review.task}
-                    <div>{review.date}</div>
+                    {review?.taskType?.name ? review.taskType.name : "N/A"}
+                    <div>
+                      {review?.createdAt
+                        ? review.createdAt.substring(0, 10)
+                        : "N/A"}
+                    </div>
                   </div>
                 </List.Item>
               )}
@@ -231,6 +258,20 @@ export default function ViewDetail({ record }) {
           </Tabs.TabPane>
         </Tabs>
       </Row>
+      <Modal
+        title="Chỉnh sửa thông tin người dùng"
+        centered
+        open={openResponsive}
+        onOk={() => setOpenResponsive(false)}
+        onCancel={() => setOpenResponsive(false)}
+        width="450px">
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Input placeholder="Họ tên" value={user?.name} />
+          <Input placeholder="Email" value={user?.email} />
+          <Input placeholder="Số điện thoại" value={user?.phoneNumber} />
+          <DatePicker placeholder="Ngày sinh" value={user?.birthday} />
+        </Space>
+      </Modal>
     </>
   );
 }

@@ -15,6 +15,7 @@ import {
   Space,
   Table,
   Tag,
+  Popconfirm,
 } from "antd";
 import {
   AppstoreOutlined,
@@ -88,12 +89,21 @@ const Home = () => {
         (
           <Space size="middle">
             <EyeOutlined onClick={() => viewDetail(record)} />
-            <DeleteOutlined />
+            <Popconfirm
+              title="Xóa người dùng"
+              description="Bạn có chắc chắn muốn xóa người dùng này không?"
+              onConfirm={confirmDeleteUser}
+              okText="Xóa"
+              cancelText="Hủy">
+              <DeleteOutlined style={{ color: "#ff4d4f" }} />
+            </Popconfirm>
           </Space>
         )
       ),
     },
   ];
+  const confirmDeleteUser = () => {};
+
   const viewDetail = (record) => {
     console.log("view detail", record);
     nav("/view-detail?userId=" + record.id);
