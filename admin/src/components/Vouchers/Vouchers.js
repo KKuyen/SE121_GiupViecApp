@@ -46,6 +46,13 @@ const Vouchers = () => {
 
   const handleEditClick = (record) => {
     setSelectedVoucher(record); // Cập nhật state với dữ liệu của voucher được chọn
+    setName(record.header);
+    setDescription(record.content);
+    setRpoint(record.RpointCost);
+    setQuantity(record.quantity);
+    setValue(record.value);
+    setStartDate(moment(record.startDate));
+    setEndDate(moment(record.endDate));
     setOpenEditResponsive(true); // Mở modal chỉnh sửa
   };
 
@@ -107,7 +114,15 @@ const Vouchers = () => {
   ];
 
   const confirmDeleteVoucher = (record) => {
-    // Xử lý xóa voucher
+    axios.delete(`/api/v1/delete-voucher?id=${record.id}`).then((res) => {
+      if (res?.errCode === 0) {
+        setData(data.filter((item) => item.id !== record.id));
+        messageApi.open({
+          type: "success",
+          content: "Xóa voucher thành công!",
+        });
+      }
+    });
   };
 
   const handelSaveVoucher = () => {
@@ -136,6 +151,36 @@ const Vouchers = () => {
       }
     });
   };
+
+  const handelUpdateVoucher = () => {
+    // Xử lý cập nhật voucher
+    const updatedVoucher = {
+      ...selectedVoucher,
+      header: name,
+      content: description,
+      RpointCost: Rpoint,
+      quantity: quantity,
+      value: value,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    console.log("updatedVoucher", updatedVoucher);
+    axios.put(`/api/v1/edit-voucher`, updatedVoucher).then((res) => {
+      if (res?.errCode === 0) {
+        setOpenEditResponsive(false);
+        setData(
+          data.map((item) =>
+            item.id === selectedVoucher.id ? updatedVoucher : item
+          )
+        );
+        messageApi.open({
+          type: "success",
+          content: "Cập nhật voucher thành công!",
+        });
+      }
+    });
+  };
+
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -167,6 +212,7 @@ const Vouchers = () => {
   const onCheckAllChange = (e) => {
     setCheckedList(e.target.checked ? plainOptions : []);
   };
+
   return (
     <div>
       <Row justify="space-between">
@@ -232,7 +278,6 @@ const Vouchers = () => {
             value={value}
             onChange={(value) => setValue(value)}
           />
-
           <RangePicker
             showTime
             value={[startDate, endDate]}
@@ -268,68 +313,70 @@ const Vouchers = () => {
         title="Sửa ưu đãi"
         centered
         open={openEditResponsive}
-        onOk={() => setOpenEditResponsive(false)}
+        onOk={handelUpdateVoucher}
         onCancel={() => setOpenEditResponsive(false)}
         width="450px">
         <Space direction="vertical" style={{ width: "100%" }}>
           <Input
             placeholder="Tên voucher"
-            value={selectedVoucher?.header}
-            onChange={(e) =>
-              setSelectedVoucher({ ...selectedVoucher, header: e.target.value })
-            }
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <Input
             placeholder="Mô tả"
-            value={selectedVoucher?.content}
-            onChange={(e) =>
-              setSelectedVoucher({
-                ...selectedVoucher,
-                content: e.target.value,
-              })
-            }
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
           <InputNumber
             min={1}
             max={100}
             placeholder="Rpoint"
-            value={selectedVoucher?.RpointCost}
-            onChange={(value) =>
-              setSelectedVoucher({ ...selectedVoucher, RpointCost: value })
-            }
+            value={Rpoint}
+            onChange={(value) => setRpoint(value)}
           />
           <InputNumber
             min={1}
             max={100}
             placeholder="Số lượng"
-            value={selectedVoucher?.quantity}
-            onChange={(value) =>
-              setSelectedVoucher({ ...selectedVoucher, quantity: value })
-            }
+            value={quantity}
+            onChange={(value) => setQuantity(value)}
           />
           <InputNumber
             min={1}
             max={100}
             placeholder="Tỉ lệ ưu đãi"
-            value={selectedVoucher?.value}
-            onChange={(value) =>
-              setSelectedVoucher({ ...selectedVoucher, value: value })
-            }
+            value={value}
+            onChange={(value) => setValue(value)}
           />
           <RangePicker
             showTime
-            value={[
-              moment(selectedVoucher?.startDate),
-              moment(selectedVoucher?.endDate),
-            ]}
-            onChange={(dates) =>
-              setSelectedVoucher({
-                ...selectedVoucher,
-                startDate: dates[0],
-                endDate: dates[1],
-              })
-            }
+            value={[startDate, endDate]}
+            onChange={(dates) => {
+              setStartDate(dates[0]);
+              setEndDate(dates[1]);
+            }}
           />
+          <Checkbox
+            indeterminate={indeterminate}
+            onChange={onCheckAllChange}
+            checked={checkAll}>
+            Check all
+          </Checkbox>
+          <CheckboxGroup
+            options={plainOptions}
+            value={checkedList}
+            onChange={onCheckChange}
+          />
+          <ImgCrop rotationSlider>
+            <Upload
+              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+              listType="picture-card"
+              fileList={fileList}
+              onChange={onChange}
+              onPreview={onPreview}>
+              {fileList.length < 1 && "+ Upload"}
+            </Upload>
+          </ImgCrop>
         </Space>
       </Modal>
     </div>
