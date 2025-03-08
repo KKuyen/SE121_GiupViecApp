@@ -70,16 +70,22 @@ const Home = () => {
       dataIndex: "name",
       key: "name",
       render: (text) => <a>{text}</a>,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
+      sorter: (a, b) => a.phoneNumber - b.phoneNumber,
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      sorter: (a, b) => a.email.length - b.email.length,
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Action",
@@ -176,14 +182,6 @@ const Home = () => {
             selected={isUser ? "user" : "tasker"}
           />
         </Col>
-        <Col md={2} style={{ margin: "5px" }}>
-          <Button onClick={() => setOpenResponsive(true)}>
-            <Space>
-              <FilterOutlined />
-              Filter
-            </Space>
-          </Button>
-        </Col>
       </Row>
       <Table
         columns={columns}
@@ -193,17 +191,6 @@ const Home = () => {
         }}
         dataSource={filteredData}
       />
-      <Modal
-        title="Lọc"
-        centered
-        open={openResponsive}
-        onOk={() => setOpenResponsive(false)}
-        onCancel={() => setOpenResponsive(false)}
-        width="400px">
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
     </div>
   );
 };

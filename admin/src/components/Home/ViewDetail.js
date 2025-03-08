@@ -374,7 +374,7 @@ export default function ViewDetail({ record }) {
           <Input placeholder="Họ tên" value={user?.name} />
           <Input placeholder="Email" value={user?.email} />
           <Input placeholder="Số điện thoại" value={user?.phoneNumber} />
-          <DatePicker placeholder="Ngày sinh" value={user?.birthday} />
+          <DatePicker placeholder="Ngày sinh" />
         </Space>
       </Modal>
     </>
