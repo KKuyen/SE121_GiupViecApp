@@ -14,6 +14,7 @@ import {
   Input,
   InputNumber,
   DatePicker,
+  Tag,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
@@ -38,17 +39,38 @@ export default function ViewDetail({ record }) {
   const [openResponsive, setOpenResponsive] = useState(false);
   const { RangePicker } = DatePicker;
   const [reviews, setReviews] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   const confirmDelete = () => {};
   const confirmDeleteLocation = () => {};
+  const confirmDeleteTask = () => {};
+
   useEffect(() => {
     // Call API
     axios.get(`/api/v1/get-a-user?id=${userId}`).then((res) => {
-      console.log("res", res.user);
-      console.log("review", res.user.reviews);
       setUser(res.user);
       setLocation(res.user.location);
       setReviews(res.user.reviews);
+    });
+    axios.post("/api/v1/get-all-tasks", { userId: userId }).then((res) => {
+      console.log("res", res.taskList);
+      res.taskList.map((task) => {
+        const temp = {
+          key: task?._id,
+          taskName: task?.taskType?.name,
+          createdAt: task?.createdAt?.substring(0, 10),
+          map:
+            task?.location?.detailAddress +
+            ", " +
+            task?.location?.district +
+            ", " +
+            task?.location?.province,
+          numberOfTasker: task?.numberOfTasker,
+          taskStatus: task?.taskStatus,
+        };
+        setTasks((tasks) => [...tasks, temp]);
+      });
+      //setTasks(res.tasks);
     });
   }, [userId]);
 
@@ -97,7 +119,83 @@ export default function ViewDetail({ record }) {
       ),
     },
   ];
-
+  const historyColumns = [
+    {
+      title: "Tên công việc",
+      dataIndex: "taskName",
+      key: "taskName",
+    },
+    {
+      title: "Ngày đặt",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "map",
+      key: "map",
+    },
+    {
+      title: "Số người làm",
+      dataIndex: "numberOfTasker",
+      key: "numberOfTasker",
+    },
+    {
+      title: "Trạng thái",
+      key: "taskStatus",
+      dataIndex: "taskStatus",
+      render: (_, { taskStatus }) => {
+        let color = "";
+        let text = "";
+        switch (taskStatus) {
+          case "TS1":
+            color = "blue";
+            text = "Đang đặt";
+            break;
+          case "TS2":
+            color = "green";
+            text = "Đã đặt";
+            break;
+          case "TS3":
+            color = "yellow";
+            text = "Hoàn thành";
+            break;
+          case "TS4":
+            color = "red";
+            text = "Đã hủy";
+            break;
+          default:
+            color = "gray";
+            text = "Không xác định";
+        }
+        return (
+          <Tag color={color} key={taskStatus}>
+            {text}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        console.log("record", record),
+        (
+          <Space size="middle">
+            <EditOutlined />
+            <Popconfirm
+              title="Xóa công việc"
+              description="Bạn có chắc chắn muốn xóa công việc này không?"
+              onConfirm={confirmDeleteTask}
+              okText="Xóa"
+              cancelText="Hủy">
+              <DeleteOutlined style={{ color: "#ff4d4f" }} />
+            </Popconfirm>
+          </Space>
+        )
+      ),
+    },
+  ];
   return (
     <>
       <Row className="top-card" gutter={[16, 16]}>
@@ -177,7 +275,14 @@ export default function ViewDetail({ record }) {
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Lịch sử" key="3">
-            <div>aaaaaaaaaaaaaaaaaaaaaaa</div>
+            <Table
+              columns={historyColumns}
+              pagination={{
+                position: ["bottomCenter"],
+                pageSize: 7,
+              }}
+              dataSource={tasks}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Đánh giá" key="4">
             <List
