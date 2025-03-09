@@ -1,4 +1,8 @@
 import express, { Request, Response } from "express";
+import { supabase } from "./supabase";
+const app = express();
+app.use(express.json());
+
 import { AppDataSource } from "./data-source";
 import bodyParser from "body-parser";
 import userRouter from "./routes/user.routes";
@@ -7,6 +11,7 @@ import taskerRouter from "./routes/tasker.routes";
 import adminRouter from "./routes/admin2.routes";
 import http from "http";
 import { MessageService } from "./services/message.service";
+import { FirebaseMessageService } from "./services/firebaseMessage.service";
 
 import session from "express-session";
 
@@ -16,12 +21,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../src/config/firebase.config"; // Ensure you have your Firebase config here
 import upload from "../src/middleware/multer";
 import dotenv from "dotenv";
-
 dotenv.config();
 import cors from "cors";
 import { IMessagePayload } from "./types/socket.types";
 
-const app = express();
 app.use(cors());
 //Socket.IO*******************************
 const server = http.createServer(app);
@@ -234,13 +237,66 @@ app.post(
   }
 );
 
+app.post(
+  "/api/v1/supabase/messages",
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { sourceId, targetId, message, sender, comolaintId } = req.body;
+      if (!sourceId || !targetId || !message || !sender || !comolaintId) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const { data, error } = await supabase
+        .from("complaintMessages")
+        .insert([
+          {
+            sourceId: sourceId,
+            targetId: targetId,
+            message,
+            sender: sender,
+            comolaintId: comolaintId,
+          },
+        ]);
+
+      if (error) throw error;
+      res.json({ success: true, message: data });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to send message" });
+      console.error("Error sending message:", error);
+    }
+  }
+);
+
+// Lấy lịch sử tin nhắn
+app.get(
+  "/api/v1/firebase/messages",
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      const sourceId = parseInt(req.query.sourceId as string);
+      const targetId = parseInt(req.query.targetId as string);
+
+      if (!sourceId || !targetId) {
+        return res
+          .status(400)
+          .json({ error: "sourceId and targetId are required" });
+      }
+
+      const messages = await FirebaseMessageService.getChatHistory(
+        sourceId,
+        targetId
+      );
+      res.json(messages);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch messages" });
+    }
+  }
+);
+
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use("/", userRouter);
 app.use("/", taskerRouter);
-
 app.use("/", admin1Router);
-
 app.use("/", adminRouter);
 
 app.use(

@@ -1,8 +1,12 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
+import admin from "firebase-admin";
 import { getAuth, Auth } from "firebase/auth";
 import * as dotenv from "dotenv";
-
+import { getFirestore } from "firebase/firestore";
 dotenv.config();
+const serviceAccount = require(process.env.Credential as string);
+
+// Khởi tạo Firebase Admin SDK
 
 interface FirebaseConfig {
   apiKey: string | undefined;
@@ -28,5 +32,5 @@ const firebaseConfig: FirebaseConfig = {
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
-
-export { auth };
+const db = getFirestore(app);
+export { db, auth };

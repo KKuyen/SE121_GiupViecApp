@@ -32,6 +32,7 @@ const nonSecurePaths = [
   "/api/v1/get-complaints",
   "/api/v1/get-a-complaint",
   "/api/v1/get-a-user",
+  "/api/v1/supabase/messages",
 ];
 const userPaths: string[] = [
   "/api/v1/hello",

@@ -2,18 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Card, Table, Avatar, Input, Button, List } from "antd";
 import { getAcomplaint, getUser } from "../../services/admnService";
 import { EyeOutlined } from "@ant-design/icons";
+import { createClient } from "@supabase/supabase-js"; // Moved to the top
+
 const { TextArea } = Input;
 
 const ReportDetail = () => {
+  const supabase = createClient(
+    "https://wbekftdbbgbvuybtvjoi.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZWtmdGRiYmdidnV5YnR2am9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwODgxNTEsImV4cCI6MjA0MzY2NDE1MX0.j-bv1lYpTHBiCjFjlwpXGtLqoftFZRqazzoROas6gAA"
+  );
+
   const [taskData, setTaskData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [tasker, setTasker] = useState(null);
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hello!", sender: "customer" },
-    { id: 2, text: "Hi, how can I help you?", sender: "tasker" },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
@@ -44,12 +48,51 @@ const ReportDetail = () => {
     fetchTaskData();
   }, []);
 
-  const sendMessage = () => {
-    if (newMessage.trim() === "") return;
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const idd = window.location.pathname.split("/")[2];
+      const { data, error } = await supabase
+        .from("complaintMessages")
+        .select("*")
+        .eq("complaintId", idd)
+        .order("createdAt", { ascending: true });
 
-    const newMsg = { id: Date.now(), text: newMessage, sender: "customer" };
-    setMessages([...messages, newMsg]);
-    setNewMessage("");
+      if (!error) setMessages(data);
+    };
+
+    fetchMessages();
+
+    // 🔥 Lắng nghe tin nhắn realtime
+    const subscription = supabase
+      .channel("realtime-messages")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "complaintMessages" },
+        (payload) => {
+          console.log("New message received:", payload.new);
+          setMessages((prev) => [...prev, payload.new]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, []);
+
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    const { error } = await supabase.from("complaintMessages").insert([
+      {
+        sender: "admin",
+        targetId: user.id,
+        complaintId: taskData[0].id,
+        message: newMessage,
+      },
+    ]);
+
+    if (!error) setNewMessage("");
   };
 
   const columns = [
@@ -91,8 +134,8 @@ const ReportDetail = () => {
         >
           <div
             style={{
-              flex: "1 1 300px", // Chiếm 1 phần, co dãn, tối thiểu 300px
-              maxWidth: "50%", // Không vượt quá 50%
+              flex: "1 1 300px",
+              maxWidth: "50%",
             }}
           >
             <strong>Customer</strong>
@@ -150,27 +193,26 @@ const ReportDetail = () => {
                 style={{
                   display: "flex",
                   justifyContent:
-                    msg.sender === "customer" ? "flex-end" : "flex-start",
+                    msg.sender === "admin" ? "flex-end" : "flex-start",
                 }}
               >
-                {msg.sender === "tasker" && (
+                {msg.sender === "customer" && (
                   <Avatar style={{ marginRight: 10 }}>T</Avatar>
                 )}
                 <div
                   style={{
                     padding: "8px 12px",
                     borderRadius: 8,
-                    background:
-                      msg.sender === "customer" ? "#1890ff" : "#f0f0f0",
-                    color: msg.sender === "customer" ? "#fff" : "#000",
+                    background: msg.sender === "admin" ? "#1890ff" : "#f0f0f0",
+                    color: msg.sender === "admin" ? "#fff" : "#000",
                     maxWidth: "70%",
                     wordBreak: "break-word",
                     whiteSpace: "pre-wrap",
                   }}
                 >
-                  {msg.text}
+                  {msg.message}
                 </div>
-                {msg.sender === "customer" && (
+                {msg.sender === "admin" && (
                   <Avatar style={{ marginLeft: 10 }}>C</Avatar>
                 )}
               </List.Item>
