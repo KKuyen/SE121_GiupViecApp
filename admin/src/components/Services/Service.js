@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Image, Input, Row, Space, Table, message } from "antd";
+import {
+  Button,
+  Col,
+  Image,
+  Input,
+  Row,
+  Space,
+  Table,
+  message,
+  Popconfirm,
+} from "antd";
 import { EditOutlined, DeleteOutlined, DownOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,7 +30,7 @@ const ExpandedRow = ({ record, isExpanded }) => (
       padding: isExpanded ? "0px 50px" : "0px",
     }}
   >
-    <AddPrices prices={record.addPriceDetails} />
+    <AddPrices prices={record.addPriceDetails} id={record.id} />
   </div>
 );
 
@@ -73,7 +83,7 @@ const Service = () => {
 
   const columns = [
     {
-      title: "Hình ảnh",
+      title: "Icon",
       dataIndex: "image",
       key: "image",
       render: (_, record) => (
@@ -81,36 +91,44 @@ const Service = () => {
       ),
     },
     {
-      title: "Tên dịch vụ",
+      title: "Name",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Mô tả",
+      title: "Description",
       dataIndex: "description",
       key: "description",
     },
     {
-      title: "Giá trị",
+      title: "Value",
       dataIndex: "value",
       key: "value",
     },
     {
-      title: "Giá gốc",
+      title: "Original Price",
       dataIndex: "originalPrice",
       key: "originalPrice",
-      render: (price) => `${price?.toLocaleString()} VND`,
+      render: (price) => (price ? `${price.toLocaleString()} VND` : "N/A"),
     },
     {
       title: "Hành động",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined />
-          <DeleteOutlined
-            style={{ color: "red" }}
-            onClick={() => handleDelete(record.id)}
+          <EditOutlined
+            onClick={() => {
+              navigate(`/edit-service/${record.id}`, { state: record });
+            }}
           />
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <DeleteOutlined style={{ color: "red" }} />
+          </Popconfirm>
           <DownOutlined
             onClick={() => handleExpand(record)}
             style={{

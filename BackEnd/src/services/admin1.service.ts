@@ -4,6 +4,9 @@ require("dotenv").config();
 import { AppDataSource } from "../data-source"; // Adjust the path as necessary
 import { TaskTypes } from "../entity/TaskTypes.entity";
 import { PaymentInformation } from "../entity/PaymentInfomation.entity";
+import { Tasks } from "../entity/Task.entity";
+import { Complaint } from "../entity/Complaint.entity";
+import { User } from "../entity/User.entity";
 
 export class Admin1Service {
   static async getAllTaskType() {
@@ -270,6 +273,86 @@ export class Admin1Service {
       errCode: 0,
       errMessage: "OK",
       paymentInformation: paymentInformation,
+    };
+  }
+  static async getIncome(month: number, year: number) {
+    const taskRepository = AppDataSource.getRepository(Tasks);
+    const tasks = await taskRepository
+      .createQueryBuilder("task")
+      .where("task.taskStatus = :taskStatus", { taskStatus: "TS3" })
+      .andWhere("EXTRACT(MONTH FROM task.finishedAt) = :month", { month })
+      .andWhere("EXTRACT(YEAR FROM task.finishedAt) = :year", { year })
+      .getMany();
+
+    const dailyIncome: { [key: string]: number } = {};
+    let totalIncome = 0;
+    let totalTasks = tasks.length;
+
+    tasks.forEach((task) => {
+      const dateObj = new Date(task.finishedAt);
+      const day = dateObj.getDate();
+      const formattedDate = `${year}-${String(month).padStart(2, "0")}-${String(
+        day
+      ).padStart(2, "0")}`;
+
+      const priceMatch = task.price.match(/\d+/);
+      const price = priceMatch ? parseInt(priceMatch[0], 10) : 0;
+
+      if (!isNaN(price)) {
+        dailyIncome[formattedDate] = (dailyIncome[formattedDate] || 0) + price;
+        totalIncome += price;
+      }
+    });
+
+    return {
+      errCode: 0,
+      income: dailyIncome,
+      totalIncome,
+      totalTasks,
+    };
+  }
+  static async getComplaints() {
+    const complaintRepository = AppDataSource.getRepository(Complaint);
+    const complaints = await complaintRepository.find();
+
+    return {
+      errCode: 0,
+      complaints,
+    };
+  }
+  static async getAComplaint(complaintId: number) {
+    const complaintRepository = AppDataSource.getRepository(Complaint);
+    const complaint = await complaintRepository.findOne({
+      where: { id: complaintId },
+    });
+
+    if (!complaint) {
+      return {
+        errCode: 1,
+        errMessage: "Complaint not found",
+      };
+    }
+
+    return {
+      errCode: 0,
+      complaint,
+    };
+  }
+  static async getUserById(userId: number) {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      return {
+        errCode: 1,
+        errMessage: "Complaint not found",
+      };
+    }
+
+    return {
+      errCode: 0,
+      user,
     };
   }
 }

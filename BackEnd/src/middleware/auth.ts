@@ -28,6 +28,10 @@ const nonSecurePaths = [
   "/api/v1/get-all-activities",
   "/api/v1/get-all-task-type",
   "/api/v1/get-a-task-type",
+  "/api/v1/get-payment",
+  "/api/v1/get-complaints",
+  "/api/v1/get-a-complaint",
+  "/api/v1/get-a-user",
 ];
 const userPaths: string[] = [
   "/api/v1/hello",

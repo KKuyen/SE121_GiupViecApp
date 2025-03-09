@@ -10,7 +10,7 @@ const AddNewService = () => {
     form
       .validateFields([
         "priceName",
-        "beginPrice",
+        "pricevalue",
         "stepPrice",
         "unit",
         "beginValue",
@@ -20,7 +20,7 @@ const AddNewService = () => {
         setPriceList([...priceList, { ...values, key: priceList.length + 1 }]);
         form.resetFields([
           "priceName",
-          "beginPrice",
+          "pricevalue",
           "stepPrice",
           "unit",
           "beginValue",
@@ -57,7 +57,7 @@ const AddNewService = () => {
           name: item.priceName,
           value: parseFloat(item.beginValue),
           stepPrice: parseFloat(item.stepPrice),
-          beginPrice: parseFloat(item.beginPrice),
+          value: parseFloat(item.pricevalue),
           stepValue: parseFloat(item.stepValue),
           unit: item.unit,
           beginValue: parseFloat(item.beginValue),
@@ -84,7 +84,7 @@ const AddNewService = () => {
   const columns = [
     { title: "Name", dataIndex: "priceName", key: "priceName" },
     { title: "Step Price", dataIndex: "stepPrice", key: "stepPrice" },
-    { title: "Begin Price", dataIndex: "beginPrice", key: "beginPrice" },
+    { title: "Value", dataIndex: "pricevalue", key: "pricealue" },
     { title: "Unit", dataIndex: "unit", key: "unit" },
     { title: "Begin Value", dataIndex: "beginValue", key: "beginValue" },
     { title: "Step Value", dataIndex: "stepValue", key: "stepValue" },
@@ -189,12 +189,12 @@ const AddNewService = () => {
         </Col>
         <Col span={8}>
           <Form.Item
-            label="Begin Price"
-            name="beginPrice"
-            rules={[{ required: true, message: "Enter begin price" }]}
+            label="Value"
+            name="pricevalue"
+            rules={[{ required: true, message: "Enter Value" }]}
           >
             <Input
-              placeholder="Enter begin price"
+              placeholder="Enter Value"
               inputMode="numeric"
               onKeyPress={handleNumberInput}
             />

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "antd": "^5.24.3",
+    "framer-motion": "^12.4.10"
+  }
+}
