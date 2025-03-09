@@ -104,7 +104,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                           showModalBottomSheet(
                             context: context,
                             builder: (BuildContext context) {
-                              return Container(
+                              return SizedBox(
                                 height: 150,
                                 child: Padding(
                                   padding: const EdgeInsets.all(
@@ -206,9 +206,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
 }
 
 class _financeCard extends StatefulWidget {
-  const _financeCard({
-    super.key,
-  });
+  const _financeCard();
 
   @override
   State<_financeCard> createState() => _financeCardState();

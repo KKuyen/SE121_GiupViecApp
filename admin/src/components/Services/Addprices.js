@@ -1,55 +1,178 @@
 import React from "react";
-import { Table, Row, Button, Space } from "antd";
+import {
+  Table,
+  Row,
+  Button,
+  Space,
+  Drawer,
+  Input,
+  message,
+  Popconfirm,
+} from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import "./style.css";
+import {
+  addAddPriceDetail,
+  deleteAddPriceDetail,
+  editAddPriceDetail,
+} from "../../services/admnService";
 
-const AddPrices = ({ prices = [] }) => {
+const AddPrices = ({ prices = [], id }) => {
+  const [dataSource, setDataSource] = React.useState(prices);
+  const [isDrawerVisible, setIsDrawerVisible] = React.useState(false);
+  const [editingPrice, setEditingPrice] = React.useState(null);
+
+  const handleDeletePrice = async (id) => {
+    try {
+      await deleteAddPriceDetail(id);
+      setDataSource(dataSource.filter((price) => price.id !== id));
+      message.success("Xóa giá thành công!");
+    } catch (error) {
+      message.error("Xóa giá thất bại!");
+    }
+  };
+
+  const handleEditPrice = (record) => {
+    setEditingPrice(record); // Lưu thông tin cần sửa
+    setIsDrawerVisible(true);
+  };
+
+  const handleSavePrice = async () => {
+    try {
+      if (editingPrice.id) {
+        // Chỉnh sửa
+        const data = {
+          taskTypeId: parseFloat(id),
+          name: editingPrice.name,
+          value: editingPrice.value,
+          stepPrice: editingPrice.stepPrice,
+          beginPrice: 0,
+          stepValue: editingPrice.stepValue,
+          unit: editingPrice.unit,
+          beginValue: editingPrice.beginValue,
+        };
+        await editAddPriceDetail(data);
+        setDataSource(
+          dataSource.map((item) =>
+            item.id === editingPrice.id ? editingPrice : item
+          )
+        );
+        message.success("Cập nhật giá thành công!");
+      } else {
+        // Thêm mới
+        const newPrice = { ...editingPrice, id: id };
+        const data = {
+          taskTypeId: parseFloat(id),
+          name: newPrice.name,
+          value: newPrice.value,
+          stepPrice: newPrice.stepPrice,
+          beginPrice: 0,
+          stepValue: newPrice.stepValue,
+          unit: newPrice.unit,
+          beginValue: newPrice.beginValue,
+        };
+        await addAddPriceDetail(data);
+        setDataSource([...dataSource, { ...newPrice, id: Date.now() }]);
+
+        message.success("Thêm giá thành công!");
+        setDataSource([...dataSource, newPrice]);
+        message.success("Thêm giá thành công!");
+      }
+      setIsDrawerVisible(false);
+      setEditingPrice(null);
+    } catch (error) {
+      message.error("Có lỗi xảy ra!");
+    }
+  };
+
   const columns = [
     {
-      title: "Tên giá",
+      title: "name",
       dataIndex: "name",
       key: "name",
     },
-
     {
-      title: "Giá bắt đầu",
-      dataIndex: "beginPrice",
-      key: "beginPrice",
+      title: "beginValue",
+      dataIndex: "beginValue",
+      key: "beginValue",
       render: (price) => `${price.toLocaleString()} VND`,
     },
     {
-      title: "Giá mỗi bước",
+      title: "stepPrice",
       dataIndex: "stepPrice",
       key: "stepPrice",
       render: (price) => `${price.toLocaleString()} VND`,
     },
     {
-      title: "Đơn vị",
+      title: "unit",
       dataIndex: "unit",
       key: "unit",
     },
     {
-      title: "Bước giá trị",
+      title: "stepValue",
       dataIndex: "stepValue",
       key: "stepValue",
+    },
+    {
+      title: "Value",
+      dataIndex: "value",
+      key: "value",
     },
     {
       title: "Hành động",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined />
-          <DeleteOutlined style={{ color: "red" }} />
+          <EditOutlined onClick={() => handleEditPrice(record)} />
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa?"
+            onConfirm={() => handleDeletePrice(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <DeleteOutlined style={{ color: "red" }} />
+          </Popconfirm>
         </Space>
       ),
     },
   ];
 
+  const handleNumberInput = (event) => {
+    const { value } = event.target;
+    const charCode = event.which ? event.which : event.keyCode;
+    const char = String.fromCharCode(charCode);
+
+    if (!/[\d.]/.test(char)) {
+      event.preventDefault();
+    }
+
+    if (char === "." && value.includes(".")) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <>
       <Row justify="space-between" align="middle">
         <h4 style={{ fontSize: "15px" }}>Giá tăng thêm</h4>
-
-        <Button type="primary">
+        <Button
+          type="primary"
+          onClick={() => {
+            if (dataSource.length >= 4) {
+              alert("Chỉ được thêm tối đa 4 giá");
+              return;
+            }
+            setEditingPrice({
+              name: "",
+              beginValue: "",
+              stepPrice: "",
+              unit: "",
+              stepValue: "",
+              value: "",
+            });
+            setIsDrawerVisible(true);
+          }}
+        >
           <div
             style={{
               fontSize: "22px",
@@ -61,12 +184,92 @@ const AddPrices = ({ prices = [] }) => {
           </div>
         </Button>
       </Row>
-
       <Table
         columns={columns}
-        dataSource={prices.map((p) => ({ ...p, key: p.id }))}
+        dataSource={dataSource.map((p) => ({ ...p, key: p.id }))}
         pagination={{ pageSize: 5 }}
       />
+      <Drawer
+        title={editingPrice?.id ? "Chỉnh sửa giá" : "Thêm giá mới"}
+        width={360}
+        onClose={() => setIsDrawerVisible(false)}
+        open={isDrawerVisible}
+        footer={
+          <div style={{ textAlign: "right" }}>
+            <Button
+              onClick={() => {
+                setIsDrawerVisible(false);
+                setEditingPrice(null);
+              }}
+              style={{ marginRight: 8 }}
+            >
+              Hủy
+            </Button>
+            <Button onClick={handleSavePrice} type="primary">
+              {editingPrice?.id ? "Lưu" : "Thêm"}
+            </Button>
+          </div>
+        }
+      >
+        <div className="nhan">name</div>
+        <Input
+          placeholder="name"
+          value={editingPrice?.name || ""}
+          onChange={(e) =>
+            setEditingPrice({ ...editingPrice, name: e.target.value })
+          }
+          style={{ marginBottom: 16 }}
+        />
+        <div className="nhan">beginValue</div>
+        <Input
+          onKeyPress={handleNumberInput}
+          placeholder="beginValue"
+          value={editingPrice?.beginValue || ""}
+          onChange={(e) =>
+            setEditingPrice({ ...editingPrice, beginValue: e.target.value })
+          }
+          style={{ marginBottom: 16 }}
+        />
+        <div className="nhan">stepPrice</div>
+        <Input
+          onKeyPress={handleNumberInput}
+          placeholder="stepPrice"
+          value={editingPrice?.stepPrice || ""}
+          onChange={(e) =>
+            setEditingPrice({ ...editingPrice, stepPrice: e.target.value })
+          }
+          style={{ marginBottom: 16 }}
+        />
+        <div className="nhan">unit</div>
+        <Input
+          placeholder="unit"
+          value={editingPrice?.unit || ""}
+          onChange={(e) =>
+            setEditingPrice({ ...editingPrice, unit: e.target.value })
+          }
+          style={{ marginBottom: 16 }}
+        />
+        <div className="nhan">stepValue</div>
+        <Input
+          onKeyPress={handleNumberInput}
+          placeholder="stepValue"
+          value={editingPrice?.stepValue || ""}
+          onChange={(e) =>
+            setEditingPrice({ ...editingPrice, stepValue: e.target.value })
+          }
+          style={{ marginBottom: 16 }}
+        />
+        <div className="nhan">value</div>
+        <Input
+          onKeyPress={handleNumberInput}
+          placeholder="value"
+          value={editingPrice?.value || ""}
+          onChange={(e) =>
+            setEditingPrice({ ...editingPrice, value: e.target.value })
+          }
+          style={{ marginBottom: 16 }}
+        />
+      </Drawer>
     </>
   );
 };

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Dropdown, Menu, Space, Select } from "antd";
 import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { getComplaints } from "../../services/admnService";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -16,45 +17,6 @@ const columns = [
   { title: "Status", dataIndex: "status", key: "status" },
 ];
 
-const data = [
-  {
-    id: 1,
-    taskId: "T001",
-    customerId: "C001",
-    taskerId: "TK001",
-    type: "Cleaning",
-    description: "House cleaning",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    taskId: "T002",
-    customerId: "C002",
-    taskerId: "TK002",
-    type: "Cooking",
-    description: "Meal preparation",
-    status: "Completed",
-  },
-  {
-    id: 3,
-    taskId: "T003",
-    customerId: "C003",
-    taskerId: "TK003",
-    type: "Laundry",
-    description: "Washing clothes",
-    status: "Pending",
-  },
-  {
-    id: 4,
-    taskId: "T004",
-    customerId: "C004",
-    taskerId: "TK004",
-    type: "Babysitting",
-    description: "Taking care of a child",
-    status: "Completed",
-  },
-];
-
 const filterMenu = (
   <Menu>
     <Menu.Item key="1">Pending</Menu.Item>
@@ -63,8 +25,22 @@ const filterMenu = (
 );
 
 const Report = () => {
+  const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Người giúp việc");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getComplaints();
+        setData(response.complaints);
+      } catch (error) {
+        console.error("Failed to fetch complaints:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleRowClick = (record) => {
     navigate(`/report-detail/${record.id}`);

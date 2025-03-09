@@ -39,7 +39,8 @@ import { CreateMessageTable1634567890123 } from "./migration/message.migration";
 import { MessageReview } from "./entity/MessageReview.entity";
 import { CreateMessageReviewTable1634567890123 } from "./migration/messageReview.migration";
 import { PaymentInformation } from "./entity/PaymentInfomation.entity";
-
+import { ComplaintMessage } from "./entity/ComplaintMessage.entity";
+import { Complaint } from "./entity/Complaint.entity";
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DB_HOST,
@@ -69,6 +70,8 @@ export const AppDataSource = new DataSource({
     Tasks,
     Vouchers,
     PaymentInformation,
+    ComplaintMessage,
+    Complaint,
   ],
   migrations: [
     UsersMigration1698321500515,

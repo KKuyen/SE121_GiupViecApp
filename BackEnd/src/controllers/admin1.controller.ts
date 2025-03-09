@@ -174,12 +174,50 @@ export class Admin1Controller {
   }
   static async getPaymentInformation(req: Request, res: Response) {
     let message: any = await Admin1Service.getPaymentInformation();
-    res
-      .status(200)
-      .json({
-        errCode: message.errCode,
-        message: message.message,
-        paymentInformation: message.paymentInformation,
-      });
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+      paymentInformation: message.paymentInformation,
+    });
+  }
+  static async getIncome(req: Request, res: Response) {
+    const { month, year } = req.query;
+    let message: any = await Admin1Service.getIncome(
+      Number(month),
+      Number(year)
+    );
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+      income: message.income,
+      totalIncome: message.totalIncome,
+      totalTasks: message.totalTasks,
+    });
+  }
+  static async getComplaints(req: Request, res: Response) {
+    let message: any = await Admin1Service.getComplaints();
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+      complaints: message.complaints,
+    });
+  }
+  static async getAComplaint(req: Request, res: Response) {
+    const { complaintId } = req.query;
+    let message: any = await Admin1Service.getAComplaint(Number(complaintId));
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+      complaint: message.complaint,
+    });
+  }
+  static async getUserById(req: Request, res: Response) {
+    const { userId } = req.query;
+    let message: any = await Admin1Service.getUserById(Number(userId));
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+      user: message.user,
+    });
   }
 }

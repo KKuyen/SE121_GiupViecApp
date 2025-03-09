@@ -56,7 +56,7 @@ class _TwoSttButtonState extends State<TwoSttButton> {
         BlocProvider.of<allNotificationCubit>(context).addANotificaiton(
             widget.TaskerId,
             "Bạn đã được yêu thích",
-            "Bạn đã được  khách hàng ${userName} yêu thích.Bây giờ bạn có thể ứng cử tự động công việc của khách hàng đó",
+            "Bạn đã được  khách hàng $userName yêu thích.Bây giờ bạn có thể ứng cử tự động công việc của khách hàng đó",
             "love.jpg");
       } else {
         BlocProvider.of<LoveTaskersCubit>(context)
@@ -64,7 +64,7 @@ class _TwoSttButtonState extends State<TwoSttButton> {
         BlocProvider.of<allNotificationCubit>(context).addANotificaiton(
             widget.TaskerId,
             "Một khách hàng đã bỏ yêu thích",
-            "Khách hàng ${userName} đã bỏ yêu thích bạn.",
+            "Khách hàng $userName đã bỏ yêu thích bạn.",
             "unlove.jpg");
       }
     } else {
@@ -74,7 +74,7 @@ class _TwoSttButtonState extends State<TwoSttButton> {
         BlocProvider.of<allNotificationCubit>(context).addANotificaiton(
             widget.TaskerId,
             "Bạn đã bị chặn",
-            "Bạn đã bị  khách hàng ${userName} chặn.Bây giờ bạn không thể thấy công việc của khách hàng đó",
+            "Bạn đã bị  khách hàng $userName chặn.Bây giờ bạn không thể thấy công việc của khách hàng đó",
             "block.jpg");
       } else {
         BlocProvider.of<LoveTaskersCubit>(context)
@@ -82,7 +82,7 @@ class _TwoSttButtonState extends State<TwoSttButton> {
         BlocProvider.of<allNotificationCubit>(context).addANotificaiton(
             widget.TaskerId,
             "Một khách hàng đã bỏ chặn bạn",
-            "Khách hàng ${userName} vừa mới bỏ chặn bạn. Bây giờ bạn có thể thấy và ứng cử công việc của khách hàng đó một cách bình thường",
+            "Khách hàng $userName vừa mới bỏ chặn bạn. Bây giờ bạn có thể thấy và ứng cử công việc của khách hàng đó một cách bình thường",
             "unblock.jpg");
       }
     }

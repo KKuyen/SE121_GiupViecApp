@@ -8,6 +8,7 @@ import Service from "./components/Services/Service";
 import Vouchers from "./components/Vouchers/Vouchers";
 import AddNewService from "./components/Services/AddNewService";
 import ReportDetail from "./components/Report/ReportDetail";
+import EditService from "./components/Services/EditService";
 const Layout = () => {
   return (
     <>
@@ -23,6 +24,7 @@ const Layout = () => {
           <Route path="add-new-service" element={<AddNewService />} />
           <Route path="report-detail/*" element={<ReportDetail />} />
           <Route path="report-detail" element={<ReportDetail />} />
+          <Route path="edit-service/:id" element={<EditService />} />
         </Route>
       </Routes>
     </>
