@@ -161,7 +161,7 @@ const Home = () => {
       <Row justify="space-between">
         <Col md={11}>
           <Search
-            placeholder="input search text"
+            placeholder="Tìm kiếm"
             allowClear
             onSearch={onSearch}
             onClear={onClear}

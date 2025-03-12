@@ -96,6 +96,15 @@ class _HomePageState extends State<HomePage>
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(
+          Icons.smart_toy_outlined,
+          color: Colors.white,
+        ),
+        backgroundColor: AppColors.cam_main,
+        shape: OvalBorder(),
+      ),
       body: SingleChildScrollView(
         child: SingleChildScrollView(
           child: Column(

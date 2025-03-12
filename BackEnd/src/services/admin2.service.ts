@@ -200,12 +200,61 @@ export class AdminService {
   static getAllActivities = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const tasks = AppDataSource.getRepository(Tasks);
-        const activities = await tasks.find();
+       const taskeRepository = AppDataSource.getRepository(Tasks);
+        const tasksQuery = taskeRepository
+          .createQueryBuilder("task")
+          .leftJoinAndSelect("task.location", "location")
+          .leftJoinAndSelect("task.user", "user")
+          .leftJoinAndSelect("task.taskType", "taskType")
+          .leftJoinAndSelect("task.taskerLists", "taskerLists")
+          .orderBy("task.createdAt", "DESC")
+          .select([
+            "task.id",
+            "task.userId",
+            "task.taskTypeId",
+            "task.time",
+            "task.locationId",
+            "task.note",
+            "task.isReTaskChildren",
+            "task.taskStatus",
+            "task.createdAt",
+            "task.updatedAt",
+            "task.price",
+            "task.approvedAt",
+            "task.cancelAt",
+            "task.finishedAt",
+            "task.cancelReason",
+            "task.numberOfTasker",
+            "user.id",
+            "user.name",
+            "user.email",
+            "user.phoneNumber",
+            "user.role",
+            "user.avatar",
+            "user.birthday",
+            "user.Rpoints",
+            "location.id",
+            "location.country",
+            "location.province",
+            "location.district",
+            "location.ownerName",
+            "location.ownerPhoneNumber",
+            "location.detailAddress",
+            "location.map",
+            "taskType.id",
+            "taskType.name",
+            "taskType.avatar",
+            "taskerLists.id",
+            "taskerLists.status",
+          ]);
+ 
+         
+
+        let tasks = await tasksQuery.getMany();
         resolve({
           errCode: 0,
           errMessage: "OK",
-          activities: activities,
+          activities: tasks,
         });
       } catch (e) {
         reject(e);

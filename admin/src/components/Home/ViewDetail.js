@@ -17,9 +17,10 @@ import {
   Tag,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import "./ViewDetail.scss";
 import axios from "../../untils/axiosCustomize";
+import moment from "moment";
 
 import {
   EditOutlined,
@@ -29,7 +30,10 @@ import {
   EyeOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
+import MapPicker from "react-google-map-picker";
 
+const DefaultLocation = { lat: 10, lng: 106 };
+const DefaultZoom = 10;
 export default function ViewDetail({ record }) {
   const [searchParams] = useSearchParams();
   const userId = searchParams.get("userId");
@@ -37,11 +41,23 @@ export default function ViewDetail({ record }) {
   const [user, setUser] = useState({});
   const [location, setLocation] = useState([]);
   const [openResponsive, setOpenResponsive] = useState(false);
+  const [openLocationResponsive, setOpenLocationResponsive] = useState(false);
   const { RangePicker } = DatePicker;
   const [reviews, setReviews] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [birthday, setBirthday] = useState(null);
+  const nav = useNavigate();
 
-  const confirmDelete = () => {};
+  const confirmDelete = () => {
+    axios.delete(`/api/v1/delete-user?id=${userId}`).then((res) => {
+      if (res.errCode === 0) {
+        nav("/");
+      }
+    });
+  };
   const confirmDeleteLocation = () => {};
   const confirmDeleteTask = () => {};
 
@@ -82,6 +98,22 @@ export default function ViewDetail({ record }) {
   const handleTabChange = (key) => {
     setActiveTab(key);
   };
+
+  const handleEditClick = () => {
+    setName(user.name);
+    setEmail(user.email);
+    setPhoneNumber(user.phoneNumber);
+    setBirthday(user.birthday ? moment(user.birthday) : null);
+    setOpenResponsive(true);
+  };
+  const handleEditLocationClick = () => {
+    setName(user.name);
+    setEmail(user.email);
+    setPhoneNumber(user.phoneNumber);
+    setBirthday(user.birthday ? moment(user.birthday) : null);
+    setOpenLocationResponsive(true);
+  };
+
   const columns = [
     {
       title: "Tên người dùng",
@@ -105,7 +137,7 @@ export default function ViewDetail({ record }) {
         console.log("record", record),
         (
           <Space size="middle">
-            <EditOutlined />
+            <EditOutlined onClick={handleEditLocationClick} />
             <Popconfirm
               title="Xóa địa chỉ"
               description="Bạn có chắc chắn muốn xóa địa chỉ này không?"
@@ -196,6 +228,43 @@ export default function ViewDetail({ record }) {
       ),
     },
   ];
+  const handleEditUser = () => {
+    setOpenResponsive(false);
+    const data = {
+      id: userId,
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      birthday: birthday,
+    };
+    axios.put("/api/v1/edit-user", data).then((res) => {
+      if (res.errCode === 0) {
+        setUser(
+          (user) => (user = { ...user, name, email, phoneNumber, birthday })
+        );
+      }
+    });
+  };
+  const handleEditLocation = () => {
+    setOpenLocationResponsive(false);
+  };
+  const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+
+  const [map, setMap] = useState(defaultLocation);
+  const [zoom, setZoom] = useState(DefaultZoom);
+
+  function handleChangeLocation(lat, lng) {
+    setMap({ lat: lat, lng: lng });
+  }
+
+  function handleChangeZoom(newZoom) {
+    setZoom(newZoom);
+  }
+
+  function handleResetLocation() {
+    setDefaultLocation({ ...DefaultLocation });
+    setZoom(DefaultZoom);
+  }
   return (
     <>
       <Row className="top-card" gutter={[16, 16]}>
@@ -219,7 +288,7 @@ export default function ViewDetail({ record }) {
           <div className="btn">
             <Button
               type="primary"
-              onClick={() => setOpenResponsive(true)}
+              onClick={handleEditClick}
               icon={<EditOutlined />}>
               Chỉnh sửa
             </Button>
@@ -244,7 +313,9 @@ export default function ViewDetail({ record }) {
                 <div className="info-item">
                   <div className="info-label">Ngày sinh</div>
                   <div className="info-value">
-                    {user?.birthday ? user.birthday.substring(0, 10) : "N/A"}
+                    {user?.birthday
+                      ? user.birthday.toString().substring(0, 10)
+                      : "N/A"}
                   </div>
                 </div>
               </Col>
@@ -367,14 +438,75 @@ export default function ViewDetail({ record }) {
         title="Chỉnh sửa thông tin người dùng"
         centered
         open={openResponsive}
-        onOk={() => setOpenResponsive(false)}
+        onOk={handleEditUser}
         onCancel={() => setOpenResponsive(false)}
         width="450px">
         <Space direction="vertical" style={{ width: "100%" }}>
-          <Input placeholder="Họ tên" value={user?.name} />
-          <Input placeholder="Email" value={user?.email} />
-          <Input placeholder="Số điện thoại" value={user?.phoneNumber} />
-          <DatePicker placeholder="Ngày sinh" />
+          <Input
+            placeholder="Họ tên"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            placeholder="Số điện thoại"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          <DatePicker
+            placeholder="Ngày sinh"
+            value={birthday}
+            onChange={(date) => setBirthday(date)}
+          />
+        </Space>
+      </Modal>
+      <Modal
+        title="Chỉnh sửa địa chỉ"
+        centered
+        open={openLocationResponsive}
+        onOk={handleEditLocation}
+        onCancel={() => setOpenLocationResponsive(false)}
+        width="450px">
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Input
+            placeholder="Họ tên"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            placeholder="Số điện thoại"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          <Input
+            placeholder="Tỉnh"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            placeholder="Huyện"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            placeholder="Địa chỉ chi tiết"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <MapPicker
+            defaultLocation={defaultLocation}
+            zoom={zoom}
+            mapTypeId="roadmap"
+            style={{ height: "400px" }}
+            onChangeLocation={handleChangeLocation}
+            onChangeZoom={handleChangeZoom}
+            apiKey="AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8"
+          />
         </Space>
       </Modal>
     </>
