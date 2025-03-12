@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Button, Dropdown, Menu, Space, Select } from "antd";
+import { Table, Input, Row, Space, Select } from "antd";
 import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { getComplaints } from "../../services/admnService";
@@ -17,16 +17,15 @@ const columns = [
   { title: "Status", dataIndex: "status", key: "status" },
 ];
 
-const filterMenu = (
-  <Menu>
-    <Menu.Item key="1">Pending</Menu.Item>
-    <Menu.Item key="2">Completed</Menu.Item>
-  </Menu>
-);
+const statusOptions = ["Pending", "Approval"];
+const typeOptions = ["Type A", "Type B", "Type C", "Type D"];
 
 const Report = () => {
   const [data, setData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Người giúp việc");
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,13 +33,33 @@ const Report = () => {
       try {
         const response = await getComplaints();
         setData(response.complaints);
+        setFilteredData(response.complaints);
       } catch (error) {
         console.error("Failed to fetch complaints:", error);
       }
     };
-
     fetchData();
   }, []);
+
+  useEffect(() => {
+    let filtered = data;
+    if (searchText) {
+      filtered = filtered.filter(
+        (item) =>
+          item.description.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.type.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.id.toString().includes(searchText) ||
+          item.taskId.toString().includes(searchText)
+      );
+    }
+    if (selectedStatus) {
+      filtered = filtered.filter((item) => item.status === selectedStatus);
+    }
+    if (selectedType) {
+      filtered = filtered.filter((item) => item.type === selectedType);
+    }
+    setFilteredData(filtered);
+  }, [searchText, selectedStatus, selectedType, data]);
 
   const handleRowClick = (record) => {
     navigate(`/report-detail/${record.id}`);
@@ -55,15 +74,44 @@ const Report = () => {
           justifyContent: "space-between",
         }}
       >
-        <Search placeholder="Search" allowClear style={{ width: 300 }} />
+        <Search
+          placeholder="Tìm kiếm ID, mô tả, loại, TaskID"
+          allowClear
+          style={{ width: 400 }}
+          onChange={(e) => setSearchText(e.target.value)}
+          prefix={<SearchOutlined />}
+        />
+        <Row>
+          <Select
+            placeholder="Chọn trạng thái"
+            allowClear
+            style={{ width: 200, marginRight: 20 }}
+            onChange={(value) => setSelectedStatus(value)}
+          >
+            {statusOptions.map((status) => (
+              <Option key={status} value={status}>
+                {status}
+              </Option>
+            ))}
+          </Select>
 
-        <Dropdown overlay={filterMenu} trigger={["click"]}>
-          <Button icon={<FilterOutlined />}>Filter</Button>
-        </Dropdown>
+          <Select
+            placeholder="Chọn loại"
+            allowClear
+            style={{ width: 200 }}
+            onChange={(value) => setSelectedType(value)}
+          >
+            {typeOptions.map((type) => (
+              <Option key={type} value={type}>
+                {type}
+              </Option>
+            ))}
+          </Select>
+        </Row>
       </Space>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         pagination={{ pageSize: 10, position: ["bottomCenter"] }}
         onRow={(record) => {
           return {

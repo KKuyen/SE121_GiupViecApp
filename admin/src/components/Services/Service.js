@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
 import {
   Button,
   Col,
@@ -17,7 +18,10 @@ import {
   deleteATaskType,
 } from "../../services/admnService.js";
 import AddPrices from "./Addprices";
-
+const supabase = createClient(
+  "https://wbekftdbbgbvuybtvjoi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZWtmdGRiYmdidnV5YnR2am9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwODgxNTEsImV4cCI6MjA0MzY2NDE1MX0.j-bv1lYpTHBiCjFjlwpXGtLqoftFZRqazzoROas6gAA"
+);
 const { Search } = Input;
 
 const ExpandedRow = ({ record, isExpanded }) => (
@@ -37,6 +41,8 @@ const ExpandedRow = ({ record, isExpanded }) => (
 const Service = () => {
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +50,15 @@ const Service = () => {
       try {
         const response = await getAllTaskTypes();
         if (response.errCode === 0) {
+          response.taskTypeList.forEach((taskType) => {
+            taskType.image = supabase.storage
+              .from("images")
+              .getPublicUrl(taskType.image);
+            taskType.image = taskType.image.data.publicUrl;
+          });
+
           setData(response.taskTypeList);
+          setFilteredData(response.taskTypeList);
         } else {
           message.error("Lỗi khi lấy dữ liệu từ server");
         }
@@ -64,14 +78,20 @@ const Service = () => {
   };
 
   const onSearch = (value) => {
-    console.log("Search value:", value);
+    setSearchText(value);
+    const filtered = data.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered);
   };
 
   const handleDelete = async (id) => {
     try {
       const response = await deleteATaskType(id);
       if (response.errCode === 0) {
-        setData((prevData) => prevData.filter((item) => item.id !== id));
+        const updatedData = data.filter((item) => item.id !== id);
+        setData(updatedData);
+        setFilteredData(updatedData);
         message.success("Xóa thành công");
       } else {
         message.error("Lỗi khi xóa dữ liệu: " + response.errMessage);
@@ -87,7 +107,7 @@ const Service = () => {
       dataIndex: "image",
       key: "image",
       render: (_, record) => (
-        <Image width={50} src={record.image || record.avatar} />
+        <Image width={30} src={record.image || record.avatar} />
       ),
     },
     {
@@ -145,24 +165,36 @@ const Service = () => {
 
   return (
     <div>
-      <Row>
+      <Row
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <Col md={11}>
           <Search
             placeholder="Tìm kiếm dịch vụ"
             allowClear
             onSearch={onSearch}
             size="large"
+            value={searchText}
+            onChange={(e) => onSearch(e.target.value)}
           />
         </Col>
         <Col>
-          <Button onClick={() => navigate("/add-new-service")}>
+          <Button
+            onClick={() => navigate("/add-new-service")}
+            style={{ height: "38px" }}
+            type="primary"
+          >
             Thêm Dịch Vụ
           </Button>
         </Col>
       </Row>
       <Table
         columns={columns}
-        dataSource={data.map((item) => ({ ...item, key: item.id }))}
+        dataSource={filteredData.map((item) => ({ ...item, key: item.id }))}
         expandable={{
           expandedRowRender: (record) => (
             <ExpandedRow

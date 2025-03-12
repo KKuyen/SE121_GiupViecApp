@@ -8,6 +8,7 @@ import 'package:se121_giupviec_app/presentation/screens/auth/signin-page.dart';
 import 'package:se121_giupviec_app/presentation/screens/tasker/account/setting.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/editAccount.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/location.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/account/report.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/myVoucher.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/aboutUs.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/account/blockTaskers.dart';
@@ -204,6 +205,23 @@ class _AccountPageState extends State<AccountPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Setting(
+                                            accountId: widget.userId,
+                                          )));
+                            },
+                          ),
+                          const Divider(
+                            height: 1,
+                            thickness: 1,
+                          ),
+                          ListTile(
+                            title: const Text('Khiếu nại'),
+                            leading: const Icon(Icons.report_problem_outlined),
+                            trailing: const Icon(Icons.navigate_next_rounded),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReportScreen(
                                             accountId: widget.userId,
                                           )));
                             },

@@ -355,4 +355,40 @@ export class Admin1Service {
       user,
     };
   }
+  static async editPaymentInformation(
+    momo: string,
+    bankAccount: string,
+    bankAccountName: string,
+    subBankAccount: string,
+    subBankAccountName: string
+  ) {
+    const paymentInformationRepository =
+      AppDataSource.getRepository(PaymentInformation);
+
+    const existingPaymentInformation =
+      await paymentInformationRepository.findOne({
+        where: { id: 1 },
+      });
+
+    if (!existingPaymentInformation) {
+      return {
+        errCode: 1,
+        errMessage: "Payment information not found",
+      };
+    }
+
+    existingPaymentInformation.momo = momo;
+    existingPaymentInformation.bankAccount = bankAccount;
+    existingPaymentInformation.bankAccountName = bankAccountName;
+    existingPaymentInformation.subBankAccount = subBankAccount;
+    existingPaymentInformation.subBankAccountName = subBankAccountName;
+
+    await paymentInformationRepository.save(existingPaymentInformation);
+
+    return {
+      errCode: 0,
+      errMessage: "Payment information updated successfully",
+      paymentInformation: existingPaymentInformation,
+    };
+  }
 }

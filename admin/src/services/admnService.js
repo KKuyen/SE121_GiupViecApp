@@ -39,3 +39,6 @@ export const getAcomplaint = (id) => {
 export const getUser = (id) => {
   return axios.post("api/v1/get-a-user?userId=" + id);
 };
+export const editPaymentInformation = (data) => {
+  return axios.put("api/v1/edit-payment-information", data);
+};

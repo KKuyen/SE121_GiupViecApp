@@ -5,7 +5,7 @@ import "chart.js/auto";
 import moment from "moment";
 import { EditOutlined, CheckOutlined } from "@ant-design/icons";
 import { getPaymentInfor } from "../../services/admnService";
-import { getIncome } from "../../services/admnService";
+import { getIncome, editPaymentInformation } from "../../services/admnService";
 
 const { Option } = Select;
 
@@ -23,10 +23,25 @@ const BankSelector = ({
   setSelectedBank,
   accountNumber,
   setAccountNumber,
+  type,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const banks = ["Vietcombank", "Techcombank", "BIDV", "Agribank"];
+  const handleNumberInput = (event) => {
+    const { value } = event.target;
+    const charCode = event.which ? event.which : event.keyCode;
+    const char = String.fromCharCode(charCode);
 
+    // Cho phép số (0-9) và dấu chấm `.`
+    if (!/[\d.]/.test(char)) {
+      event.preventDefault();
+    }
+
+    // Không cho phép nhập nhiều hơn một dấu `.`
+    if (char === "." && value.includes(".")) {
+      event.preventDefault();
+    }
+  };
   return (
     <Card title={title} bordered>
       {isEditing ? (
@@ -35,6 +50,7 @@ const BankSelector = ({
             value={accountNumber}
             onChange={(e) => setAccountNumber(e.target.value)}
             autoFocus
+            onKeyPress={handleNumberInput}
             style={{ width: "80%" }}
           />
           <Select
@@ -49,7 +65,26 @@ const BankSelector = ({
             ))}
           </Select>
           <CheckOutlined
-            onClick={() => setIsEditing(false)}
+            onClick={async () => {
+              setIsEditing(false);
+              try {
+                if (type === "main") {
+                  await editPaymentInformation({
+                    bankAccount: accountNumber,
+                    bankAccountName: selectedBank,
+                  });
+                }
+                if (type === "sub") {
+                  await editPaymentInformation({
+                    subBankAccount: accountNumber,
+                    subBankAccountName: selectedBank,
+                  });
+                }
+              } catch (err) {
+                console.error("Error editing payment info:", err);
+              }
+              alert("Cập nhật thông tin thành công!");
+            }}
             style={{ cursor: "pointer", color: "green", marginLeft: 10 }}
           />
         </>
@@ -115,7 +150,7 @@ const FinanceDashboard = () => {
         setChartData({
           labels,
           datasets: [
-            { label: "Income", data: dataValues, backgroundColor: "#6A5ACD" },
+            { label: "Thu nhập", data: dataValues, backgroundColor: "#6A5ACD" },
           ],
         });
       } catch (err) {
@@ -124,7 +159,21 @@ const FinanceDashboard = () => {
     };
     fetchIncomeData();
   }, [selectedMonth, selectedYear]);
+  const handleNumberInput = (event) => {
+    const { value } = event.target;
+    const charCode = event.which ? event.which : event.keyCode;
+    const char = String.fromCharCode(charCode);
 
+    // Cho phép số (0-9) và dấu chấm `.`
+    if (!/[\d.]/.test(char)) {
+      event.preventDefault();
+    }
+
+    // Không cho phép nhập nhiều hơn một dấu `.`
+    if (char === "." && value.includes(".")) {
+      event.preventDefault();
+    }
+  };
   return (
     <div style={{ padding: 20 }}>
       <Row gutter={16}>
@@ -133,13 +182,25 @@ const FinanceDashboard = () => {
             {isEditingPhone ? (
               <Row justify="space-between" align="middle">
                 <Input
+                  type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   autoFocus
                   style={{ width: "80%" }}
+                  onKeyPress={handleNumberInput}
+                  pattern="[0-9]{10,15}"
                 />
+
                 <CheckOutlined
-                  onClick={() => setIsEditingPhone(false)}
+                  onClick={async () => {
+                    setIsEditingPhone(false);
+                    try {
+                      await editPaymentInformation({ momo: phone });
+                      alert("Cập nhật số điện thoại thành công!");
+                    } catch (err) {
+                      console.error("Error editing phone number:", err);
+                    }
+                  }}
                   style={{ cursor: "pointer", color: "green" }}
                 />
               </Row>
@@ -161,6 +222,7 @@ const FinanceDashboard = () => {
             setSelectedBank={setSelectedBank}
             accountNumber={accountNumber}
             setAccountNumber={setAccountNumber}
+            type="main"
           />
         </Col>
         <Col span={8}>
@@ -170,6 +232,7 @@ const FinanceDashboard = () => {
             setSelectedBank={setSelectedSubBank}
             accountNumber={subAccountNumber}
             setAccountNumber={setSubAccountNumber}
+            type="sub"
           />
         </Col>
       </Row>
@@ -205,12 +268,12 @@ const FinanceDashboard = () => {
 
       <Row gutter={16} style={{ marginTop: 20 }}>
         <Col span={12}>
-          <Card title="Income">
+          <Card title="Thu nhập">
             <h2>{totalIncome} đ</h2>
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="Tasks">
+          <Card title="Tổng số công việc">
             <h2>{totalTask}</h2>
           </Card>
         </Col>

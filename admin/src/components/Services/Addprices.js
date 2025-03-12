@@ -39,18 +39,19 @@ const AddPrices = ({ prices = [], id }) => {
 
   const handleSavePrice = async () => {
     try {
+      const data = {
+        taskTypeId: parseFloat(id),
+        name: editingPrice.name,
+        value: parseFloat(editingPrice.value) || 0,
+        stepPrice: parseFloat(editingPrice.stepPrice) || 0,
+        beginPrice: 0,
+        stepValue: parseFloat(editingPrice.stepValue) || 0,
+        unit: editingPrice.unit,
+        beginValue: parseFloat(editingPrice.beginValue) || 0,
+      };
+
       if (editingPrice.id) {
         // Chỉnh sửa
-        const data = {
-          taskTypeId: parseFloat(id),
-          name: editingPrice.name,
-          value: editingPrice.value,
-          stepPrice: editingPrice.stepPrice,
-          beginPrice: 0,
-          stepValue: editingPrice.stepValue,
-          unit: editingPrice.unit,
-          beginValue: editingPrice.beginValue,
-        };
         await editAddPriceDetail(data);
         setDataSource(
           dataSource.map((item) =>
@@ -60,21 +61,20 @@ const AddPrices = ({ prices = [], id }) => {
         message.success("Cập nhật giá thành công!");
       } else {
         // Thêm mới
-        const newPrice = { ...editingPrice, id: id };
-        const data = {
-          taskTypeId: parseFloat(id),
-          name: newPrice.name,
-          value: newPrice.value,
-          stepPrice: newPrice.stepPrice,
-          beginPrice: 0,
-          stepValue: newPrice.stepValue,
-          unit: newPrice.unit,
-          beginValue: newPrice.beginValue,
-        };
-        await addAddPriceDetail(data);
-        setDataSource([...dataSource, { ...newPrice, id: Date.now() }]);
 
-        message.success("Thêm giá thành công!");
+        const newPrice = { ...editingPrice, id: id };
+
+        await addAddPriceDetail({
+          taskTypeId: parseFloat(id),
+          name: editingPrice.name,
+          value: parseFloat(editingPrice.value),
+          stepPrice: parseFloat(editingPrice.stepPrice),
+          beginPrice: 10000,
+          stepValue: parseFloat(editingPrice.stepValue),
+          unit: editingPrice.unit,
+          beginValue: parseFloat(editingPrice.beginValue),
+        });
+
         setDataSource([...dataSource, newPrice]);
         message.success("Thêm giá thành công!");
       }

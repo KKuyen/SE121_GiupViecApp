@@ -13,7 +13,7 @@ export class Admin1Controller {
       originalPrice,
       addPriceDetails,
     } = req.body;
-    if (!name || !description || !originalPrice || !value) {
+    if (!name || !originalPrice || !value) {
       res.status(500).json({
         errCode: 1,
         message: "Missing required fields",
@@ -218,6 +218,26 @@ export class Admin1Controller {
       errCode: message.errCode,
       message: message.message,
       user: message.user,
+    });
+  }
+  static async editPaymentInformation(req: Request, res: Response) {
+    const {
+      momo,
+      bankAccount,
+      bankAccountName,
+      subBankAccount,
+      subBankAccountName,
+    } = req.body;
+    let message: any = await Admin1Service.editPaymentInformation(
+      momo,
+      bankAccount,
+      bankAccountName,
+      subBankAccount,
+      subBankAccountName
+    );
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.existingPaymentInformation,
     });
   }
 }

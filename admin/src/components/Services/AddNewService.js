@@ -1,7 +1,24 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Upload, Row, Col, Table, Space } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Upload,
+  Row,
+  Col,
+  Table,
+  Space,
+  message,
+} from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { addNewTaskType } from "../../services/admnService";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://wbekftdbbgbvuybtvjoi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZWtmdGRiYmdidnV5YnR2am9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwODgxNTEsImV4cCI6MjA0MzY2NDE1MX0.j-bv1lYpTHBiCjFjlwpXGtLqoftFZRqazzoROas6gAA"
+);
+
 const AddNewService = () => {
   const [priceList, setPriceList] = useState([]);
   const [form] = Form.useForm();
@@ -28,13 +45,14 @@ const AddNewService = () => {
         ]);
       })
       .catch(() => {
-        alert("Vui lòng nhập đủ thông tin");
+        message.error("Vui lòng nhập đủ thông tin");
       });
   };
 
   const deletePrice = (key) => {
     setPriceList(priceList.filter((item) => item.key !== key));
   };
+
   const handleSubmit = async () => {
     try {
       // Lấy dữ liệu từ form chính
@@ -43,21 +61,47 @@ const AddNewService = () => {
         "description",
         "value",
         "originalPrice",
+        "icon",
       ]);
+
+      // Lấy danh sách file từ Upload
+      const fileList = form.getFieldValue("icon") || [];
+
+      let fileName = null;
+      let fileUrl = null;
+
+      if (fileList.length > 0) {
+        const file = fileList[0].originFileObj;
+        fileName = `${Date.now()}-${file.name}`;
+
+        // Upload ảnh lên Supabase Storage
+        const { data, error } = await supabase.storage
+          .from("images")
+          .upload(fileName, file);
+        if (error) throw error;
+
+        // Lấy public URL của ảnh
+        const { publicURL, error: urlError } = supabase.storage
+          .from("images")
+          .getPublicUrl(fileName);
+        if (urlError) throw urlError;
+
+        fileUrl = publicURL;
+      }
 
       // Chuẩn bị dữ liệu gửi API
       const data = {
         name: values.name,
-        avatar: null, // Hiện tại chưa có upload ảnh, để null
+        avatar: fileUrl, // Lưu URL của ảnh
         description: values.description,
-        image: "broom", // Giữ nguyên như yêu cầu
+        image: fileName, // Lưu fileName vào DB
         value: parseFloat(values.value),
         originalPrice: parseFloat(values.originalPrice),
         addPriceDetails: priceList.map((item) => ({
           name: item.priceName,
           value: parseFloat(item.beginValue),
           stepPrice: parseFloat(item.stepPrice),
-          value: parseFloat(item.pricevalue),
+          priceValue: parseFloat(item.pricevalue),
           stepValue: parseFloat(item.stepValue),
           unit: item.unit,
           beginValue: parseFloat(item.beginValue),
@@ -77,7 +121,7 @@ const AddNewService = () => {
       setPriceList([]);
     } catch (error) {
       console.error("Lỗi khi gửi dữ liệu:", error);
-      alert("Vui lòng nhập đủ thông tin!");
+      message.error("Vui lòng nhập đủ thông tin!");
     }
   };
 
@@ -120,13 +164,29 @@ const AddNewService = () => {
     }
   };
 
+  const handleUploadChange = (info) => {
+    const newFileList = info.fileList || [];
+    form.setFieldsValue({ icon: newFileList });
+  };
+
   return (
     <Form layout="vertical" form={form}>
-      <Form.Item label="Upload" valuePropName="fileList">
-        <Upload listType="picture-card" maxCount={1}>
-          <div>
-            <UploadOutlined />
-          </div>
+      <Form.Item
+        label="Icon"
+        name="icon"
+        valuePropName="fileList"
+        rules={[{ required: true, message: "Vui lòng tải lên một ảnh" }]}
+        getValueFromEvent={(e) =>
+          Array.isArray(e?.fileList) ? e.fileList : []
+        }
+      >
+        <Upload
+          listType="picture-card"
+          maxCount={1}
+          beforeUpload={() => false} // Không tự động upload
+          onChange={handleUploadChange}
+        >
+          <UploadOutlined />
         </Upload>
       </Form.Item>
 
@@ -176,7 +236,7 @@ const AddNewService = () => {
         </Col>
       </Row>
 
-      <h3>Add Price</h3>
+      <h3>Giá tăng thêm</h3>
       <Row gutter={16}>
         <Col span={8}>
           <Form.Item
@@ -253,8 +313,8 @@ const AddNewService = () => {
         </Col>
       </Row>
 
-      <Button type="dashed" block onClick={addPrice}>
-        Add Price
+      <Button type="dashed" block onClick={addPrice} style={{ height: 38 }}>
+        Tạo giá thêm
       </Button>
 
       <Table
@@ -264,9 +324,9 @@ const AddNewService = () => {
       />
 
       <Row justify="end" style={{ marginTop: 20 }}>
-        <Button style={{ marginRight: 10 }}>Cancel</Button>
+        <Button style={{ marginRight: 10 }}>Hủy</Button>
         <Button type="primary" onClick={handleSubmit}>
-          Finish
+          Hoàn thành
         </Button>
       </Row>
     </Form>

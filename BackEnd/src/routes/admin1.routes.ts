@@ -34,4 +34,8 @@ admin1Router.post("/api/v1/get-payment", Admin1Controller.getIncome);
 admin1Router.post("/api/v1/get-complaints", Admin1Controller.getComplaints);
 admin1Router.post("/api/v1/get-a-complaint", Admin1Controller.getAComplaint);
 admin1Router.post("/api/v1/get-a-user", Admin1Controller.getUserById);
+admin1Router.put(
+  "/api/v1/edit-payment-information",
+  Admin1Controller.editPaymentInformation
+);
 export default admin1Router;
