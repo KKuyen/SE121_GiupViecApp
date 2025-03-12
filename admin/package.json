@@ -10,6 +10,7 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.24.1",
+    "antd-img-crop": "^4.24.0",
     "axios": "^1.7.9",
     "chart.js": "^4.4.8",
     "firebase": "^11.4.0",
@@ -17,7 +18,12 @@
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
+
     "react-phone-input-2": "^2.15.1",
+
+    "react-google-map-picker": "^1.2.3",
+    "react-location-picker": "^1.5.0",
+
     "react-router": "^7.2.0",
     "react-router-dom": "^7.2.0",
     "react-scripts": "5.0.1",

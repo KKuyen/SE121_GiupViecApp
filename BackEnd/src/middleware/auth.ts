@@ -26,6 +26,7 @@ const nonSecurePaths = [
   "/api/v1/edit-voucher",
   "/api/v1/delete-voucher",
   "/api/v1/get-all-activities",
+
   "/api/v1/get-all-task-type",
   "/api/v1/get-a-task-type",
   "/api/v1/get-payment",
@@ -34,13 +35,14 @@ const nonSecurePaths = [
   "/api/v1/get-a-user",
   "/api/v1/supabase/messages",
   "/api/v1/edit-payment-information",
+
+  "/api/v1/get-all-tasks",
+  "/api/v1/get-all-vouchers",
 ];
 const userPaths: string[] = [
   "/api/v1/hello",
   "/api/v1/create-new-task",
   "/api/v1/edit-a-task",
-  "/api/v1/get-all-tasks",
-  "/api/v1/get-all-voucher",
   "/api/v1/get-my-voucher",
 
   "/api/v1/get-tasker-list",

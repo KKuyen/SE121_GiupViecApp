@@ -1,238 +1,221 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Col,
-  Dropdown,
   Input,
   InputNumber,
-  Menu,
   Modal,
-  Radio,
   Row,
-  Segmented,
   Space,
   Table,
-  Tag,
   DatePicker,
+  Popconfirm,
+  Checkbox,
+  message,
 } from "antd";
-
 import {
-  AppstoreOutlined,
-  BarsOutlined,
   DeleteOutlined,
-  DownOutlined,
   EditOutlined,
-  EyeOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FilterOutlined,
-  PlusCircleFilled,
   PlusCircleOutlined,
 } from "@ant-design/icons";
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (tags) => (
-      <span>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </span>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <EyeOutlined size={30} />
-        <EditOutlined />
-        <DeleteOutlined />
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "4",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "5",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "6",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "7",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "8",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "9",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-  {
-    key: "10",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "11",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
-const items = [
-  {
-    label: "Người giúp việc",
-    key: "1",
-  },
-  {
-    label: "Khách hàng",
-    key: "2",
-  },
-];
-const { Search } = Input;
-const onSearch = (value, _e, info) => console.log(info?.source, value);
-
-const filterItems = [
-  {
-    label: "Age > 30",
-    key: "1",
-  },
-  {
-    label: "Age <= 30",
-    key: "2",
-  },
-  {
-    label: "Developer",
-    key: "3",
-  },
-  {
-    label: "Teacher",
-    key: "4",
-  },
-];
+import axios from "../../untils/axiosCustomize";
+import moment from "moment";
+import Upload from "antd/es/upload/Upload";
+import ImgCrop from "antd-img-crop";
 
 const Vouchers = () => {
-  const [selectedItem, setSelectedItem] = useState(items[0].label);
-  const [filteredData, setFilteredData] = useState(data);
   const [openResponsive, setOpenResponsive] = useState(false);
-  const { RangePicker } = DatePicker;
+  const [openEditResponsive, setOpenEditResponsive] = useState(false);
+  const [selectedVoucher, setSelectedVoucher] = useState(null); // State để lưu trữ voucher được chọn
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [Rpoint, setRpoint] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+  const [value, setValue] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
-  const handleMenuClick = (e) => {
-    const selected = items.find((item) => item.key === e.key);
-    setSelectedItem(selected.label);
+  const { RangePicker } = DatePicker;
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios.get("/api/v1/get-all-vouchers").then((res) => {
+      setData(res?.vouchers);
+    });
+  }, []);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const handleEditClick = (record) => {
+    setSelectedVoucher(record); // Cập nhật state với dữ liệu của voucher được chọn
+    setName(record.header);
+    setDescription(record.content);
+    setRpoint(record.RpointCost);
+    setQuantity(record.quantity);
+    setValue(record.value);
+    setStartDate(moment(record.startDate));
+    setEndDate(moment(record.endDate));
+    setOpenEditResponsive(true); // Mở modal chỉnh sửa
   };
 
-  const handleFilterClick = ({ key }) => {
-    let filtered = data;
-    switch (key) {
-      case "1":
-        filtered = data.filter((item) => item.age > 30);
-        break;
-      case "2":
-        filtered = data.filter((item) => item.age <= 30);
-        break;
-      case "3":
-        filtered = data.filter((item) => item.tags.includes("developer"));
-        break;
-      case "4":
-        filtered = data.filter((item) => item.tags.includes("teacher"));
-        break;
-      default:
-        break;
+  const columns = [
+    {
+      title: "Tên voucher",
+      dataIndex: "header",
+      key: "header",
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "content",
+      key: "content",
+    },
+    {
+      title: "Rpoint",
+      dataIndex: "RpointCost",
+      key: "RpointCost",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Tỉ lệ giảm giá",
+      dataIndex: "value",
+      key: "value",
+    },
+    {
+      title: "Ngày bắt đầu",
+      key: "startDate",
+      dataIndex: "startDate",
+      render: (text) => moment(text).format("HH:mm  DD-MM-YYYY"), // Chuyển đổi định dạng ngày
+    },
+    {
+      title: "Ngày kết thúc",
+      key: "endDate",
+      dataIndex: "endDate",
+      render: (text) => moment(text).format("HH:mm  DD-MM-YYYY"), // Chuyển đổi định dạng ngày
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <EditOutlined onClick={() => handleEditClick(record)} />
+          <Popconfirm
+            title="Xóa voucher"
+            description="Bạn có chắc chắn muốn xóa voucher này không?"
+            onConfirm={() => confirmDeleteVoucher(record)}
+            okText="Xóa"
+            cancelText="Hủy">
+            <DeleteOutlined style={{ color: "#ff4d4f" }} />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const confirmDeleteVoucher = (record) => {
+    axios.delete(`/api/v1/delete-voucher?id=${record.id}`).then((res) => {
+      if (res?.errCode === 0) {
+        setData(data.filter((item) => item.id !== record.id));
+        messageApi.open({
+          type: "success",
+          content: "Xóa voucher thành công!",
+        });
+      }
+    });
+  };
+
+  const handelSaveVoucher = () => {
+    // Xử lý thêm voucher
+    const voucher = {
+      header: name,
+      content: description,
+      RpointCost: Rpoint,
+      quantity: quantity,
+      value: value,
+      startDate: startDate,
+      endDate: endDate,
+      isInfinity: false,
+      image: "temp image",
+      applyTasks: "ALL",
+    };
+    console.log("data", data);
+    axios.post("/api/v1/add-voucher", voucher).then((res) => {
+      if (res?.errCode === 0) {
+        setOpenResponsive(false);
+        setData([...data, voucher]);
+        messageApi.open({
+          type: "success",
+          content: "Thêm voucher thành công!",
+        });
+      }
+    });
+  };
+
+  const handelUpdateVoucher = () => {
+    // Xử lý cập nhật voucher
+    const updatedVoucher = {
+      ...selectedVoucher,
+      header: name,
+      content: description,
+      RpointCost: Rpoint,
+      quantity: quantity,
+      value: value,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    console.log("updatedVoucher", updatedVoucher);
+    axios.put(`/api/v1/edit-voucher`, updatedVoucher).then((res) => {
+      if (res?.errCode === 0) {
+        setOpenEditResponsive(false);
+        setData(
+          data.map((item) =>
+            item.id === selectedVoucher.id ? updatedVoucher : item
+          )
+        );
+        messageApi.open({
+          type: "success",
+          content: "Cập nhật voucher thành công!",
+        });
+      }
+    });
+  };
+
+  const [fileList, setFileList] = useState([]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
     }
-    setFilteredData(filtered);
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
+  const CheckboxGroup = Checkbox.Group;
+  const plainOptions = ["Apple", "Pear", "Orange"];
+  const defaultCheckedList = ["Apple", "Orange"];
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const checkAll = plainOptions.length === checkedList.length;
+  const indeterminate =
+    checkedList.length > 0 && checkedList.length < plainOptions.length;
+  const onCheckChange = (list) => {
+    setCheckedList(list);
+  };
+  const onCheckAllChange = (e) => {
+    setCheckedList(e.target.checked ? plainOptions : []);
   };
 
   return (
     <div>
       <Row justify="space-between">
-        <Col md={11}>
-          <Search
-            placeholder="input search text"
-            allowClear
-            onSearch={onSearch}
-            size="large"
-          />
-        </Col>
         <Col md={3}>
           <Button
             onClick={() => setOpenResponsive(true)}
@@ -254,22 +237,150 @@ const Vouchers = () => {
           position: ["bottomCenter"],
           pageSize: 8,
         }}
-        dataSource={filteredData}
+        dataSource={data}
       />
       <Modal
         title="Thêm ưu đãi"
         centered
         open={openResponsive}
-        onOk={() => setOpenResponsive(false)}
+        onOk={handelSaveVoucher}
         onCancel={() => setOpenResponsive(false)}
         width="450px">
         <Space direction="vertical" style={{ width: "100%" }}>
-          <Input placeholder="Tên voucher" />
-          <InputNumber min={1} max={100} placeholder="Tỉ lệ ưu đãi   " />
-          <RangePicker showTime />
+          <Input
+            placeholder="Tên voucher"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            placeholder="Mô tả"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <InputNumber
+            min={1}
+            max={100}
+            placeholder="Rpoint"
+            value={Rpoint}
+            onChange={(value) => setRpoint(value)}
+          />
+          <InputNumber
+            min={1}
+            max={100}
+            placeholder="Số lượng"
+            value={quantity}
+            onChange={(value) => setQuantity(value)}
+          />
+          <InputNumber
+            min={1}
+            max={100}
+            placeholder="Tỉ lệ ưu đãi"
+            value={value}
+            onChange={(value) => setValue(value)}
+          />
+          <RangePicker
+            showTime
+            value={[startDate, endDate]}
+            onChange={(dates) => {
+              setStartDate(dates[0]);
+              setEndDate(dates[1]);
+            }}
+          />
+          <Checkbox
+            indeterminate={indeterminate}
+            onChange={onCheckAllChange}
+            checked={checkAll}>
+            Check all
+          </Checkbox>
+          <CheckboxGroup
+            options={plainOptions}
+            value={checkedList}
+            onChange={onCheckChange}
+          />
+          <ImgCrop rotationSlider>
+            <Upload
+              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+              listType="picture-card"
+              fileList={fileList}
+              onChange={onChange}
+              onPreview={onPreview}>
+              {fileList.length < 1 && "+ Upload"}
+            </Upload>
+          </ImgCrop>
+        </Space>
+      </Modal>
+      <Modal
+        title="Sửa ưu đãi"
+        centered
+        open={openEditResponsive}
+        onOk={handelUpdateVoucher}
+        onCancel={() => setOpenEditResponsive(false)}
+        width="450px">
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Input
+            placeholder="Tên voucher"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            placeholder="Mô tả"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <InputNumber
+            min={1}
+            max={100}
+            placeholder="Rpoint"
+            value={Rpoint}
+            onChange={(value) => setRpoint(value)}
+          />
+          <InputNumber
+            min={1}
+            max={100}
+            placeholder="Số lượng"
+            value={quantity}
+            onChange={(value) => setQuantity(value)}
+          />
+          <InputNumber
+            min={1}
+            max={100}
+            placeholder="Tỉ lệ ưu đãi"
+            value={value}
+            onChange={(value) => setValue(value)}
+          />
+          <RangePicker
+            showTime
+            value={[startDate, endDate]}
+            onChange={(dates) => {
+              setStartDate(dates[0]);
+              setEndDate(dates[1]);
+            }}
+          />
+          <Checkbox
+            indeterminate={indeterminate}
+            onChange={onCheckAllChange}
+            checked={checkAll}>
+            Check all
+          </Checkbox>
+          <CheckboxGroup
+            options={plainOptions}
+            value={checkedList}
+            onChange={onCheckChange}
+          />
+          <ImgCrop rotationSlider>
+            <Upload
+              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+              listType="picture-card"
+              fileList={fileList}
+              onChange={onChange}
+              onPreview={onPreview}>
+              {fileList.length < 1 && "+ Upload"}
+            </Upload>
+          </ImgCrop>
         </Space>
       </Modal>
     </div>
   );
 };
+
 export default Vouchers;

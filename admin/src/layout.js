@@ -8,7 +8,11 @@ import Service from "./components/Services/Service";
 import Vouchers from "./components/Vouchers/Vouchers";
 import AddNewService from "./components/Services/AddNewService";
 import ReportDetail from "./components/Report/ReportDetail";
+
 import EditService from "./components/Services/EditService";
+
+import ViewDetail from "./components/Home/ViewDetail";
+
 const Layout = () => {
   return (
     <>
@@ -16,6 +20,7 @@ const Layout = () => {
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
+          <Route path="view-detail" element={<ViewDetail />} />
           <Route path="activities" element={<Activities />} />
           <Route path="finance" element={<Finance />} />
           <Route path="report" element={<Report />} />

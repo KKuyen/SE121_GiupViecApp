@@ -9,4 +9,5 @@ class AppImages {
   static const String cover = '${basePath}cover.png';
   static const String location = '${basePath}chooseLocation.png';
   static const String avatar = '${basePath}avatar.png';
+  static const String chatbot = '${basePath}chatbot.png';
 }

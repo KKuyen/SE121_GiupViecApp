@@ -76,11 +76,11 @@ class _SettingState extends State<Setting> {
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.5),
                 ),
-                child: Center(
+                child: const Center(
                     child: SizedBox(
                         height: 40,
                         width: 40,
-                        child: const CircularProgressIndicator()))),
+                        child: CircularProgressIndicator()))),
           );
         } else if (state is SettingSuccess) {
           return Scaffold(

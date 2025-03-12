@@ -1,61 +1,126 @@
-import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-import { Button, Input, message } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Popconfirm, Space, Table, Tag } from "antd";
+import React, { useEffect, useState } from "react";
+import axios from "../../untils/axiosCustomize";
 
-const supabase = createClient(
-  "https://wbekftdbbgbvuybtvjoi.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZWtmdGRiYmdidnV5YnR2am9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwODgxNTEsImV4cCI6MjA0MzY2NDE1MX0.j-bv1lYpTHBiCjFjlwpXGtLqoftFZRqazzoROas6gAA"
-);
-
+const historyColumns = [
+  {
+    title: "Tên công việc",
+    dataIndex: "taskName",
+    key: "taskName",
+  },
+  {
+    title: "Ngày đặt",
+    dataIndex: "createdAt",
+    key: "createdAt",
+  },
+  {
+    title: "Địa chỉ",
+    dataIndex: "map",
+    key: "map",
+  },
+  {
+    title: "Số người làm",
+    dataIndex: "numberOfTasker",
+    key: "numberOfTasker",
+  },
+  {
+    title: "Trạng thái",
+    key: "taskStatus",
+    dataIndex: "taskStatus",
+    render: (_, { taskStatus }) => {
+      let color = "";
+      let text = "";
+      switch (taskStatus) {
+        case "TS1":
+          color = "blue";
+          text = "Đang đặt";
+          break;
+        case "TS2":
+          color = "green";
+          text = "Đã đặt";
+          break;
+        case "TS3":
+          color = "yellow";
+          text = "Hoàn thành";
+          break;
+        case "TS4":
+          color = "red";
+          text = "Đã hủy";
+          break;
+        default:
+          color = "gray";
+          text = "Không xác định";
+      }
+      return (
+        <Tag color={color} key={taskStatus}>
+          {text}
+        </Tag>
+      );
+    },
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (_, record) => (
+      console.log("record", record),
+      (
+        <Space size="middle">
+          <EditOutlined />
+          <Popconfirm
+            title="Xóa công việc"
+            description="Bạn có chắc chắn muốn xóa công việc này không?"
+            onConfirm={confirmDeleteTask}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <DeleteOutlined style={{ color: "#ff4d4f" }} />
+          </Popconfirm>
+        </Space>
+      )
+    ),
+  },
+];
+const confirmDeleteTask = (e) => {
+  console.log("e", e);
+  // Call API
+};
 export default function Activities() {
-  const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    // Call API
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const uploadImage = async () => {
-    if (!file) {
-      message.error("Please select a file to upload.");
-      return;
-    }
-
-    setLoading(true);
-
-    const fileName = `${Date.now()}_${file.name}`;
-    const { data, error } = await supabase.storage
-      .from("images")
-      .upload(fileName, file);
-
-    if (error) {
-      message.error("Failed to upload image.");
-      console.error("Error uploading image:", error);
-      setLoading(false);
-      return;
-    }
-
-    const publicURL = supabase.storage.from("images").getPublicUrl(fileName);
-    setImageUrl(publicURL.data.publicUrl);
-    alert("Image uploaded successfully!");
-
-    setLoading(false);
-  };
-
+    axios.get("/api/v1/get-all-activities").then((res) => {
+      console.log("res", res.taskList);
+      res.activities.map((task) => {
+        const temp = {
+          key: task?._id,
+          taskName: task?.taskType?.name,
+          createdAt: task?.createdAt?.substring(0, 10),
+          map:
+            task?.location?.detailAddress +
+            ", " +
+            task?.location?.district +
+            ", " +
+            task?.location?.province,
+          numberOfTasker: task?.numberOfTasker,
+          taskStatus: task?.taskStatus,
+        };
+        setTasks((tasks) => [...tasks, temp]);
+      });
+      //setTasks(res.tasks);
+    });
+  }, []);
   return (
-    <div className="p-4 border rounded-xl shadow-md w-80 flex flex-col gap-4">
-      <Input type="file" accept="image/*" onChange={handleFileChange} />
-      <Button onClick={uploadImage} disabled={loading}>
-        {loading ? "Đang tải lên..." : "Tải ảnh lên"}
-      </Button>
-      {imageUrl && (
-        <div>
-          <p>Ảnh đã tải lên:</p>
-          <img src={imageUrl} alt="Uploaded" className="w-full rounded-lg" />
-          <p className="break-all text-sm">{imageUrl}</p>
-        </div>
-      )}
+    <div>
+      <Table
+        columns={historyColumns}
+        pagination={{
+          position: ["bottomCenter"],
+          pageSize: 7,
+        }}
+        dataSource={tasks}
+      />
     </div>
   );
 }
