@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:se121_giupviec_app/data/datasources/allNotification_remote-datasource.dart';
+import 'package:se121_giupviec_app/data/datasources/allReport_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/allReview_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/blockTaskers_remote_datasource.dart';
 import 'package:se121_giupviec_app/data/datasources/loveTaskers_remote_datasource.dart';
@@ -14,6 +15,7 @@ import 'package:se121_giupviec_app/data/repository/blockTaskers_repository_impl.
 import 'package:se121_giupviec_app/data/repository/get_task_impl.dart';
 import 'package:se121_giupviec_app/data/repository/loveTaskers_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/newtask1_repository_impl.dart';
+import 'package:se121_giupviec_app/data/repository/report_repository_implt.dart';
 import 'package:se121_giupviec_app/data/repository/setting_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/task_repository_impl.dart';
 import 'package:se121_giupviec_app/data/repository/tasker_repository_impl.dart';
@@ -21,6 +23,7 @@ import 'package:se121_giupviec_app/domain/repository/BlockTaskers_repository.dar
 import 'package:se121_giupviec_app/domain/repository/a_task_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/allReview_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/all_notificaiton_repository.dart';
+import 'package:se121_giupviec_app/domain/repository/all_repoort_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/loveTaskers_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/newTask1_repository.dart';
 import 'package:se121_giupviec_app/domain/repository/setting_repository.dart';
@@ -34,6 +37,7 @@ import 'package:se121_giupviec_app/domain/usecases/get_a_tasker_usercase.dart';
 import 'package:se121_giupviec_app/domain/usecases/Auth/sendOTP.dart';
 
 import 'package:se121_giupviec_app/domain/usecases/get_a_tasks_usercase.dart';
+import 'package:se121_giupviec_app/domain/usecases/get_all_report_usecase.dart';
 
 import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 
@@ -47,6 +51,8 @@ import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubi
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/report/aReport_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/report/report_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/aReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/review/allReview_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
@@ -125,6 +131,7 @@ Future<void> init() async {
       SettingUsecase: sl(),
     ),
   );
+
   sl.registerFactory(
     () => TaskTypeCubit(
       getAllTasksTypeUseCase: sl(),
@@ -244,6 +251,16 @@ Future<void> init() async {
       getAllNotificationsUsercase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => ReportCubit(
+      getReportsUsercase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => AReportCubit(
+      getReportsUsercase: sl(),
+    ),
+  );
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -277,6 +294,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => EditATaskerProfileUsecase(sl()));
 
   sl.registerLazySingleton(() => GetAllNotificationUseCase(sl()));
+
+  sl.registerLazySingleton(() => GetAllReportUsecase(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -324,6 +343,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<AllNotificaitonRepository>(
     () => AllNotificationRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<ReportRepository>(
+    () => ReportRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -424,6 +446,14 @@ Future<void> init() async {
       apiVersion: ApiConstants.apiVersion,
     ),
   );
+  sl.registerLazySingleton<ReportRemoteDatasource>(
+    () => ReportRemoteDatasourceImpl(
+      client: sl(),
+      baseUrl: ApiConstants.baseUrl,
+      apiVersion: ApiConstants.apiVersion,
+    ),
+  );
+
   // External
   sl.registerLazySingleton(() => http.Client());
 }

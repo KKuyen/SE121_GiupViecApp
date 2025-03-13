@@ -17,7 +17,7 @@ dependencies:
   firebase_storage:
   flutter_widget_from_html:
   firebase_auth:
-
+  supabase_flutter:
   flutter_dash: ^1.0.0
   cupertino_icons: ^1.0.6
   font_awesome_flutter: ^10.1.0

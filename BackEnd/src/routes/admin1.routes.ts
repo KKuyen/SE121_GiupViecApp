@@ -38,4 +38,8 @@ admin1Router.put(
   "/api/v1/edit-payment-information",
   Admin1Controller.editPaymentInformation
 );
+admin1Router.post(
+  "/api/v1/get-complaints-by-userId",
+  Admin1Controller.getReportByUserId
+);
 export default admin1Router;

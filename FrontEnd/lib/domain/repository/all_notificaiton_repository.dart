@@ -1,6 +1,5 @@
 // lib/domain/repository/task_repository.dart
 import 'package:se121_giupviec_app/domain/entities/notification.dart';
-import 'package:se121_giupviec_app/domain/entities/review.dart';
 
 abstract class AllNotificaitonRepository {
   Future<List<Notification>> getAllNotication(int userId);

@@ -240,4 +240,13 @@ export class Admin1Controller {
       message: message.existingPaymentInformation,
     });
   }
+  static async getReportByUserId(req: Request, res: Response) {
+    const { userId } = req.body;
+    let message: any = await Admin1Service.getReportByUserId(Number(userId));
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+      complaints: message.complaints,
+    });
+  }
 }

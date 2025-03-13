@@ -391,4 +391,22 @@ export class Admin1Service {
       paymentInformation: existingPaymentInformation,
     };
   }
+  static async getReportByUserId(userId: number) {
+    const complaintRepository = AppDataSource.getRepository(Complaint);
+    const complaints = await complaintRepository.find({
+      where: { customerId: userId },
+    });
+
+    if (!complaints) {
+      return {
+        errCode: 1,
+        errMessage: "Complaint not found",
+      };
+    }
+
+    return {
+      errCode: 0,
+      complaints,
+    };
+  }
 }

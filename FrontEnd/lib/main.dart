@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/notification/notification_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/report/aReport_cubit.dart';
+import 'package:se121_giupviec_app/presentation/bloc/report/report_cubit.dart';
 
 import 'package:se121_giupviec_app/presentation/screens/auth/splash.dart';
 
@@ -36,7 +38,7 @@ import 'presentation/bloc/Message/message_review_cubit.dart';
 import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 // Thêm dòng này
 
 Future main() async {
@@ -56,7 +58,10 @@ Future main() async {
 
   await di.init();
   // Initialize dependencies
-
+  await Supabase.initialize(
+      url: "https://wbekftdbbgbvuybtvjoi.supabase.co",
+      anonKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZWtmdGRiYmdidnV5YnR2am9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwODgxNTEsImV4cCI6MjA0MzY2NDE1MX0.j-bv1lYpTHBiCjFjlwpXGtLqoftFZRqazzoROas6gAA");
   runApp(const MyApp());
 }
 
@@ -151,6 +156,12 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) => di.sl<allNotificationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<ReportCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<AReportCubit>(),
         ),
       ],
       child: MaterialApp(

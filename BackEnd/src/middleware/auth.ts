@@ -81,6 +81,7 @@ const userPaths: string[] = [
   "/api/v1/get-user-setting",
   "/api/v1/get-notification",
   "/api/v1/delete-notification",
+  "/api/v1/get-complaints-by-userId",
 ];
 const taskerPaths: string[] = [
   "/api/v1/get-a-task",
