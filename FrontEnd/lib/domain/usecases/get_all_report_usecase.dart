@@ -12,7 +12,14 @@ class GetAllReportUsecase {
   Future<List<Complaint>> execute(int userId) async {
     return await repository.getAllReport(userId);
   }
-   Future <Complaint> execute2(int ComplanitId) async {
+
+  Future<Complaint> execute2(int ComplanitId) async {
     return await repository.getAReport(ComplanitId);
+  }
+
+  Future<void> execute3(int taskId, String type, String description,
+      int customerId, int taskerId) async {
+    await repository.createReport(
+        taskId, type, description, customerId, taskerId);
   }
 }

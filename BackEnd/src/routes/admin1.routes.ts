@@ -42,4 +42,5 @@ admin1Router.post(
   "/api/v1/get-complaints-by-userId",
   Admin1Controller.getReportByUserId
 );
+admin1Router.post("/api/v1/create-complaint", Admin1Controller.createAReport);
 export default admin1Router;

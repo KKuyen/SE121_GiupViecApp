@@ -249,4 +249,26 @@ export class Admin1Controller {
       complaints: message.complaints,
     });
   }
+  static async createAReport(req: Request, res: Response) {
+    const {
+      taskId,
+      type,
+
+      description,
+      customerId,
+      taskerId,
+    } = req.body;
+    let message: any = await Admin1Service.createAReport(
+      taskId,
+      type,
+
+      description,
+      customerId,
+      taskerId
+    );
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.message,
+    });
+  }
 }

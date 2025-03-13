@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:se121_giupviec_app/presentation/bloc/report/aReport_cubit.dart';
 
 class CreateReportScreen extends StatefulWidget {
   @override
@@ -9,18 +11,29 @@ class CreateReportScreen extends StatefulWidget {
 
 class _CreateReportScreenState extends State<CreateReportScreen> {
   final TextEditingController _taskIdController = TextEditingController();
+  final TextEditingController _taskerIdController =
+      TextEditingController(); // New controller for Tasker ID
   final TextEditingController _descriptionController = TextEditingController();
   String _selectedType = "Pending"; // Default value
 
   void _submitReport() {
-    String taskId = _taskIdController.text;
+    if (_taskIdController.text.isEmpty ||
+        _taskerIdController.text.isEmpty ||
+        _descriptionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin!")),
+      );
+      return;
+    }
+
+    int taskId = int.tryParse(_taskIdController.text) ?? 0;
+    int taskerId = int.tryParse(_taskerIdController.text) ?? 0;
     String description = _descriptionController.text;
 
-    // Xử lý dữ liệu (có thể gửi lên backend ở đây)
-    print("TaskId: $taskId, Type: $_selectedType, Description: $description");
+    context.read<AReportCubit>().createReport(taskId, _selectedType,
+        description, 1, taskerId); // `1` là customerId (giả định)
 
-    // Quay lại màn hình trước
-    Navigator.pop(context);
+    Navigator.pop(context); // Đóng màn hình sau khi gửi
   }
 
   @override
@@ -73,6 +86,15 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: "ID dịch vụ (nếu có)",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _taskerIdController, // New Tasker ID input field
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "ID Tasker (nếu có)",
                   border: OutlineInputBorder(),
                 ),
               ),

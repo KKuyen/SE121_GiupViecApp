@@ -25,4 +25,19 @@ class AReportCubit extends Cubit<AReportState> {
       emit(AReportError(e.toString()));
     }
   }
+
+  Future<void> createReport(int taskId, String type, String description,
+      int customerId, int taskerId) async {
+    try {
+      print("Chạy vào ReportCubit");
+
+      await getReportsUsercase.execute3(
+          taskId, type, description, customerId, taskerId);
+
+      print("Tạo báo cáo thành công");
+    } catch (e, stackTrace) {
+      print("Lỗi trong createReport: $e");
+      print(stackTrace);
+    }
+  }
 }

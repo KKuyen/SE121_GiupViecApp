@@ -7,6 +7,7 @@ import { PaymentInformation } from "../entity/PaymentInfomation.entity";
 import { Tasks } from "../entity/Task.entity";
 import { Complaint } from "../entity/Complaint.entity";
 import { User } from "../entity/User.entity";
+import { TaskerList } from "../entity/TaskerList.entity";
 
 export class Admin1Service {
   static async getAllTaskType() {
@@ -407,6 +408,30 @@ export class Admin1Service {
     return {
       errCode: 0,
       complaints,
+    };
+  }
+  static async createAReport(
+    taskId: number,
+    type: string,
+
+    description: string,
+    customerId: number,
+    taskerId: number
+  ) {
+    const complaintRepository = AppDataSource.getRepository(Complaint);
+    const newComplaint = complaintRepository.create({
+      taskId,
+      type,
+      status: "Pending",
+      description,
+      customerId,
+      taskerId,
+    });
+    await complaintRepository.save(newComplaint);
+    return {
+      errCode: 0,
+      errMessage: "Complaint created successfully",
+      complaint: newComplaint,
     };
   }
 }

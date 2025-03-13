@@ -17,11 +17,6 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  List<Map<String, dynamic>> reports = [
-    {"id": 1, "type": "Pending", "status": "Pending", "description": "Pending"},
-    {"id": 2, "type": "Resolved", "status": "Done", "description": "Resolved"},
-  ];
-
   void _addNewReport() {}
   @override
   void initState() {
@@ -88,14 +83,25 @@ class _ReportScreenState extends State<ReportScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Khiếu nại #${state.Report[index].id ?? ''}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                            Text("TaskId: ${state.Report[index].taskId ?? ''}"),
                             Text(
-                                "Type: ${state.Report[index].type ?? ''}    Status: ${state.Report[index].status ?? ''}"),
-                            Text(
-                                "Description: ${state.Report[index].description ?? ''}"),
+                              state.Report[index].id != null
+                                  ? "Khiếu nại #${state.Report[index].id}"
+                                  : "",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            if (state.Report[index].taskId != 0)
+                              Text("TaskId: ${state.Report[index].taskId}"),
+                            if (state.Report[index].taskerId != 0)
+                              Text("TaskerId: ${state.Report[index].taskerId}"),
+                            if (state.Report[index].type != null ||
+                                state.Report[index].status != null)
+                              Text(
+                                "Type: ${state.Report[index].type ?? ''}    Status: ${state.Report[index].status ?? ''}",
+                              ),
+                            if (state.Report[index].description != null)
+                              Text(
+                                  "Description: ${state.Report[index].description}"),
                           ],
                         ),
                       ),
