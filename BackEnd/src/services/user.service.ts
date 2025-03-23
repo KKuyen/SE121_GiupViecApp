@@ -402,6 +402,8 @@ export class UserService {
     return {
       errCode: 0,
       message: "Task created successfully",
+      id: newTask.id,
+      price: newTask.price,
     };
   }
   static async editTask(

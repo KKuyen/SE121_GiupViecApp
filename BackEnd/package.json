@@ -26,6 +26,7 @@
     "@supabase/supabase-js": "^2.49.1",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
+    "axios": "^1.8.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",

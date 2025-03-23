@@ -14,6 +14,7 @@ abstract class Newtask1Repository {
       String note,
       int myvoucherId,
       int voucherId,
+      String paymentMethod,
       List<Map<String, dynamic>> addPriceDetail);
   Future<List<Location>> getMyLocation(int userId);
   Future<Location?> getMyDefaultLocation(int userId);

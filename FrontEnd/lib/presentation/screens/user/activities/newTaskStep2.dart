@@ -40,6 +40,8 @@ class Newtaskstep2 extends StatefulWidget {
   State<Newtaskstep2> createState() => _Newtaskstep2State();
 }
 
+enum PaymentMethod { momo, direct }
+
 class _Newtaskstep2State extends State<Newtaskstep2> {
   int? voucherId = 0;
   String voucherName = 'Chưa có mã giảm giá nào';
@@ -52,6 +54,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
   String note = '';
   final TextEditingController _noteController = TextEditingController();
   Location? selectLocaion;
+  PaymentMethod _paymentMethod = PaymentMethod.momo;
 
   @override
   void initState() {
@@ -771,6 +774,38 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                                 color: AppColors.cam_main)),
                       ],
                     ),
+                    const SizedBox(height: 15),
+                    const Text('Phương thức thanh toán',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    const SizedBox(height: 5),
+                    ListTile(
+                      title: const Text('Momo'),
+                      leading: Radio<PaymentMethod>(
+                        value: PaymentMethod.momo,
+                        groupValue: _paymentMethod,
+                        onChanged: (PaymentMethod? value) {
+                          setState(() {
+                            _paymentMethod = value!;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Thanh toán trực tiếp'),
+                      leading: Radio<PaymentMethod>(
+                        value: PaymentMethod.direct,
+                        groupValue: _paymentMethod,
+                        onChanged: (PaymentMethod? value) {
+                          setState(() {
+                            _paymentMethod = value!;
+                          });
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Sizedbutton(
                       isEnabled: selectLocaion != null ? true : false,
@@ -808,6 +843,7 @@ class _Newtaskstep2State extends State<Newtaskstep2> {
                               note,
                               myvoucherId,
                               selectedvoucher,
+                              _paymentMethod.toString(),
                               addPriceDetail,
                             );
                         ScaffoldMessenger.of(context).showSnackBar(

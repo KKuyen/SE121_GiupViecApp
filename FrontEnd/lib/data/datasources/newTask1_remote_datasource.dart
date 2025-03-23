@@ -6,6 +6,7 @@ import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/data/models/location_model.dart';
 import 'package:se121_giupviec_app/data/models/taskType_model.dart';
 import 'package:se121_giupviec_app/data/models/voucher_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 abstract class NewTask1RemoteDatasource {
   Future<TasktypeModel> getAtTaskType(int taskTypeId);
@@ -17,6 +18,7 @@ abstract class NewTask1RemoteDatasource {
       String note,
       int myvoucherId,
       int voucherId,
+      String paymentMethod,
       List<Map<String, dynamic>> addPriceDetail);
   Future<List<LocationModel>> getMyLocation(int userId);
   Future<LocationModel?> getMyDefaultLocation(int userId);
@@ -186,11 +188,12 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
     String note,
     int myvoucherId,
     int voucherId,
+    String paymentMethod,
     List<Map<String, dynamic>> addPriceDetail,
   ) async {
     String token = await getToken();
     token = 'Bearer $token';
-    print('bo may day');
+    print('paymentMethod: $paymentMethod');
     final response = await client.post(
       Uri.parse('$baseUrl/$apiVersion/create-new-task'),
       body: json.encode({
@@ -208,6 +211,32 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
         'Authorization': token,
       },
     );
+    print('response: ${response.body}');
+    if (paymentMethod == "PaymentMethod.momo") {
+      try {
+        final paymentResult = await client.post(
+          Uri.parse('$baseUrl/payment'),
+          body: json.encode({
+            "money": json.decode(response.body)['price'].split(' ')[0],
+            "taskId": json.decode(response.body)['id'],
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        );
+        final Map<String, dynamic> paymentResultJson =
+            json.decode(paymentResult.body);
+        final String paymentUrl = paymentResultJson['payUrl'];
+        if (await canLaunch(paymentUrl)) {
+          await launch(paymentUrl);
+        } else {
+          throw 'Could not launch $paymentUrl';
+        }
+      } on Exception catch (e) {
+        print('error: $e');
+        // TODO
+      }
+    }
 
     if (response.statusCode == 201) {
       print('thanh cong');

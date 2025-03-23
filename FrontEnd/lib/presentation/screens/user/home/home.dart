@@ -14,6 +14,7 @@ import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_c
 import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/chatBot.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../common/widgets/location/default_location.dart';
@@ -98,9 +99,14 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChatBot()));
+        onPressed: () async {
+          const url =
+              "https://test-payment.momo.vn/v2/gateway/pay?t=TU9NT3wxMDA&s=b7d20fff457268f36ac0a9497061ae602484d0e96beba3d356f6096a17dcd8b6";
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+            throw 'Could not launch $url';
+          }
         },
         child: const Icon(
           Icons.smart_toy_outlined,
