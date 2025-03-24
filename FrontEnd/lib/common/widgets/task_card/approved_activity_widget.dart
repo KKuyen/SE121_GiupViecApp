@@ -31,6 +31,7 @@ class ApprovedActivityWidget extends StatefulWidget {
 
   final String price;
   final String note;
+  final bool isPaid;
 
   const ApprovedActivityWidget(
       {this.isFinished = false,
@@ -54,6 +55,7 @@ class ApprovedActivityWidget extends StatefulWidget {
       required this.price,
       required this.note,
       required this.loading,
+      required this.isPaid,
       super.key});
 
   @override
@@ -170,6 +172,20 @@ class ApprovedActivityWidgetState extends State<ApprovedActivityWidget> {
                       ],
                     ),
                     const Spacer(),
+                    Text(
+                      widget.isPaid == true
+                          ? 'Đã thanh toán'
+                          : 'Chưa thanh toán',
+                      style: TextStyle(
+                        color: widget.isPaid == true
+                            ? AppColors.xanh_main
+                            : AppColors.do_main,
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,

@@ -257,6 +257,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _phoneField(BuildContext context) {
     return TextFormField(
       controller: _phone,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
           labelText: 'Số điện thoại',
           border: OutlineInputBorder(

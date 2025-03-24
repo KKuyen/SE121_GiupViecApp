@@ -420,7 +420,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
     if (response.statusCode == 200) {
       final List<dynamic> taskListJson = json.decode(response.body)['taskList'];
-
+      print("taskListJsonnnnnnnnnnnnnnnnnnnnnnnnnnnn: $taskListJson");
       return taskListJson
           .map((json) => TaskModel.fromJson(json))
           .where((task) =>
@@ -700,10 +700,9 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDatasource {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = json.decode(response.body);
-      print(responseBody);
       final Map<String, dynamic> taskJson = responseBody['task'];
-      print(taskJson);
       final TaskModel taskModel = TaskModel.fromJson(taskJson);
+      print("taskModel: $taskModel");
       return taskModel;
     } else {
       print("response.body failed: ${response.body}");

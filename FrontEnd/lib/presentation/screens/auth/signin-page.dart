@@ -281,6 +281,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget _userNameField(BuildContext context) {
     return TextFormField(
       controller: _email,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
           labelText: 'Số điện thoại',
           border: OutlineInputBorder(

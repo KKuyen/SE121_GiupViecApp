@@ -387,12 +387,25 @@ class _ApprovetabState extends State<Approvetab> {
                             const EdgeInsets.all(AppInfor1.horizontal_padding),
                         child: Column(
                           children: [
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Thông tin chi tiết',
-                                style: AppTextStyle.tieudebox,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Thông tin chi tiết',
+                                  style: AppTextStyle.tieudebox,
+                                ),
+                                Text(
+                                  '${task.isPaid == true ? 'Đã thanh toán' : 'Chưa thanh toán'}',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      color: task.isPaid == true
+                                          ? AppColors.xanh_main
+                                          : AppColors.do_main,
+                                      fontSize: 15,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             Padding(
                               padding:

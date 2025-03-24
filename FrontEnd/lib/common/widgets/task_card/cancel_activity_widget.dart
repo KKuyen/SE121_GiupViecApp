@@ -27,6 +27,7 @@ class CancelActivityWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final bool isPaid;
   const CancelActivityWidget({
     required this.userId,
     required this.taskStatus,
@@ -48,6 +49,7 @@ class CancelActivityWidget extends StatefulWidget {
     required this.price,
     required this.note,
     this.cancelReason = 'Lý do khác',
+    required this.isPaid,
     required this.cancelAt,
   });
 
@@ -153,6 +155,20 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ],
                     ),
                     const Spacer(),
+                    Text(
+                      widget.isPaid == true
+                          ? 'Đã thanh toán'
+                          : 'Chưa thanh toán',
+                      style: TextStyle(
+                        color: widget.isPaid == true
+                            ? AppColors.xanh_main
+                            : AppColors.do_main,
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,

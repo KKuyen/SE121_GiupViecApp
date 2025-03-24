@@ -289,6 +289,7 @@ export class UserService {
       taskStatus: "TS1", // Set default value for taskStatus
       numberOfTasker: 0,
       voucherId,
+      isPaid: false
     });
 
     await taskRepository.save(newTask);
@@ -528,6 +529,7 @@ export class UserService {
         "task.cancelAt",
         "task.finishedAt",
         "task.cancelReason",
+        "task.isPaid",
 
         "task.numberOfTasker",
         "user.id",
@@ -849,6 +851,7 @@ export class UserService {
         "task.cancelAt",
         "task.finishedAt",
         "task.cancelReason",
+        "task.isPaid",
 
         "user.id",
         "user.name",
