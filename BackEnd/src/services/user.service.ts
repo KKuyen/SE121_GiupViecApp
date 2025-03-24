@@ -574,6 +574,7 @@ export class UserService {
         quantity: MoreThan(0),
       },
     });
+    console.log("vouchers", vouchers);
 
     return {
       errCode: 0,

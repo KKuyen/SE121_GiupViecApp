@@ -174,7 +174,6 @@ class _WaitingtabState extends State<Waitingtab> {
           );
         } else if (state is ATaskSuccess) {
           final task = state.task;
-          print("taskkkkkkkkkkkkkkkk: ${task}");
           if (firstTime) {
             _noteController.text = task.note ?? '';
             setDateTime(task.time);
