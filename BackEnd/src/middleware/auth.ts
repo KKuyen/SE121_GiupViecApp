@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 const nonSecurePaths = [
   "/api/v1/login",
   "/payment",
+  "/chat",
   "/callback",
   "/api/v1/register",
   "/api/v1/upload-and-get-link",

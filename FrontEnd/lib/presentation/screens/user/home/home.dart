@@ -100,20 +100,17 @@ class _HomePageState extends State<HomePage>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          const url =
-              "https://test-payment.momo.vn/v2/gateway/pay?t=TU9NT3wxMDA&s=b7d20fff457268f36ac0a9497061ae602484d0e96beba3d356f6096a17dcd8b6";
-          if (await canLaunch(url)) {
-            await launch(url);
-          } else {
-            throw 'Could not launch $url';
-          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatBot()),
+          );
         },
         child: const Icon(
           Icons.smart_toy_outlined,
           color: Colors.white,
         ),
         backgroundColor: AppColors.xanh_main,
-        shape: OvalBorder(),
+        shape: const OvalBorder(),
       ),
       body: SingleChildScrollView(
         child: SingleChildScrollView(
@@ -310,7 +307,7 @@ class _servicesState extends State<_services> {
                   // }
                 },
                 child: _serviceItem(
-                    icon: FontAwesomeIcons.broom,
+                    icon: getIcon(task.image!),
                     title: task.name,
                     color: colors[index % colors.length]),
               );
@@ -325,22 +322,22 @@ class _servicesState extends State<_services> {
     );
   }
 
-  // IconData getIcon(String name) {
-  //   switch (name) {
-  //     case 'broom':
-  //       return FontAwesomeIcons.broom;
-  //     case 'dry_cleaning_rounded':
-  //       return Icons.dry_cleaning_rounded;
-  //     case 'cutlery':
-  //       return FontAwesomeIcons.cutlery;
-  //     case 'local_florist_rounded':
-  //       return Icons.local_florist_rounded;
-  //     case 'bagShopping':
-  //       return FontAwesomeIcons.bagShopping;
-  //     default:
-  //       return Icons.more_horiz;
-  //   }
-  // }
+  IconData getIcon(String name) {
+    switch (name) {
+      case 'broom':
+        return FontAwesomeIcons.broom;
+      case 'dry_cleaning_rounded':
+        return Icons.dry_cleaning_rounded;
+      case 'cutlery':
+        return FontAwesomeIcons.cutlery;
+      case 'local_florist_rounded':
+        return Icons.local_florist_rounded;
+      case 'bagShopping':
+        return FontAwesomeIcons.bagShopping;
+      default:
+        return Icons.more_horiz;
+    }
+  }
 }
 
 class _serviceItem extends StatelessWidget {

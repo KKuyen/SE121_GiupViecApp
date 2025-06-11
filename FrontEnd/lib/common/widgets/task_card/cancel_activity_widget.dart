@@ -193,7 +193,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ),
                       const SizedBox(width: 20),
                       Text(
-                        widget.startDay.toIso8601String(),
+                        widget.startDay.toIso8601String().substring(0, 10),
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
@@ -354,7 +354,9 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           Spacer(),
                           Text(
                               widget.taskStatus == "TS1"
-                                  ? widget.startDay.toIso8601String()
+                                  ? widget.startDay
+                                      .toIso8601String()
+                                      .substring(0, 10)
                                   : widget.cancelAt.toIso8601String(),
                               style: TextStyle(
                                 color: Colors.black,

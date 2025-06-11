@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
+import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 
 class ChatBot extends StatefulWidget {
   const ChatBot({super.key});
@@ -15,12 +17,27 @@ class _ChatBotState extends State<ChatBot> {
   final ScrollController _scrollController = ScrollController();
   List<Message> messages = [
     Message(
-      content: "Hello! How can I assist you today?",
+      content:
+          "Xin chào, tôi là Bích - trợ lý ảo của bạn. Bạn cần giúp gì không?",
       isMe: false,
     ),
     Message(
-      content: "I need help with my order.",
+      content: "Hướng dẫn tôi cách đăng việc.",
       isMe: true,
+    ),
+    Message(
+      content:
+          "Để đăng việc, bạn cần truy cập vào trang chủ của ứng dụng, sau đó chọn mục 'Đăng việc'. Tại đây, bạn sẽ được hướng dẫn từng bước để hoàn thành việc đăng.",
+      isMe: false,
+    ),
+    Message(
+      content: "Tôi muốn thêm địa chỉ của mình vào hồ sơ.",
+      isMe: true,
+    ),
+    Message(
+      content:
+          "Để thêm địa chỉ vào hồ sơ, bạn cần truy cập vào phần 'Hồ sơ' trong ứng dụng. Tại đây, bạn có thể chỉnh sửa thông tin cá nhân và thêm địa chỉ của mình.",
+      isMe: false,
     ),
   ];
 
@@ -29,6 +46,12 @@ class _ChatBotState extends State<ChatBot> {
       messages.add(Message(
         content: message,
         isMe: true,
+      ));
+    });
+    setState(() {
+      messages.add(Message(
+        content: "Đã nhận được tin nhắn của bạn",
+        isMe: false,
       ));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -43,9 +66,7 @@ class _ChatBotState extends State<ChatBot> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFFF2F2F2),
-        appBar: AppBar(
-          title: const Text('ChatBot'),
-        ),
+        appBar: const BasicAppbar(title: Text('Trợ lý ảo'), isCenter: true),
         bottomNavigationBar: Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -61,7 +82,7 @@ class _ChatBotState extends State<ChatBot> {
                   child: TextField(
                     controller: messageController,
                     decoration: InputDecoration(
-                      hintText: 'Enter message...',
+                      hintText: 'Nhập tin nhắn...',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -71,7 +92,7 @@ class _ChatBotState extends State<ChatBot> {
                 IconButton(
                   icon: const Icon(
                     Icons.send,
-                    color: Colors.blue,
+                    color: AppColors.cam_main,
                     size: 32,
                   ),
                   onPressed: () {
@@ -130,7 +151,7 @@ class _messageCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isMe ? Colors.blue : Colors.white,
+                    color: isMe ? AppColors.cam_main : Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(15),
                       topRight: const Radius.circular(15),
