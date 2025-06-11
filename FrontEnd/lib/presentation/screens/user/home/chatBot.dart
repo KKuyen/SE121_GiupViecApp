@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:se121_giupviec_app/common/widgets/appbar/app_bar.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
+import 'package:http/http.dart' as http;
 
 class ChatBot extends StatefulWidget {
   const ChatBot({super.key});
@@ -21,39 +24,53 @@ class _ChatBotState extends State<ChatBot> {
           "Xin chào, tôi là Bích - trợ lý ảo của bạn. Bạn cần giúp gì không?",
       isMe: false,
     ),
-    Message(
-      content: "Hướng dẫn tôi cách đăng việc.",
-      isMe: true,
-    ),
-    Message(
-      content:
-          "Để đăng việc, bạn cần truy cập vào trang chủ của ứng dụng, sau đó chọn mục 'Đăng việc'. Tại đây, bạn sẽ được hướng dẫn từng bước để hoàn thành việc đăng.",
-      isMe: false,
-    ),
-    Message(
-      content: "Tôi muốn thêm địa chỉ của mình vào hồ sơ.",
-      isMe: true,
-    ),
-    Message(
-      content:
-          "Để thêm địa chỉ vào hồ sơ, bạn cần truy cập vào phần 'Hồ sơ' trong ứng dụng. Tại đây, bạn có thể chỉnh sửa thông tin cá nhân và thêm địa chỉ của mình.",
-      isMe: false,
-    ),
   ];
+  bool isLoading = false; // Thêm biến trạng thái loading
 
-  void sendMessage(String message) {
+  void sendMessage(String message) async {
     setState(() {
-      messages.add(Message(
-        content: message,
-        isMe: true,
-      ));
+      messages.add(Message(content: message, isMe: true));
+      isLoading = true; // Bắt đầu loading
+      messages.add(Message(content: "Đang trả lời...", isMe: false));
     });
-    setState(() {
-      messages.add(Message(
-        content: "Đã nhận được tin nhắn của bạn",
-        isMe: false,
-      ));
-    });
+
+    try {
+      final url = Uri.parse('http://localhost:5005/webhooks/rest/webhook');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'sender': 'user', 'message': message}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          isLoading = false; // Kết thúc loading
+          // Xóa tin nhắn "Đang trả lời..." và thêm phản hồi thực tế
+          messages.removeLast();
+          if (data.isNotEmpty && data[0]['text'] != null) {
+            messages.add(Message(content: data[0]['text'], isMe: false));
+          } else {
+            messages.add(Message(
+                content: "Không nhận được phản hồi từ server", isMe: false));
+          }
+        });
+      } else {
+        setState(() {
+          isLoading = false; // Kết thúc loading
+          messages.removeLast();
+          messages.add(
+              Message(content: "Lỗi: ${response.statusCode}", isMe: false));
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false; // Kết thúc loading
+        messages.removeLast();
+        messages.add(Message(content: "Lỗi kết nối: $e", isMe: false));
+      });
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
