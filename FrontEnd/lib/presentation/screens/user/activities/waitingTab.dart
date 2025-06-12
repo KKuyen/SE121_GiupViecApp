@@ -493,7 +493,9 @@ class _WaitingtabState extends State<Waitingtab> {
                                   style: AppTextStyle.tieudebox,
                                 ),
                                 Text(
-                                  '${task.isPaid == true ? 'Đã thanh toán' : 'Chưa thanh toán'}',
+                                  task.isPaid == true
+                                      ? 'Đã thanh toán'
+                                      : 'Chưa thanh toán',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       color: task.isPaid == true

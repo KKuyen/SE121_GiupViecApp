@@ -328,17 +328,23 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
                               )),
-                          Spacer(),
-                          Text(
+                          SizedBox(width: 30),
+                          Expanded(
+                            child: Text(
                               widget.taskStatus == "TS1"
                                   ? 'Đã hủy vì không tìm đủ người giúp việc'
                                   : widget.cancelReason,
+                              textAlign: TextAlign.right,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
-                              )),
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 5),

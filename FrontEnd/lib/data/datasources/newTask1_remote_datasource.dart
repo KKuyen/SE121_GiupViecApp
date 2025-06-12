@@ -211,8 +211,7 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
         'Authorization': token,
       },
     );
-    print('response: ${response.body}');
-    if (paymentMethod == "PaymentMethod.momo") {
+    if (paymentMethod.contains("momo")) {
       try {
         final paymentResult = await client.post(
           Uri.parse('$baseUrl/payment'),

@@ -244,7 +244,9 @@ class _FinishTabState extends State<Finishtab> {
                                   style: AppTextStyle.tieudebox,
                                 ),
                                 Text(
-                                  '${task.isPaid == true ? 'Đã thanh toán' : 'Chưa thanh toán'}',
+                                  task.isPaid == true
+                                      ? 'Đã thanh toán'
+                                      : 'Chưa thanh toán',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       color: task.isPaid == true

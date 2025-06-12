@@ -14,6 +14,7 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/tasker/tasker_find_task_state.dart';
 import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/home/chatBot.dart';
 
 class TaskerHomePage extends StatefulWidget {
   final int accountId;
@@ -107,6 +108,20 @@ class _TaskerHomePagState extends State<TaskerHomePage>
                   );
                 },
               ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatBot()),
+                );
+              },
+              child: const Icon(
+                Icons.smart_toy_outlined,
+                color: Colors.white,
+              ),
+              backgroundColor: AppColors.cam_main,
+              shape: const OvalBorder(),
             ),
             body: Column(
               children: [
