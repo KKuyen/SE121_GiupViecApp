@@ -1363,4 +1363,17 @@ export class UserService {
       errMessage: "OK",
     };
   }
+  static async paymentUpdate(taskId: number) {
+    const taskRepository = AppDataSource.getRepository(Tasks);
+    const task = await taskRepository.findOne({ where: { id: taskId } });
+    if (task) {
+      task.isPaid = true;
+      await taskRepository.save(task);
+    }
+    return {
+      errCode: 0,
+      errMessage: "OK",
+    };
+  }
+
 }

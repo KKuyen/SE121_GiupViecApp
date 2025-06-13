@@ -2,6 +2,7 @@ import { verifyJWT } from "./JWTAction";
 
 import { Request, Response, NextFunction } from "express";
 const nonSecurePaths = [
+  "/api/v1/payment-update",
   "/api/v1/login",
   "/payment",
   "/chat",
