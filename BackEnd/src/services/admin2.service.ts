@@ -225,6 +225,7 @@ export class AdminService {
             "task.finishedAt",
             "task.cancelReason",
             "task.numberOfTasker",
+            "task.isPaid",
             "user.id",
             "user.name",
             "user.email",

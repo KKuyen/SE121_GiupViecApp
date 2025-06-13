@@ -90,6 +90,11 @@ export class TasksMigration1698324600524 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: "isPaid",
+            type: "boolean",
+            isNullable: true,
+          },
+          {
             name: "createdAt",
             type: "timestamp",
             default: `now()`,

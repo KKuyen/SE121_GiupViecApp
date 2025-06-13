@@ -154,7 +154,7 @@ export class UserController {
       );
       res
         .status(200)
-        .json({ errCode: message.errCode, message: message.message });
+        .json(message);
     }
   }
   static async editTask(req: Request, res: Response) {

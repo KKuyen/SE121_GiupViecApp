@@ -19,6 +19,7 @@ class Task {
   final DateTime? cancelAt;
   final DateTime? finishedAt;
   final String? cancelReason; // Allow null
+  final bool? isPaid;
 
   Task({
     required this.id,
@@ -41,5 +42,6 @@ class Task {
     this.cancelAt,
     this.finishedAt,
     this.cancelReason,
+    this.isPaid,
   });
 }

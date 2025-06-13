@@ -102,8 +102,10 @@ class _TaskerprofileState extends State<Taskerprofile> {
                     Container(
                       height: 250,
                       decoration: const BoxDecoration(
-                        image:
-                            DecorationImage(image: AssetImage(AppImages.cover)),
+                        image: DecorationImage(
+                          image: AssetImage(AppImages.cover),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                     Container(

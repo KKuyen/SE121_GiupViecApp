@@ -174,7 +174,7 @@ class TaskerWatingActivityWidgetState extends State<TaskerFinishWidget> {
                         ),
                         const SizedBox(width: 20),
                         Text(
-                          widget.startDay.toIso8601String(),
+                          widget.startDay.toIso8601String().substring(0, 10),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,

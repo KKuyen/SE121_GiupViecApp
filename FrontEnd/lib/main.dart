@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uni_links/uni_links.dart';
+import 'dart:async';
 
 import 'package:se121_giupviec_app/presentation/bloc/Voucher/delete_my_voucher_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask2/newTask2_cubit.dart';
@@ -10,10 +11,9 @@ import 'package:se121_giupviec_app/presentation/bloc/notification/notification_c
 import 'package:se121_giupviec_app/presentation/bloc/report/aReport_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/report/report_cubit.dart';
 
+
 import 'package:se121_giupviec_app/presentation/screens/auth/splash.dart';
-
 import 'package:se121_giupviec_app/presentation/bloc/Setting/Setting_cubit.dart';
-
 import 'package:se121_giupviec_app/presentation/bloc/blockTasker/blockTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/loveTasker/loveTaskers_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/newTask1/newTask1_cubit.dart';
@@ -39,7 +39,7 @@ import 'presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'presentation/bloc/Voucher/claim_voucher_cubit.dart';
 import 'presentation/bloc/Voucher/voucher_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// Thêm dòng này
+import 'presentation/screens/navigation/navigation.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,8 +53,9 @@ Future main() async {
             messagingSenderId: "464358819305",
             appId: "1:464358819305:web:39d8f0c730192b28ecb778",
             measurementId: "G-1LZYHKS59L"));
-  } else {}
-  await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp();
+  }
 
   await di.init();
   // Initialize dependencies
@@ -62,6 +63,7 @@ Future main() async {
       url: "https://wbekftdbbgbvuybtvjoi.supabase.co",
       anonKey:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZWtmdGRiYmdidnV5YnR2am9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwODgxNTEsImV4cCI6MjA0MzY2NDE1MX0.j-bv1lYpTHBiCjFjlwpXGtLqoftFZRqazzoROas6gAA");
+
   runApp(const MyApp());
 }
 
@@ -73,7 +75,40 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
+  StreamSubscription? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    _initUniLinks();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _initUniLinks() async {
+    _sub = uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        // Handle the incoming link here
+        print('Received URI: $uri');
+        if (uri.scheme == 'myapp' && uri.host == 'callback') {
+          // Navigate to the Navigation screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  Navigation(tab: 1, userId: 1 /* pass the userId here */),
+            ),
+          );
+        }
+      }
+    }, onError: (err) {
+      // Handle error
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +206,7 @@ class _MyAppState extends State<MyApp> {
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-
-        home: const SplashPage(),
+        home: SplashPage(),
         debugShowCheckedModeBanner: false, // Bỏ nhãn DEBUG
       ),
     );

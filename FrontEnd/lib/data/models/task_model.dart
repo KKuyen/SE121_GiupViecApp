@@ -10,28 +10,29 @@ class TaskModel extends Task {
   @override
   final List<Map<String, dynamic>>? taskerLists; // Allow null
 
-  TaskModel({
-    required super.id,
-    required super.userId,
-    required super.taskTypeId,
-    required super.time,
-    required super.locationId,
-    super.note,
-    super.isReTaskChildren,
-    required super.taskStatus,
-    required super.createdAt,
-    required super.updatedAt,
-    super.price,
-    this.user,
-    this.location,
-    this.taskType,
-    this.taskerLists,
-    super.numberOfTasker,
-    super.approvedAt,
-    super.cancelAt,
-    super.finishedAt,
-    super.cancelReason,
-  }) : super(
+  TaskModel(
+      {required super.id,
+      required super.userId,
+      required super.taskTypeId,
+      required super.time,
+      required super.locationId,
+      super.note,
+      super.isReTaskChildren,
+      required super.taskStatus,
+      required super.createdAt,
+      required super.updatedAt,
+      super.price,
+      this.user,
+      this.location,
+      this.taskType,
+      this.taskerLists,
+      super.numberOfTasker,
+      super.approvedAt,
+      super.cancelAt,
+      super.finishedAt,
+      super.cancelReason,
+      super.isPaid})
+      : super(
           location: location,
           user: user,
           taskType: taskType,
@@ -51,6 +52,7 @@ class TaskModel extends Task {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       price: json['price'],
+      isPaid: json['isPaid'],
       user: json['user'] != null ? json['user'] as Map<String, dynamic> : null,
       location: json['location'] != null
           ? json['location'] as Map<String, dynamic>
@@ -89,6 +91,7 @@ class TaskModel extends Task {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'price': price,
+      'isPaid': isPaid,
       'user': user,
       'location': location,
       'taskType': taskType,
