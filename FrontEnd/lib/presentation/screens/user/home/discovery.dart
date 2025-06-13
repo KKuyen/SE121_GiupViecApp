@@ -49,7 +49,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
         ),
       ),
       Container(
-        height: 106,
+        height: 130,
         width: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
@@ -174,8 +174,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   const SizedBox(
                       height: 170,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppInfo.main_padding),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
                         child: Vouchers(),
                       )),
                   const SizedBox(
@@ -191,8 +190,7 @@ class _DiscoveryPageState extends State<DiscoveryPage>
                   const SizedBox(
                       height: 170,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppInfo.main_padding),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
                         child: Vouchers(isNearToExpire: true),
                       )),
                 ],

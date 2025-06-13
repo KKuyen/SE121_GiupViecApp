@@ -170,20 +170,25 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ],
                     ),
                     const Spacer(),
-                    Text(
-                      widget.isPaid == true
-                          ? 'Đã thanh toán'
-                          : 'Chưa thanh toán',
-                      style: TextStyle(
-                        color: widget.isPaid == true
-                            ? AppColors.xanh_main
-                            : AppColors.do_main,
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Text(
+                        widget.isPaid == true
+                            ? 'Đã thanh toán'
+                            : 'Chưa thanh toán',
+                        style: TextStyle(
+                          color: widget.isPaid == true
+                              ? AppColors.xanh_main
+                              : AppColors.do_main,
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
-                    ),
+                    )
+
                     // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,

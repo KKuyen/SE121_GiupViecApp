@@ -165,18 +165,22 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ],
                     ),
                     const Spacer(),
-                    Text(
-                      widget.isPaid == true
-                          ? 'Đã thanh toán'
-                          : 'Chưa thanh toán',
-                      style: TextStyle(
-                        color: widget.isPaid == true
-                            ? AppColors.xanh_main
-                            : AppColors.do_main,
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+                    Flexible(
+                      child: Text(
+                        widget.isPaid == true
+                            ? 'Đã thanh toán'
+                            : 'Chưa thanh toán',
+                        style: TextStyle(
+                          color: widget.isPaid == true
+                              ? AppColors.xanh_main
+                              : AppColors.do_main,
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
                     ),
                     // const Icon(

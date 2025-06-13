@@ -140,6 +140,7 @@ class _VouchersState extends State<Vouchers> {
                 backgroundColor: Colors.white,
                 StrokeColor: AppColors.cam_main,
                 isStroke: true,
+                width: 110,
                 textColor: AppColors.cam_main,
               ),
               Sizedbutton(
@@ -149,6 +150,7 @@ class _VouchersState extends State<Vouchers> {
                       .claimVoucher(userId, voucherId);
                 },
                 text: 'Lưu',
+                width: 110,
                 backgroundColor: AppColors.cam_main,
               ),
             ],

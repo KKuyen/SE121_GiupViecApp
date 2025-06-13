@@ -200,8 +200,8 @@ const Vouchers = () => {
     imgWindow?.document.write(image.outerHTML);
   };
   const CheckboxGroup = Checkbox.Group;
-  const plainOptions = ["Apple", "Pear", "Orange"];
-  const defaultCheckedList = ["Apple", "Orange"];
+  const plainOptions = ["Dọn nhà", "Làm vườn", "Đi chợ", "Nấu ăn", "Giặt ủi"];
+  const defaultCheckedList = [];
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const checkAll = plainOptions.length === checkedList.length;
   const indeterminate =

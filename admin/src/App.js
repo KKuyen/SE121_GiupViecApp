@@ -154,9 +154,7 @@ const App = () => {
                   fontSize: "1rem",
                   marginLeft: "1rem",
                   fontWeight: "bold",
-                }}>
-                Khách hàng
-              </span>
+                }}></span>
               <Dropdown overlay={<Menu items={menuProps} />}>
                 <div>
                   <Button>

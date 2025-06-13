@@ -132,18 +132,22 @@ class _CanceltabState extends State<Canceltab> {
                                     'Thông tin chi tiết',
                                     style: AppTextStyle.tieudebox,
                                   ),
-                                  Text(
-                                    task.isPaid == true
-                                        ? 'Đã thanh toán'
-                                        : 'Chưa thanh toán',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        color: task.isPaid == true
-                                            ? AppColors.xanh_main
-                                            : AppColors.do_main,
-                                        fontSize: 15,
-                                        fontStyle: FontStyle.italic,
-                                        fontWeight: FontWeight.bold),
+                                  Flexible(
+                                    child: Text(
+                                      task.isPaid == true
+                                          ? 'Đã thanh toán'
+                                          : 'Chưa thanh toán',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          color: task.isPaid == true
+                                              ? AppColors.xanh_main
+                                              : AppColors.do_main,
+                                          fontSize: 15,
+                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.bold),
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
                                   ),
                                 ],
                               ),
