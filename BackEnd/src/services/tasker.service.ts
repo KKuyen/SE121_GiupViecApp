@@ -10,7 +10,7 @@ import { BlockList } from "net";
 import { BlockTaskers } from "../entity/BlockTasket.entity";
 import { LoveTaskers } from "../entity/LoveTasker.entity";
 import { UserSettings } from "../entity/UserSetting.entity";
-
+import { getDistance } from "geolib";
 export class TaskerService {
   static getTaskerProfile = async (taskerId: number) => {
     return new Promise(async (resolve, reject) => {
@@ -474,12 +474,59 @@ export class TaskerService {
   };
   static getAllTask = async (
     taskerId: number,
-    fromDate: Date | null,
-    toDate: Date | null,
-    taskTypes: any | null
+    fromDate: Date,
+    toDate: Date,
+    taskTypes: number[]
   ) => {
     return new Promise(async (resolve, reject) => {
       try {
+        const userRepository = AppDataSource.getRepository(User);
+        const taskerInfoRepository = AppDataSource.getRepository(TaskerInfo);
+        const locationRepository = AppDataSource.getRepository(Location);
+
+        // Lấy thông tin user dựa trên taskerId
+        const user = await userRepository.findOne({
+          where: { id: taskerId },
+        });
+
+        if (!user) {
+          return resolve({
+            errCode: 1,
+            errMessage: "Không tìm thấy thông tin người giúp việc",
+          });
+        }
+        const taskerInfoId = user.taskerInfoId;
+
+        const taskerInfo = await taskerInfoRepository.findOne({
+          where: { id: taskerInfoId },
+        });
+        if (!taskerInfo) {
+          return resolve({
+            errCode: 1,
+            errMessage: "Không tìm thấy thông tin người giúp việc",
+          });
+        }
+
+        // Lấy taskTypeList từ taskerInfo.taskList
+        const taskTypeList = taskerInfo.taskList
+          .split("_")
+          .map((type) => parseInt(type, 10));
+        console.log("taskTypeList", taskTypeList);
+        // Lấy taskerLocation từ Location của user
+
+        const location = await locationRepository.findOne({
+          where: { userId: taskerId },
+        });
+
+        if (!location || !location.map) {
+          return resolve({
+            errCode: 1,
+            errMessage: "Không tìm thấy địa chỉ mặc định của người giúp việc",
+          });
+        }
+
+        const taskerLocation = location.map; // Sử dụng Location.map làm taskerLocation
+
         const taskeRepository = AppDataSource.getRepository(Tasks);
         const tasksQuery = taskeRepository
           .createQueryBuilder("task")
@@ -542,28 +589,54 @@ export class TaskerService {
         }
 
         let tasks = await tasksQuery.getMany();
+
+        // Lọc công việc bị block
         const blockListRepository = AppDataSource.getRepository(BlockTaskers);
         const blockList = await blockListRepository.find({
-          where: { taskerId: taskerId },
+          where: { taskerId },
         });
-
         const blockedUserIds = blockList.map((block) => block.userId);
-
         tasks = tasks.filter((task) => !blockedUserIds.includes(task.userId));
-        const taskerListRepository = AppDataSource.getRepository(TaskerList);
-        const taskerLists = await taskerListRepository.find({
-          where: { taskerId: taskerId },
-        });
-        const taskerListWithTasks = taskerLists.map((taskerList) => {
-          const taskIndex = tasks.findIndex(
-            (task) => task.id === taskerList.taskId
-          );
 
-          if (taskIndex !== -1) {
-            const task = tasks[taskIndex];
-            tasks.splice(taskIndex, 1); // Xóa task khỏi mảng tasks
+        // Tính điểm ưu tiên
+        tasks = tasks.map((task) => {
+          const taskWithPriority = task as Tasks & { priorityScore: number };
+          let priorityScore = 0;
+
+          // Tính điểm dựa trên khoảng cách
+          if (task.location && taskerLocation) {
+            const [latitude, longitude] = task.location.map
+              .split(" - ")
+              .map(Number);
+            const [taskerLatitude, taskerLongitude] = taskerLocation
+              .split(" - ")
+              .map(Number);
+
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+              const distance =
+                getDistance(
+                  { latitude: taskerLatitude, longitude: taskerLongitude },
+                  { latitude, longitude }
+                ) / 1000; // Đổi sang km
+
+              if (distance <= 20) {
+                priorityScore += Math.max(0, 20 - distance); // Điểm giảm dần khi khoảng cách tăng
+              }
+            }
           }
+
+          // Tính điểm dựa trên loại công việc ưu tiên
+          if (taskTypeList.includes(task.taskTypeId)) {
+            priorityScore += 10; // Thêm điểm nếu loại công việc nằm trong danh sách ưu tiên
+          }
+
+          return { ...taskWithPriority, priorityScore };
         });
+
+        // Sắp xếp theo độ ưu tiên giảm dần
+        (tasks as (Tasks & { priorityScore: number })[]).sort(
+          (a, b) => b.priorityScore - a.priorityScore
+        );
 
         resolve({
           errCode: 0,
@@ -685,6 +758,12 @@ export class TaskerService {
       } catch (e) {
         reject(e);
       }
+    });
+  };
+  static predictTask = async (jobs: any, helper: Object) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+      } catch (e) {}
     });
   };
 }
