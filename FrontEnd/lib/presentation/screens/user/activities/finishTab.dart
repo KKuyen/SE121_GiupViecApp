@@ -13,8 +13,8 @@ import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_cubit.dart';
 import 'package:se121_giupviec_app/presentation/bloc/task/a_task_state.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/account/addReport.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/activities/newTaskStep1.dart';
-import 'package:se121_giupviec_app/presentation/screens/user/activities/taskerList.dart';
 // import statements here
 
 class Finishtab extends StatefulWidget {
@@ -107,7 +107,15 @@ class _FinishTabState extends State<Finishtab> {
                       children: [
                         Sizedbutton(
                           onPressFun: () {
-                            // Add your logic here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateReportScreen(
+                                  taskId: widget.id,
+                                  userId: widget.userId,
+                                ),
+                              ),
+                            );
                           },
                           text: 'Khiếu nại',
                           StrokeColor: AppColors.cam_main,

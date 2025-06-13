@@ -5,20 +5,41 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:se121_giupviec_app/presentation/bloc/report/aReport_cubit.dart';
 
 class CreateReportScreen extends StatefulWidget {
+  final int? taskId;
+  final int? userId;
+  const CreateReportScreen({super.key, this.taskId, this.userId});
+
   @override
   _CreateReportScreenState createState() => _CreateReportScreenState();
 }
 
 class _CreateReportScreenState extends State<CreateReportScreen> {
-  final TextEditingController _taskIdController = TextEditingController();
-  final TextEditingController _taskerIdController =
-      TextEditingController(); // New controller for Tasker ID
+  late final TextEditingController _taskIdController;
+  late final TextEditingController _userIdController;
   final TextEditingController _descriptionController = TextEditingController();
-  String _selectedType = "Pending"; // Default value
+  final List<String> _issueTypes = [
+    "Người giúp việc",
+    "Thanh toán",
+    "Chất lượng dịch vụ",
+    "Thời gian làm việc",
+    "Thái độ phục vụ",
+    "Ứng dụng/Giao diện",
+    "Khác"
+  ];
+  String _selectedType = "Người giúp việc"; // Giá trị mặc định
+
+  @override
+  void initState() {
+    super.initState();
+    _taskIdController = TextEditingController(
+        text: widget.taskId != null ? widget.taskId.toString() : '');
+    _userIdController = TextEditingController(
+        text: widget.userId != null ? widget.userId.toString() : '');
+  }
 
   void _submitReport() {
     if (_taskIdController.text.isEmpty ||
-        _taskerIdController.text.isEmpty ||
+        _userIdController.text.isEmpty ||
         _descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin!")),
@@ -27,11 +48,16 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     }
 
     int taskId = int.tryParse(_taskIdController.text) ?? 0;
-    int taskerId = int.tryParse(_taskerIdController.text) ?? 0;
+    int userId = int.tryParse(_userIdController.text) ?? 0;
     String description = _descriptionController.text;
 
-    context.read<AReportCubit>().createReport(taskId, _selectedType,
-        description, 1, taskerId); // `1` là customerId (giả định)
+    context.read<AReportCubit>().createReport(
+          taskId,
+          _selectedType,
+          description,
+          1, // customerId (giả định)
+          userId,
+        );
 
     Navigator.pop(context); // Đóng màn hình sau khi gửi
   }
@@ -69,7 +95,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                   const SizedBox(width: 10),
                   DropdownButton<String>(
                     value: _selectedType,
-                    items: ["Pending", "Resolved"]
+                    items: _issueTypes
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                     onChanged: (value) {
@@ -87,11 +113,12 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 decoration: const InputDecoration(
                   labelText: "ID dịch vụ (nếu có)",
                   border: OutlineInputBorder(),
+                  prefixText: "#DV ",
                 ),
               ),
               const SizedBox(height: 10),
               TextField(
-                controller: _taskerIdController, // New Tasker ID input field
+                controller: _userIdController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: "ID Tasker (nếu có)",

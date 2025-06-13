@@ -354,7 +354,22 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
                         width: 2,
                       ),
                     ),
-                    child: AppIcon.getIconXanhMain(widget.taskTypeImage ?? ''),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: widget.taskTypeImage != null &&
+                              widget.taskTypeImage.toString().isNotEmpty
+                          ? Image.network(
+                              AppIcon.getImageUrl(
+                                  widget.taskTypeImage.toString())!,
+                              width: 40, // hoặc giá trị bạn muốn, ví dụ 48
+                              height: 40,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.image_not_supported,
+                                      color: AppColors.xanh_main),
+                            )
+                          : const Icon(Icons.image, color: AppColors.xanh_main),
+                    ),
                   ),
                   const SizedBox(
                     width: 10,

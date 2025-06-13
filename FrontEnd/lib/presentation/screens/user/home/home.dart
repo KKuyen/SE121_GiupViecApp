@@ -297,7 +297,7 @@ class _servicesState extends State<_services> {
                   // }
                 },
                 child: _serviceItem(
-                    icon: getIcon(task.avatar ?? ''),
+                    imageUrl: getImageUrl(task.avatar),
                     title: task.name,
                     color: colors[index % colors.length]),
               );
@@ -330,12 +330,21 @@ class _servicesState extends State<_services> {
   }
 }
 
+String? getImageUrl(String? avatar) {
+  if (avatar == null || avatar.isEmpty) return null;
+  final supabaseUrl = "https://wbekftdbbgbvuybtvjoi.supabase.co";
+  final publicUrl = "$supabaseUrl/storage/v1/object/public/images/$avatar";
+  return publicUrl;
+}
+
 class _serviceItem extends StatelessWidget {
-  final IconData icon;
+  // final IconData icon;
+  final String? imageUrl;
   final String title;
   final Color color;
   const _serviceItem({
-    required this.icon,
+    // required this.icon,
+    required this.imageUrl,
     required this.title,
     required this.color,
   });
@@ -354,7 +363,20 @@ class _serviceItem extends StatelessWidget {
           padding: const EdgeInsets.only(top: 13),
           child: Column(
             children: [
-              Icon(icon, size: 25, color: Colors.white),
+              imageUrl != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        imageUrl!,
+                        width: 32,
+                        height: 32,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.image_not_supported,
+                                color: Colors.white),
+                      ),
+                    )
+                  : const Icon(Icons.image, size: 32, color: Colors.white),
               const SizedBox(
                 height: 8,
               ),

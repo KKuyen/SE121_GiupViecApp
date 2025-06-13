@@ -23,6 +23,13 @@ class AppIcon {
     }
   }
 
+  static String? getImageUrl(String? avatar) {
+    if (avatar == null || avatar.isEmpty) return null;
+    final supabaseUrl = "https://wbekftdbbgbvuybtvjoi.supabase.co";
+    final publicUrl = "$supabaseUrl/storage/v1/object/public/images/$avatar";
+    return publicUrl;
+  }
+
   static Icon getIconCamMain(String iconName) {
     switch (iconName) {
       case 'broom':

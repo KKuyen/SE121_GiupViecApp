@@ -110,8 +110,25 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                               border: Border.all(
                                   color: AppColors.xanh_main, width: 2),
                             ),
-                            child: AppIcon.getIconXanhMain(
-                                taskType.avatar.toString()),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: taskType.avatar != null &&
+                                      taskType.avatar.toString().isNotEmpty
+                                  ? Image.network(
+                                      AppIcon.getImageUrl(
+                                          taskType.avatar.toString())!,
+                                      width:
+                                          48, // hoặc giá trị bạn muốn, ví dụ 48
+                                      height: 48,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error,
+                                              stackTrace) =>
+                                          const Icon(Icons.image_not_supported,
+                                              color: AppColors.xanh_main),
+                                    )
+                                  : const Icon(Icons.image,
+                                      color: AppColors.xanh_main),
+                            ),
                           ),
                           const SizedBox(width: 10),
                           Column(
