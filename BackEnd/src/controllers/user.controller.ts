@@ -659,4 +659,18 @@ export class UserController {
       message: message.errMessage,
     });
   }
+  static async paymentUpdate(req: Request, res: Response) {
+    const { taskId } = req.body;
+    if (  taskId === undefined) {
+      res.status(500).json({
+        errCode: 1,
+        message: "Missing required fields",
+      });
+    }
+    let message = await UserService.paymentUpdate(taskId);
+    res.status(200).json({
+      errCode: message.errCode,
+      message: message.errMessage,
+    });
+  }
 }

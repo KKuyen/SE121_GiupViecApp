@@ -66,5 +66,9 @@ userRouter.post(
   "/api/v1/delete-notification",
   UserController.deleteNotification
 );
+userRouter.put(
+  "/api/v1/payment-update",
+  UserController.paymentUpdate
+);
 
 export default userRouter;

@@ -3,7 +3,7 @@ class TaskType {
   final String name;
   final String? avatar;
 
-  final double value;
+  final int value;
 
   final String? description;
   final String? image;
