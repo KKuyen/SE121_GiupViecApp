@@ -2,7 +2,7 @@ class TaskType {
   final int id;
   final String name;
   final String? avatar;
-  final String value;
+  final int value;
   final String? description;
   final String? image;
   final int originalPrice;

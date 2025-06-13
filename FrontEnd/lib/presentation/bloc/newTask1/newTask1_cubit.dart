@@ -32,12 +32,13 @@ class NewTask1Cubit extends Cubit<NewTask1State> {
       String note,
       int myvoucherId,
       int voucherId,
+      String paymentMethod,
       List<Map<String, dynamic>> addPriceDetail) async {
     try {
       print("chay vao cubit create task");
 
       await newTask1Usecase.execute2(userId, taskTypeId, time, locationId, note,
-          myvoucherId, voucherId, addPriceDetail);
+          myvoucherId, voucherId, paymentMethod, addPriceDetail);
       emit(NewTask1Loading());
     } catch (e) {
       emit(NewTask1Error(e.toString()));

@@ -28,7 +28,7 @@ const historyColumns = [
     title: "Trạng thái",
     key: "taskStatus",
     dataIndex: "taskStatus",
-    render: (_, { taskStatus }) => {
+    render: (_, { taskStatus, isPaid }) => {
       let color = "";
       let text = "";
       switch (taskStatus) {
@@ -53,9 +53,16 @@ const historyColumns = [
           text = "Không xác định";
       }
       return (
-        <Tag color={color} key={taskStatus}>
-          {text}
-        </Tag>
+        <>
+          <Tag color={color} key={taskStatus}>
+            {text}
+          </Tag>
+          <Tag
+            color={isPaid ? "green" : "red"}
+            key={isPaid ? "paid" : "unpaid"}>
+            {isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+          </Tag>
+        </>
       );
     },
   },
@@ -72,8 +79,7 @@ const historyColumns = [
             description="Bạn có chắc chắn muốn xóa công việc này không?"
             onConfirm={confirmDeleteTask}
             okText="Xóa"
-            cancelText="Hủy"
-          >
+            cancelText="Hủy">
             <DeleteOutlined style={{ color: "#ff4d4f" }} />
           </Popconfirm>
         </Space>
@@ -105,6 +111,7 @@ export default function Activities() {
             task?.location?.province,
           numberOfTasker: task?.numberOfTasker,
           taskStatus: task?.taskStatus,
+          isPaid: task?.isPaid,
         };
         setTasks((tasks) => [...tasks, temp]);
       });

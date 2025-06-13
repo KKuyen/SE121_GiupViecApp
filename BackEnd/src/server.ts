@@ -14,7 +14,7 @@ import { MessageService } from "./services/message.service";
 
 import session from "express-session";
 
-import admin from "firebase-admin";
+import admin, { database } from "firebase-admin";
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../src/config/firebase.config"; // Ensure you have your Firebase config here
@@ -22,7 +22,9 @@ import upload from "../src/middleware/multer";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
+import axios from "axios";
 import { IMessagePayload } from "./types/socket.types";
+import { Tasks } from "./entity/Task.entity";
 
 app.use(cors());
 //Socket.IO*******************************
@@ -263,7 +265,95 @@ app.post(
     }
   }
 );
+app.post("/callback", async (req: Request, res: Response) => {
+  console.log("callback");
+  console.log(req.body);
+  if (req.body.resultCode === 0) {
+    const orderId = req.body.orderId;
+    try {
+      await AppDataSource.getRepository(Tasks).update(orderId, { isPaid: true });
+      console.log(`Order ${orderId} marked as paid.`);
+    } catch (error) {
+      console.error(`Failed to update order ${orderId}:`, error);
+    }
+  }
+  res.status(200).json(req.body);
+ });
+app.post("/payment", async (req: Request, res: Response): Promise<void> => {
+  let {money, taskId} = req.body;
+  if (!money || !taskId) {
+    res.status(400).json({ error: "Missing required fields" });
+    return;
+  }
+  //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
+  //parameters
+  var accessKey = 'F8BBA842ECF85';
+  var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+  var orderInfo = 'pay with MoMo';
+  var partnerCode = 'MOMO';
+  var redirectUrl = 'myapp://callback';
+  var ipnUrl = 'https://25ee-14-169-55-118.ngrok-free.app/callback';
+  var requestType = "payWithMethod";
+  var amount = money;
+  var orderId =taskId;
+  var requestId = orderId;
+  var extraData ='';
+  var paymentCode = 'T8Qii53fAXyUftPV3m9ysyRhEanUs9KlOPfHgpMR0ON50U10Bh+vZdpJU7VY4z+Z2y77fJHkoDc69scwwzLuW5MzeUKTwPo3ZMaB29imm6YulqnWfTkgzqRaion+EuD7FN9wZ4aXE1+mRt0gHsU193y+yxtRgpmY7SDMU9hCKoQtYyHsfFR5FUAOAKMdw2fzQqpToei3rnaYvZuYaxolprm9+/+WIETnPUDlxCYOiw7vPeaaYQQH0BF0TxyU3zu36ODx980rJvPAgtJzH1gUrlxcSS1HQeQ9ZaVM1eOK/jl8KJm6ijOwErHGbgf/hVymUQG65rHU2MWz9U8QUjvDWA==';
+  var orderGroupId ='';
+  var autoCapture =true;
+  var lang = 'vi';
 
+  //before sign HMAC SHA256 with format
+  //accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
+  var rawSignature = "accessKey=" + accessKey + "&amount=" + amount + "&extraData=" + extraData + "&ipnUrl=" + ipnUrl + "&orderId=" + orderId + "&orderInfo=" + orderInfo + "&partnerCode=" + partnerCode + "&redirectUrl=" + redirectUrl + "&requestId=" + requestId + "&requestType=" + requestType;
+  //puts raw signature
+  console.log("--------------------RAW SIGNATURE----------------")
+  console.log(rawSignature)
+  //signature
+  const crypto = require('crypto');
+  var signature = crypto.createHmac('sha256', secretKey)
+      .update(rawSignature)
+      .digest('hex');
+  console.log("--------------------SIGNATURE----------------")
+  console.log(signature)
+
+  //json object send to MoMo endpoint
+  const requestBody = JSON.stringify({
+      partnerCode : partnerCode,
+      partnerName : "Test",
+      storeId : "MomoTestStore",
+      requestId : requestId,
+      amount : amount,
+      orderId : orderId,
+      orderInfo : orderInfo,
+      redirectUrl : redirectUrl,
+      ipnUrl : ipnUrl,
+      lang : lang,
+      requestType: requestType,
+      autoCapture: autoCapture,
+      extraData : extraData,
+      orderGroupId: orderGroupId,
+      signature : signature
+  });
+  const options = {
+    method: 'POST',
+    url: "https://test-payment.momo.vn/v2/gateway/api/create",
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(requestBody)
+    },
+    data: requestBody
+  }
+  let result;
+  try {
+    result = await axios(options);
+    res.status(200).json(result.data);
+  } catch (error) {
+     res.status(500).json(error);
+    
+  }
+  
+ });
 // Lấy lịch sử tin nhắn
 
 const port = process.env.PORT || 3000;

@@ -163,7 +163,7 @@ class TaskerFindActivityWidgetState extends State<TaskerFindActivityWidget> {
                         ),
                         const SizedBox(width: 20),
                         Text(
-                          widget.startDay.toIso8601String(),
+                          widget.startDay.toIso8601String().substring(0, 10),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
@@ -294,7 +294,7 @@ class TaskerFindActivityWidgetState extends State<TaskerFindActivityWidget> {
                             await context
                                 .read<TaskerFindTaskCubit>()
                                 .applyTask(widget.accountId, widget.id);
-                          
+
                             await BlocProvider.of<allNotificationCubit>(context)
                                 .addANotificaiton(
                                     widget.customerId,
@@ -302,9 +302,7 @@ class TaskerFindActivityWidgetState extends State<TaskerFindActivityWidget> {
                                     "Người giúp việc ${widget.taskerName} vừa mới ứng cử công việc #DV${widget.id} của bạn.",
                                     "review.jpg");
 
-                          
                             widget.loading(widget.id);
-
                           },
                           text: 'Ứng cử',
                           backgroundColor: AppColors.cam_main,

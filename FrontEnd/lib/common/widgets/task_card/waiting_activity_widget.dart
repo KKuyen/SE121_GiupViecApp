@@ -26,6 +26,7 @@ class WatingActivityWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final bool isPaid;
 
   const WatingActivityWidget(
       {this.id = 1,
@@ -47,6 +48,7 @@ class WatingActivityWidget extends StatefulWidget {
       required this.onShowLabel,
       required this.avatar,
       required this.loading,
+      required this.isPaid,
       super.key});
 
   @override
@@ -147,6 +149,20 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                         ],
                       ),
                       const Spacer(),
+                      Text(
+                        widget.isPaid == true
+                            ? 'Đã thanh toán'
+                            : 'Chưa thanh toán',
+                        style: TextStyle(
+                          color: widget.isPaid == true
+                              ? AppColors.xanh_main
+                              : AppColors.do_main,
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       // const Icon(
                       //   Icons.more_vert,
                       //   color: Colors.black,
@@ -171,7 +187,7 @@ class WatingActivityWidgetState extends State<WatingActivityWidget> {
                         ),
                         const SizedBox(width: 20),
                         Text(
-                          widget.startDay.toIso8601String(),
+                          widget.startDay.toIso8601String().substring(0, 10),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,

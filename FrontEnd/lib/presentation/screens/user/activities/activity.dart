@@ -373,6 +373,7 @@ class _WaitingListState extends State<WaitingList> {
                         serviceName:
                             (task.taskType as Map<String, dynamic>?)?['name'] ??
                                 '',
+                        isPaid: task.isPaid == true ? true : false,
                       );
                     }),
               ),
@@ -469,15 +470,26 @@ class _ApprovedListState extends State<ApprovedList> {
                   price: task.price ?? '',
                   note: task.note ?? '',
                   ownerName:
-                      (task.location as Map<String, dynamic>)['ownerName'],
+                      (task.location as Map<String, dynamic>?)?['ownerName'] ??
+                          '',
                   phone: (task.location
-                      as Map<String, dynamic>)['ownerPhoneNumber'],
-                  deltailAddress:
-                      (task.location as Map<String, dynamic>)['detailAddress'],
-                  province: (task.location as Map<String, dynamic>)['province'],
-                  district: (task.location as Map<String, dynamic>)['district'],
-                  country: (task.location as Map<String, dynamic>)['country'],
-                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                          as Map<String, dynamic>?)?['ownerPhoneNumber'] ??
+                      '',
+                  deltailAddress: (task.location
+                          as Map<String, dynamic>?)?['detailAddress'] ??
+                      '',
+                  province:
+                      (task.location as Map<String, dynamic>?)?['province'] ??
+                          '',
+                  district:
+                      (task.location as Map<String, dynamic>?)?['district'] ??
+                          '',
+                  country:
+                      (task.location as Map<String, dynamic>?)?['country'] ??
+                          '',
+                  serviceName:
+                      (task.taskType as Map<String, dynamic>?)?['name'] ?? '',
+                  isPaid: task.isPaid == true ? true : false,
                 );
               });
         } else if (state is TaskError) {
@@ -576,15 +588,26 @@ class _FinishedListState extends State<FinishedList> {
                   price: task.price ?? '',
                   note: task.note ?? '',
                   ownerName:
-                      (task.location as Map<String, dynamic>)['ownerName'],
+                      (task.location as Map<String, dynamic>?)?['ownerName'] ??
+                          '',
                   phone: (task.location
-                      as Map<String, dynamic>)['ownerPhoneNumber'],
-                  deltailAddress:
-                      (task.location as Map<String, dynamic>)['detailAddress'],
-                  province: (task.location as Map<String, dynamic>)['province'],
-                  district: (task.location as Map<String, dynamic>)['district'],
-                  country: (task.location as Map<String, dynamic>)['country'],
-                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                          as Map<String, dynamic>?)?['ownerPhoneNumber'] ??
+                      '',
+                  deltailAddress: (task.location
+                          as Map<String, dynamic>?)?['detailAddress'] ??
+                      '',
+                  province:
+                      (task.location as Map<String, dynamic>?)?['province'] ??
+                          '',
+                  district:
+                      (task.location as Map<String, dynamic>?)?['district'] ??
+                          '',
+                  country:
+                      (task.location as Map<String, dynamic>?)?['country'] ??
+                          '',
+                  serviceName:
+                      (task.taskType as Map<String, dynamic>?)?['name'] ?? '',
+                  isPaid: task.isPaid == true ? true : false,
                 );
               });
         } else if (state is TaskError) {
@@ -637,7 +660,7 @@ class CancelList extends StatelessWidget {
                 return CancelActivityWidget(
                   userId: allUserId,
                   avatar:
-                      (task.taskType as Map<String, dynamic>)['avatar'] ?? '',
+                      (task.taskType as Map<String, dynamic>?)?['avatar'] ?? '',
                   taskStatus: task.taskStatus ?? '',
                   cancelAt: task.cancelAt ?? DateTime.now(),
                   cancelReason: task.cancelReason ?? '',
@@ -650,15 +673,26 @@ class CancelList extends StatelessWidget {
                   price: task.price ?? '',
                   note: task.note ?? '',
                   ownerName:
-                      (task.location as Map<String, dynamic>)['ownerName'],
+                      (task.location as Map<String, dynamic>?)?['ownerName'] ??
+                          '',
                   phone: (task.location
-                      as Map<String, dynamic>)['ownerPhoneNumber'],
-                  deltailAddress:
-                      (task.location as Map<String, dynamic>)['detailAddress'],
-                  province: (task.location as Map<String, dynamic>)['province'],
-                  district: (task.location as Map<String, dynamic>)['district'],
-                  country: (task.location as Map<String, dynamic>)['country'],
-                  serviceName: (task.taskType as Map<String, dynamic>)['name'],
+                          as Map<String, dynamic>?)?['ownerPhoneNumber'] ??
+                      '',
+                  deltailAddress: (task.location
+                          as Map<String, dynamic>?)?['detailAddress'] ??
+                      '',
+                  province:
+                      (task.location as Map<String, dynamic>?)?['province'] ??
+                          '',
+                  district:
+                      (task.location as Map<String, dynamic>?)?['district'] ??
+                          '',
+                  country:
+                      (task.location as Map<String, dynamic>?)?['country'] ??
+                          '',
+                  serviceName:
+                      (task.taskType as Map<String, dynamic>?)?['name'] ?? '',
+                  isPaid: task.isPaid == true ? true : false,
                 );
               });
         } else if (state is TaskError) {

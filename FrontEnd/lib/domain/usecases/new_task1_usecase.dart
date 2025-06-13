@@ -23,9 +23,10 @@ class NewTask1Usecase {
       String note,
       int myvoucherId,
       int voucherId,
+      String paymentMethod,
       List<Map<String, dynamic>> addPriceDetail) async {
     return await repository.createTask(userId, taskTypeId, time, locationId,
-        note, myvoucherId, voucherId, addPriceDetail);
+        note, myvoucherId, voucherId, paymentMethod, addPriceDetail);
   }
 
   Future<Location?> execute3(int userId) async {

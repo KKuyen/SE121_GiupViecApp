@@ -24,9 +24,18 @@ class Newtask1RepositoryImpl implements Newtask1Repository {
       String note,
       int myvoucherId,
       int voucherId,
+      String paymentMethod,
       List<Map<String, dynamic>> addPriceDetail) async {
-    return await remoteDataSource.createTask(userId, taskTypeId, time,
-        locationId, note, myvoucherId, voucherId, addPriceDetail);
+    return await remoteDataSource.createTask(
+        userId,
+        taskTypeId,
+        time,
+        locationId,
+        note,
+        myvoucherId,
+        voucherId,
+        paymentMethod,
+        addPriceDetail);
   }
 
   @override

@@ -27,6 +27,7 @@ class CancelActivityWidget extends StatefulWidget {
   final String avatar;
   final String price;
   final String note;
+  final bool isPaid;
   const CancelActivityWidget({
     required this.userId,
     required this.taskStatus,
@@ -48,6 +49,7 @@ class CancelActivityWidget extends StatefulWidget {
     required this.price,
     required this.note,
     this.cancelReason = 'Lý do khác',
+    required this.isPaid,
     required this.cancelAt,
   });
 
@@ -153,6 +155,20 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ],
                     ),
                     const Spacer(),
+                    Text(
+                      widget.isPaid == true
+                          ? 'Đã thanh toán'
+                          : 'Chưa thanh toán',
+                      style: TextStyle(
+                        color: widget.isPaid == true
+                            ? AppColors.xanh_main
+                            : AppColors.do_main,
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,
@@ -177,7 +193,7 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                       ),
                       const SizedBox(width: 20),
                       Text(
-                        widget.startDay.toIso8601String(),
+                        widget.startDay.toIso8601String().substring(0, 10),
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
@@ -312,17 +328,23 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
                               )),
-                          Spacer(),
-                          Text(
+                          SizedBox(width: 30),
+                          Expanded(
+                            child: Text(
                               widget.taskStatus == "TS1"
                                   ? 'Đã hủy vì không tìm đủ người giúp việc'
                                   : widget.cancelReason,
+                              textAlign: TextAlign.right,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
-                              )),
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 5),
@@ -338,7 +360,9 @@ class CancelActivityWidgetState extends State<CancelActivityWidget> {
                           Spacer(),
                           Text(
                               widget.taskStatus == "TS1"
-                                  ? widget.startDay.toIso8601String()
+                                  ? widget.startDay
+                                      .toIso8601String()
+                                      .substring(0, 10)
                                   : widget.cancelAt.toIso8601String(),
                               style: TextStyle(
                                 color: Colors.black,

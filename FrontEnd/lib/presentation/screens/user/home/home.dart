@@ -12,7 +12,9 @@ import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:se121_giupviec_app/presentation/bloc/TaskType/get_all_tasktype_cubit.dart';
 import 'package:se121_giupviec_app/presentation/screens/notification/notification.dart';
+import 'package:se121_giupviec_app/presentation/screens/user/home/chatBot.dart';
 import 'package:se121_giupviec_app/presentation/screens/user/home/discovery.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/helpers/SecureStorage.dart';
 import '../../../../common/widgets/location/default_location.dart';
@@ -97,13 +99,18 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatBot()),
+          );
+        },
         child: const Icon(
           Icons.smart_toy_outlined,
           color: Colors.white,
         ),
-        backgroundColor: AppColors.cam_main,
-        shape: OvalBorder(),
+        backgroundColor: AppColors.xanh_main,
+        shape: const OvalBorder(),
       ),
       body: SingleChildScrollView(
         child: SingleChildScrollView(
@@ -238,6 +245,7 @@ class _servicesState extends State<_services> {
     super.initState();
     _fetchUserId().then((value) {
       setState(() {
+        print("User IDDDD: $value");
         userId = int.parse(value);
       });
     });
@@ -253,12 +261,14 @@ class _servicesState extends State<_services> {
     ];
     return BlocBuilder<TaskTypeCubit, TaskTypeState>(
       builder: (context, state) {
+        print("State: $state");
         if (state is TaskLoading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state is TaskSuccess) {
           final tasks = state.tasks;
+          print("Task: $tasks");
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: tasks.length,
@@ -297,14 +307,14 @@ class _servicesState extends State<_services> {
                   // }
                 },
                 child: _serviceItem(
-                    icon: getIcon(task.avatar ?? ''),
+                    icon: getIcon(task.image!),
                     title: task.name,
                     color: colors[index % colors.length]),
               );
             },
           );
         } else if (state is TaskError) {
-          return Center(child: Text('Error: ${state.message}'));
+          return Center(child: Text('Errorrrrr2: ${state.message}'));
         } else {
           return const Center(child: Text('Không tìm thấy dịch vụ'));
         }

@@ -269,8 +269,8 @@ class _ApprovetabState extends State<Approvetab> {
                                         textColor: AppColors.xanh_main,
                                         StrokeColor: AppColors.xanh_main,
                                         height: 45,
+                                        width: 100,
                                       ),
-                                      Spacer(),
                                       Sizedbutton(
                                         onPressFun: () {
                                           Navigator.of(context).pop(true); //
@@ -278,6 +278,7 @@ class _ApprovetabState extends State<Approvetab> {
                                         text: 'Xác nhận',
                                         backgroundColor: AppColors.xanh_main,
                                         height: 45,
+                                        width: 70,
                                       ),
                                     ],
                                   );
@@ -299,7 +300,7 @@ class _ApprovetabState extends State<Approvetab> {
                               // Add your logic here
                             },
                             text: 'Đã hoàn thành',
-                            width: MediaQuery.of(context).size.width - 15,
+                            width: MediaQuery.of(context).size.width - 20,
                             height: 45,
                           ),
                       ],
@@ -387,12 +388,27 @@ class _ApprovetabState extends State<Approvetab> {
                             const EdgeInsets.all(AppInfor1.horizontal_padding),
                         child: Column(
                           children: [
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Thông tin chi tiết',
-                                style: AppTextStyle.tieudebox,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Thông tin chi tiết',
+                                  style: AppTextStyle.tieudebox,
+                                ),
+                                Text(
+                                  task.isPaid == true
+                                      ? 'Đã thanh toán'
+                                      : 'Chưa thanh toán',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      color: task.isPaid == true
+                                          ? AppColors.xanh_main
+                                          : AppColors.do_main,
+                                      fontSize: 15,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             Padding(
                               padding:

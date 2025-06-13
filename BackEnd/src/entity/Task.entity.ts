@@ -57,6 +57,8 @@ export class Tasks {
   voucherId!: number;
   @Column({ type: "varchar", nullable: true })
   price!: string;
+  @Column({ type: "boolean", nullable: true })
+  isPaid!: boolean;
   @ManyToOne(() => User)
   @JoinColumn({ name: "userId" })
   user!: User; // Many-to-one relationship with User

@@ -28,6 +28,7 @@ class FinishedActivityWidget extends StatefulWidget {
 
   final String price;
   final String note;
+  final bool isPaid;
 
   const FinishedActivityWidget(
       {required this.onShowLabel,
@@ -49,6 +50,7 @@ class FinishedActivityWidget extends StatefulWidget {
       required this.phone,
       required this.price,
       required this.note,
+      required this.isPaid,
       super.key});
 
   @override
@@ -148,6 +150,20 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ],
                     ),
                     const Spacer(),
+                    Text(
+                      widget.isPaid == true
+                          ? 'Đã thanh toán'
+                          : 'Chưa thanh toán',
+                      style: TextStyle(
+                        color: widget.isPaid == true
+                            ? AppColors.xanh_main
+                            : AppColors.do_main,
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     // const Icon(
                     //   Icons.more_vert,
                     //   color: Colors.black,
@@ -172,7 +188,7 @@ class _FinishedActivityWidgetState extends State<FinishedActivityWidget> {
                       ),
                       const SizedBox(width: 20),
                       Text(
-                        widget.startDay.toIso8601String(),
+                        widget.startDay.toIso8601String().substring(0, 10),
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
