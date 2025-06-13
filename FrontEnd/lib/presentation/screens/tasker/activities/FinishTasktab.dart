@@ -123,23 +123,44 @@ class _FinishtasktabState extends State<Finishtasktab> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Sizedbutton(
-                          onPressFun: () {
-                            // Add your logic here
-                          },
-                          text: 'Xác nhận hủy',
-                          StrokeColor: AppColors.cam_main,
-                          isStroke: true,
-                          textColor: AppColors.cam_main,
-                          backgroundColor: Colors.white,
-                          width: MediaQuery.of(context).size.width - 15,
-                          height: 45,
-                        ),
+                        if (task.isPaid == true)
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.green[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Text(
+                                'Đã thanh toán',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          Expanded(
+                            child: Sizedbutton(
+                              onPressFun: () {
+                                // Gọi API xác nhận đã thanh toán ở đây
+                              },
+                              text: 'Thanh toán',
+                              StrokeColor: AppColors.cam_main,
+                              isStroke: false,
+                              textColor: Colors.white,
+                              backgroundColor: AppColors.cam_main,
+                              width: MediaQuery.of(context).size.width - 15,
+                              height: 45,
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 ),
-
                 //noi dung
                 body: SingleChildScrollView(
                     child: Column(

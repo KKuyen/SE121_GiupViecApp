@@ -307,11 +307,7 @@ class _servicesState extends State<_services> {
                   // }
                 },
                 child: _serviceItem(
-<<<<<<< HEAD
                     imageUrl: getImageUrl(task.avatar),
-=======
-                    icon: getIcon(task.image!),
->>>>>>> 152b15108f8b42f17bf12c2ad8536e62fb69db75
                     title: task.name,
                     color: colors[index % colors.length]),
               );
