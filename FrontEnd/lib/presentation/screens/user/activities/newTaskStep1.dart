@@ -106,28 +106,33 @@ class _Newtaskstep1State extends State<Newtaskstep1> {
                             height: 80,
                             width: 80,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: AppColors.xanh_main, width: 2),
+                              color: AppColors.xanh_main,
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: taskType.avatar != null &&
                                       taskType.avatar.toString().isNotEmpty
-                                  ? Image.network(
-                                      AppIcon.getImageUrl(
-                                          taskType.avatar.toString())!,
-                                      width:
-                                          48, // hoặc giá trị bạn muốn, ví dụ 48
-                                      height: 48,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error,
-                                              stackTrace) =>
-                                          const Icon(Icons.image_not_supported,
-                                              color: AppColors.xanh_main),
+                                  ? Center(
+                                      child: SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: Image.network(
+                                          AppIcon.getImageUrl(
+                                              taskType.avatar.toString())!,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  const Icon(
+                                                      Icons.image_not_supported,
+                                                      color: Colors.white),
+                                        ),
+                                      ),
                                     )
-                                  : const Icon(Icons.image,
-                                      color: AppColors.xanh_main),
+                                  : const Center(
+                                      child: Icon(Icons.image,
+                                          color: Colors.white),
+                                    ),
                             ),
                           ),
                           const SizedBox(width: 10),

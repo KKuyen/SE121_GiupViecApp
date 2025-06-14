@@ -87,8 +87,33 @@ class TaskerFindActivityWidgetState extends State<TaskerFindActivityWidget> {
                   Row(
                     children: [
                       Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
-                          child: AppIcon.getIconCamMain(widget.avatar)),
+                        padding: const EdgeInsets.fromLTRB(10, 10, 15, 5),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: widget.avatar != null &&
+                                  widget.avatar.toString().isNotEmpty
+                              ? ColorFiltered(
+                                  colorFilter: const ColorFilter.mode(
+                                    Color(0xff4AB7B6),
+                                    BlendMode
+                                        .modulate, // hoặc try BlendMode.overlay, srcIn, multiply
+                                  ),
+                                  child: Image.network(
+                                    AppIcon.getImageUrl(
+                                        widget.avatar.toString())!,
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error,
+                                            stackTrace) =>
+                                        const Icon(Icons.image_not_supported,
+                                            color: AppColors.xanh_main),
+                                  ),
+                                )
+                              : const Icon(Icons.image,
+                                  color: AppColors.xanh_main),
+                        ),
+                      ),
 
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
