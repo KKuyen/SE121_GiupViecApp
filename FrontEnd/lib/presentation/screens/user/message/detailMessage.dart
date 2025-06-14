@@ -20,8 +20,11 @@ class Detailmessage extends StatefulWidget {
   final CustomUser.User targetUser;
   final CustomUser.User sourseUser;
 
-  const Detailmessage(
-      {required this.targetUser, required this.sourseUser, super.key});
+  const Detailmessage({
+    required this.targetUser,
+    required this.sourseUser,
+    super.key,
+  });
 
   @override
   State<Detailmessage> createState() => _DetailmessageState();
@@ -29,27 +32,31 @@ class Detailmessage extends StatefulWidget {
 
 class _DetailmessageState extends State<Detailmessage> {
   final ImagePicker _picker = ImagePicker();
-  List<MessageModel> messages = [];
   final ScrollController _scrollController = ScrollController();
   final SecureStorage secureStorage = SecureStorage();
   final SupabaseClient supabase = Supabase.instance.client;
+  final FirebaseImageService _firebaseImageService = FirebaseImageService();
+  final TextEditingController messageController = TextEditingController();
 
+  List<MessageModel> messages = [];
   int? curentUserId;
 
   @override
   void initState() {
     super.initState();
-    print("sourseId: ${widget.sourseUser.id}");
-    print("targetId: ${widget.targetUser.id}");
+    curentUserId = widget.sourseUser.id;
 
     _initializeSupabaseRealtime();
     _OrderMessages();
   }
 
-  void _initializeSupabaseRealtime() {
-    curentUserId = widget.sourseUser.id;
+  @override
+  void dispose() {
+    messageController.dispose();
+    super.dispose();
+  }
 
-    // Listen for new messages in the "message" table
+  void _initializeSupabaseRealtime() {
     supabase.from('message').stream(primaryKey: ['id']).listen((data) {
       for (var row in data) {
         if ((row['sourceId'] == widget.sourseUser.id &&
@@ -65,14 +72,36 @@ class _DetailmessageState extends State<Detailmessage> {
           );
         }
       }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeOut,
+          );
+        }
+      });
     });
   }
 
   void _OrderMessages() async {}
 
   void setMessages(
-      String content, bool isMe, int sourceId, int targetId, String createdAt) {
+    String content,
+    bool isMe,
+    int sourceId,
+    int targetId,
+    String createdAt,
+  ) {
     if (!mounted) return;
+
+    // Ngăn thêm trùng tin nhắn
+    if (messages.any((m) =>
+        m.content == content &&
+        m.sourceId == sourceId &&
+        m.targetId == targetId &&
+        m.createdAt == createdAt)) return;
 
     setState(() {
       messages.add(MessageModel(
@@ -85,19 +114,18 @@ class _DetailmessageState extends State<Detailmessage> {
     });
   }
 
-  Future<void> sendMessage(String message, int sourceId, int targetId) async {
-    setState(() {
-      messages.clear();
-    });
-
-    // Insert the message into the Supabase database
+  Future<void> sendMessage(
+    String message,
+    int sourceId,
+    int targetId,
+  ) async {
     await supabase.from('message').insert({
       'content': message,
       'sourceId': sourceId,
       'targetId': targetId,
       'createdAt': DateTime.now().toIso8601String(),
     });
-    // Update the message review table with the latest content and time
+
     await supabase
         .from('message_review')
         .update({
@@ -109,121 +137,94 @@ class _DetailmessageState extends State<Detailmessage> {
   }
 
   void _makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
     await launchUrl(launchUri);
   }
 
-  final FirebaseImageService _firebaseImageService = FirebaseImageService();
-
   @override
   Widget build(BuildContext context) {
-    TextEditingController messageController = TextEditingController();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF2F2F2),
       appBar: BasicAppbar(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          isHideBackButton: false,
-          action: Row(
-            children: [
-              GestureDetector(
-                onTap: () => _makePhoneCall("0345664024"),
-                child: const Icon(
-                  Icons.phone,
-                  size: 27,
-                  color: AppColors.xanh_main,
-                ),
+        color: Colors.white,
+        isHideBackButton: false,
+        action: Row(
+          children: [
+            GestureDetector(
+              onTap: () => _makePhoneCall("0345664024"),
+              child:
+                  const Icon(Icons.phone, size: 27, color: AppColors.xanh_main),
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ListTaskMessage()),
+                );
+              },
+              child:
+                  const Icon(Icons.info, size: 27, color: AppColors.xanh_main),
+            ),
+          ],
+        ),
+        isHavePadding: false,
+        title: Row(
+          children: [
+            Container(
+              width: 41,
+              height: 41,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 1.0),
               ),
-              const SizedBox(width: 10),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ListTaskMessage()));
+              child: FutureBuilder<String>(
+                future:
+                    _firebaseImageService.loadImage(widget.targetUser.avatar),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.hasError ||
+                      !snapshot.hasData) {
+                    return SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 41.0,
+                      height: 41.0,
+                    );
+                  }
+
+                  return CachedNetworkImage(
+                    imageUrl: snapshot.data!,
+                    placeholder: (context, url) => SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 41.0,
+                      height: 41.0,
+                    ),
+                    errorWidget: (context, url, error) => SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 41.0,
+                      height: 41.0,
+                    ),
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    ),
+                  );
                 },
-                child: const Icon(
-                  Icons.info,
-                  size: 27,
-                  color: AppColors.xanh_main,
-                ),
               ),
-            ],
-          ),
-          isHavePadding: false,
-          title: Row(
-            children: [
-              Container(
-                width: 41,
-                height: 41,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 1.0),
-                ),
-                child: FutureBuilder<String>(
-                  future:
-                      _firebaseImageService.loadImage(widget.targetUser.avatar),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return SvgPicture.asset(
-                        AppVectors.avatar,
-                        width: 41.0,
-                        height: 41.0,
-                      );
-                    } else if (snapshot.hasError) {
-                      return SvgPicture.asset(
-                        AppVectors.avatar,
-                        width: 41.0,
-                        height: 41.0,
-                      );
-                    } else if (snapshot.hasData) {
-                      return CachedNetworkImage(
-                        imageUrl: snapshot.data!,
-                        placeholder: (context, url) => SvgPicture.asset(
-                          AppVectors.avatar,
-                          width: 41.0,
-                          height: 41.0,
-                        ),
-                        errorWidget: (context, url, error) => SvgPicture.asset(
-                          AppVectors.avatar,
-                          width: 41.0,
-                          height: 41.0,
-                        ),
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 41.0,
-                          height: 41.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 1),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return SvgPicture.asset(
-                        AppVectors.avatar,
-                        width: 41.0,
-                        height: 41.0,
-                      );
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(widget.targetUser.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ],
-          )),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              widget.targetUser.name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -235,11 +236,8 @@ class _DetailmessageState extends State<Detailmessage> {
           child: Row(
             children: [
               IconButton(
-                icon: const Icon(
-                  Icons.image_rounded,
-                  size: 34,
-                  color: AppColors.xanh_main,
-                ),
+                icon: const Icon(Icons.image_rounded,
+                    size: 34, color: AppColors.xanh_main),
                 onPressed: () {
                   print("Không chọn ảnh");
                 },
@@ -257,23 +255,16 @@ class _DetailmessageState extends State<Detailmessage> {
                 ),
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.send,
-                  color: AppColors.xanh_main,
-                  size: 32,
-                ),
+                icon: const Icon(Icons.send,
+                    color: AppColors.xanh_main, size: 32),
                 onPressed: () {
                   if (messageController.text.isNotEmpty) {
-                    sendMessage(messageController.text, widget.sourseUser.id,
-                        widget.targetUser.id);
+                    sendMessage(
+                      messageController.text,
+                      widget.sourseUser.id,
+                      widget.targetUser.id,
+                    );
                     messageController.clear();
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.easeOut,
-                      );
-                    });
                   }
                 },
               ),
@@ -283,25 +274,23 @@ class _DetailmessageState extends State<Detailmessage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppInfo.main_padding, vertical: AppInfo.main_padding),
+          horizontal: AppInfo.main_padding,
+          vertical: AppInfo.main_padding,
+        ),
         child: ListView.builder(
-          itemCount: messages.length,
           controller: _scrollController,
+          itemCount: messages.length,
           itemBuilder: (context, index) {
             final message = messages[index];
-            final isMe = curentUserId ==
-                message
-                    .sourceId; // Check if the message is from the current user
+            final isMe = curentUserId == message.sourceId;
 
-            return _messageCard(
-              avatar: isMe
-                  ? widget.sourseUser.avatar
-                  : widget.targetUser.avatar, // Use the correct avatar
+            return _MessageCard(
+              avatar:
+                  isMe ? widget.sourseUser.avatar : widget.targetUser.avatar,
               isMe: isMe,
               message: message.content,
-              time: DateFormat('dd-MM-yyyy HH:mm').format(
-                DateTime.parse(message.createdAt).toLocal(),
-              ),
+              time: DateFormat('dd-MM-yyyy HH:mm')
+                  .format(DateTime.parse(message.createdAt).toLocal()),
             );
           },
         ),
@@ -310,13 +299,13 @@ class _DetailmessageState extends State<Detailmessage> {
   }
 }
 
-class _messageCard extends StatelessWidget {
+class _MessageCard extends StatelessWidget {
   final String avatar;
   final bool isMe;
   final String message;
   final String time;
 
-  const _messageCard({
+  const _MessageCard({
     required this.avatar,
     required this.isMe,
     required this.message,
@@ -331,10 +320,7 @@ class _messageCard extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 3),
           child: Text(
             time,
-            style: const TextStyle(
-              color: AppColors.xam72,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: AppColors.xam72, fontSize: 12),
           ),
         ),
         Container(
@@ -357,9 +343,7 @@ class _messageCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
+                          image: imageProvider, fit: BoxFit.cover),
                     ),
                   ),
                 ),

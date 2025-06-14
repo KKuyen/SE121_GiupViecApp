@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +13,7 @@ import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/isuTaskerRow.dart';
 
 import 'package:se121_giupviec_app/common/widgets/userRow/userRow.dart';
+import 'package:se121_giupviec_app/core/configs/constants/api_constants.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -123,23 +126,74 @@ class _FinishtasktabState extends State<Finishtasktab> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Sizedbutton(
-                          onPressFun: () {
-                            // Add your logic here
-                          },
-                          text: 'Xác nhận hủy',
-                          StrokeColor: AppColors.cam_main,
-                          isStroke: true,
-                          textColor: AppColors.cam_main,
-                          backgroundColor: Colors.white,
-                          width: MediaQuery.of(context).size.width - 15,
-                          height: 45,
-                        ),
+                        if (task.isPaid == true)
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.green[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Text(
+                                'Đã thanh toán',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          Expanded(
+                            child: Sizedbutton(
+                              onPressFun: () async {
+                                final url = Uri.parse(
+                                    '${ApiConstants.baseUrl}/${ApiConstants.apiVersion}/payment-update');
+                                // Ví dụ dùng http package:
+                                // import 'package:http/http.dart' as http;
+                                try {
+                                  final response = await http.put(
+                                    url,
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: jsonEncode({'taskId': task.id}),
+                                  );
+                                  if (response.statusCode == 200) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Xác nhận thanh toán thành công!')),
+                                    );
+                                    // Có thể gọi Bloc/Cubit để reload lại task nếu cần
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Lỗi xác nhận thanh toán: ${response.body}')),
+                                    );
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Lỗi kết nối: $e')),
+                                  );
+                                }
+                              },
+                              text: 'Thanh toán',
+                              StrokeColor: AppColors.cam_main,
+                              isStroke: false,
+                              textColor: Colors.white,
+                              backgroundColor: AppColors.cam_main,
+                              width: MediaQuery.of(context).size.width - 15,
+                              height: 45,
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 ),
-
                 //noi dung
                 body: SingleChildScrollView(
                     child: Column(
