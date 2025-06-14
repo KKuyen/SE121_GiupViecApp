@@ -65,6 +65,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: const BasicAppbar(
         title: Text(
           'Tạo khiếu nại',
@@ -89,7 +90,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
             children: [
               Row(
                 children: [
-                  const Text("Vấn đề bạn gặp phải: ",
+                  const Text("Vấn đề: ",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 10),
