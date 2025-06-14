@@ -38,11 +38,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   void _submitReport() {
-    if (_taskIdController.text.isEmpty ||
-        _userIdController.text.isEmpty ||
-        _descriptionController.text.isEmpty) {
+    if (_descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Vui lòng điền đầy đủ thông tin!")),
+        const SnackBar(content: Text("Vui lòng điền mô tả!")),
       );
       return;
     }
@@ -79,81 +77,96 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
         isHavePadding: true,
         color: Colors.white,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Text("Vấn đề: ",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 10),
-                  DropdownButton<String>(
-                    value: _selectedType,
-                    items: _issueTypes
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedType = value!;
-                      });
-                    },
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                top: 16,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text("Vấn đề: ",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 10),
+                          DropdownButton<String>(
+                            value: _selectedType,
+                            items: _issueTypes
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedType = value!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _taskIdController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: "ID dịch vụ (nếu có)",
+                          border: OutlineInputBorder(),
+                          prefixText: "#DV ",
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _userIdController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: "ID Tasker (nếu có)",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("Mô tả",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _descriptionController,
+                        maxLines: 5,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _submitReport,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.xanh_main,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: const Text("Tạo",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white)),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _taskIdController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "ID dịch vụ (nếu có)",
-                  border: OutlineInputBorder(),
-                  prefixText: "#DV ",
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _userIdController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "ID Tasker (nếu có)",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text("Mô tả",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 5),
-              TextField(
-                controller: _descriptionController,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submitReport,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.xanh_main,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: const Text("Tạo",
-                      style: TextStyle(fontSize: 18, color: Colors.white)),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
+      backgroundColor: Colors.white,
     );
   }
 }

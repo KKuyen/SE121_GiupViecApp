@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +13,7 @@ import 'package:se121_giupviec_app/common/widgets/input/disableInput.dart';
 import 'package:se121_giupviec_app/common/widgets/tasker_row/isuTaskerRow.dart';
 
 import 'package:se121_giupviec_app/common/widgets/userRow/userRow.dart';
+import 'package:se121_giupviec_app/core/configs/constants/api_constants.dart';
 import 'package:se121_giupviec_app/core/configs/constants/app_infor1.dart';
 import 'package:se121_giupviec_app/core/configs/text/app_text_style.dart';
 import 'package:se121_giupviec_app/core/configs/theme/app_colors.dart';
@@ -145,8 +148,38 @@ class _FinishtasktabState extends State<Finishtasktab> {
                         else
                           Expanded(
                             child: Sizedbutton(
-                              onPressFun: () {
-                                // Gọi API xác nhận đã thanh toán ở đây
+                              onPressFun: () async {
+                                final url = Uri.parse(
+                                    '${ApiConstants.baseUrl}/${ApiConstants.apiVersion}/payment-update');
+                                // Ví dụ dùng http package:
+                                // import 'package:http/http.dart' as http;
+                                try {
+                                  final response = await http.put(
+                                    url,
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: jsonEncode({'taskId': task.id}),
+                                  );
+                                  if (response.statusCode == 200) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Xác nhận thanh toán thành công!')),
+                                    );
+                                    // Có thể gọi Bloc/Cubit để reload lại task nếu cần
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Lỗi xác nhận thanh toán: ${response.body}')),
+                                    );
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Lỗi kết nối: $e')),
+                                  );
+                                }
                               },
                               text: 'Thanh toán',
                               StrokeColor: AppColors.cam_main,

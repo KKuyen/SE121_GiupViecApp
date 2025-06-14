@@ -15,6 +15,7 @@ class ReportDetailScreen extends StatefulWidget {
 
 class _ReportDetailScreenState extends State<ReportDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final supabase = Supabase.instance.client;
   List<Map<String, dynamic>> messages = [];
 
@@ -26,6 +27,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     });
     _fetchMessages();
     _listenForRealtimeMessages();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   void _fetchMessages() async {
@@ -41,10 +54,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             .where((msg) => msg['message'] != null && msg['sender'] != null)
             .map((msg) => {
                   "text": msg['message'],
-                  "sender": msg['sender'], // Lưu nguyên giá trị sender
+                  "sender": msg['sender'],
                 })
             .toList();
       });
+
+      _scrollToBottom();
     } catch (e) {
       debugPrint("Error fetching messages: $e");
     }
@@ -60,9 +75,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             setState(() {
               messages.add({
                 "text": data.last['message'],
-                "sender": data.last['sender']
+                "sender": data.last['sender'],
               });
             });
+            _scrollToBottom();
           }
         });
   }
@@ -75,8 +91,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         "message": _messageController.text.trim(),
       });
       _messageController.clear();
-      setState(() {}); // Cập nhật lại UI sau khi gửi tin nhắn
+      _scrollToBottom();
     }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,9 +107,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     return BlocBuilder<AReportCubit, AReportState>(
       builder: (context, state) {
         if (state is AReportLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         } else if (state is AReportSuccess) {
           return Scaffold(
             appBar: AppBar(
@@ -143,6 +164,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 ),
                 Expanded(
                   child: ListView.builder(
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(16),
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
@@ -168,8 +190,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                      border:
-                          Border(top: BorderSide(color: Colors.grey[300]!))),
+                    border: Border(top: BorderSide(color: Colors.grey[300]!)),
+                  ),
                   child: Row(
                     children: [
                       Expanded(
