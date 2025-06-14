@@ -35,7 +35,8 @@ class _ChatBotState extends State<ChatBot> {
     });
 
     try {
-      final url = Uri.parse('http://localhost:5005/webhooks/rest/webhook');
+      final url = Uri.parse(
+          'https://ea0f-42-118-236-231.ngrok-free.app/webhooks/rest/webhook');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

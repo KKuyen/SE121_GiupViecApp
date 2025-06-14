@@ -212,12 +212,13 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
       },
     );
     if (paymentMethod.contains("momo")) {
+      print('paymentMethodddd: $paymentMethod');
       try {
         final paymentResult = await client.post(
           Uri.parse('$baseUrl/payment'),
           body: json.encode({
             "money": json.decode(response.body)['price'].split(' ')[0],
-            "taskId": json.decode(response.body)['id'],
+            "taskId": json.decode(response.body)['id'] + 1000,
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -226,6 +227,8 @@ class NewTask1RemoteDatasourceImpl implements NewTask1RemoteDatasource {
         final Map<String, dynamic> paymentResultJson =
             json.decode(paymentResult.body);
         final String paymentUrl = paymentResultJson['payUrl'];
+        print('paymentUrl: $paymentUrl');
+        print('paymentResult: $paymentResultJson');
         if (await canLaunch(paymentUrl)) {
           await launch(paymentUrl);
         } else {

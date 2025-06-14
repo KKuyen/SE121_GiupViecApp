@@ -269,7 +269,7 @@ app.post("/callback", async (req: Request, res: Response) => {
   console.log("callback");
   console.log(req.body);
   if (req.body.resultCode === 0) {
-    const orderId = req.body.orderId;
+    const orderId = req.body.orderId -1000;
     try {
       await AppDataSource.getRepository(Tasks).update(orderId, { isPaid: true });
       console.log(`Order ${orderId} marked as paid.`);
@@ -285,6 +285,7 @@ app.post("/payment", async (req: Request, res: Response): Promise<void> => {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
+  console.log("taskIdd", taskId);
   //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
   //parameters
   var accessKey = 'F8BBA842ECF85';
@@ -292,7 +293,7 @@ app.post("/payment", async (req: Request, res: Response): Promise<void> => {
   var orderInfo = 'pay with MoMo';
   var partnerCode = 'MOMO';
   var redirectUrl = 'myapp://callback';
-  var ipnUrl = 'https://a029-14-169-67-150.ngrok-free.app/callback';
+  var ipnUrl = 'https://65ba-14-161-6-190.ngrok-free.app/callback';
   var requestType = "payWithMethod";
   var amount = money;
   var orderId =taskId;
