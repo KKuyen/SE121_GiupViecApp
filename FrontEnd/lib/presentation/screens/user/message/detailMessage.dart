@@ -206,12 +206,10 @@ class _DetailmessageState extends State<Detailmessage> {
                       width: 41.0,
                       height: 41.0,
                     ),
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
-                      ),
+                    imageBuilder: (context, imageProvider) => SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 41.0,
+                      height: 41.0,
                     ),
                   );
                 },
@@ -336,7 +334,11 @@ class _MessageCard extends StatelessWidget {
                   imageUrl: avatar,
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget: (context, url, error) => SvgPicture.asset(
+                    AppVectors.avatar,
+                    width: 32.0,
+                    height: 32.0,
+                  ),
                   imageBuilder: (context, imageProvider) => Container(
                     width: 32.0,
                     height: 32.0,

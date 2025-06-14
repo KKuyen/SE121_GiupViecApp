@@ -153,7 +153,7 @@ class _MytasktabState extends State<Mytasktab> {
                           isStroke: true,
                           textColor: AppColors.cam_main,
                           backgroundColor: Colors.white,
-                          width: MediaQuery.of(context).size.width - 15,
+                          width: MediaQuery.of(context).size.width - 20,
                           height: 45,
                         ),
                       ],

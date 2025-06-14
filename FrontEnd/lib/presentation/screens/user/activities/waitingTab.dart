@@ -241,24 +241,24 @@ class _WaitingtabState extends State<Waitingtab> {
                                       'Bạn có chắc chắn muốn xóa công việc này không?'),
                                   actions: <Widget>[
                                     Sizedbutton(
-                                      onPressFun: () {
-                                        Navigator.of(context).pop(
-                                            true); // Return false if not confirmed
-                                      },
-                                      text: 'Hủy',
-                                      backgroundColor: AppColors.xanh_main,
-                                      height: 45,
-                                    ),
+                                        onPressFun: () {
+                                          Navigator.of(context).pop(
+                                              true); // Return false if not confirmed
+                                        },
+                                        text: 'Hủy',
+                                        backgroundColor: AppColors.xanh_main,
+                                        height: 45,
+                                        width: 100),
                                     Spacer(),
                                     Sizedbutton(
-                                      onPressFun: () {
-                                        Navigator.of(context).pop(
-                                            true); // Return true if confirmed
-                                      },
-                                      text: 'Xóa',
-                                      backgroundColor: AppColors.do_main,
-                                      height: 45,
-                                    ),
+                                        onPressFun: () {
+                                          Navigator.of(context).pop(
+                                              true); // Return true if confirmed
+                                        },
+                                        text: 'Xóa',
+                                        backgroundColor: AppColors.do_main,
+                                        height: 45,
+                                        width: 100),
                                   ],
                                 );
                               },

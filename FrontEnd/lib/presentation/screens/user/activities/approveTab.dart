@@ -140,24 +140,24 @@ class _ApprovetabState extends State<Approvetab> {
                                         'Bạn có chắc chắn muốn xóa công việc này không?'),
                                     actions: <Widget>[
                                       Sizedbutton(
-                                        onPressFun: () {
-                                          Navigator.of(context).pop(
-                                              false); // Return false if not confirmed
-                                        },
-                                        text: 'Hủy',
-                                        backgroundColor: AppColors.xanh_main,
-                                        height: 45,
-                                      ),
+                                          onPressFun: () {
+                                            Navigator.of(context).pop(
+                                                false); // Return false if not confirmed
+                                          },
+                                          text: 'Hủy',
+                                          backgroundColor: AppColors.xanh_main,
+                                          height: 45,
+                                          width: 100),
                                       Spacer(),
                                       Sizedbutton(
-                                        onPressFun: () {
-                                          Navigator.of(context).pop(
-                                              true); // Return true if confirmed
-                                        },
-                                        text: 'Xóa',
-                                        backgroundColor: AppColors.do_main,
-                                        height: 45,
-                                      ),
+                                          onPressFun: () {
+                                            Navigator.of(context).pop(
+                                                true); // Return true if confirmed
+                                          },
+                                          text: 'Xóa',
+                                          backgroundColor: AppColors.do_main,
+                                          height: 45,
+                                          width: 100),
                                     ],
                                   );
                                 },
@@ -244,7 +244,7 @@ class _ApprovetabState extends State<Approvetab> {
                             isStroke: true,
                             textColor: AppColors.cam_main,
                             backgroundColor: Colors.white,
-                            width: MediaQuery.of(context).size.width - 15,
+                            width: MediaQuery.of(context).size.width - 20,
                             height: 45,
                           ),
                         if (task.time.isBefore(DateTime.now()))

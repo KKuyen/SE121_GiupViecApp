@@ -198,44 +198,30 @@ class _messageCardState extends State<_messageCard> {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white, width: 1.0),
           ),
-          child: FutureBuilder<String>(
-            future: _firebaseImageService.loadImage(widget.avatar),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting ||
-                  snapshot.hasError ||
-                  !snapshot.hasData) {
-                return SvgPicture.asset(
-                  AppVectors.avatar,
-                  width: 41.0,
-                  height: 41.0,
-                );
-              } else {
-                return CachedNetworkImage(
-                  imageUrl: snapshot.data!,
-                  placeholder: (context, url) => SvgPicture.asset(
-                    AppVectors.avatar,
-                    width: 41.0,
-                    height: 41.0,
-                  ),
-                  errorWidget: (context, url, error) => SvgPicture.asset(
-                    AppVectors.avatar,
-                    width: 41.0,
-                    height: 41.0,
-                  ),
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: 41.0,
-                    height: 41.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 20.5,
+            child: ClipOval(
+              child: widget.avatar.contains('http')
+                  ? CachedNetworkImage(
+                      imageUrl: widget.avatar,
+                      fit: BoxFit.cover,
+                      width: 41,
+                      height: 41,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                        AppVectors.avatar,
+                        width: 41,
+                        height: 41,
                       ),
+                    )
+                  : SvgPicture.asset(
+                      AppVectors.avatar,
+                      width: 41,
+                      height: 41,
                     ),
-                  ),
-                );
-              }
-            },
+            ),
           ),
         ),
         title: Text(
